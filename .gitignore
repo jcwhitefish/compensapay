@@ -1,0 +1,11 @@
+#carpeta ads
+/ads
+
+#archivos error.log
+error_log
+
+# capeta todo
+TODO 
+
+#Visual Studio Code
+.vscode/
