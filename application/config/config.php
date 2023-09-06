@@ -23,7 +23,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+if($_SERVER['HTTP_HOST']=="app.compensapay.mx" || $_SERVER['HTTP_HOST']=="https://compensapay.mx" || $_SERVER['HTTP_HOST']=="https://compensapay.xyz")
+{
+   $config['base_url'] = "https://".$_SERVER['HTTP_HOST']; 
+}
+else{
+    $config['base_url'] = "http://".$_SERVER['HTTP_HOST'];
+}
+$config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+
 
 /*
 |--------------------------------------------------------------------------
