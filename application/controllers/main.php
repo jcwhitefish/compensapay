@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Main extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,6 +20,9 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome');
+		//las partes de $this->load->view('nombre_vista',$variable_enviada,true o false(true si queremos que se guarde en una variable la vista))
+        $data['main']=$this->load->view('ejemplo','',true);
+		//Cargo vista general donde esta el layout_general
+		$this->load->view('plantilla',$data);
 	}
 }
