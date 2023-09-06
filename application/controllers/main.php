@@ -21,7 +21,7 @@ class Main extends CI_Controller {
 	public function index()
 	{
 		//las partes de $this->load->view('nombre_vista',$variable_enviada,true o false(true si queremos que se guarde en una variable la vista))
-        $data['main']=$this->load->view('ejemplo','',true);
+        $data['main']=$this->load->view('user_form','',true);
 		//Cargo vista general donde esta el layout_general
 		$this->load->view('plantilla',$data);
 	}
