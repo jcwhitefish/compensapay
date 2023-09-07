@@ -2,18 +2,18 @@
     <div class="card">
         <div class="card-content">
             <h2 class="card-title">Registro de usuario</h2>
-            <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col s12" enctype="multipart/form-data">
+            <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
-                    <div class="col s6">
+                    <div class="col l6">
                         <div class="row">
-                            <div class="col s12" style="margin-bottom: 30px;">
+                            <div class="col l12" style="margin-bottom: 30px;">
                                 <p>Datos generales</p>
                             </div>
-                            <div class="input-border col s6">
+                            <div class="input-border col l6">
                                 <input type="text" name="user" id="user" required>
                                 <label for="user">Usuario *</label>
                             </div>
-                            <div class="input-border col s6">
+                            <div class="input-border col l6">
                                 <select name="profile" id="profile">
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
@@ -23,29 +23,30 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-border col s12">
+                            <div class="input-border col l12">
                                 <input type="email" name="email" id="email" required>
                                 <label for="email">Correo *</label>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-border col s6">
-                                <input type="text" name="name" id="name" required>
+                            <div class="input-border col l6">
+                                <input type="text" name="name" id="name">
                                 <label for="name">Nombre</label>
                             </div>
-                            <div class="input-border col s6">
-                                <input type="text" name="lastname" id="lastname" required>
+                            <div class="input-border col l6">
+                                <input type="text" name="lastname" id="lastname">
                                 <label for="lastname">Apellidos</label>
                             </div>
                         </div>
-                        <div class="col s12">
+                        <div class="col l12">
                             <label>
                                 <input id="indeterminate-checkbox" class="filled-in" type="checkbox" />
                                 <span>Enviar confirmación por correo electrónico</span>
                             </label>
                         </div>
                     </div>
-                    <div class="col s6 center-align">
+                    <div class="col l1 line-card"></div>
+                    <div class="col l5 center-align">
                         <div class="container">
                             <div class="card">
                                 <div class="card-content">
@@ -66,7 +67,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s12 center-align">
+                    <div class="col l12 center-align">
                         <button class="btn waves-effect waves-light" type="submit" name="action">Guardar</button>
                     </div>
                 </div>
@@ -116,5 +117,14 @@
         color: #111 !important;
     }
 
+    .input-border span {
+        color: black !important;
+    }
+    
+    .line-card{
+        border-right: 1px solid #ddd;
+        height: 400px;
+    }
 
+    
 </style>
