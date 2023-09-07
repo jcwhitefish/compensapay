@@ -1,12 +1,12 @@
 -- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: conciliapay
+-- Host: localhost    Database: compensapay
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.27-MariaDB
 
 --
- CREATE DATABASE if not exists `conciliapay` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
- USE  conciliapay ;
+ CREATE DATABASE if not exists `compensapay` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+ USE  compensapay ;
 -- --------------------------------------------------------
 
 
@@ -543,7 +543,32 @@ LOCK TABLES `usuario` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'conciliapay'
+-- Table structure for table `catRegimenFiscal`
+--
+
+DROP TABLE IF EXISTS `catRegimenFiscal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `catRegimenFiscal` (
+  `rf_idRegimenFiscal` int(4) NOT NULL AUTO_INCREMENT,
+  `rf_ClaveRegimenFiscal` varchar(3) DEFAULT NULL,
+  `rf_TextoRegimenFiscal` varchar(50) DEFAULT NULL,
+  `rf_Activo` tinyint(1) NOT NULL,
+  PRIMARY KEY (`rf_idRegimenFiscal`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `catRegimenFiscal`
+--
+
+LOCK TABLES `catRegimenFiscal` WRITE;
+/*!40000 ALTER TABLE `catRegimenFiscal` DISABLE KEYS */;
+/*!40000 ALTER TABLE `catRegimenFiscal` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'compensapay'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
