@@ -29,5 +29,10 @@ class Registro extends CI_Controller {
         $data['main'] = $this->load->view('registro/usuario','',true);
         $this->load->view('plantilla',$data);
 	}
-
+	public function empresa()
+	{
+        //mostramos en pantalla welcome_message.php
+        $data['main'] = $this->load->view('registro/empresa','',true);
+        $this->load->view('plantilla',$data);
+	}
 }
