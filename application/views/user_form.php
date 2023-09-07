@@ -21,7 +21,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         ?>
     </div>
 
-    <!-- Formulario -->
     <div class="container">
         <div class="card">
             <div class="card-content">
