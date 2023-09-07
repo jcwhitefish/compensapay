@@ -1,12 +1,12 @@
 -- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: conciliapay
+-- Host: localhost    Database: compensapay
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.27-MariaDB
 
 --
- CREATE DATABASE if not exists `conciliapay` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
- USE  conciliapay ;
+ CREATE DATABASE if not exists `compensapay` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+ USE  compensapay ;
 -- --------------------------------------------------------
 
 
@@ -543,7 +543,7 @@ LOCK TABLES `usuario` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'conciliapay'
+-- Dumping routines for database 'compensapay'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
