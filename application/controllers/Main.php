@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Registro extends CI_Controller {
+class Main extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,19 +20,9 @@ class Registro extends CI_Controller {
 	 */
 	public function index()
 	{
-        //mostramos en pantalla welcome_message.php
-        $this->load->view('welcome_message');
+         //mostramos en pantalla welcome_message.php
+         $data['main'] = $this->load->view('ejemplo','',true);
+         $this->load->view('plantilla',$data);
 	}
-	public function usuario()
-	{
-        //mostramos en pantalla welcome_message.php
-        $data['main'] = $this->load->view('registro/usuario','',true);
-        $this->load->view('plantilla',$data);
-	}
-	public function empresa()
-	{
-        //mostramos en pantalla welcome_message.php
-        $data['main'] = $this->load->view('registro/empresa','',true);
-        $this->load->view('plantilla',$data);
-	}
+
 }

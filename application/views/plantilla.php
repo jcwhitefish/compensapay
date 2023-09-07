@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<title>Compensapay</title>
 <!-- importamos materialize usando base_url() -->
 <link rel="stylesheet" href="<?php echo base_url();?>css/materialize.min.css">
+<link rel="stylesheet" href="<?php echo base_url();?>css/style.css">
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
