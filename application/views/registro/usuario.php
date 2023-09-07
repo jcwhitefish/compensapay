@@ -1,0 +1,120 @@
+<div class="container">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="card-title">Registro de usuario</h2>
+            <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col s12" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col s6">
+                        <div class="row">
+                            <div class="col s12" style="margin-bottom: 30px;">
+                                <p>Datos generales</p>
+                            </div>
+                            <div class="input-border col s6">
+                                <input type="text" name="user" id="user" required>
+                                <label for="user">Usuario *</label>
+                            </div>
+                            <div class="input-border col s6">
+                                <select name="profile" id="profile">
+                                    <option value="perfil1">Perfil 1</option>
+                                    <option value="perfil2">Perfil 2</option>
+                                    <option value="perfil3">Perfil 3</option>
+                                </select>
+                                <label>Perfil</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col s12">
+                                <input type="email" name="email" id="email" required>
+                                <label for="email">Correo *</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col s6">
+                                <input type="text" name="name" id="name" required>
+                                <label for="name">Nombre</label>
+                            </div>
+                            <div class="input-border col s6">
+                                <input type="text" name="lastname" id="lastname" required>
+                                <label for="lastname">Apellidos</label>
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <label>
+                                <input id="indeterminate-checkbox" class="filled-in" type="checkbox" />
+                                <span>Enviar confirmación por correo electrónico</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s6 center-align">
+                        <div class="container">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h2 class="card-title">Imagen de perfil</h2>
+                                    <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
+                                    <div class="file-field">
+                                        <div class="btn">
+                                            <span>Foto de Perfil</span>
+                                            <input type="file" name="photo" id="photo">
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .card-title{
+        margin-bottom: 30px !important;
+        font-weight: bold !important;
+    }
+    .btn{
+        background: #444444;
+    }
+    .btn:hover {
+        background: #e0e51d;
+    }
+    [type="checkbox"].filled-in:checked + span:after,
+    [type="checkbox"].filled-in:checked + span:not(.lever):after {
+        background-color: #444444; 
+        border: 2px solid #444444;
+    }
+    .input-border input[type=text],
+    .input-border input[type=email] {
+        border: 2px solid #ddd;
+        border-radius: 3px;
+        padding: 0 8px;
+        margin: 15px 0 10px 0;
+    }
+
+    .input-border input[type=text]:focus,
+    .input-border input[type=email]:focus {
+        border-color: #444 !important;
+        border-bottom: 1px solid #444 !important;
+        box-shadow: 0 1px 0 0 #444 !important;
+    }
+
+    .input-border label {
+        color: black;
+        top: -85px;
+        position: relative;
+    }
+
+    .input-border input[type=text]:focus + label,
+    .input-border input[type=email]:focus + label {
+        color: #111 !important;
+    }
+
+
+</style>
