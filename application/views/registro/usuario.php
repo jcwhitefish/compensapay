@@ -47,14 +47,8 @@
                         <div class="container">
                             <h2 class="card-title">Imagen de perfil</h2>
                             <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
-                            <div class="file-field">
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate " type="text">
-                                </div>
-                                <div class="btn">
-                                    <span>Foto de Perfil</span>
-                                    <input type="file" name="photo" id="photo">
-                                </div>
+                            <div class="p-5">
+                                <button class="btn" name="savePicture">Guardar</button>
                             </div>
                         </div>
                     </div>

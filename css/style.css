@@ -1,5 +1,6 @@
 
 .input-border input[type=text],
+.input-border input[type=file],
 .input-border input[type=email] {
     border: 2px solid #ddd;
     border-radius: 3px;
@@ -9,6 +10,7 @@
 }
 
 .input-border input[type=text]:focus,
+.input-border input[type=file]:focus,
 .input-border input[type=email]:focus {
     border-color: #444 !important;
     border-bottom: 1px solid #444 !important;
@@ -23,6 +25,7 @@
 }
 
 .input-border input[type=text]:focus + label,
+.input-border input[type=file]:focus + label,
 .input-border input[type=email]:focus + label {
     color: #111 !important;
 }
@@ -51,10 +54,29 @@
     border-radius: 25px !important;
 }
 
+.center-button {
+    display: flex !important;
+    justify-content: center !important;
+}
+
 /* paddings */
 .p-1{
-    padding: 1% !important;
+    padding: .25rem !important;
 }
+
+.p-3{
+    padding: .75rem !important;
+}
+
+.p-4{
+    padding: 1rem !important;
+}
+
 .p-5{
-    padding: 5% !important;
+    padding: 1.25rem !important;
+}
+
+.px-3{
+    padding-left: .75rem !important;
+    padding-right: .75rem !important;
 }
