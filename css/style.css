@@ -35,12 +35,21 @@
 .input-border span {
     color: black !important;
 }
+/* texto en negritas */
+.bold{
+    font-weight: bold;
+}
+
 .line-card{
     border-right: 1px solid #ddd;
     border-left: 1px solid #ddd;
     height: 400px;
 }
-/* texto en negritas */
-.bold{
-    font-weight: bold;
+
+/* paddings */
+.p-1{
+    padding: 1% !important;
+}
+.p-5{
+    padding: 5% !important;
 }

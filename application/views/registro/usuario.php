@@ -4,7 +4,7 @@
             <h2 class="card-title">Registro de usuario</h2>
             <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
-                    <div class="col l5">
+                    <div class="col l5 especial-p">
                         <div class="row">
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p>Datos generales</p>
@@ -45,10 +45,8 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col l1">
-                        <div></div>
-                    </div>
-                    <div class="col l3 line-card"></div>
+
+                    <div class="col l4 line-card"></div>
                     <div class="col l3 center-align">
                         <div class="container">
                             <div class="card">
@@ -91,5 +89,12 @@
         background: #e0e51d;
     }
 
+    .especial-p{
+        padding-right: 4% !important;
+    }
+
+    .p-5{
+        padding: 4% !important;
+    }
     
 </style>
