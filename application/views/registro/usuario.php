@@ -4,12 +4,12 @@
             <h2 class="card-title">Registro de usuario</h2>
             <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
-                    <div class="col l6">
+                    <div class="col l5">
                         <div class="row">
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p>Datos generales</p>
                             </div>
-                            <div class="input-border col l6">
+                            <div class="input-border col l5">
                                 <input type="text" name="user" id="user" required>
                                 <label for="user">Usuario *</label>
                             </div>
@@ -45,8 +45,11 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col l1 line-card"></div>
-                    <div class="col l5 center-align">
+                    <div class="col l1">
+                        <div></div>
+                    </div>
+                    <div class="col l3 line-card"></div>
+                    <div class="col l3 center-align">
                         <div class="container">
                             <div class="card">
                                 <div class="card-content">
@@ -86,11 +89,6 @@
     
     .btn:hover {
         background: #e0e51d;
-    }
-    
-    .line-card{
-        border-right: 1px solid #ddd;
-        height: 400px;
     }
 
     
