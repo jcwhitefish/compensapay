@@ -25,6 +25,16 @@
 .input-border input[type=email]:focus + label {
     color: #111 !important;
 }
+
+[type="checkbox"].filled-in:checked + span:after,
+[type="checkbox"].filled-in:checked + span:not(.lever):after {
+    background-color: #444444; 
+    border: 2px solid #444444;
+}
+
+.input-border span {
+    color: black !important;
+}
 /* texto en negritas */
 .bold{
     font-weight: bold;

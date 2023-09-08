@@ -83,42 +83,9 @@
     .btn{
         background: #444444;
     }
+    
     .btn:hover {
         background: #e0e51d;
-    }
-    [type="checkbox"].filled-in:checked + span:after,
-    [type="checkbox"].filled-in:checked + span:not(.lever):after {
-        background-color: #444444; 
-        border: 2px solid #444444;
-    }
-    .input-border input[type=text],
-    .input-border input[type=email] {
-        border: 2px solid #ddd;
-        border-radius: 3px;
-        padding: 0 8px;
-        margin: 15px 0 10px 0;
-    }
-
-    .input-border input[type=text]:focus,
-    .input-border input[type=email]:focus {
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -85px;
-        position: relative;
-    }
-
-    .input-border input[type=text]:focus + label,
-    .input-border input[type=email]:focus + label {
-        color: #111 !important;
-    }
-
-    .input-border span {
-        color: black !important;
     }
     
     .line-card{
