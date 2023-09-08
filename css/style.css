@@ -46,6 +46,10 @@
     height: 400px;
 }
 
+.esquinasRedondas {
+    border-radius: 25px !important;
+}
+
 /* paddings */
 .p-1{
     padding: 1% !important;

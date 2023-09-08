@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="card">
+    <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de usuario</h2>
             <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col l12" enctype="multipart/form-data">
@@ -9,7 +9,7 @@
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p>Datos generales</p>
                             </div>
-                            <div class="input-border col l5">
+                            <div class="input-border col l6">
                                 <input type="text" name="user" id="user" required>
                                 <label for="user">Usuario *</label>
                             </div>
@@ -45,25 +45,20 @@
                             </label>
                         </div>
                     </div>
-
-                    <div class="col l4 line-card"></div>
+                    <div class="col l4 line-card hide-on-med-and-down"></div>
                     <div class="col l3 center-align">
                         <div class="container">
-                            <div class="card">
-                                <div class="card-content">
-                                    <h2 class="card-title">Imagen de perfil</h2>
-                                    <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
-                                    <div class="file-field">
-                                        <div class="btn">
-                                            <span>Foto de Perfil</span>
-                                            <input type="file" name="photo" id="photo">
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
-                                        </div>
+                            <h2 class="card-title">Imagen de perfil</h2>
+                                <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
+                                <div class="file-field">
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate " type="text">
+                                    </div>
+                                    <div class="btn">
+                                        <span>Foto de Perfil</span>
+                                        <input type="file" name="photo" id="photo">
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,10 +86,6 @@
 
     .especial-p{
         padding-right: 4% !important;
-    }
-
-    .p-5{
-        padding: 4% !important;
     }
     
 </style>

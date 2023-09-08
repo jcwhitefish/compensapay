@@ -70,10 +70,6 @@
         font-weight: bold !important;
     }
 
-    .esquinasRedondas {
-        border-radius: 25px !important;
-    }
-
     .detEmpresa {
         margin-left: 40px;
         margin-bottom: 30px;
