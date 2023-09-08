@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Registro extends CI_Controller {
-
 	/**
 	 * Index Page for this controller.
 	 *
@@ -36,6 +35,26 @@ class Registro extends CI_Controller {
         $this->load->view('plantilla',$data);
 	}
 	public function usuarioUnico(){
-		
+		$nombre = $this->uri->segment(3); 
+		$data = array(
+            'nombre' => $nombre,
+            'email' => 'johndoe@example.com'
+        );
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($data));
+	}	
+	//Nos permite ver las variables que queramos
+	public function verVariables(){
+		$parametro = $this->uri->segment(3); 
+		$data = array(
+            'nombre' => 'John Doe',
+            'email' => 'johndoe@example.com'
+        );
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($data));
 	}
 }

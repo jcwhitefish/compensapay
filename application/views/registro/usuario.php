@@ -15,7 +15,7 @@
                             </div>
                             <div class="input-border col l6">
                                 <!-- Aqui se modifica dependiendo del si fue invitado o no -->
-                                <input type="text" name="profile" id="profile" value="" disabled >
+                                <input type="text" name="profile" id="profile" value="" disabled>
                                 <label for="profile">Perfil</label>
                             </div>
                         </div>
@@ -73,8 +73,32 @@
         setup() {
             const inputValue = ref('');
 
-            const validateInput = () => {
-                console.log('hola');
+
+            const validateInput = async () => {
+                try {
+                    // Esto solo sirve en POST
+                    // const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>',  {
+                    const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>'+'/'+inputValue.value,  {
+                        method: "GET", // *GET, POST, PUT, DELETE, etc.
+                        mode: "cors", // no-cors, *cors, same-origin
+                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: "same-origin", // include, *same-origin, omit
+                        headers: {
+                            "Content-Type": "application/json",
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        redirect: "follow", // manual, *follow, error
+                        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        //Esto solo sirve en POST
+                        //body: JSON.stringify({'nombre': 11}), // body data type must match "Content-Type" header
+                    }); // Reemplaza la URL con la URL de tu API
+                    const responseData = await response.json();
+                    //data.value = responseData; // Almacena los datos en data
+                    console.log(responseData)
+                } catch (error) {
+                    console.error('Error al realizar la solicitud fetch:', error);
+                }
+
             }
             return {
                 inputValue,

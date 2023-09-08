@@ -21,7 +21,7 @@ class Main extends CI_Controller {
 	public function index()
 	{
          //mostramos en pantalla welcome_message.php
-         $data['main'] = $this->load->view('ejemplo','',true);
+         $data['main'] = $this->load->view('herramientas/ejemplo','',true);
          $this->load->view('plantilla',$data);
 	}
 
