@@ -7,7 +7,7 @@
                     <div class="col l5 especial-p">
                         <div class="row">
                             <div class="col l12" style="margin-bottom: 30px;">
-                                <p>Datos generales</p>
+                                <p class="bold">Datos generales</p>
                             </div>
                             <div class="input-border col l6">
                                 <input type="text" name="user" id="user" required>

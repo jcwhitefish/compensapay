@@ -19,6 +19,7 @@
     color: black;
     top: -75px;
     position: relative;
+    font-weight: bold !important;
 }
 
 .input-border input[type=text]:focus + label,
