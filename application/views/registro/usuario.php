@@ -10,16 +10,13 @@
                                 <p class="bold">Datos generales</p>
                             </div>
                             <div class="input-border col l6">
-                                <input type="text" name="user" id="user" required>
+                                <input v-model="inputValue" @input="validateInput" type="text" name="user" id="user" required>
                                 <label for="user">Usuario *</label>
                             </div>
                             <div class="input-border col l6">
-                                <select name="profile" id="profile">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
-                                </select>
-                                <label>Perfil</label>
+                                <!-- Aqui se modifica dependiendo del si fue invitado o no -->
+                                <input type="text" name="profile" id="profile" value="" disabled >
+                                <label for="profile">Perfil</label>
                             </div>
                         </div>
                         <div class="row">
@@ -49,16 +46,16 @@
                     <div class="col l3 center-align">
                         <div class="container">
                             <h2 class="card-title">Imagen de perfil</h2>
-                                <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
-                                <div class="file-field">
-                                    <div class="file-path-wrapper">
-                                        <input class="file-path validate " type="text">
-                                    </div>
-                                    <div class="btn">
-                                        <span>Foto de Perfil</span>
-                                        <input type="file" name="photo" id="photo">
-                                    </div>
+                            <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
+                            <div class="file-field">
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate " type="text">
                                 </div>
+                                <div class="btn">
+                                    <span>Foto de Perfil</span>
+                                    <input type="file" name="photo" id="photo">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,21 +68,42 @@
         </div>
     </div>
 </div>
+<script>
+    const {
+        createApp,
+        computed,
+        ref
+    } = Vue
+
+    createApp({
+        setup() {
+            const inputValue = ref('');
+
+            const validateInput = () => {
+                console.log('hola');
+            }
+            return {
+                inputValue,
+                validateInput
+            }
+        }
+    }).mount('#app')
+</script>
 <style>
-    .card-title{
+    .card-title {
         margin-bottom: 30px !important;
         font-weight: bold !important;
     }
-    .btn{
+
+    .btn {
         background: #444444;
     }
-    
+
     .btn:hover {
         background: #e0e51d;
     }
 
-    .especial-p{
+    .especial-p {
         padding-right: 4% !important;
     }
-    
 </style>
