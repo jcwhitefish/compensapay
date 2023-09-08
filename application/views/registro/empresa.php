@@ -77,41 +77,47 @@
                     </div>
                     <div class="col l3 center-align">
                         <div class="container">
-                            <h2 class="card-title">Imagen de perfil</h2>
-                                <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
-                                <div class="file-field">
-                                    <div class="file-path-wrapper">
-                                        <input class="file-path validate " type="text" style="visibility: hidden;">
-                                    </div>
-                                    <div class="btn">
-                                        <span>Foto de Perfil</span>
-                                        <input type="file" name="photo" id="photo">
-                                    </div>
-                                </div>
+                            <h2 class="card-title">Seleccionar logotipo</h2>
+                            <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
+                            <label for="image-upload" class="custom-file-upload p-5">
+                                Seleccionar Imagen
+                            </label>
+                            <input id="image-upload" type="file"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col l12 ">
-                        <div class="col l12">
-                           <p class="bold">Sube tus documentos</p>
+                        <div class="col l12"> 
+                           <p class="bold">Sube tus documentos</p><br>
                         </div>
-                        <div class="file-field">
-                            <div class="row">
-                                <div class=" col l9 file-path-wrapper input-border especial-p">
-                                    <input class="file-path validate " type="text">
-                                </div>
-                                <div class=" col l3 p-4 center-button hide">
-                                    <div class="btn">
-                                        <span>Agregar</span>
-                                        <input type="file" name="photo" id="photo">
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col l9 input-border">
+                            <input type="text" name="csf" id="csf" disabled>
+                            <label for="csf" > Constancia de Situación Fiscal</label>
+                        </div>
+                        <div class="col l3 center-align p-5">
+                            <label for="csf" class="custom-file-upload">Agregar                        </label>
+                            <input id="csf" type="file"/>
+                        </div>
+                        <div class="col l9 input-border">
+                            <input type="text" name="acta-constitutiva" id="acta-constitutiva" disabled>
+                            <label for="acta-constitutiva" >Acta Constitutiva</label>
+                        </div>
+                        <div class="col l3 center-align p-5">
+                            <label for="acta-constitutiva" class="custom-file-upload">Agregar</label>
+                            <input id="acta-constitutiva" type="file"/>
+                        </div>
+                        <div class="col l9 input-border">
+                            <input type="text" name="comprobanteDomicilio" id="comprobanteDomicilio" disabled>
+                            <label for="comprobanteDomicilio" >Comprobante de Domicilio</label>
+                        </div>
+                        <div class="col l3 center-align p-5">
+                            <label for="comprobante-domicilio" class="custom-file-upload">Agregar</label>
+                            <input id="comprobante-domicilio" type="file"/>
                         </div>
                     </div>
-                    <div class="col l12 right-align">
-                        <button class="btn waves-effect waves-light " type="submit" name="action">Siguiente</button>
+                    <div class="col l12 right-align p-5">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Siguiente</button>
                     </div>
                 </div>
             </form>
@@ -134,8 +140,18 @@
     .especial-p{
         padding-right: 4% !important;
     }
-    .input-border p{
-        
+    input[type="file"] {
+        display: none;
     }
+    .custom-file-upload {
+        color: white;
+        background: #444;
+        display: inline-block;
+        padding: 10px 40px;
+        cursor: pointer;
+        border-radius: 3px !important;
+    }
+
+
 
 </style>
