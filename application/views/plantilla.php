@@ -11,6 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    
     <div id="app">
     <?php
     if (isset($main)) {

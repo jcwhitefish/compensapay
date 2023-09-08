@@ -2,7 +2,7 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
-            <form method="post" action="<?php echo site_url('controladorcontroller/save_xd'); ?>" class="col l12" enctype="multipart/form-data">
+            <form method="post" action="<?php echo site_url('registro/registrarEmpresa'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col l5 especial-p">
                         <div class="row">
@@ -66,7 +66,7 @@
                         <div class="row">
                             <div class="input-border col l12">
                                 <p class="bold p-3">Soy Proveedor</p>
-                                <select name="bank" id="bank">
+                                <select name="partner" id="partner">
                                     <option value="perfil1">Trafigura</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
@@ -82,38 +82,38 @@
                             <label for="image-upload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input id="image-upload" type="file"/>
+                            <input id="image-upload" type="file" />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col l12 ">
-                        <div class="col l12"> 
-                           <p class="bold">Sube tus documentos</p><br>
+                        <div class="col l12">
+                            <p class="bold">Sube tus documentos</p><br>
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="csf" id="csf" disabled>
-                            <label for="csf" > Constancia de Situación Fiscal</label>
+                            <label for="csf"> Constancia de Situación Fiscal</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="csf" class="custom-file-upload">Agregar                        </label>
-                            <input id="csf" type="file"/>
+                            <label for="csf" class="custom-file-upload">Agregar </label>
+                            <input id="csf" type="file" />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="acta-constitutiva" id="acta-constitutiva" disabled>
-                            <label for="acta-constitutiva" >Acta Constitutiva</label>
+                            <label for="acta-constitutiva">Acta Constitutiva</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="acta-constitutiva" class="custom-file-upload">Agregar</label>
-                            <input id="acta-constitutiva" type="file"/>
+                            <input id="acta-constitutiva" type="file" />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="comprobanteDomicilio" id="comprobanteDomicilio" disabled>
-                            <label for="comprobanteDomicilio" >Comprobante de Domicilio</label>
+                            <label for="comprobanteDomicilio">Comprobante de Domicilio</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="comprobante-domicilio" class="custom-file-upload">Agregar</label>
-                            <input id="comprobante-domicilio" type="file"/>
+                            <input id="comprobante-domicilio" type="file" />
                         </div>
                     </div>
                     <div class="col l12 right-align p-5">
@@ -124,25 +124,78 @@
         </div>
     </div>
 </div>
+<script>
+
+    const {
+        createApp,
+        computed,
+        ref
+    } = Vue
+
+    const app = createApp(
+        {
+        setup() {
+            const inputValue = ref('');
+
+
+            const validateInput = async () => {
+                try {
+                    // Esto solo sirve en POST
+                    // const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>',  {
+                    const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>' + '/' + inputValue.value, {
+                        method: "GET", // *GET, POST, PUT, DELETE, etc.
+                        mode: "cors", // no-cors, *cors, same-origin
+                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: "same-origin", // include, *same-origin, omit
+                        headers: {
+                            "Content-Type": "application/json",
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        redirect: "follow", // manual, *follow, error
+                        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        //Esto solo sirve en POST
+                        //body: JSON.stringify({'nombre': 11}), // body data type must match "Content-Type" header
+                    }); // Reemplaza la URL con la URL de tu API
+                    const responseData = await response.json();
+                    //data.value = responseData; // Almacena los datos en data
+                    console.log(responseData)
+                } catch (error) {
+                    console.error('Error al realizar la solicitud fetch:', error);
+                }
+
+            }
+            return {
+                inputValue,
+                validateInput
+            }
+        }
+    });
+    app.use(store);
+    app.mount('#app')
+
+</script>
 <style>
-    .card-title{
+    .card-title {
         margin-bottom: 30px !important;
         font-weight: bold !important;
     }
-    .btn{
+
+    .btn {
         background: #444444;
     }
-    
+
     .btn:hover {
         background: #e0e51d;
     }
 
-    .especial-p{
+    .especial-p {
         padding-right: 4% !important;
     }
+
     input[type="file"] {
         display: none;
     }
+
     .custom-file-upload {
         color: white;
         background: #444;
@@ -151,7 +204,4 @@
         cursor: pointer;
         border-radius: 3px !important;
     }
-
-
-
 </style>

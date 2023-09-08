@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Registro extends CI_Controller {
+class Registro extends CI_Controller
+{
 	/**
 	 * Index Page for this controller.
 	 *
@@ -19,42 +20,44 @@ class Registro extends CI_Controller {
 	 */
 	public function index()
 	{
-        //mostramos en pantalla welcome_message.php
-        $this->load->view('welcome_message');
+		//mostramos en pantalla welcome_message.php
+		$this->load->view('welcome_message');
 	}
 	public function usuario()
 	{
-        //mostramos en pantalla welcome_message.php
-        $data['main'] = $this->load->view('registro/usuario','',true);
-        $this->load->view('plantilla',$data);
+		//mostramos en pantalla welcome_message.php
+		$data['main'] = $this->load->view('registro/usuario', '', true);
+		$this->load->view('plantilla', $data);
 	}
 	public function empresa()
 	{
-        //mostramos en pantalla welcome_message.php
-        $data['main'] = $this->load->view('registro/empresa','',true);
-        $this->load->view('plantilla',$data);
+		//mostramos en pantalla welcome_message.php
+		$data['main'] = $this->load->view('registro/empresa', '', true);
+		$this->load->view('plantilla', $data);
 	}
-	public function usuarioUnico(){
-		$nombre = $this->uri->segment(3); 
+	public function usuarioUnico()
+	{
+		$nombre = $this->uri->segment(3);
 		$data = array(
-            'nombre' => $nombre,
-            'email' => 'johndoe@example.com'
-        );
-        // Configura la respuesta para que sea en formato JSON
-        $this->output->set_content_type('application/json');
-        // Envía los datos en formato JSON
-        $this->output->set_output(json_encode($data));
-	}	
+			'nombre' => $nombre,
+			'email' => 'johndoe@example.com'
+		);
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($data));
+	}
 	//Nos permite ver las variables que queramos
-	public function verVariables(){
-		$parametro = $this->uri->segment(3); 
+	public function verVariables()
+	{
+		$parametro = $this->uri->segment(3);
 		$data = array(
-            'nombre' => 'John Doe',
-            'email' => 'johndoe@example.com'
-        );
-        // Configura la respuesta para que sea en formato JSON
-        $this->output->set_content_type('application/json');
-        // Envía los datos en formato JSON
-        $this->output->set_output(json_encode($data));
+			'nombre' => 'John Doe',
+			'email' => 'johndoe@example.com'
+		);
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($data));
 	}
 }
