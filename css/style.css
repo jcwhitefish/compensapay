@@ -1,16 +1,16 @@
 
 .input-border input[type=text],
-.input-border input[type=file],
+.input-border input[type=number],
 .input-border input[type=email] {
     border: 2px solid #ddd;
-    border-radius: 3px;
-    padding: 0 8px;
-    margin: 15px 0 10px 0;
-    height: 40px;
+    border-radius: 3px !important;
+    padding: 0 8px !important;
+    margin: 15px 0 10px 0 !important;
+    height: 40px !important;
 }
 
 .input-border input[type=text]:focus,
-.input-border input[type=file]:focus,
+.input-border input[type=number]:focus,
 .input-border input[type=email]:focus {
     border-color: #444 !important;
     border-bottom: 1px solid #444 !important;
@@ -25,7 +25,7 @@
 }
 
 .input-border input[type=text]:focus + label,
-.input-border input[type=file]:focus + label,
+.input-border input[type=number]:focus + label,
 .input-border input[type=email]:focus + label {
     color: #111 !important;
 }
@@ -46,7 +46,6 @@
 
 .line-card{
     border-right: 1px solid #ddd;
-    border-left: 1px solid #ddd;
     height: 400px;
 }
 
@@ -79,4 +78,21 @@
 .px-3{
     padding-left: .75rem !important;
     padding-right: .75rem !important;
+}
+
+/* inputs */
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    color: white;
+    background: #444;
+    display: inline-block;
+    padding: 10px 50px;
+    cursor: pointer;
+    border-radius: 3px !important;
+}
+.custom-file-upload:hover {
+    background: #e0e51d;
+    border: 2px solid #e0e51d;
 }
