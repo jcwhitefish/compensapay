@@ -10,7 +10,7 @@
                                 <p class="bold">Detalles de la empresa</p>
                             </div>
                             <div class="input-border col l6">
-                                <input type="text" name="bussinesName" id="bussinesName" required>
+                                <input v-model="data['bussinesName']" @input="checkFormat('bussinesName')" :style="colorsBorder['bussinesName'] || {}" type="text" name="bussinesName" id="bussinesName" required>
                                 <label for="bussinesName">Razón Social</label>
                             </div>
                             <div class="input-border col l6">
@@ -24,13 +24,13 @@
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input type="text" name="nameComercial" id="nameComercial" required>
+                                <input v-model="data['nameComercial']" @input="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
                                 <label for="nameComercial">Nombre Comercial</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
-                                <input type="text" name="rfc" id="rfc">
+                                <input v-model="data['rfc']" @input="checkFormat('rfc')" :style="colorsBorder['rfc'] || {}" type="text" name="rfc" id="rfc" minlength="12" maxlength="13" pattern="[A-Z0-9]{12,13}" title="Debe tener de 12 a 13 caracteres alfanuméricos" required>
                                 <label for="rfc">RFC</label>
                             </div>
                             <div class="input-border col l6">
@@ -49,31 +49,27 @@
                                 <p class="bold">Datos Bancarios</p>
                             </div>
                             <div class="input-border col l12">
-                                <input type="text" name="clabe" id="clabe" required>
+                                <input v-model="data['clabe']" @input="checkFormat('clabe')" :style="colorsBorder['clabe'] || {}" type="text" name="clabe" id="clabe" required pattern="[0-9]{18}" maxlength="18" title="Por favor, ingresa exactamente 18 dígitos numéricos.">
                                 <label for="clabe">Cuenta CLABE</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <select name="bank" id="bank">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
-                                </select>
-                                <label>Banco emisor</label>
+                                <input v-model="data['bank']" @input="checkFormat('bank')" :style="colorsBorder['bank'] || {}" type="text" name="bank" id="bank" required>
+                                <label for="bank">Banco emisor</label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div v-if="false" class="row">
+
+                            <p class="bold p-3">
+                                Soy Proveedor
+                            </p>
                             <div class="input-border col l12">
-                                <p class="bold p-3">Soy Proveedor</p>
-                                <select name="partner" id="partner">
-                                    <option value="perfil1">Trafigura</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
-                                </select>
-                                <label>Cliente</label>
+                                <input type="text" name="partner" id="partner" disabled>
+                                <label for="partner">Cliente</label>
                             </div>
                         </div>
+
                     </div>
                     <div class="col l3 center-align">
                         <div class="container">
@@ -82,7 +78,7 @@
                             <label for="image-upload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input id="image-upload" type="file" />
+                            <input id="image-upload" type="file" accept="image/png, image/jpeg" />
                         </div>
                     </div>
                 </div>
@@ -125,24 +121,131 @@
     </div>
 </div>
 <script>
-
     const {
         createApp,
         computed,
-        ref
+        reactive,
+        ref,
+        isRef
     } = Vue
 
-    const app = createApp(
-        {
+    const app = createApp({
         setup() {
-            const inputValue = ref('');
+            const data = reactive({
+                bussinesName: ref('')
 
+            });
+            const colorsBorder = reactive({})
+            const checkFormat = (nombreInput) => {
+                if (!isRef(colorsBorder[nombreInput])) {
+                    colorsBorder[nombreInput] = ref('')
+                }
+
+                switch (nombreInput) {
+                    case 'bussinesName':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'nameComercial':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'rfc':
+                        data[nombreInput] = data[nombreInput].toUpperCase();
+                        var patron = /[^A-Z0-9]/;
+                        if (data[nombreInput] != '' && (data[nombreInput].length == 12 || data[nombreInput].length == 13) && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'clabe':
+                        var patron = /[^0-9]/;
+                        if (data[nombreInput] != '' && data[nombreInput].length == 18 && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'bank':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'partner':
+                        data[nombreInput] = data[nombreInput].toUpperCase();
+                        var patron = /[^A-Z0-9]/;
+                        if (data[nombreInput] != '' && (data[nombreInput].length == 12 || data[nombreInput].length == 13) && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+
+                    default:
+                        // Código a ejecutar si valor no coincide con ningún caso
+                }
+
+            }
             return {
-                inputValue
+                data,
+                colorsBorder,
+                checkFormat,
             }
         }
     });
-
 </script>
 <style>
     .card-title {
