@@ -10,6 +10,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- importamos materialize usando base_url() -->
     <link rel="stylesheet" href="<?php echo base_url('css/materialize.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('css/style.css'); ?>">
+    <!-- importamos iconos -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
