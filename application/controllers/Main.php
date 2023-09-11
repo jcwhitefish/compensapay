@@ -22,7 +22,7 @@ class Main extends CI_Controller {
 	{
          //mostramos en pantalla welcome_message.php
          $data['main'] = $this->load->view('main','',true);
-         $this->load->view('main',$data);
+         $this->load->view('plantilla',$data);
 	}
 
 }
