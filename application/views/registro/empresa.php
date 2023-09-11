@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col l4 line-card especial-p">
+                    <div class="col l4 line-card line-card-l especial-p">
                         <div class="row">
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p class="bold">Datos Bancarios</p>
@@ -92,16 +92,16 @@
                             <p class="bold">Sube tus documentos</p><br>
                         </div>
                         <div class="col l9 input-border">
-                            <input type="text" name="csf" id="csf" disabled>
-                            <label for="csf"> Constancia de Situación Fiscal</label>
+                            <input type="text" name="cSf" id="cSf" disabled>
+                            <label for="cSf"> Constancia de Situación Fiscal</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="csf" class="custom-file-upload">Agregar </label>
                             <input id="csf" type="file" />
                         </div>
                         <div class="col l9 input-border">
-                            <input type="text" name="acta-constitutiva" id="acta-constitutiva" disabled>
-                            <label for="acta-constitutiva">Acta Constitutiva</label>
+                            <input type="text" name="actaConstitutiva" id="actaConstitutiva" disabled>
+                            <label for="actaConstitutiva">Acta Constitutiva</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="acta-constitutiva" class="custom-file-upload">Agregar</label>
@@ -137,41 +137,11 @@
         setup() {
             const inputValue = ref('');
 
-
-            const validateInput = async () => {
-                try {
-                    // Esto solo sirve en POST
-                    // const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>',  {
-                    const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>' + '/' + inputValue.value, {
-                        method: "GET", // *GET, POST, PUT, DELETE, etc.
-                        mode: "cors", // no-cors, *cors, same-origin
-                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                        credentials: "same-origin", // include, *same-origin, omit
-                        headers: {
-                            "Content-Type": "application/json",
-                            // 'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        redirect: "follow", // manual, *follow, error
-                        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                        //Esto solo sirve en POST
-                        //body: JSON.stringify({'nombre': 11}), // body data type must match "Content-Type" header
-                    }); // Reemplaza la URL con la URL de tu API
-                    const responseData = await response.json();
-                    //data.value = responseData; // Almacena los datos en data
-                    console.log(responseData)
-                } catch (error) {
-                    console.error('Error al realizar la solicitud fetch:', error);
-                }
-
-            }
             return {
-                inputValue,
-                validateInput
+                inputValue
             }
         }
     });
-    app.use(store);
-    app.mount('#app')
 
 </script>
 <style>

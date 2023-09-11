@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de usuario</h2>
@@ -78,7 +78,7 @@
                             <label for="image-upload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input id="image-upload" type="file"/>
+                            <input id="image-upload" type="file" />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
@@ -89,14 +89,16 @@
         </div>
     </div>
 </div>
+<script src="<?php echo base_url('js/storeRegistro.js'); ?>"></script>
 <script>
+
     const {
         createApp,
         computed,
         ref
     } = Vue
 
-    createApp({
+    const app = createApp({
         setup() {
             const inputValue = ref('');
 
@@ -105,7 +107,7 @@
                 try {
                     // Esto solo sirve en POST
                     // const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>',  {
-                    const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>'+'/'+inputValue.value,  {
+                    const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>' + '/' + inputValue.value, {
                         method: "GET", // *GET, POST, PUT, DELETE, etc.
                         mode: "cors", // no-cors, *cors, same-origin
                         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -132,7 +134,7 @@
                 validateInput
             }
         }
-    }).mount('#app')
+    });
 </script>
 <style>
     .card-title {
@@ -144,14 +146,13 @@
         padding-right: 3% !important;
     }
 
-    .line-card{
+    .line-card {
         border-right: 1px solid #ddd;
         height: 400;
     }
 
-    .line-card-right{
+    .line-card-right {
         border-right: 1px solid #ddd;
         height: 800px;
     }
-    
 </style>

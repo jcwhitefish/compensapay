@@ -48,7 +48,10 @@
     border-right: 1px solid #ddd;
     height: 400px;
 }
-
+.line-card-l{
+    border-left: 1px solid #ddd;
+    height: 400px;
+}
 .esquinasRedondas {
     border-radius: 25px !important;
 }
