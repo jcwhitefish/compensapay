@@ -10,36 +10,36 @@
                                 <p class="bold">Detalles de la empresa</p>
                             </div>
                             <div class="input-border col l6">
-                                <input type="text" name="bussinesName" id="bussinesName" required>
+                                <input v-model="data['bussinesName']" @blur="checkFormat('bussinesName')" :style="colorsBorder['bussinesName'] || {}" type="text" name="bussinesName" id="bussinesName" required>
                                 <label for="bussinesName">Razón Social</label>
                             </div>
                             <div class="input-border col l6">
-                                <select name="type" id="type">
+                                <select name="type" id="type" disabled>
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
                                 </select>
-                                <label>Giro</label>
+                                <label for="type">Giro</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input type="text" name="nameComercial" id="nameComercial" required>
+                                <input v-model="data['nameComercial']" @blur="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
                                 <label for="nameComercial">Nombre Comercial</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
-                                <input type="text" name="rfc" id="rfc">
+                                <input v-model="data['rfc']" @blur="checkFormat('rfc')" :style="colorsBorder['rfc'] || {}" type="text" name="rfc" id="rfc" minlength="12" maxlength="13" pattern="[A-Z0-9]{12,13}" title="Debe tener de 12 a 13 caracteres alfanuméricos" required>
                                 <label for="rfc">RFC</label>
                             </div>
                             <div class="input-border col l6">
-                                <select name="fiscal" id="fiscal">
+                                <select name="fiscal" id="fiscal" disabled>
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
                                 </select>
-                                <label>Regimen Fiscal</label>
+                                <label for="fiscal">Regimen Fiscal</label>
                             </div>
                         </div>
                     </div>
@@ -49,40 +49,36 @@
                                 <p class="bold">Datos Bancarios</p>
                             </div>
                             <div class="input-border col l12">
-                                <input type="text" name="clabe" id="clabe" required>
+                                <input v-model="data['clabe']" @blur="checkFormat('clabe')" :style="colorsBorder['clabe'] || {}" type="text" name="clabe" id="clabe" required pattern="[0-9]{18}" maxlength="18" title="Por favor, ingresa exactamente 18 dígitos numéricos.">
                                 <label for="clabe">Cuenta CLABE</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <select name="bank" id="bank">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
-                                </select>
-                                <label>Banco emisor</label>
+                                <input v-model="data['bank']" @blur="checkFormat('bank')" :style="colorsBorder['bank'] || {}" type="text" name="bank" id="bank" required>
+                                <label for="bank">Banco emisor</label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div v-if="false" class="row">
+
+                            <p class="bold p-3">
+                                Soy Proveedor
+                            </p>
                             <div class="input-border col l12">
-                                <p class="bold p-3">Soy Proveedor</p>
-                                <select name="partner" id="partner">
-                                    <option value="perfil1">Trafigura</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
-                                </select>
-                                <label>Cliente</label>
+                                <input type="text" name="partner" id="partner" disabled>
+                                <label for="partner">Cliente</label>
                             </div>
                         </div>
+
                     </div>
                     <div class="col l3 center-align">
                         <div class="container">
                             <h2 class="card-title">Seleccionar logotipo</h2>
-                            <img src="https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
-                            <label for="image-upload" class="custom-file-upload p-5">
+                            <img :src="imageUploadURL" alt="" style="max-width: 140px; height: 140px;">
+                            <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input id="image-upload" type="file" />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpeg" required />
                         </div>
                     </div>
                 </div>
@@ -92,28 +88,28 @@
                             <p class="bold">Sube tus documentos</p><br>
                         </div>
                         <div class="col l9 input-border">
-                            <input type="text" name="cSf" id="cSf" disabled>
-                            <label for="cSf"> Constancia de Situación Fiscal</label>
+                            <input type="text" name="cSfDisabled" id="cSfDisabled" disabled :value="csfUploadName">
+                            <label for="cSfDisabled"> Constancia de Situación Fiscal</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="csf" class="custom-file-upload">Agregar </label>
-                            <input id="csf" type="file" />
+                            <input @change="checkFormat('csfUpload')" ref="csfUpload" id="csf" type="file" accept="application/pdf" required />
                         </div>
                         <div class="col l9 input-border">
-                            <input type="text" name="actaConstitutiva" id="actaConstitutiva" disabled>
-                            <label for="actaConstitutiva">Acta Constitutiva</label>
+                            <input type="text" name="actaConstitutivaDisabled" id="actaConstitutivaDisabled" disabled :value="actaConstitutivaUploadName">
+                            <label for="actaConstitutivaDisabled">Acta Constitutiva</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="acta-constitutiva" class="custom-file-upload">Agregar</label>
-                            <input id="acta-constitutiva" type="file" />
+                            <label for="actaConstitutiva" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('actaConstitutivaUpload')" ref="actaConstitutivaUpload" id="actaConstitutiva" type="file" accept="application/pdf" required />
                         </div>
                         <div class="col l9 input-border">
-                            <input type="text" name="comprobanteDomicilio" id="comprobanteDomicilio" disabled>
-                            <label for="comprobanteDomicilio">Comprobante de Domicilio</label>
+                            <input type="text" name="comprobanteDomicilioDisabled" id="comprobanteDomicilioDisabled" disabled :value="comprobanteDomicilioUploadName">
+                            <label for="comprobanteDomicilioDisabled">Comprobante de Domicilio</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="comprobante-domicilio" class="custom-file-upload">Agregar</label>
-                            <input id="comprobante-domicilio" type="file" />
+                            <label for="comprobanteDomicilio" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('comprobanteDomicilioUpload')" ref="comprobanteDomicilioUpload" id="comprobanteDomicilio" type="file" accept="application/pdf" required />
                         </div>
                     </div>
                     <div class="col l12 right-align p-5">
@@ -125,24 +121,186 @@
     </div>
 </div>
 <script>
-
     const {
         createApp,
         computed,
-        ref
+        reactive,
+        ref,
+        isRef,
     } = Vue
 
-    const app = createApp(
-        {
+    const app = createApp({
         setup() {
-            const inputValue = ref('');
+            const data = reactive({
+                bussinesName: ref(''),
+                nameComercial: ref(''),
+                rfc: ref(''),
+                clabe: ref(''),
+                bank: ref(''),
+                imageUpload: ref(''),
+                csfUpload: ref(''),
+                actaConstitutivaUpload: ref(''),
+                comprobanteDomicilioUpload: ref('')
+            });
+            // partes del image
+            const imageUpload = ref(null);
+            const imageUploadURL = ref('https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640');
+            const colorsBorder = reactive({});
+            //partes del pdf
+            const csfUpload = ref(null);
+            const csfUploadName = ref('');
+            //partes del pdf
+            const actaConstitutivaUpload = ref(null);
+            const actaConstitutivaUploadName = ref('');
+            //partes del pdf
+            const comprobanteDomicilioUpload = ref(null);
+            const comprobanteDomicilioUploadName = ref('');
 
+            // Se pudo haber hecho con evet 
+            const checkFormat = (nombreInput) => {
+                if (!isRef(colorsBorder[nombreInput])) {
+                    colorsBorder[nombreInput] = ref('')
+                }
+
+                switch (nombreInput) {
+                    case 'bussinesName':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'nameComercial':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'rfc':
+                        data[nombreInput] = data[nombreInput].toUpperCase();
+                        var patron = /[^A-Z0-9]/;
+                        if (data[nombreInput] != '' && (data[nombreInput].length == 12 || data[nombreInput].length == 13) && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'clabe':
+                        var patron = /[^0-9]/;
+                        if (data[nombreInput] != '' && data[nombreInput].length == 18 && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'bank':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'partner':
+                        data[nombreInput] = data[nombreInput].toUpperCase();
+                        var patron = /[^A-Z0-9]/;
+                        if (data[nombreInput] != '' && (data[nombreInput].length == 12 || data[nombreInput].length == 13) && !patron.test(data[nombreInput])) {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+                        break;
+                    case 'imageUpload':
+                        if (imageUpload.value.files[0].size <= 1024 * 1024) { // 1 MB en bytes
+                            imageUploadURL.value = URL.createObjectURL(imageUpload.value.files[0])
+                            data[nombreInput] = imageUpload.value
+                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
+                        } else {
+                            alert("El archivo es demasiado grande. Debe ser menor de 1 MB.");
+
+                            imageUpload.value.files[0].value = null;
+                        }
+
+                        break;
+                    case 'csfUpload':
+                        data[nombreInput] = csfUpload.value
+                        csfUploadName.value = csfUpload.value.files[0].name;
+
+                        break;
+                    case 'actaConstitutivaUpload':
+                        data[nombreInput] = actaConstitutivaUpload.value
+                        actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
+
+                        break;
+                    case 'comprobanteDomicilioUpload':
+                        data[nombreInput] = comprobanteDomicilioUpload.value
+                        comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
+
+                        break;
+                    default:
+                        // Código a ejecutar si valor no coincide con ningún caso
+                }
+
+            }
             return {
-                inputValue
+                data,
+                colorsBorder,
+                checkFormat,
+                imageUpload,
+                imageUploadURL,
+                csfUpload,
+                csfUploadName,
+                actaConstitutivaUpload,
+                actaConstitutivaUploadName,
+                comprobanteDomicilioUpload,
+                comprobanteDomicilioUploadName
             }
         }
     });
-
 </script>
 <style>
     .card-title {
