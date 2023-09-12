@@ -83,6 +83,47 @@
     padding-right: .75rem !important;
 }
 
+/* navbar */
+.nav{
+    background: #fff;
+    padding-left: 7% !important;
+    padding-right: 7%!important;
+}
+.nav a{
+    color: #666 !important;
+    font-size: large;
+    
+}
+
+/* buttons */
+.button-white {
+    transition-duration: 0.4s;
+    background-color: #444;
+    color: white;
+    padding: 8px 30px;
+    border: 2px solid #444;
+    border-radius: 10px !important;
+  }
+  
+  .button-white:hover {
+    background-color: white; /* Green */
+    color: #444;
+  }
+
+  .button-gray {
+    transition-duration: 0.4s;
+    background-color: white;
+    color: black;
+    padding: 8px 30px;
+    border: 2px solid #444;
+    border-radius: 10px !important;
+  }
+  
+  .button-gray:hover {
+    background-color: #444; /* Green */
+    color: white;
+  }
+
 /* inputs */
 input[type="file"] {
     display: none;

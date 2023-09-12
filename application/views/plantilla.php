@@ -20,6 +20,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
         <?php
+        if (true) {
+            ?>
+           <nav>
+                <div class="nav-wrapper nav">
+                    <a href="#" class="bold">@Your Company</a>
+                    <div class="right hide-on-med-and-down px-3">
+                        <button class="button-gray">Sign Up</button>
+                        <button class="button-white">Login In</button>
+                    </div>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Pages</a></li>
+                    </ul>
+                    
+                </div>
+            </nav>
+            <?php
+        }
+        ?>
+        <?php
         if (isset($main)) {
             echo $main;
         }
