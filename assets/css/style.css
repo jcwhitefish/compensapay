@@ -94,8 +94,17 @@
 }
 .nav a{
     color: #666 !important;
-    font-size: large;
-    
+    font-size: large;  
+}
+
+.nav-gray{
+    background: #ddd;
+    padding-left: 7% !important;
+    padding-right: 7%!important;
+}
+.nav-gray a{
+    color: #fff !important;
+    font-size: large;  
 }
 
 /* buttons */

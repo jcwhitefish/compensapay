@@ -3,7 +3,7 @@
         <div class="card-content">
             <div class="row">
                 <div class="col l6 center-align">
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
                     <p>¿Aún no eres socio?, registrate <a href="">aqui</a></p><br>
                 </div>
                 <div class="col l6 p-5">
@@ -21,36 +21,11 @@
                         <button class="button-gray">Choose this plan</button>
                         <p class="p-1"><a href=""><u>Olvide mi contraseña</u></a></p>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-
-function onClick(e) {
-
-  e.preventDefault();
-
-  grecaptcha.enterprise.ready(async () => {
-
-    const token = await grecaptcha.enterprise.execute('6LckTgEoAAAAAIwv6mQDBDjTsMnLolQ08wXF_fPC', {action: 'LOGIN'});
-
-    // IMPORTANT: The 'token' that results from execute is an encrypted response sent by
-
-    // reCAPTCHA Enterprise to the end user's browser.
-
-    // This token must be validated by creating an assessment.
-
-    // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-
-  });
-
-}
-
-</script> 
 
 <style>
     .card-title {

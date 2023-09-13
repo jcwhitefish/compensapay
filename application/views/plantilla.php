@@ -20,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
         <?php
-        if (true) {
+        if (false) {
             ?>
            <nav>
                 <div class="nav-wrapper nav">
@@ -39,6 +39,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </nav>
             <?php
+        }else{
+            ?>
+            <nav>
+                <div class="nav-wrapper nav-gray">
+                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">                      
+                </div>
+             </nav>
+             <?php 
         }
         ?>
         <?php
