@@ -21,22 +21,23 @@ class Interaccionbd extends CI_Model
         if ($regreso)
         {
            $tempo = $regreso->result_array()[0]['existe'];
-            echo $tempo;
+         //   echo $tempo;
             if ($tempo == 0)
             {
-                echo "No hay datos";
+           //     echo "No hay datos";
+            
             }
             else
             {
-                echo "Regreso distinto a 0";
+             //   echo "Regreso distinto a 0";
             }
         }
         else
         {
-            echo "Algo fallo";
+            $tempo=500;//echo "Algo fallo";
         }
        
-       
+       return $tempo;
     }
 
 
