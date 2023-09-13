@@ -1,6 +1,7 @@
 
 .input-border input[type=text],
 .input-border input[type=number],
+.input-border input[type=password],
 .input-border input[type=email] {
     border: 2px solid #ddd;
     border-radius: 3px !important;
@@ -10,6 +11,7 @@
 }
 
 .input-border input[type=text]:focus,
+.input-border input[type=password]:focus,
 .input-border input[type=number]:focus,
 .input-border input[type=email]:focus {
     border-color: #444 !important;
@@ -25,6 +27,7 @@
 }
 
 .input-border input[type=text]:focus + label,
+.input-border input[type=password]:focus + label,
 .input-border input[type=number]:focus + label,
 .input-border input[type=email]:focus + label {
     color: #111 !important;

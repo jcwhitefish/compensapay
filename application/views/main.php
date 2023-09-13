@@ -246,13 +246,13 @@
         <div class="col l12 center-align">
             <h5 class="bold">Start your trial</h5>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elit.</p><br>
-            <div class="container input-border">
-                <input type="text" name="answer" id="answer" required>
-                <label for="answer">Name *</label>
-                <input type="text" name="answer" id="answer" required>
-                <label for="answer">Email *</label>
-                <input type="text" name="answer" id="answer" required>
-                <label for="answer">Password *</label>
+            <div class="container input-border left-align">
+                <input type="text" name="name" id="name" required>
+                <label for="answer">Name</label>
+                <input type="email" name="email" id="email" required>
+                <label for="answer">Email</label>
+                <input type="password" name="password" id="password" required>
+                <label for="answer">Password</label>
             </div>
             <button class="button-gray">Choose this plan</button>
         </div>
