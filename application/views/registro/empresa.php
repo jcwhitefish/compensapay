@@ -2,7 +2,7 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
-            <form method="post" action="<?php echo site_url('registro/registrarEmpresa'); ?>" class="col l12" enctype="multipart/form-data">
+            <form method="post" action="<?php echo base_url('registro/verVariables'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col l5 especial-p">
                         <div class="row">

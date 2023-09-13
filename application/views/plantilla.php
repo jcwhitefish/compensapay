@@ -16,50 +16,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
 
 
-        <?php
-        if (false) {
-            ?>
-           <nav>
-                <div class="nav-wrapper nav">
-                    <a href="#" class="bold">@Your Company</a>
-                    <div class="right hide-on-med-and-down px-3">
-                        <button class="button-gray">Sign Up</button>
-                        <button class="button-white">Login In</button>
-                    </div>
-                    <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Pages</a></li>
-                    </ul>
-                    
+    <?php
+    if (false) {
+    ?>
+        <nav>
+            <div class="nav-wrapper nav">
+                <a href="#" class="bold">@Your Company</a>
+                <div class="right hide-on-med-and-down px-3">
+                    <button class="button-gray">Sign Up</button>
+                    <button class="button-white">Login In</button>
                 </div>
-            </nav>
-            <?php
-        }else{
-            ?>
-            <nav>
-                <div class="nav-wrapper nav-gray">
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">                      
-                </div>
-             </nav>
-             <?php 
-        }
-        ?>
-        <?php
-        if (isset($main)) {
-            echo $main;
-        }
-        ?>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Pages</a></li>
+                </ul>
+
+            </div>
+        </nav>
+    <?php
+    } else {
+    ?>
+        <nav>
+            <div class="nav-wrapper nav-gray">
+                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+            </div>
+        </nav>
+    <?php
+    }
+    ?>
+    <?php
+    if (isset($main)) {
+        echo $main;
+    }
+    ?>
     <script>
-        if (typeof app !== 'undefined' && typeof store !== 'undefined') {
-            app.use(store);
-            app.mount('#app');
-        }
-        else if(typeof app !== 'undefined') {
+        if (typeof app !== 'undefined') {
             app.mount('#app');
         }
     </script>

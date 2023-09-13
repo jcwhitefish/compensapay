@@ -35,6 +35,12 @@ class Registro extends CI_Controller
 		$data['main'] = $this->load->view('registro/empresa', '', true);
 		$this->load->view('plantilla', $data);
 	}
+	public function finalizado()
+	{
+		//mostramos en pantalla welcome_message.php
+		$data['main'] = $this->load->view('registro/finalizado', '', true);
+		$this->load->view('plantilla', $data);
+	}
 	public function usuarioUnico()
 	{
 		$nombre = $this->uri->segment(3);
@@ -50,10 +56,27 @@ class Registro extends CI_Controller
 	//Nos permite ver las variables que queramos
 	public function verVariables()
 	{
-		$parametro = $this->uri->segment(3);
+
+		$bussinesName = $this->input->post('bussinesName');
+		$nameComercial = $this->input->post('nameComercial');
+		$rfc = $this->input->post('rfc');
+		$clabe = $this->input->post('clabe');
+		$bank = $this->input->post('bank');
+		$imageUpload = $this->input->post('imageUpload');
+		$csfUpload = $this->input->post('csfUpload');
+		$actaConstitutivaUpload = $this->input->post('actaConstitutivaUpload');
+		$comprobanteDomicilioUpload = $this->input->post('comprobanteDomicilioUpload');
+		//creamos un data
 		$data = array(
-			'nombre' => 'John Doe',
-			'email' => 'johndoe@example.com'
+			'bussinesName' => $bussinesName,
+			'nameComercial' => $nameComercial,
+			'rfc' => $rfc,
+			'clabe' => $clabe,
+			'bank' => $bank,
+			'imageUpload' => $imageUpload,
+			'csfUpload' => $csfUpload,
+			'actaConstitutivaUpload' => $actaConstitutivaUpload,
+			'comprobanteDomicilioUpload' => $comprobanteDomicilioUpload
 		);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
