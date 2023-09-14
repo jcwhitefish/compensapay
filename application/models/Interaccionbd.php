@@ -14,9 +14,40 @@ class Interaccionbd extends CI_Model
     private $regreso;
     private $tempo;
 
-    public function ExisteUsuario($usuario)
+    /*
+    VerBanco
+    Entrada -> Cadena de 3 posiciones con los 3 primero digitos correspondientes a la CLABE
+    Salida -> Cadena con el Alias del Banco al que corresponde la CLABE
+    */
+    public function VerBanco($cadenaclabe)
     {
-       $sql="select existeUsuario('".$usuario."','valor llave') as existe;";
+       $sql="select verbanco('".$cadenaclabe."') as existe;";
+       echo $sql;
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+           if ($tempo==NULL)
+           {
+            $tempo=0;
+           }
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+  /*
+    /  AgragaContacto 
+    /  Entrada -> cadena JSON con datos para tipo de contacto
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    */
+    public function AgregaContacto($cadenajsoncontacto)
+    {
+       $sql="select AgregaContacto('".$cadenajsoncontacto."','".keyvalue."') as existe;";
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
@@ -26,9 +57,123 @@ class Interaccionbd extends CI_Model
         {
             $tempo=500;//echo "Algo fallo";
         }
-       
        return $tempo;
     }
 
 
+
+
+    /*
+    /  ExisteRFC 
+    /  Entrada -> cadena corresponde al rfc a consultar
+    /  Salida ->   JSON Si existe
+    /              0    No existe
+    */
+    public function ExisteRFC($rfc)
+    {
+       $sql="select existerfc('".$rfc."','".keyvalue."') as existe;";
+      
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+            if ($tempo == NULL)
+           {
+               $tempo=0;
+            }
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+    /*
+    /  ExisteUsuario 
+    /  Entrada -> cadena corresponde al usuario
+    /  Salida ->    1 Si existe
+    /               0 No existe
+    */
+    public function ExisteUsuario($usuario)
+    {
+       $sql="select existeUsuario('".$usuario."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+        /*
+    /  AgragaUsuario 
+    /  Entrada -> cadena JSON con datos sobre Usuario
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    */
+    public function AgregaUsuario($cadenajsonusuario)
+    {
+       $sql="select AgregaUsuario('".$cadenajsonusuario."','".keyvalue."') as existe;";
+       echo $sql;
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;// "Algo fallo"
+        }
+       return $tempo;
+    }
+
+    /*
+    /  AgragarPersona 
+    /  Entrada -> cadena JSON con datos sobre Persona Fiscal o Moral
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    */
+    public function AgregaPersona($cadenajsonpersona)
+    {
+       $sql="select AgregaPersona('".$cadenajsonpersona."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+    /*
+    /  AgragarRepresentanteLegal 
+    /  Entrada -> cadena JSON con datos sobre Representante Legal
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    */
+    public function AgregaRepresentante($cadenajsonpersona)
+    {
+       $sql="select AgregaRepresentante('".$cadenajsonpersona."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+
+    
 }
