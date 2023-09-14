@@ -17,42 +17,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
+        <?php
+         $navbar1=true;
+         $navbar2=false;
+         $sidebar=true;
 
-    <?php
-    if (false) {
-    ?>
-        <nav>
-            <div class="nav-wrapper nav">
-                <a href="#" class="bold">@Your Company</a>
-                <div class="right hide-on-med-and-down px-3">
-                    <button class="button-gray">Sign Up</button>
-                    <button class="button-white">Login In</button>
+        if ($navbar1) {
+        ?>
+            <nav>
+                <div class="nav-wrapper nav">
+                    <a href="#" class="bold">@Your Company</a>
+                    <div class="right hide-on-med-and-down px-3">
+                        <button class="button-gray">Sign Up</button>
+                        <button class="button-white">Login In</button>
+                    </div>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Pages</a></li>
+                    </ul>
+
                 </div>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Pages</a></li>
+            </nav>
+        <?php
+        } if($navbar2) {
+        ?>
+            <nav>
+                <div class="nav-wrapper nav-gray">
+                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+                </div>
+            </nav>
+        <?php
+        } if($sidebar) {
+        ?>
+            <div class="sidebar center-align">
+                <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side"></img></a>
+                <hr class="line-side">
+                <ul>
+                    <li><a href="#"><i class="Tiny material-icons p-1">search</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">home</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">import_export</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">pie_chart</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">mail</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">collections</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">today</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">people</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">settings</i></a></li>
+                    <li><a href="#"><i class="Tiny material-icons p-1">headset_mic</i></a></li>
                 </ul>
+            </div>
+            <div class="container-main">
+        <?php
+        } if (isset($main)) {
+            echo $main;
+        }
+        if ($sidebar) {
+            echo '</div>';
+        }
+        ?>
 
-            </div>
-        </nav>
-    <?php
-    } else {
-    ?>
-        <nav>
-            <div class="nav-wrapper nav-gray">
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
-            </div>
-        </nav>
-    <?php
-    }
-    ?>
-    <?php
-    if (isset($main)) {
-        echo $main;
-    }
-    ?>
     <script>
         if (typeof app !== 'undefined') {
             app.mount('#app');
@@ -66,5 +90,49 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </script>
 
 </body>
+
+<style>
+    /* Estilo de la barra lateral */
+.sidebar {
+    position: fixed;                                                                                                           
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4.5%; 
+    background-color: #333;
+    color: #fff;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.container-main{
+    padding-left: 5% ;
+    flex-grow: 1;
+}
+
+.line-side{
+    border: 1px solid #e0e51d;
+}
+
+.image-side{
+    max-width: 50px; 
+    max-height: 50px; 
+    width: auto; 
+    height: auto;
+}
+
+</style>
 
 </html>

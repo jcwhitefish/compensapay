@@ -91,6 +91,7 @@
     background: #fff;
     padding-left: 7% !important;
     padding-right: 7%!important;
+    position: fixed;
 }
 .nav a{
     color: #666 !important;
