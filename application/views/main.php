@@ -1,5 +1,4 @@
 <div class="p-5">
-
     <div class="p-5 row d-flex">
         <div class="col l5">
             <div class="p-10">
@@ -334,7 +333,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Obtén referencias a los botones y al contenido correspondiente.
         const monthlyButton = document.getElementById('monthlyButton');
         const annualButton = document.getElementById('annualButton');
         const monthlyContent = document.getElementById('monthlyContent');
