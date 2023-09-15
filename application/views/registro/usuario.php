@@ -1,4 +1,4 @@
-<div class="container" id="app">
+<div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de usuario</h2>

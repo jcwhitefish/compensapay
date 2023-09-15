@@ -1,4 +1,4 @@
-<div class="container" id="app">
+<div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
@@ -92,8 +92,8 @@
                             <label for="cSfDisabled"> Constancia de Situación Fiscal</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="csf" class="custom-file-upload">Agregar </label>
-                            <input @change="checkFormat('csfUpload')" ref="csfUpload" id="csf" type="file" accept="application/pdf" required />
+                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <input @change="checkFormat('csfUpload')" name="cSfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" required />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="actaConstitutivaDisabled" id="actaConstitutivaDisabled" disabled :value="actaConstitutivaUploadName">
