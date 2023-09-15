@@ -1,8 +1,8 @@
-<div class="container" id="app">
+<div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
-            <form method="post" action="<?php echo site_url('registro/registrarEmpresa'); ?>" class="col l12" enctype="multipart/form-data">
+            <form method="post" action="<?php echo base_url('registro/empresaTemporal'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col l5 especial-p">
                         <div class="row">
@@ -14,7 +14,7 @@
                                 <label for="bussinesName">Razón Social</label>
                             </div>
                             <div class="input-border col l6">
-                                <select name="type" id="type" disabled>
+                                <select name="type" id="type" >
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
@@ -34,7 +34,7 @@
                                 <label for="rfc">RFC</label>
                             </div>
                             <div class="input-border col l6">
-                                <select name="fiscal" id="fiscal" disabled>
+                                <select name="fiscal" id="fiscal">
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['bank']" @blur="checkFormat('bank')" :style="colorsBorder['bank'] || {}" type="text" name="bank" id="bank" required>
+                                <input v-model="data['bank']" type="text" name="bank" id="bank" disabled required>
                                 <label for="bank">Banco emisor</label>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpeg" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpg, image/jpeg" required />
                         </div>
                     </div>
                 </div>
@@ -92,8 +92,8 @@
                             <label for="cSfDisabled"> Constancia de Situación Fiscal</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="csf" class="custom-file-upload">Agregar </label>
-                            <input @change="checkFormat('csfUpload')" ref="csfUpload" id="csf" type="file" accept="application/pdf" required />
+                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <input @change="checkFormat('csfUpload')" name="cSfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" required />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="actaConstitutivaDisabled" id="actaConstitutivaDisabled" disabled :value="actaConstitutivaUploadName">
@@ -223,7 +223,6 @@
 
                         }
                         break;
-                    case 'bank':
                         if (data[nombreInput] !== '') {
 
                             colorsBorder[nombreInput] = {
