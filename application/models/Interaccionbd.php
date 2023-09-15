@@ -174,6 +174,37 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
+/*
+    /  Agraga Direccion 
+    /  Entrada -> cadena JSON con datos sobre Direccion
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    	$direccion=$this->Interaccionbd->AgregaDireccion('{
+			"idPersona":1,
+			"CalleyNumero": "En la calle con el numero X",
+			"Colonia": "No conocida",
+			"Ciudad":"",
+			"Estado":"CDMX",
+			"CodPostal":"06000"}');
+		echo $direccion;
+    */
+    public function AgregaDireccion($cadenajsondireccion)
+    {
+       $sql="select AgregaDireccion('".$cadenajsondireccion."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+
+
      /*
     /  ValidarAcceso 
     /  Entrada -> cadena JSON con datos sobre Representante Legal
