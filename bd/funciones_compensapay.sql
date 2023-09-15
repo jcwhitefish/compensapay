@@ -193,11 +193,60 @@ where
 
 return salida;
 end;
--- -----------------------------------------------
-CREATE DEFINER=`root`@`localhost` FUNCTION `compensapay`.`VerFirma`(entrada VARCHAR(20)) RETURNS int(11)
-BEGIN
-  DECLARE salida int;
-  select count(u_NombreUsuario) into salida from usuario where usuario.u_NombreUsuario=entrada; 
-  -- SET salida = 1;
-  RETURN salida;
-END;
+
+-- -------------------------------------------
+CREATE DEFINER=`root`@`localhost` FUNCTION `compensapay`.`ConsutlarEstadosMX`() RETURNS blob
+begin
+  declare salida blob;
+
+select
+
+	concat('[',
+        GROUP_CONCAT(
+            JSON_OBJECT ('id_estado',
+	e.e_IdEstado,
+	'Nombre',
+	e.e_Descripcion,
+	'alias',
+	e.e_alias)
+            SEPARATOR ',')
+    ,']')
+
+
+	
+into
+	salida
+from
+	estados e;
+
+return salida;
+end;
+-- -------------------------------------------
+CREATE DEFINER=`root`@`localhost` FUNCTION `compensapay`.`ValidarLlave`(entrada blob,
+llave varchar(100)) RETURNS blob
+begin
+  declare resultado blob;
+  declare usuario varchar(100);
+  declare llave_interna varchar(100);
+ 
+  set usuario = JSON_UNQUOTE(json_extract(entrada,'$.Usuario'));
+  set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
+ 
+ select
+ JSON_OBJECT ('Perfil',
+	p.p_idPerfil)
+
+into
+	resultado
+from
+	compensapay.usuario u
+inner join compensapay.perfil p on aes_decrypt(u.u_idPerfil,llave) = p.p_idPerfil 
+	where
+	aes_decrypt(u_NombreUsuario,llave)= usuario
+	and aes_decrypt(u_Llaveacceso,llave)= md5(llave_interna);
+
+
+
+RETURN resultado;
+
+end;
