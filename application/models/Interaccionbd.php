@@ -174,6 +174,50 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
+     /*
+    /  ValidarAcceso 
+    /  Entrada -> cadena JSON con datos sobre Representante Legal
+    /  Salida ->    1 Guardado
+    /               0 No se guardo
+    */
+    public function ValidarAcceso($cadenajsonvalidar)
+    {
+       $sql="select ValidarLlave('".$cadenajsonvalidar."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+           if ($tempo==NULL)
+           {
+            $tempo='{"Perfil": 0}';
+        }
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+      /*
+    /  Lista Estados Republica Mexicana 
+    /  Entrada -> N/A
+    /  Salida ->    JSON con IdEstado, Nombre y Alias
+    */
+    public function ConsutlarEstadosMX()
+    {
+       $sql="select ConsutlarEstadosMX() as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
 
     
 }
