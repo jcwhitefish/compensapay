@@ -9,12 +9,19 @@
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p class="bold">Detalles de la empresa</p>
                             </div>
-                            <div class="input-border col l6">
+                            <div class="input-border col l12">
                                 <input v-model="data['bussinesName']" @blur="checkFormat('bussinesName')" :style="colorsBorder['bussinesName'] || {}" type="text" name="bussinesName" id="bussinesName" required>
                                 <label for="bussinesName">Razón Social</label>
                             </div>
+
+                        </div>
+                        <div class="row">
                             <div class="input-border col l6">
-                                <select name="type" id="type" >
+                                <input v-model="data['nameComercial']" @blur="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
+                                <label for="nameComercial">Nombre Comercial</label>
+                            </div>
+                            <div class="input-border col l6">
+                                <select name="type" id="type">
                                     <option value="perfil1">Perfil 1</option>
                                     <option value="perfil2">Perfil 2</option>
                                     <option value="perfil3">Perfil 3</option>
@@ -22,12 +29,7 @@
                                 <label for="type">Giro</label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="input-border col l12">
-                                <input v-model="data['nameComercial']" @blur="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
-                                <label for="nameComercial">Nombre Comercial</label>
-                            </div>
-                        </div>
+
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['rfc']" @blur="checkFormat('rfc')" :style="colorsBorder['rfc'] || {}" type="text" name="rfc" id="rfc" minlength="12" maxlength="13" pattern="[A-Z0-9]{12,13}" title="Debe tener de 12 a 13 caracteres alfanuméricos" required>
@@ -40,6 +42,32 @@
                                     <option value="perfil3">Perfil 3</option>
                                 </select>
                                 <label for="fiscal">Regimen Fiscal</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col l6">
+                                <input v-model="data['codigoPostal']" @blur="checkFormat('codigoPostal')" :style="colorsBorder['codigoPostal'] || {}" type="text" name="codigoPostal" id="codigoPostal" maxlength="5" pattern="[0-9]{5}" required>
+                                <label for="codigoPostal">Codigo Postal</label>
+                            </div>
+                            <div class="input-border col l6">
+                                <select name="estado" id="estado">
+                                    <option value="perfil1">Perfil 1</option>
+                                    <option value="perfil2">Perfil 2</option>
+                                    <option value="perfil3">Perfil 3</option>
+                                </select>
+                                <label for="estado">Estado</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col l12">
+                                <input v-model="data['direccion']" @blur="checkFormat('direccion')" :style="colorsBorder['direccion'] || {}" type="text" name="direccion" id="direccion" required>
+                                <label for="direccion">Direccion</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col l6">
+                                <input v-model="data['telefono']" @blur="checkFormat('telefono')" :style="colorsBorder['telefono'] || {}" type="text" name="telefono" id="telefono" required>
+                                <label for="telefono">telefono</label>
                             </div>
                         </div>
                     </div>
@@ -78,7 +106,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpg, image/jpeg" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpg, image/jpeg" maxFileSize="1048576" required />
                         </div>
                     </div>
                 </div>
@@ -93,23 +121,31 @@
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="csfUpload" class="custom-file-upload">Agregar </label>
-                            <input @change="checkFormat('csfUpload')" name="cSfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" required />
+                            <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="actaConstitutivaDisabled" id="actaConstitutivaDisabled" disabled :value="actaConstitutivaUploadName">
                             <label for="actaConstitutivaDisabled">Acta Constitutiva</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="actaConstitutiva" class="custom-file-upload">Agregar</label>
-                            <input @change="checkFormat('actaConstitutivaUpload')" ref="actaConstitutivaUpload" id="actaConstitutiva" type="file" accept="application/pdf" required />
+                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="comprobanteDomicilioDisabled" id="comprobanteDomicilioDisabled" disabled :value="comprobanteDomicilioUploadName">
                             <label for="comprobanteDomicilioDisabled">Comprobante de Domicilio</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="comprobanteDomicilio" class="custom-file-upload">Agregar</label>
-                            <input @change="checkFormat('comprobanteDomicilioUpload')" ref="comprobanteDomicilioUpload" id="comprobanteDomicilio" type="file" accept="application/pdf" required />
+                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
+                        </div>
+                        <div class="col l9 input-border">
+                            <input type="text" name="representanteLegalDisabled" id="representanteLegalDisabled" disabled :value="representanteLegalUploadName">
+                            <label for="representanteLegalDisabled">Identificacion de Representante Legal</label>
+                        </div>
+                        <div class="col l3 center-align p-5">
+                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                     </div>
                     <div class="col l12 right-align p-5">
@@ -140,7 +176,13 @@
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
-                comprobanteDomicilioUpload: ref('')
+                comprobanteDomicilioUpload: ref(''),
+                representanteLegalUpload: ref(''),
+                codigoPostal: ref(''),
+                estado: ref(''),
+                codigoPostal: ref(''),
+                direccion: ref(''),
+                telefono: ref(''),
             });
             // partes del image
             const imageUpload = ref(null);
@@ -155,6 +197,9 @@
             //partes del pdf
             const comprobanteDomicilioUpload = ref(null);
             const comprobanteDomicilioUploadName = ref('');
+            //partes del pdf
+            const representanteLegalUpload = ref(null);
+            const representanteLegalUploadName = ref('');
 
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
@@ -163,6 +208,66 @@
                 }
 
                 switch (nombreInput) {
+                    case 'telefono':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'codigoPostal':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'estado':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
+                    case 'direccion':
+                        if (data[nombreInput] !== '') {
+
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            }
+
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            }
+
+                        }
+
+                        break;
                     case 'bussinesName':
                         if (data[nombreInput] !== '') {
 
@@ -266,19 +371,59 @@
 
                         break;
                     case 'csfUpload':
-                        data[nombreInput] = csfUpload.value
-                        csfUploadName.value = csfUpload.value.files[0].name;
+
+                        if (csfUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
+                            data[nombreInput] = csfUpload.value
+                            csfUploadName.value = csfUpload.value.files[0].name;
+
+                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
+                        } else {
+                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+
+                            csfUpload.value.files[0].value = null;
+                            csfUploadName.value = '';
+                        }
 
                         break;
                     case 'actaConstitutivaUpload':
-                        data[nombreInput] = actaConstitutivaUpload.value
-                        actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
+                        if (actaConstitutivaUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
+                            data[nombreInput] = actaConstitutivaUpload.value
+                            actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
 
+                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
+                        } else {
+                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+
+                            actaConstitutivaUpload.value.files[0].value = null;
+                            actaConstitutivaUploadName.value = '';
+                        }
                         break;
                     case 'comprobanteDomicilioUpload':
-                        data[nombreInput] = comprobanteDomicilioUpload.value
-                        comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
+                        if (comprobanteDomicilioUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
+                            data[nombreInput] = comprobanteDomicilioUpload.value
+                            comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
 
+                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
+                        } else {
+                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+
+                            comprobanteDomicilioUpload.value.files[0].value = null;
+                            comprobanteDomicilioUpload.value = '';
+                        }
+                        break;
+                    case 'representanteLegalUpload':
+                        if (representanteLegalUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
+                            data[nombreInput] = representanteLegalUpload.value
+                            console.log('hola');
+                            representanteLegalUploadName.value = representanteLegalUpload.value.files[0].name;
+
+                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
+                        } else {
+                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+
+                            representanteLegalUpload.value.files[0].value = null;
+                            representanteLegalUpload.value = '';
+                        }
                         break;
                     default:
                         // Código a ejecutar si valor no coincide con ningún caso
@@ -296,7 +441,10 @@
                 actaConstitutivaUpload,
                 actaConstitutivaUploadName,
                 comprobanteDomicilioUpload,
-                comprobanteDomicilioUploadName
+                comprobanteDomicilioUploadName,
+                representanteLegalUpload,
+                representanteLegalUploadName
+
             }
         }
     });

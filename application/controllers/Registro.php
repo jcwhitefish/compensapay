@@ -61,12 +61,16 @@ class Registro extends CI_Controller
 	public function empresaTemporal()
 	{
 
-		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required|regex_match[/^[A-Za-z0-9\s]+$/]');
-		$this->form_validation->set_rules('nameComercial', 'NameComercial', 'required|regex_match[/^[A-Za-z0-9\s]+$/]');
+		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required');
+		$this->form_validation->set_rules('nameComercial', 'NameComercial', 'required');
 		$this->form_validation->set_rules('type', 'Type', 'required');
 		$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|regex_match[/^[A-Z0-9]{12,13}$/]');
 		$this->form_validation->set_rules('fiscal', 'Fiscal', 'required');
 		$this->form_validation->set_rules('clabe', 'CLABE', 'trim|required|regex_match[/^[0-9]{18}$/]');
+		$this->form_validation->set_rules('codigoPostal', 'CodigoPostal', 'required|regex_match[/^[0-9]{5}$/]');
+		$this->form_validation->set_rules('estado', 'Estado', 'required');
+		$this->form_validation->set_rules('direccion', 'Direccion', 'required');
+		$this->form_validation->set_rules('telefono', 'Telefono', 'required|regex_match[/^[0-9]+$/]');
 
 		if ($this->form_validation->run() === FALSE) {
 			// Si la validación falla, puedes mostrar errores o redirigir al formulario
@@ -89,7 +93,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-' . $original_name;
+				$new_name = $uniqueString . '-0-' . $original_name;
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -104,14 +108,56 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-' . $original_name;
+				$new_name = $uniqueString . '-1-' . $original_name;
+				// Mueve el archivo con el nuevo nombre al directorio de destino
+				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+			}
+			if (!$this->upload->do_upload('actaConstitutivaUpload')) {
+				echo $this->upload->display_errors();
+			} else {
+				// Subida exitosa, obten el nombre original del archivo
+				$uploaded_data = $this->upload->data();
+				$original_name = $uploaded_data['file_name'];
+				// Renombra el archivo agregando la el stringUnico al nombre
+
+				$new_name = $uniqueString . '-1-' . $original_name;
+				// Mueve el archivo con el nuevo nombre al directorio de destino
+				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+			}
+
+			if (!$this->upload->do_upload('comprobanteDomicilioUpload')) {
+				echo $this->upload->display_errors();
+			} else {
+				// Subida exitosa, obten el nombre original del archivo
+				$uploaded_data = $this->upload->data();
+				$original_name = $uploaded_data['file_name'];
+				// Renombra el archivo agregando la el stringUnico al nombre
+
+				$new_name = $uniqueString . '-3-' . $original_name;
+				// Mueve el archivo con el nuevo nombre al directorio de destino
+				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+			}
+			if (!$this->upload->do_upload('representanteLegalUpload')) {
+				echo $this->upload->display_errors();
+			} else {
+				// Subida exitosa, obten el nombre original del archivo
+				$uploaded_data = $this->upload->data();
+				$original_name = $uploaded_data['file_name'];
+				// Renombra el archivo agregando la el stringUnico al nombre
+
+				$new_name = $uniqueString . '-4-' . $original_name;
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
 
 
+
 			// Si la validación es exitosa, obtén los datos del formulario
 			$bussinesName = $this->input->post('bussinesName');
+			$codigoPostal = $this->input->post('codigoPostal');
+			$estado = $this->input->post('estado');
+			$direccion = $this->input->post('direccion');
+			$telefono = $this->input->post('telefono');
 			$nameComercial = $this->input->post('nameComercial');
 			$type = $this->input->post('type');
 			$rfc = $this->input->post('rfc');
@@ -122,20 +168,23 @@ class Registro extends CI_Controller
 			$data = array(
 				'bussinesName' => $bussinesName,
 				'nameComercial' => $nameComercial,
+				'codigoPostal' => $codigoPostal,
+				'estado' => $estado,
+				'direccion' => $direccion,
+				'telefono' => $telefono,
 				'type' => $type,
 				'rfc' => $rfc,
 				'fiscal' => $fiscal,
 				'clabe' => $clabe,
-				'bank' => $bank
+				'bank' => $bank,
+				'documentos' =>  $uniqueString
 			);
 
-			// Ahora puedes hacer lo que necesites con los datos
+		// Convertir el arreglo en una cadena de consulta
+		$query_string = http_build_query($data);
 
-			// Por ejemplo, guardarlos en una base de datos o realizar alguna acción
-			// Configura la respuesta para que sea en formato JSON
-			$this->output->set_content_type('application/json');
-			// Envía los datos en formato JSON
-			$this->output->set_output(json_encode($data));
+		// Redirigir con los parámetros en la URL
+		redirect('registro/usuario?' . $query_string);
 		}
 	}
 	public function catalogoBancos()
@@ -152,10 +201,7 @@ class Registro extends CI_Controller
 			return json_encode($data);
 		}
 
-		// Configura la respuesta para que sea en formato JSON
-		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
-		$this->output->set_output(clabe3($clabe));
+
 	}
 	//Nos permite ver las variables que queramos
 	public function verVariables()
