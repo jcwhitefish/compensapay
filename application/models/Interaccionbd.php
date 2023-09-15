@@ -199,7 +199,7 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
-      /*
+    /*
     /  Lista Estados Republica Mexicana 
     /  Entrada -> N/A
     /  Salida ->    JSON con IdEstado, Nombre y Alias
