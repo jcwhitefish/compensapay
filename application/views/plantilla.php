@@ -18,41 +18,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
         <?php
-         $navbar1=true;
-         $navbar2=false;
+
+         $navbar=true;
          $sidebar=true;
+         $isLog=true;
 
-        if ($navbar1) {
+        if($navbar) {
         ?>
-            <nav class="hide-on-small-only">
-                <div class="nav-wrapperxd nav">
-                    <a href="#" class="bold">@Your Company</a>
-                    <div class="right hide-on-med-and-down px-3">
-                        <button class="button-gray">Sign Up</button>
-                        <button class="button-white">Login In</button>
-                    </div>
-                    <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Pages</a></li>
-                    </ul>
-
-                </div>
-            </nav>
-        <?php
-        } if($navbar2) {
-        ?>
-            <nav class="hide-on-small-only">
-                <div class="nav-wrapper nav-gray">
+            <nav>
+                <div class="nav nav-wrapper">
                     <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+                    <?php if ($isLog): ?> 
+                        <?php if (true): ?>
+                            <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
+                        <?php else: ?>
+                            <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
+                        <?php endif; ?>
+                        <ul class="right hide-on-med-and-down px-3">
+                            <li class=""><a href="#"><i class="material-icons p-1">notifications_none</i></a></li>
+                        </ul>
+                        <div class="right hide-on-med-and-down px-3">
+                            <p class="right-align">Display Name</p>
+                            <select name="type" id="type" class="browser-default input-nav">
+                                <option value="perfil1">Vista Cliente</option>
+                                <option value="perfil2">Vista Cliente 2</option>
+                                <option value="perfil3">Vista Cliente 3</option>
+                            </select>
+                        </div>
+                        <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+                    <?php endif; ?>
                 </div>
             </nav>
         <?php
         } if($sidebar) {
         ?>
             <div class="sidebar center-align">
-                <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side"></img></a>
+                <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></img></a>
                 <hr class="line-side">
                 <ul>
                 <ul class="icon-list">
@@ -88,103 +89,84 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <script>
         M.AutoInit();    
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let prevScrollPos = window.pageYOffset;
-            let isScrollingUp = false;
-            let isAnimating = false;
-            let scrollThreshold = 20; // Ajusta este valor según tus necesidades
-            let nav = document.querySelector('nav.hide-on-small-only');
-
-            function toggleNavVisibility() {
-                isAnimating = true;
-
-                if (isScrollingUp) {
-                    nav.classList.remove('hide');
-                } else {
-                    nav.classList.add('hide');
-                }
-
-                setTimeout(function() {
-                    isAnimating = false;
-                }, 300); // Puedes ajustar la duración de la animación
-
-                prevScrollPos = window.pageYOffset;
-            }
-
-            window.addEventListener('scroll', function() {
-                const currentScrollPos = window.pageYOffset;
-
-                if (Math.abs(currentScrollPos - prevScrollPos) >= scrollThreshold && !isAnimating) {
-                    if (currentScrollPos > prevScrollPos) {
-                        // Desplazamiento hacia abajo: ocultar la barra de navegación
-                        isScrollingUp = false;
-                        toggleNavVisibility();
-                    } else {
-                        // Desplazamiento hacia arriba: mostrar la barra de navegación
-                        isScrollingUp = true;
-                        toggleNavVisibility();
-                    }
-                }
-            });
-
-        });
-
-    </script>
-
  
 
 
 </body>
 
 <style>
-    /* Estilo de la barra lateral */
-.sidebar {
-    position: fixed;                                                                                                           
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 4.5%; 
-    background-color: #333;
-    z-index: 10000; 
-    color: #fff;
-}
+    /* Estilos de la barra lateral */
+    .sidebar {
+        position: fixed;                                                                                                           
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 60px; 
+        background-color: #333;
+        color: #fff;
+    }
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+    .sidebar ul li {
+        padding: 10px;
+    }
+    .sidebar a {
+        text-decoration: none;
+        color: #fff;
+    }
+    .line-side{
+        border: 1px solid #e0e51d;
+    }
+    .image-side{
+        max-width: 50px; 
+        max-height: 50px; 
+        width: auto; 
+        height: auto;
+    }
+    .icon-list li a:hover i {
+        color: #e0e51d;
+    }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
+    /* Padding si se tiene la barra lateral */
+    .container-main{
+        padding-left: 5% ;
+        flex-grow: 1;
+    }
 
-.sidebar ul li {
-    padding: 10px;
-}
+    .nav{
+        background: #fff;
+        padding-left: 7% !important;
+        padding-right: 7%!important;
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between;
+    }
 
-.sidebar a {
-    text-decoration: none;
-    color: #fff;
-}
+    .nav h4{
+        color: #444;
+    }
 
-.container-main{
-    padding-left: 5% ;
-    flex-grow: 1;
-}
+    .nav p{
+        color: #888;
+        margin: 0;
+        padding: 0;
+        margin-top: -15px;
+    }
 
-.line-side{
-    border: 1px solid #e0e51d;
-}
+    .image-center{
+        margin: 0 auto;
+    }
 
-.image-side{
-    max-width: 50px; 
-    max-height: 50px; 
-    width: auto; 
-    height: auto;
-}
-
-.icon-list li a:hover i {
-    color: #e0e51d; /* Cambia el color a amarillo al pasar el cursor */
-}
-
-
+    .input-nav{
+        margin-top: -30px;
+        border: none; 
+        background-color: transparent;
+    }
+    .input-nav:focus {
+        outline: none; /* Eliminar el borde al enfocar */
+    }
 
 </style>
 

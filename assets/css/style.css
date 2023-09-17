@@ -1,3 +1,23 @@
+/* inputs */
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    color: white;
+    background: #444;
+    display: inline-block;
+    padding: 10px 50px;
+    cursor: pointer;
+    border-radius: 3px !important;
+}
+.custom-file-upload:hover {
+    background: #e0e51d;
+    border: 2px solid #e0e51d;
+}
+.custom-file-upload:focus {
+    background: #e0e51d !important;
+    border: 2px solid #e0e51d ;
+}
 
 .input-border input[type=text],
 .input-border input[type=number],
@@ -9,7 +29,6 @@
     margin: 15px 0 10px 0 !important;
     height: 40px !important;
 }
-
 .input-border input[type=text]:focus,
 .input-border input[type=password]:focus,
 .input-border input[type=number]:focus,
@@ -18,14 +37,12 @@
     border-bottom: 1px solid #444 !important;
     box-shadow: 0 1px 0 0 #444 !important;
 }
-
 .input-border label {
     color: black;
     top: -75px;
     position: relative;
     font-weight: bold !important;
 }
-
 .input-border input[type=text]:focus + label,
 .input-border input[type=password]:focus + label,
 .input-border input[type=number]:focus + label,
@@ -42,11 +59,18 @@
 .input-border span {
     color: black !important;
 }
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield; /* Otros navegadores */
+  }
+
 /* texto en negritas */
 .bold{
     font-weight: bold;
 }
 
+/* cards */
 .line-card{
     border-right: 1px solid #ddd;
     height: 400px;
@@ -97,24 +121,6 @@
     font-size: large;  
 }
 
-.nav-gray{
-    background: #ddd;
-    padding-left: 7% !important;
-    padding-right: 7%!important;
-}
-.nav-gray a{
-    color: #fff !important;
-    font-size: large;  
-}
-
-.nav-wrapperxd {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; 
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
 
 /* buttons */
 .button-gray {
@@ -145,26 +151,6 @@
     color: white;
 }
 
-/* inputs */
-input[type="file"] {
-    display: none;
-}
-.custom-file-upload {
-    color: white;
-    background: #444;
-    display: inline-block;
-    padding: 10px 50px;
-    cursor: pointer;
-    border-radius: 3px !important;
-}
-.custom-file-upload:hover {
-    background: #e0e51d;
-    border: 2px solid #e0e51d;
-}
-.custom-file-upload:focus {
-    background: #e0e51d !important;
-    border: 2px solid #e0e51d ;
-}
 /* images */
 
 .custom-image{

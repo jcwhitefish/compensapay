@@ -30,9 +30,39 @@ class Registro extends CI_Controller
 	}
 	public function usuario()
 	{
+		// Obtener los parámetros de la URL
+		$bussinesName = $this->input->get('bussinesName');
+		$nameComercial = $this->input->get('nameComercial');
+		$codigoPostal = $this->input->get('codigoPostal');
+		$estado = $this->input->get('estado');
+		$direccion = $this->input->get('direccion');
+		$telefono = $this->input->get('telefono');
+		$type = $this->input->get('type');
+		$rfc = $this->input->get('rfc');
+		$fiscal = $this->input->get('fiscal');
+		$clabe = $this->input->get('clabe');
+		$bank = $this->input->get('bank');
+		$datos = array(
+			'bussinesName' => $bussinesName,
+			'nameComercial' => $nameComercial,
+			'codigoPostal' => $codigoPostal,
+			'estado' => $estado,
+			'direccion' => $direccion,
+			'telefono' => $telefono,
+			'type' => $type,
+			'rfc' => $rfc,
+			'fiscal' => $fiscal,
+			'clabe' => $clabe,
+			'bank' => $bank
+		);
+				
 		//mostramos en pantalla welcome_message.php
-		$data['main'] = $this->load->view('registro/usuario', '', true);
-		$this->load->view('plantilla', $data);
+		
+		if (isset($datos)){
+			$data['main'] = $this->load->view('registro/usuario', $datos, true);
+			$this->load->view('plantilla', $data);
+		}
+
 	}
 	public function empresa()
 	{
@@ -180,11 +210,11 @@ class Registro extends CI_Controller
 				'documentos' =>  $uniqueString
 			);
 
-		// Convertir el arreglo en una cadena de consulta
-		$query_string = http_build_query($data);
+			// Convertir el arreglo en una cadena de consulta
+			$query_string = http_build_query($data);
 
-		// Redirigir con los parámetros en la URL
-		redirect('registro/usuario?' . $query_string);
+			// Redirigir con los parámetros en la URL
+			redirect('registro/usuario?' . $query_string);
 		}
 	}
 	public function catalogoBancos()
@@ -200,8 +230,6 @@ class Registro extends CI_Controller
 			$data['nombre'] = $clabe3;
 			return json_encode($data);
 		}
-
-
 	}
 	//Nos permite ver las variables que queramos
 	public function verVariables()
