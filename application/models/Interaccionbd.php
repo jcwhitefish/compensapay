@@ -60,9 +60,6 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
-
-
-
     /*
     /  ExisteRFC 
     /  Entrada -> cadena corresponde al rfc a consultar
@@ -110,7 +107,7 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
-        /*
+    /*
     /  AgragaUsuario 
     /  Entrada -> cadena JSON con datos sobre Usuario
     /  Salida ->    1 Guardado
