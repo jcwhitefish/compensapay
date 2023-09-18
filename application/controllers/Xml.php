@@ -18,46 +18,72 @@ class Xml extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
-	public function index()
-	{
+	public function index(){
 		//mostramos en pantalla welcome_message.php
 		$data['main'] = $this->load->view('xml','',true);
 		$this->load->view('plantilla',$data);
 	}
 	public function xmlTemp(){
-		// Verificar si el formulario se ha enviado y el archivo se ha subido correctamente
-		if ($this->input->post('action') && isset($_FILES['xmlUpload']) && $_FILES['xmlUpload']['error'] === UPLOAD_ERR_OK) {
-			// Configurar opciones de carga de archivos para XML
-			$config['upload_path'] = './temporales/'; // Ruta donde se guardarán los archivos
-			$config['allowed_types'] = 'xml'; // Permitir solo archivos XML
-			$config['max_size'] = 1024; // Tamaño máximo en KB (2 MB)
 
-			$this->load->library('upload', $config);
+		if ($_FILES['comprobantexmlUpload']['error'] == UPLOAD_ERR_OK) {
+			$xmlContent = file_get_contents($_FILES['comprobantexmlUpload']['tmp_name']);
+			$xml = simplexml_load_string((string)$xmlContent);
 
-			// Realizar la carga del archivo XML
-			if ($this->upload->do_upload('xmlUpload')) {
-				// El archivo se cargó correctamente
-				$xmlFilePath = $this->upload->data('full_path');
+			$dom = new DOMDocument();
+			$dom->loadXML($xmlContent);
 
-				// Aquí puedes procesar el contenido del archivo XML como desees
-				// Por ejemplo, puedes leerlo y almacenar los datos en una variable
-				$xmlContent = file_get_contents($xmlFilePath);
+			$version = $dom->documentElement->getAttribute('Version');
+			$fecha = $dom->documentElement->getAttribute('Fecha');
+			$sello = $dom->documentElement->getAttribute('Sello');
+			$formaPago = $dom->documentElement->getAttribute('FormaPago');
+			$noCertificado = $dom->documentElement->getAttribute('NoCertificado');
+			$certificado = $dom->documentElement->getAttribute('Certificado');
+			$subTotal = $dom->documentElement->getAttribute('SubTotal');
+			$moneda = $dom->documentElement->getAttribute('Moneda');
+			$tipoCambio = $dom->documentElement->getAttribute('TipoCambio');
+			$total = $dom->documentElement->getAttribute('Total');
+			$tipoDeComprobante = $dom->documentElement->getAttribute('TipoDeComprobante');
+			$exportacion = $dom->documentElement->getAttribute('Exportacion');
+			$metodoPago = $dom->documentElement->getAttribute('MetodoPago');
+			$lugarExpedicion = $dom->documentElement->getAttribute('LugarExpedicion');
 
-				// Ahora $xmlContent contiene el contenido del archivo XML
+			$emisor = $dom->getElementsByTagName('Emisor')->item(0);
+			$emisorRfc = $emisor->getAttribute('Rfc');
+			$emisorNombre = $emisor->getAttribute('Nombre');
+			$emisorRegimenFiscal = $emisor->getAttribute('RegimenFiscal');
 
-				// Puedes realizar cualquier otra acción necesaria con $xmlContent aquí
+			$receptor = $dom->getElementsByTagName('Receptor')->item(0);
+			$receptorRfc = $receptor->getAttribute('Rfc');
+			$receptorNombre = $receptor->getAttribute('Nombre');
+			$usoCFDI = $receptor->getAttribute('UsoCFDI');
 
-				// Redirigir o mostrar una vista con los resultados
-			} else {
-				// Si la carga falla, muestra un mensaje de error o realiza una acción adecuada
-				$error = $this->upload->display_errors();
-				echo $error;
+			$conceptos = $dom->getElementsByTagName('Concepto');
+			foreach ($conceptos as $concepto) {
+				$claveProdServ = $concepto->getAttribute('ClaveProdServ');
+				$noIdentificacion = $concepto->getAttribute('NoIdentificacion');
+				$cantidad = $concepto->getAttribute('Cantidad');
+				$claveUnidad = $concepto->getAttribute('ClaveUnidad');
+				$descripcion = $concepto->getAttribute('Descripcion');
+				$valorUnitario = $concepto->getAttribute('ValorUnitario');
+				$importe = $concepto->getAttribute('Importe');
+				$objetoImp = $concepto->getAttribute('ObjetoImp');
+				
+				$impuestos = $concepto->getElementsByTagName('Traslado');
+				foreach ($impuestos as $impuesto) {
+					$base = $impuesto->getAttribute('Base');
+					$impuestoId = $impuesto->getAttribute('Impuesto');
+					$tipoFactor = $impuesto->getAttribute('TipoFactor');
+					$tasaOCuota = $impuesto->getAttribute('TasaOCuota');
+					$importeImpuesto = $impuesto->getAttribute('Importe');
+				}
 			}
-		} else {
-			// Manejar el caso en el que el formulario no se haya enviado o el archivo no se haya subido
-		}
+
+			$impuestosGenerales = $dom->getElementsByTagName('Impuestos')->item(0);
+			$totalImpuestosTrasladados = $impuestosGenerales->getAttribute('TotalImpuestosTrasladados');
+
+			print_r($emisorNombre);
+
+		} 
 	}
 
-
-		// Carga tu vista o realiza cualquier otra acción necesaria aqu
 }
