@@ -13,9 +13,34 @@ class Interaccionbd extends CI_Model
     private $sql;
     private $regreso;
     private $tempo;
+    
+/*
+   /  Agraga Pregunta secreta 
+   /  Entrada -> cadena JSON con idPregunta, idPersona, Respuesta
+   /  Salida ->    1 Guardado
+   /               0 No se guardo
+   $cadena=$this->Interaccionbd->AgregaPregunta('{"idPersona":1,
+			"idPregunta":1,
+			"Respuesta":"StarWars"}');
+		echo $cadena;
+    */
+    public function AgregaPregunta($cadenajsonrespuesta)
+    {
+       $sql="select AgregaPregunta('".$cadenajsonrespuesta."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }   
 
-    
-    
+
+
     /*
     VerBanco
     Entrada -> Cadena de 3 posiciones con los 3 primero digitos correspondientes a la CLABE
@@ -201,10 +226,7 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }
-
-
-
-     /*
+    /*
     /  ValidarAcceso 
     /  Entrada -> cadena JSON con datos sobre Representante Legal
     /  Salida ->    1 Guardado
@@ -228,7 +250,6 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }
-
     /*
     /  Lista Estados Republica Mexicana 
     /  Entrada -> N/A
@@ -248,7 +269,7 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }
-     /*
+    /*
     /  Lista Regimen Fiscal de acuerdo a tipo de persona 
     /  Entrada -> Int Tipo persona 1 para persona Fisica y 2 para persona moral
     /  Salida ->  JSON con Id_RegimenFiscal, ClaveRegimen, DescripcionRegimen
@@ -273,6 +294,34 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }
+
+    /*
+    /  Lista Preguntas para recuperacion de acceso 
+    /  Entrada -> N/A
+    /  Salida ->  JSON con idpregunta, Pregunta
+      * $resultado=$this->Interaccionbd->ConsutlaCatPreguntas();
+		echo $resultado;
+    */
+    public function ConsutlaCatPreguntas()
+    {
+       $sql="select vercatpreguntas() as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+            if ($tempo==NULL)
+            {
+                $tempo=0;
+            }
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
    
-    
+
+
+
 }
