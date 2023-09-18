@@ -21,7 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
          $navbar=true;
          $sidebar=true;
-         $isLog=true;
+         $isLog=false;
 
         if($navbar) {
         ?>
@@ -142,6 +142,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         display: flex; 
         align-items: center; 
         justify-content: space-between;
+        margin-bottom: 0px !important;
     }
 
     .nav h4{
@@ -167,6 +168,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .input-nav:focus {
         outline: none; /* Eliminar el borde al enfocar */
     }
+
+    #header{
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
 
 </style>
 
