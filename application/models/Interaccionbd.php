@@ -14,6 +14,8 @@ class Interaccionbd extends CI_Model
     private $regreso;
     private $tempo;
 
+    
+    
     /*
     VerBanco
     Entrada -> Cadena de 3 posiciones con los 3 primero digitos correspondientes a la CLABE
@@ -246,6 +248,31 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }
-
+     /*
+    /  Lista Regimen Fiscal de acuerdo a tipo de persona 
+    /  Entrada -> Int Tipo persona 1 para persona Fisica y 2 para persona moral
+    /  Salida ->  JSON con Id_RegimenFiscal, ClaveRegimen, DescripcionRegimen
+      * $resultado=$this->Interaccionbd->ConsutlaRegimenFiscal(1);
+		echo $resultado;
+    */
+    public function ConsutlaRegimenFiscal($tipopersona)
+    {
+       $sql="select verRegimenFiscal($tipopersona) as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+            if ($tempo==NULL)
+            {
+                $tempo=0;
+            }
+        }
+        else
+        {
+            $tempo=500;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+   
     
 }
