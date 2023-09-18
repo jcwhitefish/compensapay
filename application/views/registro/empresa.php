@@ -106,7 +106,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpg, image/jpeg" maxFileSize="1048576" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpg" maxFileSize="1048576" required />
                         </div>
                     </div>
                 </div>
@@ -414,7 +414,6 @@
                     case 'representanteLegalUpload':
                         if (representanteLegalUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
                             data[nombreInput] = representanteLegalUpload.value
-                            console.log('hola');
                             representanteLegalUploadName.value = representanteLegalUpload.value.files[0].name;
 
                             // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
