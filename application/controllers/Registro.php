@@ -28,41 +28,33 @@ class Registro extends CI_Controller
 		//mostramos en pantalla welcome_message.php
 		$this->load->view('welcome_message');
 	}
-	public function usuario()
+	public function usuario(...$encodedParams)
 	{
-		// Obtener los parámetros de la URL
-		$bussinesName = $this->input->get('bussinesName');
-		$nameComercial = $this->input->get('nameComercial');
-		$codigoPostal = $this->input->get('codigoPostal');
-		$estado = $this->input->get('estado');
-		$direccion = $this->input->get('direccion');
-		$telefono = $this->input->get('telefono');
-		$type = $this->input->get('type');
-		$rfc = $this->input->get('rfc');
-		$fiscal = $this->input->get('fiscal');
-		$clabe = $this->input->get('clabe');
-		$bank = $this->input->get('bank');
-		$datos = array(
-			'bussinesName' => $bussinesName,
-			'nameComercial' => $nameComercial,
-			'codigoPostal' => $codigoPostal,
-			'estado' => $estado,
-			'direccion' => $direccion,
-			'telefono' => $telefono,
-			'type' => $type,
-			'rfc' => $rfc,
-			'fiscal' => $fiscal,
-			'clabe' => $clabe,
-			'bank' => $bank
-		);
-				
-		//mostramos en pantalla welcome_message.php
-		
-		if (isset($datos)){
-			$data['main'] = $this->load->view('registro/usuario', $datos, true);
-			$this->load->view('plantilla', $data);
+		$data = array();
+		if (!empty($encodedParams)) {
+
+			$decodedParams = array_map('urldecode', $encodedParams);
+
+			$datos = array(
+				'bussinesName' => $decodedParams[0],
+				'nameComercial' => $decodedParams[1],
+				'codigoPostal' => $decodedParams[2],
+				'estado' => $decodedParams[3],
+				'direccion' => $decodedParams[4],
+				'telefono' => $decodedParams[5],
+				'type' => $decodedParams[6],
+				'rfc' => $decodedParams[7],
+				'fiscal' => $decodedParams[8],
+				'clabe' => $decodedParams[9],
+				'bank' => $decodedParams[10],
+				'uniqueString' => $decodedParams[11]
+			);
+			$datos = json_encode($datos);
+			$data['datosEmpresa'] = $datos;
 		}
 
+		$data['main'] = $this->load->view('registro/usuario', $data, true);
+		$this->load->view('plantilla', $data);
 	}
 	public function empresa()
 	{
@@ -209,12 +201,15 @@ class Registro extends CI_Controller
 				'bank' => $bank,
 				'documentos' =>  $uniqueString
 			);
+			// Inicializar un array para los parámetros codificados
+			$encodedParams = array();
 
-			// Convertir el arreglo en una cadena de consulta
-			$query_string = http_build_query($data);
-
-			// Redirigir con los parámetros en la URL
-			redirect('registro/usuario?' . $query_string);
+			// Codificar cada parámetro en el array
+			foreach ($data as $key => $value) {
+				$encodedParams[$key] = urlencode($value);
+			}
+			// Redirigir a la URL con segmentos de URL
+			redirect('registro/usuario/' . implode('/', $encodedParams));
 		}
 	}
 	public function catalogoBancos()
@@ -235,19 +230,8 @@ class Registro extends CI_Controller
 	public function verVariables()
 	{
 
-		$bussinesName = $this->input->post('bussinesName');
-		$nameComercial = $this->input->post('nameComercial');
-		$rfc = $this->input->post('rfc');
-		$clabe = $this->input->post('clabe');
-		$bank = $this->input->post('bank');
-		$imageUpload = $this->input->post('imageUpload');
-		$csfUpload = $this->input->post('csfUpload');
-		$actaConstitutivaUpload = $this->input->post('actaConstitutivaUpload');
-		$comprobanteDomicilioUpload = $this->input->post('comprobanteDomicilioUpload');
-		//creamos un data
-		$data = array(
-			'bussinesName' => $bussinesName,
-		);
+		$bussinesName = $this->input->post('Data');
+
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
