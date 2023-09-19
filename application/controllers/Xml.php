@@ -23,41 +23,40 @@ class Xml extends CI_Controller {
 		$data['main'] = $this->load->view('xml','',true);
 		$this->load->view('plantilla',$data);
 	}
-	public function xmlTemp(){
+	public function factura(){
 
-		if ($_FILES['comprobantexmlUpload']['error'] == UPLOAD_ERR_OK) {
-			$xmlContent = file_get_contents($_FILES['comprobantexmlUpload']['tmp_name']);
-			$xml = simplexml_load_string((string)$xmlContent);
+		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
+			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
 
-			$dom = new DOMDocument();
-			$dom->loadXML($xmlContent);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
 
-			$version = $dom->documentElement->getAttribute('Version');
-			$fecha = $dom->documentElement->getAttribute('Fecha');
-			$sello = $dom->documentElement->getAttribute('Sello');
-			$formaPago = $dom->documentElement->getAttribute('FormaPago');
-			$noCertificado = $dom->documentElement->getAttribute('NoCertificado');
-			$certificado = $dom->documentElement->getAttribute('Certificado');
-			$subTotal = $dom->documentElement->getAttribute('SubTotal');
-			$moneda = $dom->documentElement->getAttribute('Moneda');
-			$tipoCambio = $dom->documentElement->getAttribute('TipoCambio');
-			$total = $dom->documentElement->getAttribute('Total');
-			$tipoDeComprobante = $dom->documentElement->getAttribute('TipoDeComprobante');
-			$exportacion = $dom->documentElement->getAttribute('Exportacion');
-			$metodoPago = $dom->documentElement->getAttribute('MetodoPago');
-			$lugarExpedicion = $dom->documentElement->getAttribute('LugarExpedicion');
+			$version = $xml->documentElement->getAttribute('Version');
+			$fecha = $xml->documentElement->getAttribute('Fecha');
+			$sello = $xml->documentElement->getAttribute('Sello');
+			$formaPago = $xml->documentElement->getAttribute('FormaPago');
+			$noCertificado = $xml->documentElement->getAttribute('NoCertificado');
+			$certificado = $xml->documentElement->getAttribute('Certificado');
+			$subTotal = $xml->documentElement->getAttribute('SubTotal');
+			$moneda = $xml->documentElement->getAttribute('Moneda');
+			$tipoCambio = $xml->documentElement->getAttribute('TipoCambio');
+			$total = $xml->documentElement->getAttribute('Total');
+			$tipoDeComprobante = $xml->documentElement->getAttribute('TipoDeComprobante');
+			$exportacion = $xml->documentElement->getAttribute('Exportacion');
+			$metodoPago = $xml->documentElement->getAttribute('MetodoPago');
+			$lugarExpedicion = $xml->documentElement->getAttribute('LugarExpedicion');
 
-			$emisor = $dom->getElementsByTagName('Emisor')->item(0);
+			$emisor = $xml->getElementsByTagName('Emisor')->item(0);
 			$emisorRfc = $emisor->getAttribute('Rfc');
 			$emisorNombre = $emisor->getAttribute('Nombre');
 			$emisorRegimenFiscal = $emisor->getAttribute('RegimenFiscal');
 
-			$receptor = $dom->getElementsByTagName('Receptor')->item(0);
+			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
 			$receptorRfc = $receptor->getAttribute('Rfc');
 			$receptorNombre = $receptor->getAttribute('Nombre');
 			$usoCFDI = $receptor->getAttribute('UsoCFDI');
 
-			$conceptos = $dom->getElementsByTagName('Concepto');
+			$conceptos = $xml->getElementsByTagName('Concepto');
 			foreach ($conceptos as $concepto) {
 				$claveProdServ = $concepto->getAttribute('ClaveProdServ');
 				$noIdentificacion = $concepto->getAttribute('NoIdentificacion');
@@ -78,11 +77,71 @@ class Xml extends CI_Controller {
 				}
 			}
 
-			$impuestosGenerales = $dom->getElementsByTagName('Impuestos')->item(0);
+			$impuestosGenerales = $xml->getElementsByTagName('Impuestos')->item(0);
 			$totalImpuestosTrasladados = $impuestosGenerales->getAttribute('TotalImpuestosTrasladados');
 
-			print_r($emisorNombre);
+			echo "Version: " . $version . "<br>";
+			echo "Fecha: " . $fecha . "<br>";
+			echo "Sello: " . $sello . "<br>";
+			echo "Forma de Pago: " . $formaPago . "<br>";
+			echo "No. de Certificado: " . $noCertificado . "<br>";
+			echo "Certificado: " . $certificado . "<br>";
+			echo "SubTotal: " . $subTotal . "<br>";
+			echo "Moneda: " . $moneda . "<br>";
+			echo "Tipo de Cambio: " . $tipoCambio . "<br>";
+			echo "Total: " . $total . "<br>";
+			echo "Tipo de Comprobante: " . $tipoDeComprobante . "<br>";
+			echo "Exportación: " . $exportacion . "<br>";
+			echo "Método de Pago: " . $metodoPago . "<br>";
+			echo "Lugar de Expedición: " . $lugarExpedicion . "<br>";
 
+			echo "Emisor RFC: " . $emisorRfc . "<br>";
+			echo "Emisor Nombre: " . $emisorNombre . "<br>";
+			echo "Emisor Regimen Fiscal: " . $emisorRegimenFiscal . "<br>";
+
+			echo "Receptor RFC: " . $receptorRfc . "<br>";
+			echo "Receptor Nombre: " . $receptorNombre . "<br>";
+			echo "Uso CFDI: " . $usoCFDI . "<br>";
+
+			$contadorConceptos = 1;
+			foreach ($conceptos as $concepto) {
+				echo "Concepto #" . $contadorConceptos . "<br>";
+				echo "Clave Producto/Servicio: " . $claveProdServ . "<br>";
+				echo "No. Identificación: " . $noIdentificacion . "<br>";
+				echo "Cantidad: " . $cantidad . "<br>";
+				echo "Clave Unidad: " . $claveUnidad . "<br>";
+				echo "Descripción: " . $descripcion . "<br>";
+				echo "Valor Unitario: " . $valorUnitario . "<br>";
+				echo "Importe: " . $importe . "<br>";
+				echo "Objeto Imp: " . $objetoImp . "<br>";
+
+				$contadorImpuestos = 1;
+				foreach ($impuestos as $impuesto) {
+					echo "Impuesto #" . $contadorImpuestos . "<br>";
+					echo "Base: " . $base . "<br>";
+					echo "Impuesto ID: " . $impuestoId . "<br>";
+					echo "Tipo de Factor: " . $tipoFactor . "<br>";
+					echo "Tasa o Cuota: " . $tasaOCuota . "<br>";
+					echo "Importe de Impuesto: " . $importeImpuesto . "<br>";
+
+					$contadorImpuestos++;
+				}
+
+				$contadorConceptos++;
+			}
+
+			echo "Total de Impuestos Trasladados: " . $totalImpuestosTrasladados . "<br>";
+
+
+		} 
+	}
+	public function notaCredito(){
+
+		if ($_FILES['creditNoteUpload']['error'] == UPLOAD_ERR_OK) {
+			$xmlContent = file_get_contents($_FILES['creditNoteUpload']['tmp_name']);
+			$xml = simplexml_load_string((string)$xmlContent);
+
+			print_r($xml);
 		} 
 	}
 
