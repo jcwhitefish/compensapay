@@ -270,16 +270,6 @@ class Registro extends CI_Controller
 		} else {
 			echo "No se pudo mover la carpeta.";
 		}
-		// echo '{"Nombre": "' . $bussinesName . '",
-		// 	"Apellido": "",
-		// 	"Alias": "' . $nameComercial . '",
-		// 	"RFC": "' . $rfc . '",
-		// 	"TipoPersona": 2,
-		// 	"Rol": 1,
-		// 	"ActivoFintec": 0,
-		// 	"RegimenFical":' . $fiscal . ',
-		// 	"idCtaBanco":1,
-		// 	"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto"}';
 		$agregarpersona = $this->Interaccionbd->AgregaPersona('{"Nombre": "' . $bussinesName . '",
 			"Apellido": "",
 			"Alias": "' . $nameComercial . '",
