@@ -101,8 +101,21 @@ class Registro extends CI_Controller
 			echo $validation_errors;
 		} else {
 			$uniqueString = uniqid();
-			$config['upload_path'] = './temporales/'; // Carpeta donde se guardarán los archivos
-			$config['allowed_types'] = 'png|jpg|jpeg'; // Tipos de archivos permitidos
+			$hora_actual = date("H");
+			$uniqueString = $uniqueString . '-' . $hora_actual;
+			$nombre_carpeta = "./temporales/" . $uniqueString;
+
+			if (!file_exists($nombre_carpeta)) {
+				if (mkdir($nombre_carpeta, 0777, true)) {
+					echo "Carpeta creada correctamente: $nombre_carpeta";
+				} else {
+					echo "No se pudo crear la carpeta: $nombre_carpeta";
+				}
+			} else {
+				echo "La carpeta ya existe: $nombre_carpeta";
+			}
+			$config['upload_path'] = './temporales/' . $uniqueString . '/'; // Carpeta donde se guardarán los archivos
+			$config['allowed_types'] = 'jpg'; // Tipos de archivos permitidos
 			$config['max_size'] = 1024; // Tamaño máximo en kilobytes (1 MB)
 
 			$this->upload->initialize($config);
@@ -115,7 +128,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-0-' . $original_name;
+				$new_name = $uniqueString . '-foto.jpg';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -130,7 +143,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-1-' . $original_name;
+				$new_name = $uniqueString . '-csf.pdf';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -142,7 +155,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-1-' . $original_name;
+				$new_name = $uniqueString . '-actaConstitutiva.pdf';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -155,7 +168,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-3-' . $original_name;
+				$new_name = $uniqueString . '-comprobanteDomicilio.pdf';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -167,7 +180,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-4-' . $original_name;
+				$new_name = $uniqueString . '-representanteLegal.pdf';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -211,6 +224,63 @@ class Registro extends CI_Controller
 			// Redirigir a la URL con segmentos de URL
 			redirect('registro/usuario/' . implode('/', $encodedParams));
 		}
+	}
+	public function registraEmpresa()
+	{
+		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required');
+		$this->form_validation->set_rules('nameComercial', 'NameComercial', 'required');
+		$this->form_validation->set_rules('type', 'Type', 'required');
+		$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|regex_match[/^[A-Z0-9]{12,13}$/]');
+		$this->form_validation->set_rules('fiscal', 'Fiscal', 'required');
+		$this->form_validation->set_rules('clabe', 'CLABE', 'trim|required|regex_match[/^[0-9]{18}$/]');
+		$this->form_validation->set_rules('codigoPostal', 'CodigoPostal', 'required|regex_match[/^[0-9]{5}$/]');
+		$this->form_validation->set_rules('estado', 'Estado', 'required');
+		$this->form_validation->set_rules('direccion', 'Direccion', 'required');
+		$this->form_validation->set_rules('telefono', 'Telefono', 'required|regex_match[/^[0-9]+$/]');
+		$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
+		if ($this->form_validation->run() === FALSE) {
+			// Si la validación falla, puedes mostrar errores o redirigir al formulario
+			// redirect('controlador/metodo');
+			$validation_errors = validation_errors();
+			echo $validation_errors;
+		} else {
+
+			// Si la validación es exitosa, obtén los datos del formulario
+			$bussinesName = $this->input->post('bussinesName');
+			$codigoPostal = $this->input->post('codigoPostal');
+			$estado = $this->input->post('estado');
+			$direccion = $this->input->post('direccion');
+			$telefono = $this->input->post('telefono');
+			$nameComercial = $this->input->post('nameComercial');
+			$type = $this->input->post('type');
+			$rfc = $this->input->post('rfc');
+			$fiscal = $this->input->post('fiscal');
+			$clabe = $this->input->post('clabe');
+			$bank = $this->input->post('bank');
+			$uniqueString = $this->input->post('uniqueString');
+		}
+		//IMPORTANTE BORRAR:
+		$fiscal = 1;
+		//Movemos los archivos de la persona
+		$sourcePath = './temporales/'.$uniqueString; // Ruta de origen de la carpeta
+		$destinationPath =  './boveda/'.$uniqueString; // Ruta de destino de la carpeta
+
+		if (rename($sourcePath, $destinationPath)) {
+			echo "Carpeta movida exitosamente.";
+		} else {
+			echo "No se pudo mover la carpeta.";
+		}
+		$agregarpersona = $this->Interaccionbd->AgregaPersona('{"Nombre": "' . $bussinesName . '",
+			"Apellido": "",
+			"Alias": "' . $nameComercial . '",
+			"RFC": "' . $rfc . '",
+			"TipoPersona": 2,
+			"Rol": 1,
+			"ActivoFintec": 0,
+			"RegimenFical":' . $fiscal . ',
+			"idCtaBanco":1,
+			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpg"}');
+		echo $agregarpersona;
 	}
 	public function catalogoBancos()
 	{

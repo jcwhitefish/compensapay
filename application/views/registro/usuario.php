@@ -81,7 +81,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/png, image/jpg, image/jpeg" maxFileSize="1048576" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpg" maxFileSize="1048576" required />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
@@ -254,7 +254,6 @@
                 subirFormulario()
             }
             const subirFormulario = async () => {
-                console.log('hola');
                 if (typeof dataEmpresa !== 'undefined') {
                     // La variable miVariable está definida
                     console.log(dataEmpresa);
