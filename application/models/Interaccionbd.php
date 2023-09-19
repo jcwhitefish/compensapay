@@ -130,7 +130,7 @@ class Interaccionbd extends CI_Model
     public function VerBanco($cadenaclabe)
     {
        $sql="select verbanco('".$cadenaclabe."') as existe;";
-       echo $sql;
+       //echo $sql;
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
@@ -224,7 +224,7 @@ class Interaccionbd extends CI_Model
     public function AgregaUsuario($cadenajsonusuario)
     {
        $sql="select AgregaUsuario('".$cadenajsonusuario."','".keyvalue."') as existe;";
-       echo $sql;
+       //echo $sql;
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
