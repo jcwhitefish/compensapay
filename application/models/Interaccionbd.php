@@ -14,6 +14,87 @@ class Interaccionbd extends CI_Model
     private $regreso;
     private $tempo;
     
+
+   /*
+   /  Consulta Persona (Fisica o Moral) 
+   /  Entrada -> Numero de id de la persona (fisica o moral)
+   /  Salida ->    cadena JSON con los datos de la persona, usuario 
+   /               0 No se guardo
+   $persona = $this->Interaccionbd->consultaPersona(1);
+		echo $persona;
+    */
+    public function consultaPersona($valoridpersona)
+    {
+       $sql="select consultaPersona(".$valoridpersona.",'".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+           if ($tempo==NULL)
+           {
+            $tempo=0;
+           }
+        }
+        else
+        {
+           $tempo=-1;//echo "Algo fallo";
+        }
+       return $tempo;
+    }   
+
+
+
+
+
+   /*
+   /  Actualiza Llave de acceso 
+   /  Entrada -> cadena JSON con idUsuario, NuevaLlave
+   /  Salida ->    cadena JSON con idPersona, idUsuario y idPerfil
+   /               0 No se guardo
+   $cambio=$this->Interaccionbd->UpdateLlaveUsuario('{"idUsuario":1,"Llave":"llave"}');
+		echo $cambio;
+    */
+    public function UpdateLlaveUsuario($cadenajsonnuevallave)
+    {
+       $sql="select UpdateLlaveUsuario('".$cadenajsonnuevallave."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+           $tempo=-1;//echo "Algo fallo";
+        }
+       return $tempo;
+    }   
+
+   /*
+   /  Agraga Cuenta Bancaria 
+   /  Entrada -> cadena JSON con idPersona, idBanco, CLABE
+   /  Salida ->    1 Guardado
+   /               0 No se guardo
+   $resultado=$this->Interaccionbd->AgregaCuentaBancaria('{"idPersona":2,
+			"idBanco":1,
+			"CLABE": "1309434901823"}');
+		echo $resultado;
+
+    */
+    public function AgregaCuentaBancaria($cadenajsoncuenta)
+    {
+       $sql="select AgregaCtaBancaria('".$cadenajsoncuenta."','".keyvalue."') as existe;";
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+        }
+        else
+        {
+           $tempo=-1;//echo "Algo fallo";
+        }
+       return $tempo;
+    }   
+
 /*
    /  Agraga Pregunta secreta 
    /  Entrada -> cadena JSON con idPregunta, idPersona, Respuesta
@@ -34,7 +115,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }   
@@ -61,7 +142,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -82,7 +163,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -108,7 +189,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -129,7 +210,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -151,7 +232,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;// "Algo fallo"
+           $tempo=-1;// "Algo fallo"
         }
        return $tempo;
     }
@@ -172,7 +253,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -193,7 +274,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -222,7 +303,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -246,7 +327,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -265,7 +346,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -290,7 +371,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
@@ -316,7 +397,7 @@ class Interaccionbd extends CI_Model
         }
         else
         {
-            $tempo=500;//echo "Algo fallo";
+           $tempo=-1;//echo "Algo fallo";
         }
        return $tempo;
     }
