@@ -115,7 +115,7 @@ class Registro extends CI_Controller
 				echo "La carpeta ya existe: $nombre_carpeta";
 			}
 			$config['upload_path'] = './temporales/' . $uniqueString . '/'; // Carpeta donde se guardarán los archivos
-			$config['allowed_types'] = 'jpg'; // Tipos de archivos permitidos
+			$config['allowed_types'] = 'jpeg|jpg'; // Tipos de archivos permitidos
 			$config['max_size'] = 1024; // Tamaño máximo en kilobytes (1 MB)
 
 			$this->upload->initialize($config);
@@ -128,7 +128,7 @@ class Registro extends CI_Controller
 				$original_name = $uploaded_data['file_name'];
 				// Renombra el archivo agregando la el stringUnico al nombre
 
-				$new_name = $uniqueString . '-foto.jpg';
+				$new_name = $uniqueString . '-foto.jpeg';
 				// Mueve el archivo con el nuevo nombre al directorio de destino
 				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
 			}
@@ -242,7 +242,6 @@ class Registro extends CI_Controller
 			// Si la validación falla, puedes mostrar errores o redirigir al formulario
 			// redirect('controlador/metodo');
 			$validation_errors = validation_errors();
-			echo $validation_errors;
 		} else {
 
 			// Si la validación es exitosa, obtén los datos del formulario
@@ -262,14 +261,11 @@ class Registro extends CI_Controller
 		//IMPORTANTE BORRAR:
 		$fiscal = 1;
 		//Movemos los archivos de la persona
-		$sourcePath = './temporales/'.$uniqueString; // Ruta de origen de la carpeta
-		$destinationPath =  './boveda/'.$uniqueString; // Ruta de destino de la carpeta
+		$sourcePath = './temporales/' . $uniqueString; // Ruta de origen de la carpeta
+		$destinationPath =  './boveda/' . $uniqueString; // Ruta de destino de la carpeta
 
-		if (rename($sourcePath, $destinationPath)) {
-			echo "Carpeta movida exitosamente.";
-		} else {
-			echo "No se pudo mover la carpeta.";
-		}
+		$renombre = rename($sourcePath, $destinationPath);
+
 		$agregarpersona = $this->Interaccionbd->AgregaPersona('{"Nombre": "' . $bussinesName . '",
 			"Apellido": "",
 			"Alias": "' . $nameComercial . '",
@@ -279,8 +275,110 @@ class Registro extends CI_Controller
 			"ActivoFintec": 0,
 			"RegimenFical":' . $fiscal . ',
 			"idCtaBanco":1,
-			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpg"}');
-		echo $agregarpersona;
+			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpeg"}');
+		$registro['id'] = $agregarpersona;
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($registro));
+	}
+	public function registraUsuario()
+	{
+		$this->form_validation->set_rules('user', 'Usuario', 'required');
+		$this->form_validation->set_rules('name', 'Nombre', 'required');
+		$this->form_validation->set_rules('lastname', 'Apellidos', 'required');
+		$this->form_validation->set_rules('email', 'Correo', 'required|valid_email');
+		$this->form_validation->set_rules('validateEmail', 'Confirmar Correo', 'required');
+		$this->form_validation->set_rules('number', 'Teléfono Móvil', 'required|exact_length[10]|numeric');
+		$this->form_validation->set_rules('validateNumber', 'Confirmar Teléfono Móvil', 'required|exact_length[10]|numeric');
+		$this->form_validation->set_rules('question', 'Pregunta Secreta', 'required');
+		$this->form_validation->set_rules('answer', 'Respuesta', 'required');
+		$this->form_validation->set_rules('idEmpresa', 'ID', 'required');
+		if ($this->form_validation->run() === FALSE) {
+			// Si la validación falla, puedes mostrar errores o redirigir al formulario
+			// redirect('controlador/metodo');
+			$validation_errors = validation_errors();
+			echo $validation_errors;
+		} else {
+
+			// Si la validación es exitosa, obtén los datos del formulario
+			$user = $this->input->post('user');
+			$name = $this->input->post('name');
+			$lastname = $this->input->post('lastname');
+			$email = $this->input->post('email');
+			$validateEmail = $this->input->post('validateEmail');
+			$number = $this->input->post('number');
+			$validateNumber = $this->input->post('validateNumber');
+			$question = $this->input->post('question');
+			$answer = $this->input->post('answer');
+			$idEmpresa = $this->input->post('idEmpresa');
+			//Esto es para guardar el archivo
+			$uniqueString = uniqid();
+			$hora_actual = date("H");
+			$uniqueString = $uniqueString . '-' . $hora_actual;
+			$nombre_carpeta = "./boveda/" . $uniqueString;
+
+			if (!file_exists($nombre_carpeta)) {
+				if (mkdir($nombre_carpeta, 0777, true)) {
+					// echo "Carpeta creada correctamente: $nombre_carpeta";
+				} else {
+					// echo "No se pudo crear la carpeta: $nombre_carpeta";
+				}
+			} else {
+				// echo "La carpeta ya existe: $nombre_carpeta";
+			}
+			$config['upload_path'] = './boveda/' . $uniqueString . '/'; // Carpeta donde se guardarán los archivos
+			$config['allowed_types'] = 'jpeg|jpg'; // Tipos de archivos permitidos
+			$config['max_size'] = 1024; // Tamaño máximo en kilobytes (1 MB)
+
+			$this->upload->initialize($config);
+			if (!$this->upload->do_upload('imagen')) {
+				echo $this->upload->display_errors();
+				// Manejar el error de "gato", mostrarlo o redirigir al formulario de carga
+			} else {
+				// Subida exitosa, obten el nombre original del archivo
+				$uploaded_data = $this->upload->data();
+				$original_name = $uploaded_data['file_name'];
+				// Renombra el archivo agregando la el stringUnico al nombre
+
+				$new_name = $uniqueString . '-foto.jpeg';
+				// Mueve el archivo con el nuevo nombre al directorio de destino
+				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+			}
+		}
+		//Registramos usuario
+
+		$agregausuario = $this->Interaccionbd->AgregaUsuario('{
+			"NombreUsuario": "' . $user . '",
+			"idPersona": ' . $idEmpresa . ',
+			"idPerfil": 1,
+			"urlImagen":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpeg"}');
+		$agregarepresentante = $this->Interaccionbd->AgregaRepresentante('{"NombreRepresentante": "' . $name . ' ' . $lastname . '",
+			"RFC":"",
+			"idPersona": "' . $idEmpresa . '"}');
+		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 2,
+			"idPersona":' . $idEmpresa . ',
+			"Contenido": "' . $number . '"}');
+		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 3,
+				"idPersona":' . $idEmpresa . ',
+				"Contenido": "' . $email . '"}');
+		//Enviamos el correo
+		//echo $this->enviarCorreo();
+
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		$encodedParams = array();
+		$encodedParams['nombre'] = urlencode($name);
+		$encodedParams['apellidos'] = urlencode($lastname);
+		$dato = array();
+		$dato['url'] = 'registro/finalizado/' . implode('/', $encodedParams);
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+
+	}
+	public function enviarCorreo()
+	{
+		return 'Listo correo';
 	}
 	public function catalogoBancos()
 	{
@@ -299,9 +397,32 @@ class Registro extends CI_Controller
 	//Nos permite ver las variables que queramos
 	public function verVariables()
 	{
-
-		$bussinesName = $this->input->post('Data');
-
+		$bussinesName = $this->input->post('bussinesName');
+		$codigoPostal = $this->input->post('codigoPostal');
+		$estado = $this->input->post('estado');
+		$direccion = $this->input->post('direccion');
+		$telefono = $this->input->post('telefono');
+		$nameComercial = $this->input->post('nameComercial');
+		$type = $this->input->post('type');
+		$rfc = $this->input->post('rfc');
+		$fiscal = $this->input->post('fiscal');
+		$clabe = $this->input->post('clabe');
+		$bank = $this->input->post('bank');
+		$uniqueString = $this->input->post('uniqueString');
+		$data = array(
+			'bussinesName' => $bussinesName,
+			'nameComercial' => $nameComercial,
+			'codigoPostal' => $codigoPostal,
+			'estado' => $estado,
+			'direccion' => $direccion,
+			'telefono' => $telefono,
+			'type' => $type,
+			'rfc' => $rfc,
+			'fiscal' => $fiscal,
+			'clabe' => $clabe,
+			'bank' => $bank,
+			'documentos' =>  $uniqueString
+		);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON

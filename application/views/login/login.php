@@ -1,31 +1,98 @@
-<div class="p-5">
+<div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
+                <?php 
+                $isLog= false;
+                if ($isLog){
+                    echo '<h6>Bienvenido  [[nombres y apellidos del usuario]], tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>';
+                } ?>
                 <div class="col l6 center-align">
                     <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
-                    <p>¿Aún no eres socio?, registrate <a href="">aqui</a></p><br>
+                    <p>¿Aún no eres socio?, regístrate <a href="#">aquí</a></p><br>
                 </div>
                 <div class="col l6 p-5">
-                    <div class="container input-border">
-                        <input type="text" name="user" id="user" placeholder="Usuario" required>
-                        <label for="user">Usuario</label>
-                        <input type="password" name="password" id="password" placeholder="Contraseña" required>
-                        <label for="password">Contraseña</label>
-                    </div>
-                    <div class="container input-border right-align p-5">
-                        <label>	                 
-                            <input class="filled-in" type="checkbox" />	                               
-                            <span>Guardar datos en este equipo</span>	                                
-                        </label>
-                        <button class="button-gray">Choose this plan</button>
-                        <p class="p-1"><a href=""><u>Olvide mi contraseña</u></a></p>
-                    </div>
+                    <form method="post" action="<?= site_url('login'); ?>">
+                        <div class="container input-border">
+                            <input v-model="data['user']" @blur="checkFormat('user')" :style="colorsBorder['user'] || {}" type="text" name="user" id="user" placeholder="Usuario" required>
+                            <label for="user">Usuario</label>
+                            <input v-model="data['password']" @blur="checkFormat('password')" :style="colorsBorder['password'] || {}" type="password" name="password" id="password" placeholder="Contraseña" required>
+                            <label for="password">Contraseña</label>
+                            <?php if ($isLog){ ?>
+                                <input v-model="data['passwordValidate']" @blur="checkFormat('passwordValidate')" :style="colorsBorder['passwordValidate'] || {}" type="password" name="passwordValidate" id="passwordValidate" placeholder="Verificar contraseña" required>
+                                <label for="passwordValidate">Verificar contraseña</label>
+                            <?php } ?>
+                        </div>
+                        <?php 
+                            if (isset($error_message) && !empty($error_message)) {
+                                echo $error_message;
+                        } ?>
+                        <div class="container right-align">
+                            <label>
+                                <input class="filled-in" type="checkbox" />
+                                <span>Guardar datos en este equipo</span>
+                            </label>
+                        </div>
+                        <div class="center-align p-5">
+                            <p>aquí va el captcha xd</p>
+                        </div>
+                        <div class="right-align container">
+                            <button class="button-gray" type="submit">Iniciar Sesión</button>
+                            <p class="p-1"><a href="#"><u>Olvidé mi contraseña</u></a></p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const { createApp, computed, reactive, ref, isRef } = Vue;
+
+    const app = createApp({
+        setup() {
+            const data = reactive({
+                user: ref(''),
+                password: ref(''),
+                passwordValidate: ref(''),
+            });
+
+            const colorsBorder = reactive({});
+
+            const checkFormat = (nombreInput) => {
+                if (!isRef(colorsBorder[nombreInput])) {
+                    colorsBorder[nombreInput] = ref('');
+                }
+
+                switch (nombreInput) {
+                    case 'bussinesName':
+                    case 'user':
+                    case 'password':
+                    case 'passwordValidate':
+                        if (data[nombreInput] !== '') {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid #03BB85!important',
+                            };
+                        } else {
+                            colorsBorder[nombreInput] = {
+                                border: '1px solid red!important',
+                            };
+                        }
+                        break;
+                    default:
+                }
+            };
+
+            return {
+                data,
+                colorsBorder,
+                checkFormat,
+            };
+        },
+    });
+</script>
+
 
 <style>
     .card-title {
@@ -47,3 +114,7 @@
         height: 800px;
     }
 </style>
+
+<!-- cadena_validar = '{"Usuario":"DemoUser","Llave":"Pasrd"}';
+$validar_acceso=$this->Interaccionbd->ValidarAcceso($cadena_validar);
+echo $validar_acceso; -->

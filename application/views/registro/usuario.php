@@ -81,7 +81,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpg" maxFileSize="1048576" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" required />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
@@ -251,40 +251,90 @@
             }
             const submitForm = (event) => {
                 event.preventDefault();
-                subirFormulario()
-            }
-            const subirFormulario = async () => {
-                if (typeof dataEmpresa !== 'undefined') {
-                    // La variable miVariable está definida
-                    console.log(dataEmpresa);
-                } else {
-                    // La variable miVariable no está definida
-                    console.log('La variable no existe.');
+                <?php
+                if (isset($datosEmpresa)) {
+                    echo 'let empresa = formEmpresa();';
                 }
-                // try {
-                //     // Esto solo sirve en POST
-                //     // const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>',  {
-                //     const response = await fetch('<?php echo base_url('registro/usuarioUnico') ?>' + '/' + inputValue.value, {
-                //         method: "GET", // *GET, POST, PUT, DELETE, etc.
-                //         mode: "cors", // no-cors, *cors, same-origin
-                //         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                //         credentials: "same-origin", // include, *same-origin, omit
-                //         headers: {
-                //             "Content-Type": "application/json",
-                //             // 'Content-Type': 'application/x-www-form-urlencoded',
-                //         },
-                //         redirect: "follow", // manual, *follow, error
-                //         referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                //         //Esto solo sirve en POST
-                //         //body: JSON.stringify({'nombre': 11}), // body data type must match "Content-Type" header
-                //     }); // Reemplaza la URL con la URL de tu API
-                //     const responseData = await response.json();
-                //     //data.value = responseData; // Almacena los datos en data
-                //     console.log(responseData)
-                // } catch (error) {
-                //     console.error('Error al realizar la solicitud fetch:', error);
-                // }
+                ?>
+
+            }
+            const formUsuario = (empresa = array('')) => {
+                empresa['id'] = 0
+                // Esto solo sirve en POST
+                const formData = new FormData();
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        formData.append(key, data[key]);
+                    }
+                }
+                formData.append('idEmpresa', empresa['id']);
+                formData.append('imagen', imageUpload);
+
+                fetch('<?php echo base_url('registro/registraUsuario') ?>', {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('La solicitud no fue exitosa');
+                        }
+                        return response.json();
+                    })
+                    .then((responseData) => {
+                        //console.log(responseData);
+                        // Hacer algo con los datos, por ejemplo, retornarlos
+                        console.log(formUsuario(responseData));
+
+                    })
+                    .catch((error) => {
+                        console.error('Error al realizar la solicitud fetch:', error);
+                    });
             };
+            <?php
+            if (isset($datosEmpresa)) {
+            ?>
+
+                const formEmpresa = () => {
+
+                    // Esto solo sirve en POST
+                    const formData = new FormData();
+                    for (const key in dataEmpresa) {
+                        if (dataEmpresa.hasOwnProperty(key)) {
+                            formData.append(key, dataEmpresa[key]);
+                        }
+                    }
+
+                    const response = fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    });
+
+                    fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
+                            method: 'POST',
+                            body: formData,
+                            redirect: 'follow'
+                        })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('La solicitud no fue exitosa');
+                            }
+                            return response.json();
+                        })
+                        .then((responseData) => {
+                            //console.log(responseData);
+                            // Hacer algo con los datos, por ejemplo, retornarlos
+                            formUsuario(responseData)
+
+                        })
+                        .catch((error) => {
+                            console.error('Error al realizar la solicitud fetch:', error);
+                        });
+                };
+            <?php
+            }
+            ?>
 
             return {
                 data,

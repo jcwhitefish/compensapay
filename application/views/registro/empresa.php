@@ -106,7 +106,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpg" maxFileSize="1048576" required />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" required />
                         </div>
                     </div>
                 </div>
