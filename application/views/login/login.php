@@ -2,9 +2,7 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-                <?php 
-                $isLog= false;
-                if ($isLog){
+                <?php if ($isLog){
                     echo '<h6>Bienvenido  [[nombres y apellidos del usuario]], tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>';
                 } ?>
                 <div class="col l6 center-align">
@@ -12,7 +10,7 @@
                     <p>¿Aún no eres socio?, regístrate <a href="#">aquí</a></p><br>
                 </div>
                 <div class="col l6 p-5">
-                    <form method="post" action="<?= site_url('login'); ?>">
+                    <form method="<?= $isLog ? 'post' : 'get' ?>" action="<?= base_url('login'); ?>">
                         <div class="container input-border">
                             <input v-model="data['user']" @blur="checkFormat('user')" :style="colorsBorder['user'] || {}" type="text" name="user" id="user" placeholder="Usuario" required>
                             <label for="user">Usuario</label>
@@ -66,7 +64,6 @@
                 }
 
                 switch (nombreInput) {
-                    case 'bussinesName':
                     case 'user':
                     case 'password':
                     case 'passwordValidate':

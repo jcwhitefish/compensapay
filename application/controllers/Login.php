@@ -2,12 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
-
-	public function __construct() {
-        parent::__construct();
-        $this->load->model('Interaccionbd');
-    }
-
 	/**
 	 * Index Page for this controller.
 	 *
@@ -27,37 +21,45 @@ class Login extends CI_Controller {
     public function index() {
 		
         if ($this->input->post()) {
+			//save the variables 
             $user = $this->input->post('user');
             $password = $this->input->post('password');
-			$password = $this->input->post('password');
-            
+			//change variables in json
             $data = array(
                 'Usuario' => $user,
                 'Llave' => $password
             );
-            
             $cadenajsonvalidar = json_encode($data);
-            
             $resultado = $this->Interaccionbd->ValidarAcceso($cadenajsonvalidar);
-    
     	    $perfil = json_decode($resultado, true)['Perfil'];
-
+			//assign isLog for validate de login view
+			$data['isLog'] = false;
 			
-            //print_r($data);
             if ($resultado == 0) {
-                //redirect('main');
+                //redirect if your id profile is 0
 				$data['error_message'] = 'Usuario o contraseña incorrectos.';
 				$data['main'] = $this->load->view('login/login',$data ,true);
 				$this->load->view('plantilla',$data);
-				//print_r($perfil);
             } else {
-                //$data['error_message'] = 'Usuario o contraseña incorrectos.';
-                //$this->load->view('plantilla', $data);
+                //print your profile id
 				print_r($perfil);
             }
         } else {
-            $data['main'] = $this->load->view('login/login','',true);
+			//normal view
+			//assign isLog for validate de login view
+			$data['isLog'] = true;
+            $data['main'] = $this->load->view('login/login',$data,true);
 			$this->load->view('plantilla',$data);
         }
 	}
+	public function validadorCuenta($user = null, $password = null, $passwordValidate = null) {
+		if ($user && $password && $passwordValidate) {
+			//in this part you can use your information 
+		} else {
+			$data['isLog'] = false;
+			$data['main'] = $this->load->view('login/login', $data, true);
+			$this->load->view('plantilla', $data);
+		}
+	}
+	
 }
