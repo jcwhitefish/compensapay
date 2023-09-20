@@ -62,10 +62,21 @@ class Registro extends CI_Controller
 		$data['main'] = $this->load->view('registro/empresa', '', true);
 		$this->load->view('plantilla', $data);
 	}
-	public function finalizado()
+	public function finalizado(...$encodedParams)
 	{
+		$data = array();
+		if (!empty($encodedParams)) {
+
+			$decodedParams = array_map('urldecode', $encodedParams);
+
+			$datos = array(
+				'nombre' => $decodedParams[0],
+				'correo' => $decodedParams[1],
+				'enlace' => $decodedParams[2],
+			);
+		}
 		//mostramos en pantalla welcome_message.php
-		$data['main'] = $this->load->view('registro/finalizado', '', true);
+		$data['main'] = $this->load->view('registro/finalizado', $datos, true);
 		$this->load->view('plantilla', $data);
 	}
 	public function usuarioUnico()
@@ -362,23 +373,32 @@ class Registro extends CI_Controller
 		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 3,
 				"idPersona":' . $idEmpresa . ',
 				"Contenido": "' . $email . '"}');
-		//Enviamos el correo
-		//echo $this->enviarCorreo();
 
-		// Configura la respuesta para que sea en formato JSON
-		$this->output->set_content_type('application/json');
+
+
 		$encodedParams = array();
-		$encodedParams['nombre'] = urlencode($name);
-		$encodedParams['apellidos'] = urlencode($lastname);
+		$encodedParams['nombre'] = urlencode($name. ' ' . $lastname);
+		$encodedParams['correo'] = urlencode($email);
+
 		$dato = array();
 		$dato['url'] = 'registro/finalizado/' . implode('/', $encodedParams);
+				// Enviamos el correo
+		
+		//asi es como
+		$dato['enlace'] = $this->enviarCorreo($user);
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
-
 	}
-	public function enviarCorreo()
+	public function enviarCorreo($user)
 	{
-		return 'Listo correo';
+		// Esto por el momento esta bien
+		$encodedParams = array();
+		// $encodedParams['nombreUsuario'] = urlencode($user);
+		// $urlValidadora = base_url('login/validarCuenta/'. implode('/', $encodedParams));
+		$urlValidadora = urlencode($user);
+		return $urlValidadora;
 	}
 	public function catalogoBancos()
 	{
