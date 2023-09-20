@@ -16,8 +16,8 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 DROP database IF EXISTS `compensapay`;
-CREATE database 'compensapay';
-use 'compensapay';
+CREATE database `compensapay`;
+use `compensapay`;
 
 
 --
@@ -1332,9 +1332,9 @@ begin
 			'clabe', aes_decrypt (c.b_CLABE,llave),
 			'logo_persona',	aes_decrypt (per_logo ,llave),
 			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
-			'id_usuario', u.u_idUsuario) 	) 
-	separator ',')
-    , ']')
+			'id_usuario', u.u_idUsuario) 
+	  SEPARATOR ',')
+    ,']')
     into salida
 from
 	persona p

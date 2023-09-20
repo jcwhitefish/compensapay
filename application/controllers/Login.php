@@ -18,48 +18,41 @@ class Login extends CI_Controller {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 
-    public function index() {
-		
-        if ($this->input->post()) {
-			//save the variables 
-            $user = $this->input->post('user');
-            $password = $this->input->post('password');
-			//change variables in json
-            $data = array(
-                'Usuario' => $user,
-                'Llave' => $password
-            );
-            $cadenajsonvalidar = json_encode($data);
-            $resultado = $this->Interaccionbd->ValidarAcceso($cadenajsonvalidar);
-    	    $perfil = json_decode($resultado, true)['Perfil'];
-			//assign isLog for validate de login view
-			$data['isLog'] = false;
-			
-            if ($resultado == 0) {
-                //redirect if your id profile is 0
-				$data['error_message'] = 'Usuario o contraseña incorrectos.';
-				$data['main'] = $this->load->view('login/login',$data ,true);
-				$this->load->view('plantilla',$data);
-            } else {
-                //print your profile id
-				print_r($perfil);
-            }
-        } else {
-			//normal view
-			//assign isLog for validate de login view
-			$data['isLog'] = false;
-            $data['main'] = $this->load->view('login/login',$data,true);
-			$this->load->view('plantilla',$data);
-        }
-	}
+	 public function index() {
+		if ($this->input->post()) {
+			$user = $this->input->post('user');
+			$password = $this->input->post('password');
+			// Change the array in json
+			$data = [
+				'Usuario' => $user,
+				'Llave' => $password
+			];
+			$cadenajsonvalidar = json_encode($data);
+			$resultado = $this->Interaccionbd->ValidarAcceso($cadenajsonvalidar);
+			$perfil = json_decode($resultado, true);
+	
+	
+			if ($perfil['Perfil'] === 0) {
+				// if your profile is 0 
+
+				//$data['error_message'] = 'Usuario o contraseña incorrectos.';
+				print_r($perfil['Perfil']);
+			} else {
+				print_r($perfil['Perfil']);
+			}
+		} 
+
+		// assign isLog for validate if show in the screen
+		$data['main'] = $this->load->view('login/login', '', true);
+		$this->load->view('plantilla', $data);
+	}	
 	public function validarCuenta($user = null, $password = null, $passwordValidate = null) {
 		if ($user && $password && $passwordValidate) {
 			//in this part you can use your information 
-		} else {
-			$data['isLog'] = true;
-			$data['main'] = $this->load->view('login/login', $data, true);
-			$this->load->view('plantilla', $data);
-		}
+		} 
+		
+		$data['main'] = $this->load->view('login/login', '', true);
+		$this->load->view('plantilla', $data);
 	}
 	
 }
