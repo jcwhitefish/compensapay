@@ -3,7 +3,7 @@
         <div class="card-content">
             <div class="row">
                 <?php 
-                $isLog = true;
+                $isLog = false;
                 if (!$isLog){
                     echo '<h6>Bienvenido  [[nombres y apellidos del usuario]], tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>';
                 } ?>

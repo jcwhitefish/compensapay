@@ -385,19 +385,19 @@ class Registro extends CI_Controller
 				// Enviamos el correo
 		
 		//asi es como
-		$dato['enlace'] = $this->enviarCorreo($user);
+		$dato['enlace'] = $this->enviarCorreo($idEmpresa);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
-	public function enviarCorreo($user)
+	public function enviarCorreo($idEmpresa)
 	{
 		// Esto por el momento esta bien
 		$encodedParams = array();
-		// $encodedParams['nombreUsuario'] = urlencode($user);
+		// $encodedParams['idEmpresa'] = urlencode($idEmpresa);
 		// $urlValidadora = base_url('login/validarCuenta/'. implode('/', $encodedParams));
-		$urlValidadora = urlencode($user);
+		$urlValidadora = urlencode($idEmpresa);
 		return $urlValidadora;
 	}
 	public function catalogoBancos()
