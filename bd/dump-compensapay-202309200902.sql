@@ -563,7 +563,7 @@ CREATE TABLE `persona` (
   `per_RFC` blob DEFAULT NULL,
   `per_idTipoPrersona` blob DEFAULT NULL,
   `per_idRol` blob DEFAULT NULL,
-  `per_ActivoFintec` blob DEFAULT 0,
+  `per_ActivoFintec` blob DEFAULT NULL,
   `per_RegimenFiscal` blob DEFAULT NULL,
   `per_idCtaBanco` blob DEFAULT NULL,
   `per_logo` blob DEFAULT NULL,
