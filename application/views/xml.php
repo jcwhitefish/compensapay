@@ -19,6 +19,7 @@
             </form>
         </div>
     </div>
+    
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title p-5">Nota de credito</h2>

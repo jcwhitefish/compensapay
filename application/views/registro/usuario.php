@@ -259,7 +259,10 @@
 
             }
             const formUsuario = (empresa = array('')) => {
-                empresa['id'] = 0
+                
+                if (typeof empresa['id'] === 'undefined'){
+                    empresa['id'] = 0;
+                }
                 // Esto solo sirve en POST
                 const formData = new FormData();
                 for (const key in data) {
@@ -268,8 +271,7 @@
                     }
                 }
                 formData.append('idEmpresa', empresa['id']);
-                formData.append('imagen', imageUpload);
-
+                formData.append('imagen', imageUpload.value.files[0]);
                 fetch('<?php echo base_url('registro/registraUsuario') ?>', {
                         method: 'POST',
                         body: formData,
@@ -282,9 +284,12 @@
                         return response.json();
                     })
                     .then((responseData) => {
-                        //console.log(responseData);
+                        console.log(responseData);
+                        console.log(responseData.url);
                         // Hacer algo con los datos, por ejemplo, retornarlos
-                        console.log(formUsuario(responseData));
+                        // accion = responseData
+                        window.location.replace('<?php echo base_url(); ?>'+responseData.url+'/'+responseData.enlace);
+
 
                     })
                     .catch((error) => {
@@ -305,12 +310,6 @@
                         }
                     }
 
-                    const response = fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
-                        method: 'POST',
-                        body: formData,
-                        redirect: 'follow'
-                    });
-
                     fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
                             method: 'POST',
                             body: formData,
@@ -326,6 +325,7 @@
                             //console.log(responseData);
                             // Hacer algo con los datos, por ejemplo, retornarlos
                             formUsuario(responseData)
+
 
                         })
                         .catch((error) => {
