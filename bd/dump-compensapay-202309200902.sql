@@ -1330,7 +1330,8 @@ begin
 			'banco', c2.Alias,
 			'clabe', aes_decrypt (c.b_CLABE,llave),
 			'logo_persona',	aes_decrypt (per_logo ,llave),
-			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave)	) 
+			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
+			'id_usuario', u.u_idUsuario) 	) 
 	separator ',')
     , ']')
     into salida
