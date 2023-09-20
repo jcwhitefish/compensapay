@@ -1265,7 +1265,8 @@ concat('[',
 	'idCuentaBanco', aes_decrypt (per_idCtaBanco, llave),
 	'Banco', c2.Alias,
 	'imagenPersona', aes_decrypt (per_logo ,llave),
-	'imagenUsuario', aes_decrypt (u.u_imagenUsuario, llave))
+	'imagenUsuario', aes_decrypt (u.u_imagenUsuario, llave),
+	'idUsuario', u.u_idUsuario)
 	  SEPARATOR ',')
     ,']')
 
