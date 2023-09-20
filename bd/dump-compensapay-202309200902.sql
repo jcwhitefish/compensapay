@@ -1333,6 +1333,7 @@ begin
 			'logo_persona',	aes_decrypt (per_logo ,llave),
 			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
 			'nombre_usuario', aes_decrypt(u.u_NombreUsuario, llave),
+			'nombre_representante', aes_decrypt(r.rl_Nombre,llave),
 			'id_usuario', u.u_idUsuario) 
 	  SEPARATOR ',')
     ,']')
