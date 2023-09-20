@@ -52,7 +52,7 @@ class Login extends CI_Controller {
 			$this->load->view('plantilla',$data);
         }
 	}
-	public function validadorCuenta($user = null, $password = null, $passwordValidate = null) {
+	public function validarCuenta($user = null, $password = null, $passwordValidate = null) {
 		if ($user && $password && $passwordValidate) {
 			//in this part you can use your information 
 		} else {
