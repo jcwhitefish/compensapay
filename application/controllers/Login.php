@@ -47,7 +47,7 @@ class Login extends CI_Controller {
         } else {
 			//normal view
 			//assign isLog for validate de login view
-			$data['isLog'] = true;
+			$data['isLog'] = false;
             $data['main'] = $this->load->view('login/login',$data,true);
 			$this->load->view('plantilla',$data);
         }
@@ -56,7 +56,7 @@ class Login extends CI_Controller {
 		if ($user && $password && $passwordValidate) {
 			//in this part you can use your information 
 		} else {
-			$data['isLog'] = false;
+			$data['isLog'] = true;
 			$data['main'] = $this->load->view('login/login', $data, true);
 			$this->load->view('plantilla', $data);
 		}
