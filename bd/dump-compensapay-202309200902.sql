@@ -1332,6 +1332,7 @@ begin
 			'clabe', aes_decrypt (c.b_CLABE,llave),
 			'logo_persona',	aes_decrypt (per_logo ,llave),
 			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
+			'nombre_usuario', aes_decrypt(u.u_NombreUsuario, llave),
 			'id_usuario', u.u_idUsuario) 
 	  SEPARATOR ',')
     ,']')
