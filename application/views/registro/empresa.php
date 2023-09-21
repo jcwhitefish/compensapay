@@ -12,6 +12,7 @@
                             <div class="input-border col l12">
                                 <input v-model="data['bussinesName']" @blur="checkFormat('bussinesName')" :style="colorsBorder['bussinesName'] || {}" type="text" name="bussinesName" id="bussinesName" required>
                                 <label for="bussinesName">Razón Social</label>
+                                <p v-if="colorsBorder['bussinesName'] && colorsBorder['bussinesName'].border === '1px solid red!important'" class="error-message">¡Razón Social inválida!</p>
                             </div>
 
                         </div>
@@ -19,6 +20,7 @@
                             <div class="input-border col l6">
                                 <input v-model="data['nameComercial']" @blur="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
                                 <label for="nameComercial">Nombre Comercial</label>
+                                <p v-if="colorsBorder['nameComercial'] && colorsBorder['nameComercial'].border === '1px solid red!important'" class="error-message">¡Nombre Comercial inválido!</p>
                             </div>
                             <div class="input-border col l6">
                                 <select name="type" id="type">
@@ -29,11 +31,11 @@
                                 <label for="type">Giro</label>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['rfc']" @blur="checkFormat('rfc')" :style="colorsBorder['rfc'] || {}" type="text" name="rfc" id="rfc" minlength="12" maxlength="13" pattern="[A-Z0-9]{12,13}" title="Debe tener de 12 a 13 caracteres alfanuméricos" required>
                                 <label for="rfc">RFC</label>
+                                <p v-if="colorsBorder['rfc'] && colorsBorder['rfc'].border === '1px solid red!important'" class="error-message">¡RFC inválido!</p>
                             </div>
                             <div class="input-border col l6">
                                 <select name="fiscal" id="fiscal">
@@ -48,6 +50,7 @@
                             <div class="input-border col l6">
                                 <input v-model="data['codigoPostal']" @blur="checkFormat('codigoPostal')" :style="colorsBorder['codigoPostal'] || {}" type="text" name="codigoPostal" id="codigoPostal" maxlength="5" pattern="[0-9]{5}" required>
                                 <label for="codigoPostal">Codigo Postal</label>
+                                <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
                                 <select name="estado" id="estado">
@@ -62,12 +65,14 @@
                             <div class="input-border col l12">
                                 <input v-model="data['direccion']" @blur="checkFormat('direccion')" :style="colorsBorder['direccion'] || {}" type="text" name="direccion" id="direccion" required>
                                 <label for="direccion">Direccion</label>
+                                <p v-if="colorsBorder['direccion'] && colorsBorder['direccion'].border === '1px solid red!important'" class="error-message">¡Direccion inválida!</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
-                                <input v-model="data['telefono']" @blur="checkFormat('telefono')" :style="colorsBorder['telefono'] || {}" type="text" name="telefono" id="telefono" required>
-                                <label for="telefono">telefono</label>
+                                <input v-model="data['telefono']" @blur="checkFormat('telefono')" :style="colorsBorder['telefono'] || {}" type="text" name="telefono" id="telefono" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa exactamente 10 dígitos numéricos.">
+                                <label for="telefono">Telefono</label>
+                                <p v-if="colorsBorder['telefono'] && colorsBorder['telefono'].border === '1px solid red!important'" class="error-message">¡Telefono inválido!</p>
                             </div>
                         </div>
                     </div>
@@ -79,6 +84,7 @@
                             <div class="input-border col l12">
                                 <input v-model="data['clabe']" @blur="checkFormat('clabe')" :style="colorsBorder['clabe'] || {}" type="text" name="clabe" id="clabe" required pattern="[0-9]{18}" maxlength="18" title="Por favor, ingresa exactamente 18 dígitos numéricos.">
                                 <label for="clabe">Cuenta CLABE</label>
+                                <p v-if="colorsBorder['clabe'] && colorsBorder['clabe'].border === '1px solid red!important'" class="error-message">¡Cuenta CLABE inválido!</p>
                             </div>
                         </div>
                         <div class="row">
@@ -209,7 +215,8 @@
 
                 switch (nombreInput) {
                     case 'telefono':
-                        if (data[nombreInput] !== '') {
+                        var patron = /[^0-9]/;
+                        if (data[nombreInput] != '' && data[nombreInput].length == 10 && !patron.test(data[nombreInput])) {
 
                             colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
@@ -221,10 +228,10 @@
                             }
 
                         }
-
                         break;
                     case 'codigoPostal':
-                        if (data[nombreInput] !== '') {
+                        var patron = /[^0-9]/;
+                        if (data[nombreInput] != '' && data[nombreInput].length == 5 && !patron.test(data[nombreInput])) {
 
                             colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
@@ -236,7 +243,6 @@
                             }
 
                         }
-
                         break;
                     case 'estado':
                         if (data[nombreInput] !== '') {
@@ -327,20 +333,6 @@
                             }
 
                         }
-                        break;
-                        if (data[nombreInput] !== '') {
-
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid #03BB85!important',
-                            }
-
-                        } else {
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid red!important',
-                            }
-
-                        }
-
                         break;
                     case 'partner':
                         data[nombreInput] = data[nombreInput].toUpperCase();
@@ -477,5 +469,11 @@
         padding: 10px 40px;
         cursor: pointer;
         border-radius: 3px !important;
+    }
+    .error-message {
+        color: red;
+        font-size: 10px;
+        top: -25px;
+        position: relative;
     }
 </style>
