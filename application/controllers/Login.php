@@ -43,7 +43,7 @@ class Login extends CI_Controller {
 		} 
 
 		// assign isLog for validate if show in the screen
-		$data['main'] = $this->load->view('login/crear_contrasena', '', true);
+		$data['main'] = $this->load->view('login/entrar', '', true);
 		$this->load->view('plantilla', $data);
 	}	
 	public function validarCuenta($idEmpresa = null)
