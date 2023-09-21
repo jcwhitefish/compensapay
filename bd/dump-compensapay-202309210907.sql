@@ -15,6 +15,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+DROP database IF EXISTS `compensapay`;
+CREATE database `compensapay`;
+use `compensapay`;
+
 --
 -- Table structure for table `acceso`
 --
@@ -831,38 +835,69 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaContacto`(entrada text,
-
+CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaContacto`(entrada text,
+
+
+
 llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-	declare contenido varchar(50);
-	declare idPersona int(3);
-	declare idTipoContacto int(3);
-	set contenido = JSON_UNQUOTE(json_extract(entrada,'$.Contenido'));
-	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
-	set idTipoContacto = JSON_UNQUOTE(json_extract(entrada,'$.idTipoContacto'));
-	insert into compensapay.contacto (c_idTipoContacto,
- 									c_idPersona,
- 									c_Descripcion,
- 									c_Activo) values
- 									(aes_encrypt(idTipoContacto,llave),
- 									aes_encrypt(idPersona,llave),
- 									aes_encrypt(contenido,llave),
- 									1
- 									);
-  select
-	count(c_Descripcion)
-into
-	resultado
-from
-	compensapay.contacto c 
-where
-	aes_decrypt(c_idTipoContacto,llave) = idTipoContacto and 
-	aes_decrypt(c_idPersona,llave) = idPersona and 
-	aes_decrypt(c_Descripcion,llave) = Contenido
-	and c_Activo = 1;
-  RETURN resultado;
+begin
+
+  	declare resultado text;
+
+	declare contenido varchar(50);
+
+	declare idPersona int(3);
+
+	declare idTipoContacto int(3);
+
+	set contenido = JSON_UNQUOTE(json_extract(entrada,'$.Contenido'));
+
+	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
+
+	set idTipoContacto = JSON_UNQUOTE(json_extract(entrada,'$.idTipoContacto'));
+
+	insert into compensapay.contacto (c_idTipoContacto,
+
+ 									c_idPersona,
+
+ 									c_Descripcion,
+
+ 									c_Activo) values
+
+ 									(aes_encrypt(idTipoContacto,llave),
+
+ 									aes_encrypt(idPersona,llave),
+
+ 									aes_encrypt(contenido,llave),
+
+ 									1
+
+ 									);
+
+  select
+
+	count(c_Descripcion)
+
+into
+
+	resultado
+
+from
+
+	compensapay.contacto c 
+
+where
+
+	aes_decrypt(c_idTipoContacto,llave) = idTipoContacto and 
+
+	aes_decrypt(c_idPersona,llave) = idPersona and 
+
+	aes_decrypt(c_Descripcion,llave) = Contenido
+
+	and c_Activo = 1;
+
+  RETURN resultado;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -880,55 +915,104 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaCtaBancaria`(entrada text,llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-  	declare idPersona int(3);
-  	declare idBanco int(3);
-  	declare contenido varchar(50);
-  	declare idcuenta int(3);
-    declare existe int (3);
-	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
-	set idBanco = JSON_UNQUOTE(json_extract(entrada,'$.idBanco'));
-	set contenido = JSON_UNQUOTE(json_extract(entrada,'$.CLABE'));
-select c.b_idCtaBancaria into existe
-from compensapay.cuentabacaria c 
-where aes_decrypt (b_CLABE,llave)=contenido;
-if existe then
-	set resultado = 0;
-else 
-	insert into compensapay.cuentabacaria (
-								b_idCatBanco,
-								b_CLABE,
-								b_Activo 
-								)
-							values
-								(
-								idBanco,
-								aes_encrypt(contenido,llave),
-								1
-								);
-select c.b_idCtaBancaria into idcuenta 
-from compensapay.cuentabacaria c 
-where aes_decrypt(b_CLABE,llave)=contenido and b_Activo = 1 ;
-
-update compensapay.persona p 
-set p.per_idCtaBanco = aes_encrypt(idcuenta,llave) 
-where aes_decrypt (p.per_idPersona,llave)=idPersona
-and p.per_Activo = 1;
-
-select
-	count(aes_decrypt (p.per_idCtaBanco,llave))
-into
-	resultado
-from
-	compensapay.persona p 
-where
-	p.per_idPersona =  idPersona and 
-	p.per_Activo = 1;
-end if;
-
-RETURN resultado;
-
+begin
+
+  	declare resultado text;
+
+  	declare idPersona int(3);
+
+  	declare idBanco int(3);
+
+  	declare contenido varchar(50);
+
+  	declare idcuenta int(3);
+
+    declare existe int (3);
+
+	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
+
+	set idBanco = JSON_UNQUOTE(json_extract(entrada,'$.idBanco'));
+
+	set contenido = JSON_UNQUOTE(json_extract(entrada,'$.CLABE'));
+
+select c.b_idCtaBancaria into existe
+
+from compensapay.cuentabacaria c 
+
+where aes_decrypt (b_CLABE,llave)=contenido;
+
+if existe then
+
+	set resultado = 0;
+
+else 
+
+	insert into compensapay.cuentabacaria (
+
+								b_idCatBanco,
+
+								b_CLABE,
+
+								b_Activo 
+
+								)
+
+							values
+
+								(
+
+								idBanco,
+
+								aes_encrypt(contenido,llave),
+
+								1
+
+								);
+
+select c.b_idCtaBancaria into idcuenta 
+
+from compensapay.cuentabacaria c 
+
+where aes_decrypt(b_CLABE,llave)=contenido and b_Activo = 1 ;
+
+
+
+update compensapay.persona p 
+
+set p.per_idCtaBanco = aes_encrypt(idcuenta,llave) 
+
+where aes_decrypt (p.per_idPersona,llave)=idPersona
+
+and p.per_Activo = 1;
+
+
+
+select
+
+	count(aes_decrypt (p.per_idCtaBanco,llave))
+
+into
+
+	resultado
+
+from
+
+	compensapay.persona p 
+
+where
+
+	p.per_idPersona =  idPersona and 
+
+	p.per_Activo = 1;
+
+end if;
+
+
+
+RETURN resultado;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -946,37 +1030,68 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaDireccion`(entrada text) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-  	declare idPersona int(3);
-	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
-insert into compensapay.direccion (	d_idPersona,
- 									d_CalleYNumero,
- 									d_Colonia,
- 									d_Ciudad,
- 									d_Estado,
- 									d_CodPost,
- 									d_Activo) values
- 									(
- 									idPersona,
- 									JSON_UNQUOTE(json_extract(entrada,'$.CalleyNumero')),
- 									JSON_UNQUOTE(json_extract(entrada,'$.Colonia')),
- 									JSON_UNQUOTE(json_extract(entrada,'$.Ciudad')),
- 									JSON_UNQUOTE(json_extract(entrada,'$.Estado')),
- 									JSON_UNQUOTE(json_extract(entrada,'$.CodPostal')),
- 									1
- 									);
-select
-	count(d_CalleyNumero)
-into
-	resultado
-from
-	compensapay.direccion d  
-where
-	d.d_idPersona  = idPersona  
-and d.d_Activo  = 1 ;
-  RETURN resultado;
-
+begin
+
+  	declare resultado text;
+
+  	declare idPersona int(3);
+
+	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
+
+insert into compensapay.direccion (	d_idPersona,
+
+ 									d_CalleYNumero,
+
+ 									d_Colonia,
+
+ 									d_Ciudad,
+
+ 									d_Estado,
+
+ 									d_CodPost,
+
+ 									d_Activo) values
+
+ 									(
+
+ 									idPersona,
+
+ 									JSON_UNQUOTE(json_extract(entrada,'$.CalleyNumero')),
+
+ 									JSON_UNQUOTE(json_extract(entrada,'$.Colonia')),
+
+ 									JSON_UNQUOTE(json_extract(entrada,'$.Ciudad')),
+
+ 									JSON_UNQUOTE(json_extract(entrada,'$.Estado')),
+
+ 									JSON_UNQUOTE(json_extract(entrada,'$.CodPostal')),
+
+ 									1
+
+ 									);
+
+select
+
+	count(d_CalleyNumero)
+
+into
+
+	resultado
+
+from
+
+	compensapay.direccion d  
+
+where
+
+	d.d_idPersona  = idPersona  
+
+and d.d_Activo  = 1 ;
+
+  RETURN resultado;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -994,40 +1109,74 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaPersona`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-	declare rfc varchar(16);
-set
-rfc = JSON_UNQUOTE(json_extract(entrada,'$.RFC'));
- insert into compensapay.persona (per_Nombre,
- 									per_Apellido,
- 									per_Alias,
- 									per_RFC,
- 									per_idTipoPrersona,
- 									per_idRol,
- 									per_ActivoFintec,
- 									per_RegimenFiscal,
- 									per_idCtaBanco,
- 									per_logo,
- 									per_Activo) values
- 									(
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Nombre')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Apellido')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.Alias')),llave),
- 									aes_encrypt(rfc,llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.TipoPersona')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Rol')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.ActivoFintec')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RegimenFical')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.idCtaBanco')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Logo')),llave),
- 									1
- 									);
-
-  select per_idPersona  into resultado from compensapay.persona p where aes_decrypt(per_RFC,llave) = rfc and per_Activo = 1;								
-
-  RETURN resultado;
-
+begin
+
+  	declare resultado text;
+
+	declare rfc varchar(16);
+
+set
+
+rfc = JSON_UNQUOTE(json_extract(entrada,'$.RFC'));
+
+ insert into compensapay.persona (per_Nombre,
+
+ 									per_Apellido,
+
+ 									per_Alias,
+
+ 									per_RFC,
+
+ 									per_idTipoPrersona,
+
+ 									per_idRol,
+
+ 									per_ActivoFintec,
+
+ 									per_RegimenFiscal,
+
+ 									per_idCtaBanco,
+
+ 									per_logo,
+
+ 									per_Activo) values
+
+ 									(
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Nombre')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Apellido')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.Alias')),llave),
+
+ 									aes_encrypt(rfc,llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.TipoPersona')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Rol')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.ActivoFintec')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RegimenFical')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.idCtaBanco')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.Logo')),llave),
+
+ 									1
+
+ 									);
+
+
+
+  select per_idPersona  into resultado from compensapay.persona p where aes_decrypt(per_RFC,llave) = rfc and per_Activo = 1;								
+
+
+
+  RETURN resultado;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1045,38 +1194,70 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaPregunta`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-  	declare contenido varchar(50);
-	declare idPersona int(3);
-	declare idPregunta int(3);
-set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
-set idPregunta = JSON_UNQUOTE(json_extract(entrada,'$.idPregunta'));
-set contenido = JSON_UNQUOTE(json_extract(entrada,'$.Respuesta'));
-
-insert into compensapay.preguntapersona (
-										pp_idpersona,
-										pp_idpregunta,
-										pp_respuestapregunta,
-										pp_Activo
- 									) values
- 									(idPersona,
- 									idPregunta,
- 									aes_encrypt(upper(trim(contenido)),llave),
- 									1
- 									);
-
-  select
-	count(pp_idpregunta)
-into
-	resultado
-from
-	compensapay.preguntapersona p 
-where
-	pp_idpersona = idPersona and 
-	pp_idpregunta = idPregunta 
-	and pp_Activo = 1;
-  RETURN resultado;
+begin
+
+  	declare resultado text;
+
+  	declare contenido varchar(50);
+
+	declare idPersona int(3);
+
+	declare idPregunta int(3);
+
+set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
+
+set idPregunta = JSON_UNQUOTE(json_extract(entrada,'$.idPregunta'));
+
+set contenido = JSON_UNQUOTE(json_extract(entrada,'$.Respuesta'));
+
+
+
+insert into compensapay.preguntapersona (
+
+										pp_idpersona,
+
+										pp_idpregunta,
+
+										pp_respuestapregunta,
+
+										pp_Activo
+
+ 									) values
+
+ 									(idPersona,
+
+ 									idPregunta,
+
+ 									aes_encrypt(upper(trim(contenido)),llave),
+
+ 									1
+
+ 									);
+
+
+
+  select
+
+	count(pp_idpregunta)
+
+into
+
+	resultado
+
+from
+
+	compensapay.preguntapersona p 
+
+where
+
+	pp_idpersona = idPersona and 
+
+	pp_idpregunta = idPregunta 
+
+	and pp_Activo = 1;
+
+  RETURN resultado;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1094,35 +1275,64 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaRepresentante`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  	declare resultado text;
-	declare nombre varchar(30);
-set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
-insert
-	into
-	compensapay.representantelegal (rl_Nombre,
-	rl_RFC,
-	rl_idPersona,
-	rl_Activo)
-values
- 									(aes_encrypt (nombre,llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RFC')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPersona')),llave),
- 									1);
-
-select
-	count(rl_Nombre)
-into
-	resultado
-from
-	compensapay.representantelegal
-where
-	aes_decrypt(rl_Nombre,
-	llave) = nombre
-	and rl_Activo = 1;
-
-return resultado;
-
+begin
+
+  	declare resultado text;
+
+	declare nombre varchar(30);
+
+set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
+
+insert
+
+	into
+
+	compensapay.representantelegal (rl_Nombre,
+
+	rl_RFC,
+
+	rl_idPersona,
+
+	rl_Activo)
+
+values
+
+ 									(aes_encrypt (nombre,llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RFC')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPersona')),llave),
+
+ 									1);
+
+
+
+select
+
+	count(rl_Nombre)
+
+into
+
+	resultado
+
+from
+
+	compensapay.representantelegal
+
+where
+
+	aes_decrypt(rl_Nombre,
+
+	llave) = nombre
+
+	and rl_Activo = 1;
+
+
+
+return resultado;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1140,35 +1350,64 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregarOperacion`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-	declare resultado text;
-	declare nombre varchar(30);
-set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
-
-insert
-	into
-	compensapay.representantelegal (rl_Nombre,
-	rl_RFC,
-	rl_idPersona,
-	rl_Activo)
-values
- 									(aes_encrypt (nombre,llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RFC')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPersona')),llave),
- 									1);
-
-select
-	count(rl_Nombre)
-into
-	resultado
-from
-	compensapay.representantelegal
-where
-	aes_decrypt(rl_Nombre,
-	llave) = nombre
-	and rl_Activo = 1;
-return resultado;
-
+begin
+
+	declare resultado text;
+
+	declare nombre varchar(30);
+
+set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
+
+
+
+insert
+
+	into
+
+	compensapay.representantelegal (rl_Nombre,
+
+	rl_RFC,
+
+	rl_idPersona,
+
+	rl_Activo)
+
+values
+
+ 									(aes_encrypt (nombre,llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.RFC')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPersona')),llave),
+
+ 									1);
+
+
+
+select
+
+	count(rl_Nombre)
+
+into
+
+	resultado
+
+from
+
+	compensapay.representantelegal
+
+where
+
+	aes_decrypt(rl_Nombre,
+
+	llave) = nombre
+
+	and rl_Activo = 1;
+
+return resultado;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1186,33 +1425,56 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaUsuario`(entrada text,llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  declare resultado text;
-  declare nomuser varchar(30);
-set nomuser = JSON_UNQUOTE(json_extract(entrada,'$.NombreUsuario'));
+begin
+
+  declare resultado text;
+
+  declare nomuser varchar(30);
+
+set nomuser = JSON_UNQUOTE(json_extract(entrada,'$.NombreUsuario'));
+
  insert into compensapay.usuario (u_NombreUsuario,
  									u_Nombre ,
- 									u_Apellidos ,
- 								--	u_Llaveacceso,
- 									u_idPersona,
- 									u_idPerfil,
- 									u_imagenUsuario,
- 									u_Activo) values
+ 									u_Apellidos ,
+
+ 								--	u_Llaveacceso,
+
+ 									u_idPersona,
+
+ 									u_idPerfil,
+
+ 									u_imagenUsuario,
+
+ 									u_Activo) values
+
  									(aes_encrypt(nomuser,llave),
  									aes_encrypt (MD5(JSON_UNQUOTE(json_extract(entrada,'$.Nombre'))),llave),
- 									aes_encrypt (MD5(JSON_UNQUOTE(json_extract(entrada,'$.Apellido'))),llave),
- 							--		aes_encrypt (MD5(JSON_UNQUOTE(json_extract(entrada,'$.LlaveAcceso'))),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.idPersona')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPerfil')),llave),
- 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.urlImagen')),llave),
- 									1
- 									);
-  select count(u_NombreUsuario) into resultado 
-  from compensapay.usuario 
-  where aes_decrypt(u_NombreUsuario,llave) = nomuser 
-  and u_Activo = 1;								
-
-  RETURN resultado;
+ 									aes_encrypt (MD5(JSON_UNQUOTE(json_extract(entrada,'$.Apellido'))),llave),
+
+ 							--		aes_encrypt (MD5(JSON_UNQUOTE(json_extract(entrada,'$.LlaveAcceso'))),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract(entrada,'$.idPersona')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.idPerfil')),llave),
+
+ 									aes_encrypt(JSON_UNQUOTE(json_extract (entrada,'$.urlImagen')),llave),
+
+ 									1
+
+ 									);
+
+  select count(u_NombreUsuario) into resultado 
+
+  from compensapay.usuario 
+
+  where aes_decrypt(u_NombreUsuario,llave) = nomuser 
+
+  and u_Activo = 1;								
+
+
+
+  RETURN resultado;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1230,56 +1492,106 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ConsultaEmpresa`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-	declare resultado text;
-	declare idPersona int;
-
-	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
-
-select
-concat('[',
-        GROUP_CONCAT(
-	JSON_OBJECT (
-	'Nombre', aes_decrypt (per_Nombre,llave),
-	'Alias', aes_decrypt (per_Alias,llave),
-	'RFC', aes_decrypt (per_RFC,llave),
-	'idTipoPersona', aes_decrypt (per_idTipoPrersona, llave),
-	'idRol', aes_decrypt (per_idRol, llave),
-	'ActivoFintec', aes_decrypt (per_ActivoFintec, llave),
-	'idRegimenFiscal', aes_decrypt (per_RegimenFiscal, llave),
-	'idCuentaBanco', aes_decrypt (per_idCtaBanco, llave),
-	'Banco', c2.Alias,
-	'imagenPersona', aes_decrypt (per_logo ,llave),
-	'imagenUsuario', aes_decrypt (u.u_imagenUsuario, llave),
-	'idUsuario', u.u_idUsuario)
-	  SEPARATOR ',')
-    ,']')
-
-	into resultado
-from
-	persona p
-inner join representantelegal r  
-on
-	p.per_idPersona = aes_decrypt(r.rl_idPersona, llave)
-inner join usuario u 
-on
-	aes_decrypt(r.rl_idPersona,	llave) = aes_decrypt(u.u_idPersona,	llave)
-inner join tipopersona t 
-on
-	t.tp_idTipoPersona = aes_decrypt(p.per_idTipoPrersona,	llave)
-inner join cuentabacaria c on
-	c.b_idCatBanco = aes_decrypt (per_idCtaBanco,llave)
-inner join catbancos c2 on
-	c.b_idCatBanco = c2.id 
-where
-	per_Activo = 1
-	and u_Activo = 1
-	and rl_Activo = 1
-	and t.tp_Activo = 1
-	and per_idPersona = idPersona;
-
-return resultado;
-
+begin
+
+	declare resultado text;
+
+	declare idPersona int;
+
+
+
+	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
+
+
+
+select
+
+concat('[',
+
+        GROUP_CONCAT(
+
+	JSON_OBJECT (
+
+	'Nombre', aes_decrypt (per_Nombre,llave),
+
+	'Alias', aes_decrypt (per_Alias,llave),
+
+	'RFC', aes_decrypt (per_RFC,llave),
+
+	'idTipoPersona', aes_decrypt (per_idTipoPrersona, llave),
+
+	'idRol', aes_decrypt (per_idRol, llave),
+
+	'ActivoFintec', aes_decrypt (per_ActivoFintec, llave),
+
+	'idRegimenFiscal', aes_decrypt (per_RegimenFiscal, llave),
+
+	'idCuentaBanco', aes_decrypt (per_idCtaBanco, llave),
+
+	'Banco', c2.Alias,
+
+	'imagenPersona', aes_decrypt (per_logo ,llave),
+
+	'imagenUsuario', aes_decrypt (u.u_imagenUsuario, llave),
+
+	'idUsuario', u.u_idUsuario)
+
+	  SEPARATOR ',')
+
+    ,']')
+
+
+
+	into resultado
+
+from
+
+	persona p
+
+inner join representantelegal r  
+
+on
+
+	p.per_idPersona = aes_decrypt(r.rl_idPersona, llave)
+
+inner join usuario u 
+
+on
+
+	aes_decrypt(r.rl_idPersona,	llave) = aes_decrypt(u.u_idPersona,	llave)
+
+inner join tipopersona t 
+
+on
+
+	t.tp_idTipoPersona = aes_decrypt(p.per_idTipoPrersona,	llave)
+
+inner join cuentabacaria c on
+
+	c.b_idCatBanco = aes_decrypt (per_idCtaBanco,llave)
+
+inner join catbancos c2 on
+
+	c.b_idCatBanco = c2.id 
+
+where
+
+	per_Activo = 1
+
+	and u_Activo = 1
+
+	and rl_Activo = 1
+
+	and t.tp_Activo = 1
+
+	and per_idPersona = idPersona;
+
+
+
+return resultado;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1297,61 +1609,114 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ConsultaPersona`(entrada int,llave varchar(100)) RETURNS text CHARSET latin1
-begin
-
-	declare salida text;
-	select
-	concat('[',
-        GROUP_CONCAT(
-			JSON_OBJECT (
-			'nombre', aes_decrypt (per_Nombre,llave),
-			'alias', aes_decrypt (per_Alias,llave),
-			'rfc', aes_decrypt (per_RFC,llave),
-			'idtipopersona', aes_decrypt (per_idTipoPrersona, llave),
-			'idrol', aes_decrypt (per_idRol, llave),
-			'activofintec',	aes_decrypt (per_ActivoFintec, llave),
-			'idregimenfiscal', aes_decrypt (per_RegimenFiscal, llave),
-			'idcuentabanco', aes_decrypt (per_idCtaBanco, llave),
-			'banco', c2.Alias,
-			'clabe', aes_decrypt (c.b_CLABE,llave),
-			'logo_persona',	aes_decrypt (per_logo ,llave),
-			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
-			'nombre_usuario', aes_decrypt(u.u_NombreUsuario, llave),
+begin
+
+
+
+	declare salida text;
+
+	select
+
+	concat('[',
+
+        GROUP_CONCAT(
+
+			JSON_OBJECT (
+
+			'nombre', aes_decrypt (per_Nombre,llave),
+
+			'alias', aes_decrypt (per_Alias,llave),
+
+			'rfc', aes_decrypt (per_RFC,llave),
+
+			'idtipopersona', aes_decrypt (per_idTipoPrersona, llave),
+
+			'idrol', aes_decrypt (per_idRol, llave),
+
+			'activofintec',	aes_decrypt (per_ActivoFintec, llave),
+
+			'idregimenfiscal', aes_decrypt (per_RegimenFiscal, llave),
+
+			'idcuentabanco', aes_decrypt (per_idCtaBanco, llave),
+
+			'banco', c2.Alias,
+
+			'clabe', aes_decrypt (c.b_CLABE,llave),
+
+			'logo_persona',	aes_decrypt (per_logo ,llave),
+
+			'logo_usuario',	aes_decrypt (u.u_imagenUsuario, llave),
+
+			'nombre_usuario', aes_decrypt(u.u_NombreUsuario, llave),
+
 			'nombre_representante', aes_decrypt(r.rl_Nombre,llave),
 			'nombre_usuario',aes_decrypt(u.u_Nombre ,llave),
-			'apellido_usuario',aes_decrypt(u.u_Apellidos,llave),
-			'id_usuario', u.u_idUsuario) 
-	  SEPARATOR ',')
-    ,']')
-    into salida
-from
-	persona p
-inner join representantelegal r  
-on
-	p.per_idPersona = aes_decrypt(r.rl_idPersona,llave)
-inner join usuario u 
-on
-	aes_decrypt(r.rl_idPersona,llave) = aes_decrypt(u.u_idPersona,llave)
-inner join tipopersona t 
-on
-	t.tp_idTipoPersona = aes_decrypt(p.per_idTipoPrersona,llave)
-inner join cuentabacaria c on
-	c.b_idCatBanco = aes_decrypt (per_idCtaBanco,llave)
-inner join catbancos c2 on
-	c.b_idCatBanco = c2.id 
-inner join compensapay.rol on
-	rol.r_idRol= aes_decrypt(p.per_idRol,llave)
-inner join compensapay.perfil on
-	perfil.p_idPerfil = aes_decrypt (u.u_idPerfil,llave) 
-where
-	per_Activo = 1
-	and u_Activo = 1
-	and rl_Activo = 1
-	and t.tp_Activo = 1
-	and per_idPersona = entrada;
-
-return salida;
-
+			'apellido_usuario',aes_decrypt(u.u_Apellidos,llave),
+
+			'id_usuario', u.u_idUsuario) 
+
+	  SEPARATOR ',')
+
+    ,']')
+
+    into salida
+
+from
+
+	persona p
+
+inner join representantelegal r  
+
+on
+
+	p.per_idPersona = aes_decrypt(r.rl_idPersona,llave)
+
+inner join usuario u 
+
+on
+
+	aes_decrypt(r.rl_idPersona,llave) = aes_decrypt(u.u_idPersona,llave)
+
+inner join tipopersona t 
+
+on
+
+	t.tp_idTipoPersona = aes_decrypt(p.per_idTipoPrersona,llave)
+
+inner join cuentabacaria c on
+
+	c.b_idCatBanco = aes_decrypt (per_idCtaBanco,llave)
+
+inner join catbancos c2 on
+
+	c.b_idCatBanco = c2.id 
+
+inner join compensapay.rol on
+
+	rol.r_idRol= aes_decrypt(p.per_idRol,llave)
+
+inner join compensapay.perfil on
+
+	perfil.p_idPerfil = aes_decrypt (u.u_idPerfil,llave) 
+
+where
+
+	per_Activo = 1
+
+	and u_Activo = 1
+
+	and rl_Activo = 1
+
+	and t.tp_Activo = 1
+
+	and per_idPersona = entrada;
+
+
+
+return salida;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1369,24 +1734,42 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ConsutlarEstadosMX`() RETURNS text CHARSET latin1
-begin
-  declare salida text;
-select
-	concat('[',
-        GROUP_CONCAT(
-            JSON_OBJECT (
-				'id_estado', e.e_IdEstado,
-				'Nombre', e.e_Descripcion,
-				'alias', e.e_alias)
-            SEPARATOR ',')
-    ,']')
-
-into
-	salida
-from
-	estados e;
-
-return salida;
+begin
+
+  declare salida text;
+
+select
+
+	concat('[',
+
+        GROUP_CONCAT(
+
+            JSON_OBJECT (
+
+				'id_estado', e.e_IdEstado,
+
+				'Nombre', e.e_Descripcion,
+
+				'alias', e.e_alias)
+
+            SEPARATOR ',')
+
+    ,']')
+
+
+
+into
+
+	salida
+
+from
+
+	estados e;
+
+
+
+return salida;
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1404,23 +1787,40 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ExisteRFC`(entrada VARCHAR(20),llave varchar(100)) RETURNS text CHARSET latin1
-begin
-
-  declare salida text;
-select
-	JSON_OBJECT (
-		'RFC',aes_decrypt(per_RFC,llave),
-		'Nombre',aes_decrypt(per_Nombre,llave),
-		'alias',aes_decrypt (per_Alias,llave))
-into
-	salida
-from
-	persona
-where
-	aes_decrypt (per_RFC,llave) = entrada;
-
-return salida;
-
+begin
+
+
+
+  declare salida text;
+
+select
+
+	JSON_OBJECT (
+
+		'RFC',aes_decrypt(per_RFC,llave),
+
+		'Nombre',aes_decrypt(per_Nombre,llave),
+
+		'alias',aes_decrypt (per_Alias,llave))
+
+into
+
+	salida
+
+from
+
+	persona
+
+where
+
+	aes_decrypt (per_RFC,llave) = entrada;
+
+
+
+return salida;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1438,13 +1838,20 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ExisteUsuario`(entrada VARCHAR(50),llave varchar(100)) RETURNS int(1)
-BEGIN
-  DECLARE salida int;
- 	select count(u_NombreUsuario) 
-	into salida 
-	from usuario 
-	where aes_decrypt(u_NombreUsuario,llave) = entrada;
-  RETURN salida;
+BEGIN
+
+  DECLARE salida int;
+
+ 	select count(u_NombreUsuario) 
+
+	into salida 
+
+	from usuario 
+
+	where aes_decrypt(u_NombreUsuario,llave) = entrada;
+
+  RETURN salida;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1462,36 +1869,66 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateLlaveUsuario`(entrada text, llave varchar(100)) RETURNS text CHARSET latin1
-begin
-	declare resultado text;
-  	declare iduser varchar(100);
-  	declare llave_interna varchar(100);
-  	declare nueva_llave blob;
-  	set iduser = JSON_UNQUOTE(json_extract(entrada,'$.idUsuario'));
-  	set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
-    set nueva_llave = aes_encrypt(md5(llave_interna),llave);
-
- update
-	usuario u
- set
-	u.u_Llaveacceso = nueva_llave
- where
-	u.u_idUsuario = iduser;
- select
- JSON_OBJECT (
-	'Perfil',p.p_idPerfil,
-	'Persona',aes_decrypt(u.u_idPersona,llave),
-	'Usuario',aes_decrypt (u.u_NombreUsuario,llave)) 
- into
-	resultado
- from
-	compensapay.usuario u
- inner join compensapay.perfil p on aes_decrypt(u.u_idPerfil,llave) = p.p_idPerfil 
-	where
-	u.u_idUsuario = iduser
-	and aes_decrypt(u.u_Llaveacceso,llave) = md5(llave_interna);
-return resultado;
-
+begin
+
+	declare resultado text;
+
+  	declare iduser varchar(100);
+
+  	declare llave_interna varchar(100);
+
+  	declare nueva_llave blob;
+
+  	set iduser = JSON_UNQUOTE(json_extract(entrada,'$.idUsuario'));
+
+  	set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
+
+    set nueva_llave = aes_encrypt(md5(llave_interna),llave);
+
+
+
+ update
+
+	usuario u
+
+ set
+
+	u.u_Llaveacceso = nueva_llave
+
+ where
+
+	u.u_idUsuario = iduser;
+
+ select
+
+ JSON_OBJECT (
+
+	'Perfil',p.p_idPerfil,
+
+	'Persona',aes_decrypt(u.u_idPersona,llave),
+
+	'Usuario',aes_decrypt (u.u_NombreUsuario,llave)) 
+
+ into
+
+	resultado
+
+ from
+
+	compensapay.usuario u
+
+ inner join compensapay.perfil p on aes_decrypt(u.u_idPerfil,llave) = p.p_idPerfil 
+
+	where
+
+	u.u_idUsuario = iduser
+
+	and aes_decrypt(u.u_Llaveacceso,llave) = md5(llave_interna);
+
+return resultado;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1509,27 +1946,48 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `ValidarLlave`(entrada text,llave varchar(100)) RETURNS text CHARSET latin1
-begin
-  declare resultado text;
-  declare usuario varchar(100);
-  declare llave_interna varchar(100);
-  set usuario = JSON_UNQUOTE(json_extract(entrada,'$.Usuario'));
-  set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
- select
- JSON_OBJECT (
-	'Perfil',p.p_idPerfil,
-	'Persona',aes_decrypt(u.u_idPersona, llave),
-	'Usuario',aes_decrypt(u.u_NombreUsuario,llave)) 
-into
-	resultado
-from
-	compensapay.usuario u
-inner join compensapay.perfil p on aes_decrypt(u.u_idPerfil,llave) = p.p_idPerfil 
-	where
-	aes_decrypt(u_NombreUsuario,llave) = usuario
-	and aes_decrypt(u_Llaveacceso,llave) = md5(llave_interna);
-RETURN resultado;
-
+begin
+
+  declare resultado text;
+
+  declare usuario varchar(100);
+
+  declare llave_interna varchar(100);
+
+  set usuario = JSON_UNQUOTE(json_extract(entrada,'$.Usuario'));
+
+  set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
+
+ select
+
+ JSON_OBJECT (
+
+	'Perfil',p.p_idPerfil,
+
+	'Persona',aes_decrypt(u.u_idPersona, llave),
+
+	'Usuario',aes_decrypt(u.u_NombreUsuario,llave)) 
+
+into
+
+	resultado
+
+from
+
+	compensapay.usuario u
+
+inner join compensapay.perfil p on aes_decrypt(u.u_idPerfil,llave) = p.p_idPerfil 
+
+	where
+
+	aes_decrypt(u_NombreUsuario,llave) = usuario
+
+	and aes_decrypt(u_Llaveacceso,llave) = md5(llave_interna);
+
+RETURN resultado;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1547,23 +2005,40 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `VerBanco`(entrada VARCHAR(4)) RETURNS varchar(100) CHARSET utf8mb4
-begin
-
-  declare salida varchar(100);
-select
-	JSON_OBJECT (
-		'Clave',Clave,
-		'Alias',Alias  
-	)
-into
-	salida
-from
-	catbancos 
-where
-	compensapay.catbancos.Clave = entrada;
-
-return salida;
-
+begin
+
+
+
+  declare salida varchar(100);
+
+select
+
+	JSON_OBJECT (
+
+		'Clave',Clave,
+
+		'Alias',Alias  
+
+	)
+
+into
+
+	salida
+
+from
+
+	catbancos 
+
+where
+
+	compensapay.catbancos.Clave = entrada;
+
+
+
+return salida;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1581,25 +2056,44 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `VerCatPreguntas`() RETURNS text CHARSET latin1
-begin
-	declare salida text;
-	select	
-		concat('[',
-        GROUP_CONCAT(
-			JSON_OBJECT (
-				'idpregunta',pg_idpregunta,
-				'pregunta',pg_pregunta
-			 ) 
-	separator ',')
-    , ']')
-into
-	salida
-from
-	catpreguntas 
-where
-	pg_activo  = 1;
-return salida;
-
+begin
+
+	declare salida text;
+
+	select	
+
+		concat('[',
+
+        GROUP_CONCAT(
+
+			JSON_OBJECT (
+
+				'idpregunta',pg_idpregunta,
+
+				'pregunta',pg_pregunta
+
+			 ) 
+
+	separator ',')
+
+    , ']')
+
+into
+
+	salida
+
+from
+
+	catpreguntas 
+
+where
+
+	pg_activo  = 1;
+
+return salida;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1617,48 +2111,90 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `VerRegimenFiscal`(tipopersona int) RETURNS text CHARSET latin1
-begin
-	declare salida text;
-	declare fisica int;
-	declare moral int;
-
-if tipopersona = 1
-	then
-		select	
-		concat('[',
-        GROUP_CONCAT(
-			JSON_OBJECT (
-				'id_regimen',rg_id_regimen,
-				'Clave',rg_Clave,
-				'Regimen',rg_Regimen ) 
-	separator ',')
-    , ']')
-into
-	salida
-from
-	catregimenfiscal
-where
-	rg_P_Fisica = 1;
-
-elseif tipopersona = 2 then
-		select
-		concat('[',
-        GROUP_CONCAT(
-			JSON_OBJECT (
-				'id_regimen',rg_id_regimen,
-				'Clave',rg_Clave,
-				'Regimen',rg_Regimen  
-	) separator ',')
-    , ']')
-into
-	salida
-from
-	catregimenfiscal
-where
-	rg_P_Moral = 1;
-end if;
-return salida;
-
+begin
+
+	declare salida text;
+
+	declare fisica int;
+
+	declare moral int;
+
+
+
+if tipopersona = 1
+
+	then
+
+		select	
+
+		concat('[',
+
+        GROUP_CONCAT(
+
+			JSON_OBJECT (
+
+				'id_regimen',rg_id_regimen,
+
+				'Clave',rg_Clave,
+
+				'Regimen',rg_Regimen ) 
+
+	separator ',')
+
+    , ']')
+
+into
+
+	salida
+
+from
+
+	catregimenfiscal
+
+where
+
+	rg_P_Fisica = 1;
+
+
+
+elseif tipopersona = 2 then
+
+		select
+
+		concat('[',
+
+        GROUP_CONCAT(
+
+			JSON_OBJECT (
+
+				'id_regimen',rg_id_regimen,
+
+				'Clave',rg_Clave,
+
+				'Regimen',rg_Regimen  
+
+	) separator ',')
+
+    , ']')
+
+into
+
+	salida
+
+from
+
+	catregimenfiscal
+
+where
+
+	rg_P_Moral = 1;
+
+end if;
+
+return salida;
+
+
+
 end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
