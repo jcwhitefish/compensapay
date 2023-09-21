@@ -46,13 +46,23 @@ class Login extends CI_Controller {
 		$data['main'] = $this->load->view('login/login', '', true);
 		$this->load->view('plantilla', $data);
 	}	
-	public function validarCuenta($user = null, $password = null, $passwordValidate = null) {
-		if ($user && $password && $passwordValidate) {
-			//in this part you can use your information 
-		} 
-		
-		$data['main'] = $this->load->view('login/login', '', true);
-		$this->load->view('plantilla', $data);
+	public function validarCuenta($idEmpresa = null)
+	{
+
+		if (isset($idEmpresa)) {
+			$empresa = urldecode($idEmpresa);
+			$persona = json_decode($this->Interaccionbd->consultaPersona($empresa));
+			print_r($persona);
+			if ($persona[0]->id_usuario != 0) {
+				$data['main'] = $this->load->view('login/login', '', true);
+				$this->load->view('plantilla', $data);
+			}else{
+				redirect('registro/empresa');
+				
+			}
+		} else {
+			redirect('registro/empresa');
+		}
 	}
 	
 }
