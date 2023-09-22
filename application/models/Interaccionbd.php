@@ -25,11 +25,16 @@ class Interaccionbd extends CI_Model
     */
     public function consultaPersona($valoridpersona)
     {
-       $sql="select consultaPersona(".$valoridpersona.",'".keyvalue."') as existe;";
-        $regreso = $this->db->query ($sql); 
+       $this->db->select("*");
+       $this->db->from("datos_persona");
+       $this->db->where("id_persona=".$valoridpersona);
+      
+       $resultados = $this->db->get();
+      $regreso=json_encode($resultados->result());
+      
+      $tempo= $regreso;
         if ($regreso)
         {
-           $tempo = $regreso->result_array()[0]['existe'];
            if ($tempo==NULL)
            {
             $tempo=0;
@@ -58,10 +63,12 @@ class Interaccionbd extends CI_Model
     {
        $sql="select UpdateLlaveUsuario('".$cadenajsonnuevallave."','".keyvalue."') as existe;";
         $regreso = $this->db->query ($sql); 
+
+
         if ($regreso)
         {
-           $tempo = $regreso->result_array()[0]['existe'];
-        }
+           $tempo = json_encode(explode('|', $regreso->result_array()[0]['existe']));
+         }
         else
         {
            $tempo=-1;//echo "Algo fallo";
@@ -181,8 +188,9 @@ class Interaccionbd extends CI_Model
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
-           $tempo = $regreso->result_array()[0]['existe'];
-            if ($tempo == NULL)
+         $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
+         
+           if ($tempo == NULL)
            {
                $tempo=0;
             }
