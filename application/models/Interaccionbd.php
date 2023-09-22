@@ -18,12 +18,22 @@ class Interaccionbd extends CI_Model
     /*
    /  Update Persona (Fisica o Moral) 
    /  Entrada -> cadena JSON con los datos de la persona (fisica o moral) modificados
-   /  Salida ->    1 Si actualizo
+   /  Salida ->    1 Idpersona actualizado
    /               0 No se guardo
-   $persona = $this->Interaccionbd->consultaPersona(1);
-		echo $persona;
+   $res=$this->Interaccionbd->updatePersona('{
+			"idpersona":"1",   
+			"Nombre": "Cliente Nombre",
+			"Apellido": "Apellido Cliente",
+			"Alias": "AliasC2",
+			"RFC": "XXXXAAMMDDXX9",
+			"TipoPersona": "1",
+			"Rol": "1",
+			"ActivoFintec": "0",
+			"RegimenFical":"1",
+			"Activo":"1"}');
+		echo $res;	
     */
-    public function updatePersona($valoresjsonpersona)
+    public function updatePersona($cadenajsonpersona)
     {
 
       $sql="select UpdatePersona('".$cadenajsonpersona."','".keyvalue."') as existe;";
@@ -31,7 +41,7 @@ class Interaccionbd extends CI_Model
 
       if ($regreso)
       {
-         $tempo = json_encode(explode('|', $regreso->result_array()[0]['existe']));
+         $tempo =  $regreso->result_array()[0]['existe'];
        }
       else
       {
