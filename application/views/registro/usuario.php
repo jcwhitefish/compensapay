@@ -347,6 +347,8 @@
             };
         },
     });
+    window.history.pushState({}, "", "<?php echo base_url('registro/usuario')?>");
+
 </script>
 
 

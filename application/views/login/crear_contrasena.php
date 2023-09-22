@@ -2,13 +2,14 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-                <h6>Bienvenido  [[nombres y apellidos del usuario]], tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>
+                <!--                 <h6>Bienvenido  [[nombres y apellidos del usuario]], tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6> -->
+                <h6>Bienvenido, tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>
                 <div class="col l6 center-align">
                     <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
                     <p>¿Aún no eres socio?, regístrate <a href="#">aquí</a></p><br>
                 </div>
                 <div class="col l6 p-5">
-                    <form method="get" action="<?= base_url('login/validarCuenta'); ?>">
+                    <form method="get" action="<?= base_url('login/entrar'); ?>">
                         <div class="container input-border">
                             <input v-model="data['userValidate']" @blur="checkFormat('userValidate')" :style="colorsBorder['userValidate'] || {}" type="text" name="userValidate" id="userValidate" placeholder="nameUserValue" value="nameUserValue" required disabled>
                             <label for="userValidate">Usuario</label>
