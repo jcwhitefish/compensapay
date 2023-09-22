@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         <?php
 
-         $navbar=false;
+         $navbar=true;
          $sidebar=false;
          $isLog=false;
 
