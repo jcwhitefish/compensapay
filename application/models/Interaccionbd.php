@@ -50,10 +50,6 @@ class Interaccionbd extends CI_Model
      return $tempo;
     }   
 
-
-
-
-
    /*
    /  Consulta Persona (Fisica o Moral) 
    /  Entrada -> Numero de id de la persona (fisica o moral)
