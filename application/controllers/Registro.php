@@ -238,6 +238,7 @@ class Registro extends CI_Controller
 	}
 	public function registraEmpresa()
 	{
+		registro('Aqui entro');
 		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required');
 		$this->form_validation->set_rules('nameComercial', 'NameComercial', 'required');
 		$this->form_validation->set_rules('type', 'Type', 'required');
@@ -417,35 +418,6 @@ class Registro extends CI_Controller
 	//Nos permite ver las variables que queramos
 	public function verVariables()
 	{
-		$bussinesName = $this->input->post('bussinesName');
-		$codigoPostal = $this->input->post('codigoPostal');
-		$estado = $this->input->post('estado');
-		$direccion = $this->input->post('direccion');
-		$telefono = $this->input->post('telefono');
-		$nameComercial = $this->input->post('nameComercial');
-		$type = $this->input->post('type');
-		$rfc = $this->input->post('rfc');
-		$fiscal = $this->input->post('fiscal');
-		$clabe = $this->input->post('clabe');
-		$bank = $this->input->post('bank');
-		$uniqueString = $this->input->post('uniqueString');
-		$data = array(
-			'bussinesName' => $bussinesName,
-			'nameComercial' => $nameComercial,
-			'codigoPostal' => $codigoPostal,
-			'estado' => $estado,
-			'direccion' => $direccion,
-			'telefono' => $telefono,
-			'type' => $type,
-			'rfc' => $rfc,
-			'fiscal' => $fiscal,
-			'clabe' => $clabe,
-			'bank' => $bank,
-			'documentos' =>  $uniqueString
-		);
-		// Configura la respuesta para que sea en formato JSON
-		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($data));
+		echo 'hola desde verVariable';
 	}
 }

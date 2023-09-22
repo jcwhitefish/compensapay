@@ -43,7 +43,7 @@ class Login extends CI_Controller {
 		} 
 
 		// assign isLog for validate if show in the screen
-		$data['main'] = $this->load->view('login/login', '', true);
+		$data['main'] = $this->load->view('login/entrar', '', true);
 		$this->load->view('plantilla', $data);
 	}	
 	public function validarCuenta($idEmpresa = null)
@@ -54,7 +54,7 @@ class Login extends CI_Controller {
 			$persona = json_decode($this->Interaccionbd->consultaPersona($empresa));
 			print_r($persona);
 			if ($persona[0]->id_usuario != 0) {
-				$data['main'] = $this->load->view('login/login', '', true);
+				$data['main'] = $this->load->view('login/crear_contrasena','', true);
 				$this->load->view('plantilla', $data);
 			}else{
 				redirect('registro/empresa');
