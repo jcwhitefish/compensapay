@@ -15,6 +15,35 @@ class Interaccionbd extends CI_Model
     private $tempo;
     
 
+    /*
+   /  Update Persona (Fisica o Moral) 
+   /  Entrada -> cadena JSON con los datos de la persona (fisica o moral) modificados
+   /  Salida ->    1 Si actualizo
+   /               0 No se guardo
+   $persona = $this->Interaccionbd->consultaPersona(1);
+		echo $persona;
+    */
+    public function updatePersona($valoresjsonpersona)
+    {
+
+      $sql="select UpdatePersona('".$cadenajsonpersona."','".keyvalue."') as existe;";
+      $regreso = $this->db->query ($sql); 
+
+      if ($regreso)
+      {
+         $tempo = json_encode(explode('|', $regreso->result_array()[0]['existe']));
+       }
+      else
+      {
+         $tempo=-1;//echo "Algo fallo";
+      }
+     return $tempo;
+    }   
+
+
+
+
+
    /*
    /  Consulta Persona (Fisica o Moral) 
    /  Entrada -> Numero de id de la persona (fisica o moral)
@@ -46,10 +75,6 @@ class Interaccionbd extends CI_Model
         }
        return $tempo;
     }   
-
-
-
-
 
    /*
    /  Actualiza Llave de acceso 
