@@ -20,9 +20,7 @@ class Main extends CI_Controller {
 	 */
 	public function index()
 	{
-         //mostramos en pantalla welcome_message.php
-         $data['main'] = $this->load->view('main','',true);
-         $this->load->view('plantilla',$data);
+		redirect('https://compensapay.mx');
 	}
 
 }
