@@ -378,13 +378,13 @@ class Registro extends CI_Controller
 
 
 		$encodedParams = array();
-		$encodedParams['nombre'] = urlencode($name. ' ' . $lastname);
+		$encodedParams['nombre'] = urlencode($name . ' ' . $lastname);
 		$encodedParams['correo'] = urlencode($email);
 
 		$dato = array();
 		$dato['url'] = 'registro/finalizado/' . implode('/', $encodedParams);
-				// Enviamos el correo
-		
+		// Enviamos el correo
+
 		//asi es como
 		$dato['enlace'] = $this->enviarCorreo($idEmpresa);
 		// Configura la respuesta para que sea en formato JSON
@@ -414,6 +414,23 @@ class Registro extends CI_Controller
 			$data['nombre'] = $clabe3;
 			return json_encode($data);
 		}
+	}
+	public function regimenFiscal()
+	{
+		$dato = array();
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+	public function listaEstados()
+	{
+		$datos = array();
+		$datos =  $this->Interaccionbd -> ConsutlarEstadosMX();
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($datos));
 	}
 	//Nos permite ver las variables que queramos
 	public function verVariables()

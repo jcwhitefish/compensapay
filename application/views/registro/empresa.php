@@ -53,10 +53,10 @@
                                 <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <select name="estado" id="estado">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
+                                <select name="estado" id="estado" v-model="selectedOption">
+                                    <option :value="null">Selecciona una opción</option>
+                                    <option v-for="option in dataOptions" :key="option.id_estado" :value="option.id_estado">{{ option.Nombre }}</option>
+
                                 </select>
                                 <label for="estado">Estado</label>
                             </div>
@@ -169,6 +169,7 @@
         reactive,
         ref,
         isRef,
+        onMounted
     } = Vue
 
     const app = createApp({
@@ -206,6 +207,10 @@
             //partes del pdf
             const representanteLegalUpload = ref(null);
             const representanteLegalUploadName = ref('');
+            //partes de listar estados
+            const selectedOption = ref(null);
+            const dataOptions = ref([]);
+
 
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
@@ -421,6 +426,20 @@
                 }
 
             }
+
+            // Hacer la solicitud Fetch a tu API
+            fetch('http://localhost/compensapay/registro/listaEstados')
+                .then((response) => response.json())
+                .then((data) => {
+                    dataOptions.value = JSON.parse(data); // Almacenar los datos en la propiedad dataOptions
+                    console.log(dataOptions.value);
+                    console.log(M.AutoInit);
+                    M.AutoInit();
+
+                });
+
+
+
             return {
                 data,
                 colorsBorder,
@@ -434,7 +453,9 @@
                 comprobanteDomicilioUpload,
                 comprobanteDomicilioUploadName,
                 representanteLegalUpload,
-                representanteLegalUploadName
+                representanteLegalUploadName,
+                selectedOption,
+                dataOptions
 
             }
         }
@@ -470,6 +491,7 @@
         cursor: pointer;
         border-radius: 3px !important;
     }
+
     .error-message {
         color: red;
         font-size: 10px;
