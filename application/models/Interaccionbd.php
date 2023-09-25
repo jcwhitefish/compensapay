@@ -15,6 +15,42 @@ class Interaccionbd extends CI_Model
     private $tempo;
     
 
+    
+    /*
+   /  Update Usuario (Fisica o Moral) 
+   /  Entrada -> cadena JSON con los datos de la persona (fisica o moral) modificados
+   /  Salida ->    1 Idpersona actualizado
+   /               0 No se guardo
+   $update=$this->Interaccionbd->updateUsuario('{   
+			"NombreUsuario": "DemoUser",
+			"Nombre": "Nombre User",
+			"Apellidos": "Apellido User",
+			"idPersona": 1,
+			"idPerfil": 1,
+			"urlImagen": "/tempral/imagen.png",
+			"Activo":1
+		}');
+		
+		$salida=$this->Interaccionbd->consultaPersona(1);
+    */
+    public function updateUsuario($cadenajsonusuario)
+    {
+
+      $sql="select UpdateUsuario('".$cadenajsonusuario."','".keyvalue."') as existe;";
+      $regreso = $this->db->query ($sql); 
+    if ($regreso)
+      {
+         $tempo =  $regreso->result_array()[0]['existe'];
+        }
+      else
+      {
+         $tempo=-1;//echo "Algo fallo";
+      }
+     return $tempo;
+    }   
+
+
+
     /*
    /  Update Persona (Fisica o Moral) 
    /  Entrada -> cadena JSON con los datos de la persona (fisica o moral) modificados
@@ -276,7 +312,7 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
-    /*
+   /*
     /  AgragarPersona 
     /  Entrada -> cadena JSON con datos sobre Persona Fiscal o Moral
     /  Salida ->    1 Guardado
@@ -289,7 +325,7 @@ class Interaccionbd extends CI_Model
         if ($regreso)
         {
            $tempo = $regreso->result_array()[0]['existe'];
-        }
+        }    
         else
         {
            $tempo=-1;//echo "Algo fallo";
@@ -348,8 +384,9 @@ class Interaccionbd extends CI_Model
     }
     /*
     /  ValidarAcceso 
-    /  Entrada -> cadena JSON con datos sobre Representante Legal
-    /  Salida ->    1 Guardado
+    /  Entrada -> cadena JSON con datos de acceso
+    /  Salida ->    cadena con datoss de acceso
+
     /               0 No se guardo
     */
     public function ValidarAcceso($cadenajsonvalidar)
@@ -357,13 +394,25 @@ class Interaccionbd extends CI_Model
        $sql="select ValidarLlave('".$cadenajsonvalidar."','".keyvalue."') as existe;";
         $regreso = $this->db->query ($sql); 
         if ($regreso)
-        {
-           $tempo = $regreso->result_array()[0]['existe'];
-           if ($tempo==NULL)
-           {
-            $tempo='{"Perfil": 0}';
-        }
-        }
+         {
+            $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
+			
+            $perfil= explode(",",$tempo);
+			//$perfil = json_decode($resultado, true);
+			print_r($perfil);
+			
+			foreach ($perfil as $elemento)
+			{
+			//	$elemento=explode(':',$elementos);
+				$campo = strstr($elemento, ':', true);
+            $campo1 = strpbrk($campo,"P"); // Desde PHP 5.3.0
+			   echo $campo1."<br>"; // mostrará name
+				//echo $elemento."<br>";
+			}
+			$perfil=$resultado;
+         return $tempo;
+
+         }
         else
         {
            $tempo=-1;//echo "Algo fallo";
@@ -441,6 +490,9 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
    
+
+
+
 
 
 
