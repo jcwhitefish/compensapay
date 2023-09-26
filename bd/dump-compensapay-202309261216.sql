@@ -1375,7 +1375,7 @@ CREATE TABLE IF NOT EXISTS `acceso` (
   `PreguntaSeguridad` varchar(255) DEFAULT NULL,
   `RespuestaSeguridad` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`a_idAcceso`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `acceso`
@@ -1394,7 +1394,7 @@ CREATE TABLE IF NOT EXISTS `catbancos` (
   `Clave` varchar(3) DEFAULT NULL,
   `Alias` varchar(50) DEFAULT NULL,
   `Nombre` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `catbancos`
@@ -1512,7 +1512,7 @@ CREATE TABLE IF NOT EXISTS `catgiro` (
   `g_Giro` varchar(255) NOT NULL,
   `g_Activo` int NOT NULL,
   PRIMARY KEY (`g_idGiro`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `catgiro`
@@ -1540,7 +1540,7 @@ CREATE TABLE IF NOT EXISTS `catpreguntas` (
   `pg_pregunta` varchar(255) NOT NULL,
   `pg_activo` int NOT NULL,
   PRIMARY KEY (`pg_idpregunta`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `catpreguntas`
@@ -1569,7 +1569,7 @@ CREATE TABLE IF NOT EXISTS `catregimenfiscal` (
   `rg_Regimen` varchar(128) DEFAULT NULL,
   `rg_P_Fisica` int DEFAULT NULL,
   `rg_P_Moral` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `catregimenfiscal`
@@ -1613,7 +1613,7 @@ CREATE TABLE IF NOT EXISTS `cattipovalor` (
   `cv_Descripcion` varchar(255) NOT NULL,
   `cv_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cv_idTipoValor`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `cattipovalor`
@@ -1644,7 +1644,7 @@ CREATE TABLE IF NOT EXISTS `clienteproveedor` (
   `cp_idEstatusCP` int DEFAULT NULL,
   `cp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cp_idClienteProveedor`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `clienteproveedor`
@@ -1673,7 +1673,7 @@ CREATE TABLE IF NOT EXISTS `compensacion` (
   `cm_idOperacion` int DEFAULT NULL,
   `cm_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cm_idCompensacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `compensacion`
@@ -1694,7 +1694,7 @@ CREATE TABLE IF NOT EXISTS `configuracion` (
   `cnf_Valor` varchar(100) NOT NULL,
   `cnf_Activo` int NOT NULL,
   PRIMARY KEY (`cnf_idConfiguracion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `configuracion`
@@ -1722,7 +1722,7 @@ CREATE TABLE IF NOT EXISTS `contacto` (
   `c_Descripcion` varchar(255) NOT NULL,
   `c_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`c_idContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `contacto`
@@ -1751,7 +1751,7 @@ CREATE TABLE IF NOT EXISTS `cuentabancaria` (
   `b_CLABE` varchar(255) NOT NULL,
   `b_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`b_idCtaBancaria`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `cuentabancaria`
@@ -1811,7 +1811,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `d_CodPost` int DEFAULT NULL,
   `d_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`d_idDireccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `direccion`
@@ -1839,7 +1839,7 @@ CREATE TABLE IF NOT EXISTS `elementoconfigurable` (
   `ec_idTipoValor` int NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idElementoConfigurable`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `elementoconfigurable`
@@ -1864,7 +1864,7 @@ CREATE TABLE IF NOT EXISTS `estados` (
   `e_IdEstado` int DEFAULT NULL,
   `e_Descripcion` varchar(50) DEFAULT NULL,
   `e_alias` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `estados`
@@ -1921,7 +1921,7 @@ CREATE TABLE IF NOT EXISTS `estatuscm` (
   `ec_Descripcion` varchar(16) NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idEstatusCM`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `estatuscm`
@@ -1949,7 +1949,7 @@ CREATE TABLE IF NOT EXISTS `estatuscp` (
   `ecp_Descripcion` varchar(16) NOT NULL,
   `ecp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ecp_idEstatusCP`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `estatuscp`
@@ -1977,7 +1977,7 @@ CREATE TABLE IF NOT EXISTS `estatuso` (
   `eo_Descripcion` varchar(16) NOT NULL,
   `eo_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`eo_idEstatusO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `estatuso`
@@ -2008,7 +2008,7 @@ CREATE TABLE IF NOT EXISTS `moduloperfil` (
   `mp_idPerfil` tinyint DEFAULT NULL,
   `mp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`mp_idModuloPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `moduloperfil`
@@ -2027,7 +2027,7 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   `m_Descripcion` varchar(30) NOT NULL,
   `m_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`m_idModulo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `modulos`
@@ -2055,7 +2055,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `o_FechaUpload` datetime NOT NULL,
   `o_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`o_idOperacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `operacion`
@@ -2082,7 +2082,7 @@ CREATE TABLE IF NOT EXISTS `perfil` (
   `p_Descripcion` varchar(50) NOT NULL,
   `p_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`p_idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `perfil`
@@ -2120,7 +2120,7 @@ CREATE TABLE IF NOT EXISTS `persona` (
   `per_logo` varchar(255) DEFAULT NULL,
   `per_Activo` int DEFAULT NULL,
   PRIMARY KEY (`per_idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `persona`
@@ -2149,7 +2149,7 @@ CREATE TABLE IF NOT EXISTS `preguntapersona` (
   `pp_respuestapregunta` varchar(255) NOT NULL,
   `pp_Activo` int DEFAULT NULL,
   PRIMARY KEY (`pp_idpreguntapersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `preguntapersona`
@@ -2178,7 +2178,7 @@ CREATE TABLE IF NOT EXISTS `representantelegal` (
   `rl_idPersona` varchar(255) DEFAULT NULL,
   `rl_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`rl_idRepresentante`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `representantelegal`
@@ -2205,7 +2205,7 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `r_Descripcion` varchar(50) DEFAULT NULL,
   `r_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`r_idRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `rol`
@@ -2236,7 +2236,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento` (
   `s_UsuarioActualizo` int NOT NULL,
   `s_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`s_idSeguimiento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `seguimiento`
@@ -2255,7 +2255,7 @@ CREATE TABLE IF NOT EXISTS `tipocontacto` (
   `tc_Descripcion` varchar(30) NOT NULL,
   `tc_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`tc_idTipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `tipocontacto`
@@ -2283,7 +2283,7 @@ CREATE TABLE IF NOT EXISTS `tipodocumento` (
   `td_Descripcion` varchar(16) NOT NULL,
   `td_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`td_idTipoDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `tipodocumento`
@@ -2310,7 +2310,7 @@ CREATE TABLE IF NOT EXISTS `tipopersona` (
   `tp_Descripcion` varchar(50) DEFAULT NULL,
   `tp_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`tp_idTipoPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `tipopersona`
@@ -2343,7 +2343,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `u_imagenUsuario` varchar(255) DEFAULT NULL,
   `u_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`u_idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Truncar tablas antes de insertar `usuario`
