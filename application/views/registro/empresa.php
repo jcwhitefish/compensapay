@@ -252,7 +252,6 @@
                         break;
                     case 'estado':
                         if (data[nombreInput] !== '') {
-
                             colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
                             }
@@ -329,9 +328,6 @@
                         var patron = /[^0-9]/;
                         if (data[nombreInput] != '' && data[nombreInput].length == 18 && !patron.test(data[nombreInput])) {
 
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid #03BB85!important',
-                            }
                             //Aqui estoy
                             var requestOptions = {
                                 method: 'GET',
@@ -340,7 +336,18 @@
 
                             fetch("http://localhost/compensapay/herramientas/listaBanco/" + data[nombreInput].toString().substring(0, 3), requestOptions)
                                 .then(response => response.json())
-                                .then(result => data['bank'] = JSON.parse(result))
+                                .then(result => {
+                                    data['bank'] = JSON.parse(result)
+                                    if (data['bank'] == 0) {
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid red!important',
+                                        }
+                                    } else {
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid #03BB85!important',
+                                        }
+                                    }
+                                })
                                 .catch(error => console.log('error', error));
 
                         } else {
@@ -534,7 +541,35 @@
                     });
             }
             const submitForm = () => {
+                // Obtén el objeto data
+                const dataObject = {
+                    bussinesName: data.bussinesName,
+                    nameComercial: data.nameComercial,
+                    codigoPostal: data.codigoPostal,
+                    estado: data.estado,
+                    direccion: data.direccion,
+                    telefono: data.telefono,
+                    type: data.giro,
+                    rfc: data.rfc,
+                    fiscal: data.regimen,
+                    clabe: data.clabe,
+                    bank: data.bank.idbanco,
+                    documentos: data.uniqueString,
+                };
+                console.log('dataObject');
+                console.log(dataObject);
+                // Inicializa un array para los parámetros codificados
+                const encodedParams = [];
 
+                // Codifica cada parámetro en el array
+                for (const key in dataObject) {
+                    if (dataObject.hasOwnProperty(key)) {
+                        encodedParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(dataObject[key])}`);
+                    }
+                }
+
+                // Redirige a la URL con segmentos de URL
+                //window.location.href = 'registro/usuario?' + encodedParams.join('&');
 
             }
 
