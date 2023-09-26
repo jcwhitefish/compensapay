@@ -222,6 +222,34 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
 
+/*
+    VerGiro
+    Entrada -> Vacia
+    Salida -> Cadena con los giros registrados en BD
+    $giro = $this->Interaccionbd->VerGiro();
+		echo $giro;
+    */
+    public function VerGiro()
+    {
+       $sql="select verGiro() as existe;";
+       //echo $sql;
+        $regreso = $this->db->query ($sql); 
+        if ($regreso)
+        {
+           $tempo = $regreso->result_array()[0]['existe'];
+           if ($tempo==NULL)
+           {
+            $tempo=0;
+           }
+        }
+        else
+        {
+           $tempo=-1;//echo "Algo fallo";
+        }
+       return $tempo;
+    }
+
+
   /*
     /  AgragaContacto 
     /  Entrada -> cadena JSON con datos para tipo de contacto
