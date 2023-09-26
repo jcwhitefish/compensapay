@@ -1683,7 +1683,28 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
+DELIMITER $$
+create function compensapay.verGiro()
+returns TEXT
+begin
+	declare salida text;
+select	
+		concat('[',
+        GROUP_CONCAT(
+			JSON_OBJECT (
+				'id_Giro', g_idGiro,
+				'Giro', g_Giro ) 
+	separator ',')
+    , ']')
+into
+	salida
+from
+	catgiro
+where
+	g_Activo = 1;
+return salida;
+end;$$
+DELIMITER;
 --
 -- Final view structure for view `vistapersonausuario`
 --
