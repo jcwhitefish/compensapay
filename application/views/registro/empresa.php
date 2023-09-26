@@ -2,7 +2,7 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <h2 class="card-title">Registro de Empresa</h2>
-            <form method="post" action="<?php echo base_url('registro/empresaTemporal'); ?>" class="col l12" enctype="multipart/form-data">
+            <form @submit.prevent="submitForm" method="post" action="<?php echo base_url('registro/empresaTemporal'); ?>" class="col l12" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col l5 especial-p">
                         <div class="row">
@@ -23,12 +23,11 @@
                                 <p v-if="colorsBorder['nameComercial'] && colorsBorder['nameComercial'].border === '1px solid red!important'" class="error-message">¡Nombre Comercial inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <select name="type" id="type">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
+                                <select name="giro" id="giro" v-model="data['giro']" required>
+                                    <option v-for="giro in listaGiros" :key="giro.id_Giro" :value="giro.id_Giro">{{ giro.Giro }}</option>
+
                                 </select>
-                                <label for="type">Giro</label>
+                                <label for="giro">Giro</label>
                             </div>
                         </div>
                         <div class="row">
@@ -38,12 +37,11 @@
                                 <p v-if="colorsBorder['rfc'] && colorsBorder['rfc'].border === '1px solid red!important'" class="error-message">¡RFC inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <select name="fiscal" id="fiscal">
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
+                                <select name="regimen" id="regimen" v-model="data['regimen']" required>
+                                    <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{  regimen.Regimen }}</option>
+
                                 </select>
-                                <label for="fiscal">Regimen Fiscal</label>
+                                <label for="regimen">Regimen Fiscal</label>
                             </div>
                         </div>
                         <div class="row">
@@ -53,9 +51,8 @@
                                 <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <select name="estado" id="estado" v-model="selectedOption">
-                                    <option :value="null">Selecciona una opción</option>
-                                    <option v-for="option in dataOptions" :key="option.id_estado" :value="option.id_estado">{{ option.Nombre }}</option>
+                                <select name="estado" id="estado" v-model="data['estado']" required>
+                                    <option v-for="estado in listaEstados" :key="estado.id_estado" :value="estado.id_estado">{{ estado.Nombre }}</option>
 
                                 </select>
                                 <label for="estado">Estado</label>
@@ -89,7 +86,7 @@
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['bank']" type="text" name="bank" id="bank" disabled required>
+                                <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['Alias']" required>
                                 <label for="bank">Banco emisor</label>
                             </div>
                         </div>
@@ -169,7 +166,8 @@
         reactive,
         ref,
         isRef,
-        onMounted
+        onMounted,
+        nextTick
     } = Vue
 
     const app = createApp({
@@ -186,10 +184,13 @@
                 comprobanteDomicilioUpload: ref(''),
                 representanteLegalUpload: ref(''),
                 codigoPostal: ref(''),
-                estado: ref(''),
+                estado: ref(null),
+                regimen: ref(null),
                 codigoPostal: ref(''),
                 direccion: ref(''),
                 telefono: ref(''),
+                uniqueString: ref(''),
+                giro: ref(null)
             });
             // partes del image
             const imageUpload = ref(null);
@@ -208,9 +209,9 @@
             const representanteLegalUpload = ref(null);
             const representanteLegalUploadName = ref('');
             //partes de listar estados
-            const selectedOption = ref(null);
-            const dataOptions = ref([]);
-
+            const listaEstados = ref([]);
+            const listaRegimenes = ref([]);
+            const listaGiros = ref([]);
 
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
@@ -331,6 +332,16 @@
                             colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
                             }
+                            //Aqui estoy
+                            var requestOptions = {
+                                method: 'GET',
+                                redirect: 'follow'
+                            };
+
+                            fetch("http://localhost/compensapay/herramientas/listaBanco/" + data[nombreInput].toString().substring(0, 3), requestOptions)
+                                .then(response => response.json())
+                                .then(result => data['bank'] = JSON.parse(result))
+                                .catch(error => console.log('error', error));
 
                         } else {
                             colorsBorder[nombreInput] = {
@@ -356,70 +367,84 @@
                         }
                         break;
                     case 'imageUpload':
-                        if (imageUpload.value.files[0].size <= 1024 * 1024) { // 1 MB en bytes
-                            imageUploadURL.value = URL.createObjectURL(imageUpload.value.files[0])
-                            data[nombreInput] = imageUpload.value
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 1 MB.");
+                        if (imageUpload.value.files.length == 1) {
 
-                            imageUpload.value.files[0].value = null;
-                        }
+                            if (imageUpload.value.files[0].size <= 1024 * 1024) {
+                                imageUploadURL.value = URL.createObjectURL(imageUpload.value.files[0])
+                                data[nombreInput] = imageUpload.value;
+                                subirArchivo(data[nombreInput], 'logo')
+
+                            } else {
+                                imageUploadURL.value = 'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640';
+
+                            }
+
+
+                        } else if (imageUpload.value.files.length == 0) {}
+
+
 
                         break;
                     case 'csfUpload':
+                        //falta el caso en el que se tiene que vaciar la variable porque no aceptamos su archivo creo va en el else
+                        if (csfUpload.value.files.length == 1) {
 
-                        if (csfUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
-                            data[nombreInput] = csfUpload.value
-                            csfUploadName.value = csfUpload.value.files[0].name;
+                            if (csfUpload.value.files[0].size <= 1024 * 1024 * 30) {
+                                csfUploadName.value = csfUpload.value.files[0].name;
+                                data[nombreInput] = csfUpload.value;
+                                subirArchivo(data[nombreInput], 'constanciaSituacionFiscal')
 
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+                            } else {
+                                csfUploadName.value = '';
+                            }
 
-                            csfUpload.value.files[0].value = null;
-                            csfUploadName.value = '';
-                        }
 
+                        } else if (csfUpload.value.files.length == 0) {}
                         break;
                     case 'actaConstitutivaUpload':
-                        if (actaConstitutivaUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
-                            data[nombreInput] = actaConstitutivaUpload.value
-                            actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
+                        if (actaConstitutivaUpload.value.files.length == 1) {
 
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+                            if (actaConstitutivaUpload.value.files[0].size <= 1024 * 1024 * 30) {
+                                actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
+                                data[nombreInput] = actaConstitutivaUpload.value;
+                                subirArchivo(data[nombreInput], 'actaConstitutiva')
 
-                            actaConstitutivaUpload.value.files[0].value = null;
-                            actaConstitutivaUploadName.value = '';
-                        }
+                            } else {
+                                actaConstitutivaUploadName.value = '';
+                            }
+
+
+                        } else if (actaConstitutivaUpload.value.files.length == 0) {}
                         break;
                     case 'comprobanteDomicilioUpload':
-                        if (comprobanteDomicilioUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
-                            data[nombreInput] = comprobanteDomicilioUpload.value
-                            comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
+                        if (comprobanteDomicilioUpload.value.files.length == 1) {
 
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+                            if (comprobanteDomicilioUpload.value.files[0].size <= 1024 * 1024 * 30) {
+                                comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
+                                data[nombreInput] = comprobanteDomicilioUpload.value;
+                                subirArchivo(data[nombreInput], 'comprobanteDomicilio')
 
-                            comprobanteDomicilioUpload.value.files[0].value = null;
-                            comprobanteDomicilioUpload.value = '';
-                        }
+                            } else {
+                                comprobanteDomicilioUploadName.value = '';
+                            }
+
+
+                        } else if (comprobanteDomicilioUpload.value.files.length == 0) {}
                         break;
                     case 'representanteLegalUpload':
-                        if (representanteLegalUpload.value.files[0].size <= 1024 * 1024 * 5) { // 1 MB en bytes
-                            data[nombreInput] = representanteLegalUpload.value
-                            representanteLegalUploadName.value = representanteLegalUpload.value.files[0].name;
+                        if (representanteLegalUpload.value.files.length == 1) {
 
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 5 MB.");
+                            if (representanteLegalUpload.value.files[0].size <= 1024 * 1024 * 30) {
+                                representanteLegalUploadName.value = representanteLegalUpload.value.files[0].name;
+                                data[nombreInput] = representanteLegalUpload.value;
+                                subirArchivo(data[nombreInput], 'representanteLegal')
 
-                            representanteLegalUpload.value.files[0].value = null;
-                            representanteLegalUpload.value = '';
-                        }
+                            } else {
+                                representanteLegalUploadName.value = '';
+                            }
+
+
+                        } else if (representanteLegalUpload.value.files.length == 0) {}
                         break;
                     default:
                         // Código a ejecutar si valor no coincide con ningún caso
@@ -428,16 +453,100 @@
             }
 
             // Hacer la solicitud Fetch a tu API
-            fetch('http://localhost/compensapay/registro/listaEstados')
-                .then((response) => response.json())
-                .then((data) => {
-                    dataOptions.value = JSON.parse(data); // Almacenar los datos en la propiedad dataOptions
-                    console.log(dataOptions.value);
-                    console.log(M.AutoInit);
-                    M.AutoInit();
+            const subirArchivo = (archivo, nombre, lugar = 0) => {
+                const formData = new FormData();
+                formData.append('archivo', archivo.files[0]);
 
-                });
 
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+
+                fetch('http://localhost/compensapay/herramientas/subirArchivo/' + data['uniqueString'] + '/' + nombre + '/' + lugar, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        /*console.log(result)*/
+                    })
+                    .catch(error => console.log('error', error));
+            }
+            const idUnico = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+                fetch('http://localhost/compensapay/herramientas/idUnico', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        data['uniqueString'] = result.idUnico; // Almacenar los datos en la propiedad listaEstados
+                        // console.log(data['uniqueString']);
+
+                    });
+            }
+            const listarEstados = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+                fetch('http://localhost/compensapay/herramientas/listaEstados', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        listaEstados.value = JSON.parse(result); // Almacenar los datos en la propiedad listaEstados
+                        // console.log(listaEstados.value);
+                        nextTick(() => {
+                            M.FormSelect.init(document.getElementById('estado'));
+                        });
+
+                    });
+            }
+            const listarRegimen = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+                fetch('http://localhost/compensapay/herramientas/listaRegimen/2', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        listaRegimenes.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        // console.log(listaRegimenes.value);
+                        nextTick(() => {
+                            M.FormSelect.init(document.getElementById('regimen'));
+                        });
+
+                    });
+            }
+            const listarGiro = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch('http://localhost/compensapay/herramientas/listaGiro', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        listaGiros.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        //console.log(listaGiros.value);
+                        nextTick(() => {
+                            M.FormSelect.init(document.getElementById('giro'));
+                        });
+
+                    });
+            }
+            const submitForm = () => {
+
+
+            }
+
+
+            onMounted(
+                () => {
+                    idUnico();
+                    listarEstados();
+                    listarRegimen();
+                    listarGiro();
+                }
+            )
 
 
             return {
@@ -454,8 +563,10 @@
                 comprobanteDomicilioUploadName,
                 representanteLegalUpload,
                 representanteLegalUploadName,
-                selectedOption,
-                dataOptions
+                listaEstados,
+                listaRegimenes,
+                listaGiros,
+                submitForm
 
             }
         }
