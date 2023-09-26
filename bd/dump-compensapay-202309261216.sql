@@ -1119,37 +1119,28 @@ RETURN resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `VerBanco`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `VerBanco` (`entrada` VARCHAR(4)) RETURNS VARCHAR(100) CHARSET utf8mb4  begin
 
-  declare salida varchar(100);
+-- compensapay.catbancos definition
 
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `VerBanco` (`entrada` VARCHAR(4)) RETURNS VARCHAR(100) CHARSET utf8mb4  
+begin
+ declare salida varchar(100);
 select
-
 	JSON_OBJECT (
+		'idBanco',b.id,
 
-		'Clave',Clave,
+		'Clave',b.Clave,
 
-		'Alias',Alias  
-
+		'Alias',b.Alias  
 	)
-
 into
-
 	salida
-
 from
-
-	catbancos 
-
+	catbancos b
 where
-
-	compensapay.catbancos.Clave = entrada;
-
-
-
+	b.Clave = entrada;
 return salida;
-
-
 
 end$$
 
