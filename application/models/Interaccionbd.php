@@ -135,6 +135,7 @@ class Interaccionbd extends CI_Model
         if ($regreso)
         {
            $tempo = json_encode(explode('|', $regreso->result_array()[0]['existe']));
+           $tempo = $this->ajson($tempo);
          }
         else
         {
@@ -251,13 +252,17 @@ class Interaccionbd extends CI_Model
     public function ExisteRFC($rfc)
     {
        $sql="select existerfc('".$rfc."','".keyvalue."') as existe;";
-      
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
-         $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
-         
-           if ($tempo == NULL)
+         $regreso = $regreso->result_array()[0]['existe'];
+         if ($regreso != "")
+         {
+            $tempo=json_encode(explode('|',$regreso));
+            $tempo = $this->ajson($tempo);
+          
+         }
+         elseif ($regreso == NULL)
            {
                $tempo=0;
             }
@@ -299,7 +304,7 @@ class Interaccionbd extends CI_Model
     public function AgregaUsuario($cadenajsonusuario)
     {
        $sql="select AgregaUsuario('".$cadenajsonusuario."','".keyvalue."') as existe;";
-       //echo $sql;
+      
         $regreso = $this->db->query ($sql); 
         if ($regreso)
         {
@@ -396,28 +401,13 @@ class Interaccionbd extends CI_Model
         if ($regreso)
          {
             $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
-			
-            $perfil= explode(",",$tempo);
-			//$perfil = json_decode($resultado, true);
-			print_r($perfil);
-			
-			foreach ($perfil as $elemento)
-			{
-			//	$elemento=explode(':',$elementos);
-				$campo = strstr($elemento, ':', true);
-            $campo1 = strpbrk($campo,"P"); // Desde PHP 5.3.0
-			   echo $campo1."<br>"; // mostrará name
-				//echo $elemento."<br>";
-			}
-			$perfil=$resultado;
-         return $tempo;
-
+			   $final = $this->ajson($tempo);
          }
         else
         {
-           $tempo=-1;//echo "Algo fallo";
+           $final=-1;//echo "Algo fallo";
         }
-       return $tempo;
+       return $final;
     }
     /*
     /  Lista Estados Republica Mexicana 
@@ -490,7 +480,61 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }
    
-
+/* ajson 
+Entrada, resulado comun de consultas con pipe de separacion
+Salida, json con los datos recibidos
+*/
+public function ajson ($pasarjson)
+{
+   if ($pasarjson !="")
+   {
+   $perfil= explode(",",$pasarjson);
+   $j_valida='{';
+   foreach ($perfil as $elemento)
+   {
+     $campo=str_replace("[","",$elemento);
+      $campo=str_replace('"',"",$campo);
+      $campo=str_replace(']',"",$campo);
+      $campos=explode(":",$campo);
+   
+      $j_valida=$j_valida.'"'.$campos[0].'":"'.$campos[1].'",';
+   
+   }
+   $j_valida=substr($j_valida, 0, -1); 
+   $j_valida=$j_valida."}";
+   
+   $final=json_encode($j_valida);
+   switch(json_last_error()) {
+      case JSON_ERROR_NONE:
+          $final= $final;
+      break;
+      case JSON_ERROR_DEPTH:
+         $final= ' - Excedido tamaño máximo de la pila';
+      break;
+      case JSON_ERROR_STATE_MISMATCH:
+         $final= ' - Desbordamiento de buffer o los modos no coinciden';
+      break;
+      case JSON_ERROR_CTRL_CHAR:
+         $final= ' - Encontrado carácter de control no esperado';
+      break;
+      case JSON_ERROR_SYNTAX:
+         $final= ' - Error de sintaxis, JSON mal formado';
+      break;
+      case JSON_ERROR_UTF8:
+         $final= ' - Caracteres UTF-8 malformados, posiblemente están mal codificados';
+      break;
+      default:
+      $final= ' - Error desconocido';
+      break;
+      }
+      return json_decode($final);
+   }
+   else
+{
+   return NULL;
+}
+  
+}
 
 
 
