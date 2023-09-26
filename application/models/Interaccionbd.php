@@ -250,6 +250,47 @@ class Interaccionbd extends CI_Model
     }
 
 
+
+/*Ver Operacion
+Entrada: id persona (empresa)
+Salida: json con operaciones
+$operaciones=$this->Interaccionbd->VerOperaciones(1);
+*/
+public function VerOperaciones($idPersona)
+{
+   $sql="select verOperaciones('".$idPersona."','".keyvalue."') as existe;";
+   $regreso = $this->db->query ($sql); 
+   if ($regreso)
+   {
+    $regreso = $regreso->result_array()[0]['existe'];
+    if ($regreso != "")
+    {
+      $tempo1=explode(',',$regreso);
+
+      $cont=0;
+      foreach($tempo1 as $linea)
+      {
+         $tempo=json_encode(explode('|',$linea));
+         $linea = $this->ajson($tempo);
+         $tempo1[$cont]=$linea;
+         $cont++;
+      }
+          
+    }
+    elseif ($regreso == NULL)
+      {
+          $tempo1=0;
+       }
+   }
+   else
+   {
+      $tempo1=-1;//echo "Algo fallo";
+   }
+
+  return $tempo1;
+}
+
+
   /*
     /  AgragaContacto 
     /  Entrada -> cadena JSON con datos para tipo de contacto
