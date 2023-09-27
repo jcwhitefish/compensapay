@@ -29,7 +29,7 @@
                         </div>
                         <div class="right-align container">
                             <button class="button-gray" type="submit">Iniciar Sesión</button>
-                            <p class="p-1"><a href="#"><u>Olvidé mi contraseña</u></a></p>
+                            <p class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
                         </div>
                     </form>
                 </div>

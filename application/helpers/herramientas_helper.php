@@ -17,3 +17,19 @@ function registro($miVariable) {
 
     return true; // Indica que la operación fue exitosa
 }
+function cifrarAES($mensaje)
+{
+    $clave = 'R$#9pL@z&*Q!7k#J2';
+    $iv = hex2bin('845e409135219b45a30ca1c60a7e0c77');
+    $cifrado = openssl_encrypt($mensaje, 'AES-256-CBC', $clave, 0, $iv);
+    return base64_encode($cifrado); 
+}
+
+function descifrarAES($mensajeCifrado)
+{
+    $clave = 'R$#9pL@z&*Q!7k#J2';
+    $iv = hex2bin('845e409135219b45a30ca1c60a7e0c77');
+    $datosDecodificados = base64_decode($mensajeCifrado);
+    $mensajeDescifrado = openssl_decrypt($datosDecodificados, 'AES-256-CBC', $clave, 0, $iv);
+    return $mensajeDescifrado;
+}
