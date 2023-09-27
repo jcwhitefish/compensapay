@@ -266,6 +266,7 @@
                 if (typeof empresa['id'] === 'undefined') {
                     empresa['id'] = 0;
                 }
+                //Aqui iria un echo con una variable de php si el usuario fue invitado
                 // Esto solo sirve en POST
                 const formData = new FormData();
                 for (const key in data) {
@@ -325,7 +326,7 @@
                             return response.json();
                         })
                         .then((responseData) => {
-                            //console.log(responseData);
+                            console.log(responseData);
                             // Hacer algo con los datos, por ejemplo, retornarlos
                             formUsuario(responseData)
 
@@ -385,7 +386,7 @@
             };
         },
     });
-    window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
+    //window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
 </script>
 
 
