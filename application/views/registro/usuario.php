@@ -60,9 +60,7 @@
                             </div>
                             <div class="input-border col l12">
                                 <select v-model="data['question']" name="question" id="question" required>
-                                    <option value="perfil1">Perfil 1</option>
-                                    <option value="perfil2">Perfil 2</option>
-                                    <option value="perfil3">Perfil 3</option>
+                                    <option v-for="question in listaPreguntas" :key="question.idpregunta" :value="question.idpregunta">{{ question.pregunta }}</option>
                                 </select>
                                 <label for="question">Pregunta *</label>
                             </div>
@@ -81,7 +79,7 @@
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576"  />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
@@ -100,6 +98,8 @@
         reactive,
         ref,
         isRef,
+        onMounted,
+        nextTick
     } = Vue;
 
     const app = createApp({
@@ -121,11 +121,14 @@
                 validateNumber: ref(''),
                 question: ref(''),
                 answer: ref(''),
+                uniqueString: ref('')
             });
 
             const imageUpload = ref(null);
             const imageUploadURL = ref('https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640');
             const colorsBorder = reactive({});
+            //partes de listar
+            const listaPreguntas = ref([]);
 
             const checkFormat = (fieldName) => {
                 if (!isRef(colorsBorder[fieldName])) {
@@ -259,8 +262,8 @@
 
             }
             const formUsuario = (empresa = array('')) => {
-                
-                if (typeof empresa['id'] === 'undefined'){
+
+                if (typeof empresa['id'] === 'undefined') {
                     empresa['id'] = 0;
                 }
                 // Esto solo sirve en POST
@@ -288,7 +291,7 @@
                         console.log(responseData.url);
                         // Hacer algo con los datos, por ejemplo, retornarlos
                         // accion = responseData
-                        window.location.replace('<?php echo base_url(); ?>'+responseData.url+'/'+responseData.enlace);
+                        window.location.replace('<?php echo base_url(); ?>' + responseData.url + '/' + responseData.enlace);
 
 
                     })
@@ -335,7 +338,41 @@
             <?php
             }
             ?>
+            const idUnico = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+                fetch("<?php echo base_url('herramientas/idUnico'); ?>", requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        data['uniqueString'] = result.idUnico; // Almacenar los datos en la propiedad listaEstados
+                        // console.log(data['uniqueString']);
 
+                    });
+            }
+            const listarPreguntas = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+                fetch("<?php echo base_url('herramientas/listaPreguntas'); ?>", requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        listaPreguntas.value = JSON.parse(result); // Almacenar los datos en la propiedad listaEstados
+                        //console.log(listaPreguntas.value);
+                        nextTick(() => {
+                            M.FormSelect.init(document.getElementById('question'));
+                        });
+
+                    });
+            }
+            onMounted(
+                () => {
+                    idUnico();
+                    listarPreguntas();
+                }
+            )
             return {
                 data,
                 colorsBorder,
@@ -343,12 +380,12 @@
                 imageUpload,
                 imageUploadURL,
                 submitForm,
-                validateInput
+                validateInput,
+                listaPreguntas
             };
         },
     });
-    window.history.pushState({}, "", "<?php echo base_url('registro/usuario')?>");
-
+    window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
 </script>
 
 

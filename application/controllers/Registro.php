@@ -423,15 +423,6 @@ class Registro extends CI_Controller
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
-	public function listaEstados()
-	{
-		$datos = array();
-		$datos =  $this->Interaccionbd -> ConsutlarEstadosMX();
-		// Configura la respuesta para que sea en formato JSON
-		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($datos));
-	}
 	//Nos permite ver las variables que queramos
 	public function verVariables()
 	{

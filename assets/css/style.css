@@ -125,30 +125,44 @@ input[type="number"] {
 /* buttons */
 .button-gray {
     transition-duration: 0.4s;
-    background-color: #444;
-    color: white;
+    background-color: #444 !important;
+    color: white !important;
     padding: 8px 30px;
     border: 2px solid #444;
     border-radius: 10px !important;
   }
   
 .button-gray:hover {
-    background-color: white; /* Green */
-    color: #444;
+    background-color: white !important; 
+    color: #444 !important;
 }
 
 .button-white {
     transition-duration: 0.4s;
-    background-color: white;
-    color: black;
+    background-color: white!important;
+    color: black !important;
     padding: 8px 30px;
-    border: 2px solid #444;
+    border: 2px solid #444 !important;
     border-radius: 10px !important;
 }
 
 .button-white:hover {
-    background-color: #444; /* Green */
-    color: white;
+    background-color: #444 !important;
+    color: white !important;
+}
+
+.button-blue {
+    transition-duration: 0.4s;
+    background-color: #1565c0 !important;
+    color: white !important;
+    padding: 8px 30px;
+    border: 2px solid #0d47a1 !important;
+    border-radius: 10px !important;
+}
+
+.button-blue:hover {
+    background-color: #0d47a1 !important; 
+    color: white !important;
 }
 
 .button-white {
