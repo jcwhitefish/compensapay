@@ -38,7 +38,7 @@
                             </div>
                             <div class="input-border col l6">
                                 <select name="regimen" id="regimen" v-model="data['regimen']" required>
-                                    <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{  regimen.Regimen }}</option>
+                                    <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{ regimen.Regimen }}</option>
 
                                 </select>
                                 <label for="regimen">Regimen Fiscal</label>
@@ -334,7 +334,7 @@
                                 redirect: 'follow'
                             };
 
-                            fetch("http://localhost/compensapay/herramientas/listaBanco/" + data[nombreInput].toString().substring(0, 3), requestOptions)
+                            fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data[nombreInput].toString().substring(0, 3), requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
                                     data['bank'] = JSON.parse(result)
@@ -471,7 +471,7 @@
                     redirect: 'follow'
                 };
 
-                fetch('http://localhost/compensapay/herramientas/subirArchivo/' + data['uniqueString'] + '/' + nombre + '/' + lugar, requestOptions)
+                fetch("<?php echo base_url('herramientas/subirArchivo/'); ?>" + data['uniqueString'] + '/' + nombre + '/' + lugar, requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         /*console.log(result)*/
@@ -483,7 +483,7 @@
                     method: 'GET',
                     redirect: 'follow'
                 };
-                fetch('http://localhost/compensapay/herramientas/idUnico', requestOptions)
+                fetch("<?php echo base_url('herramientas/idUnico'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         data['uniqueString'] = result.idUnico; // Almacenar los datos en la propiedad listaEstados
@@ -496,7 +496,7 @@
                     method: 'GET',
                     redirect: 'follow'
                 };
-                fetch('http://localhost/compensapay/herramientas/listaEstados', requestOptions)
+                fetch("<?php echo base_url('herramientas/listaEstados'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         listaEstados.value = JSON.parse(result); // Almacenar los datos en la propiedad listaEstados
@@ -512,7 +512,7 @@
                     method: 'GET',
                     redirect: 'follow'
                 };
-                fetch('http://localhost/compensapay/herramientas/listaRegimen/2', requestOptions)
+                fetch("<?php echo base_url('herramientas/listaRegimen/2'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         listaRegimenes.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
@@ -529,7 +529,7 @@
                     redirect: 'follow'
                 };
 
-                fetch('http://localhost/compensapay/herramientas/listaGiro', requestOptions)
+                fetch("<?php echo base_url('herramientas/listaGiro'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         listaGiros.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
@@ -553,23 +553,28 @@
                     rfc: data.rfc,
                     fiscal: data.regimen,
                     clabe: data.clabe,
-                    bank: data.bank.idbanco,
+                    bank: data.bank.idBanco,
                     documentos: data.uniqueString,
                 };
-                console.log('dataObject');
-                console.log(dataObject);
-                // Inicializa un array para los parámetros codificados
-                const encodedParams = [];
-
-                // Codifica cada parámetro en el array
-                for (const key in dataObject) {
-                    if (dataObject.hasOwnProperty(key)) {
-                        encodedParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(dataObject[key])}`);
+                const isEmpty = Object.values(dataObject).some(value => value === null || value === undefined || value === '');
+                console.log(isEmpty);
+                if (!isEmpty) {
+                    // Inicializa un array para los parámetros codificados
+                    const urlSegments = ['registro', 'usuario'];
+                    // Agrega las variables del objeto dataObject como segmentos a la URL
+                    for (const key in dataObject) {
+                        if (dataObject.hasOwnProperty(key)) {
+                            urlSegments.push(encodeURIComponent(dataObject[key]));
+                        }
                     }
-                }
 
-                // Redirige a la URL con segmentos de URL
-                //window.location.href = 'registro/usuario?' + encodedParams.join('&');
+                    // Construye la URL completa uniendo los segmentos con "/"
+                    const finalURL = urlSegments.join('/');
+                    window.location.replace("<?php echo base_url(); ?>" + finalURL);
+                    console.log(finalURL);
+                } else {
+                    // Al menos uno de los valores está vacío, no hacer nada
+                }
 
             }
 
