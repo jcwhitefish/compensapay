@@ -556,8 +556,10 @@
                     bank: data.bank.idBanco,
                     documentos: data.uniqueString,
                 };
+                // console.log('dataObject');
+                // console.log(dataObject);
                 const isEmpty = Object.values(dataObject).some(value => value === null || value === undefined || value === '');
-                console.log(isEmpty);
+                // console.log('Estan vacios alguno?'+isEmpty);
                 if (!isEmpty) {
                     // Inicializa un array para los parámetros codificados
                     const urlSegments = ['registro', 'usuario'];
@@ -571,7 +573,7 @@
                     // Construye la URL completa uniendo los segmentos con "/"
                     const finalURL = urlSegments.join('/');
                     window.location.replace("<?php echo base_url(); ?>" + finalURL);
-                    console.log(finalURL);
+                    // console.log(finalURL);
                 } else {
                     // Al menos uno de los valores está vacío, no hacer nada
                 }
