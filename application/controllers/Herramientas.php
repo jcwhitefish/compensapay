@@ -119,4 +119,14 @@ class Herramientas extends CI_Controller
         // Envía los datos en formato JSON
         $this->output->set_output(json_encode($datos));
     }
+    public function listaPreguntas()
+    {
+        $datos = array();
+        $datos = $this->Interaccionbd->ConsutlaCatPreguntas();
+
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($datos));
+    }
 }

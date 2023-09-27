@@ -208,7 +208,7 @@
             //partes del pdf
             const representanteLegalUpload = ref(null);
             const representanteLegalUploadName = ref('');
-            //partes de listar estados
+            //partes de listar
             const listaEstados = ref([]);
             const listaRegimenes = ref([]);
             const listaGiros = ref([]);
