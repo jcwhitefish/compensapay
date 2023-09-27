@@ -195,6 +195,49 @@ class Interaccionbd extends CI_Model
        return $tempo;
     }   
 
+/*Ver Contactos
+Entrada: id persona (empresa)
+Salida: json con contactos almacenados
+$operaciones=$this->Interaccionbd->VerContactos(1);
+	$contactos=$this->Interaccionbd->VerContactos(1);
+		print_r($contactos);
+*/
+public function VerContactos($idPersona)
+{
+   $sql="select verContacto('".$idPersona."','".keyvalue."') as existe;";
+   $regreso = $this->db->query ($sql); 
+   if ($regreso)
+   {
+    $regreso = $regreso->result_array()[0]['existe'];
+    if ($regreso != "")
+    {
+      $tempo1=explode(',',$regreso);
+      $cont=0;
+      foreach($tempo1 as $linea)
+      {
+         $tempo=json_encode(explode('|',$linea));
+         $linea = $this->ajson($tempo);
+         $tempo1[$cont]=$linea;
+         $cont++;
+      }
+    }
+    elseif ($regreso == NULL)
+      {
+          $tempo1=0;
+       }
+   }
+   else
+   {
+      $tempo1=-1;//echo "Algo fallo";
+   }
+
+  return $tempo1;
+}
+
+
+
+
+
 
 
     /*
