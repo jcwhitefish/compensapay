@@ -1,18 +1,14 @@
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS `compensapay` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `compensapay` DEFAULT CHARACTER SET utf8mb4;
 USE compensapay;
 
 DELIMITER $$
 DROP FUNCTION IF EXISTS `AgregaContacto`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaContacto` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
-  	declare resultado text;
+CREATE FUNCTION `AgregaContacto` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
+ 	declare resultado text;
 	declare contenido varchar(50);
 	declare idPersona int(3);
 	declare idTipoContacto int(3);
@@ -50,7 +46,7 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `AgregaCtaBancaria`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaCtaBancaria` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `AgregaCtaBancaria` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
 
 	declare resultado text;
 	declare idPersona int(3);
@@ -120,9 +116,9 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `AgregaDireccion`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaDireccion` (`entrada` TEXT) RETURNS BLOB  begin
-  	declare resultado blob;
-  	declare idPersona int(3);
+CREATE FUNCTION `AgregaDireccion` (`entrada` TEXT) RETURNS BLOB begin
+ 	declare resultado blob;
+ 	declare idPersona int(3);
 	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
 insert into direccion (	d_idPersona,
  									d_CalleYNumero,
@@ -145,17 +141,17 @@ select
 into
 	resultado
 from
-	direccion d  
+	direccion d 
 where
-	d.d_idPersona  = idPersona  
-and d.d_Activo  = 1 ;
-  RETURN resultado;
+	d.d_idPersona = idPersona 
+and d.d_Activo = 1 ;
+ RETURN resultado;
 
 END$$
 
 DROP FUNCTION IF EXISTS `AgregaPersona`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaPersona` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
-  	declare resultado text;
+CREATE FUNCTION `AgregaPersona` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
+ 	declare resultado text;
 	declare rfc varchar(16);
 	set rfc = JSON_UNQUOTE(json_extract(entrada,'$.RFC'));
  insert into persona (per_Nombre,
@@ -193,14 +189,14 @@ where
 	from_base64(per_RFC) = rfc
 	and per_Activo = 1;
 
-  RETURN resultado;
+ RETURN resultado;
 
 END$$
 
 DROP FUNCTION IF EXISTS `AgregaPregunta`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaPregunta` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB  begin
-  	declare resultado blob;
-  	declare contenido varchar(50);
+CREATE FUNCTION `AgregaPregunta` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB begin
+ 	declare resultado blob;
+ 	declare contenido varchar(50);
 	declare idPersona int(3);
 	declare idPregunta int(3);
 set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
@@ -218,7 +214,7 @@ insert into preguntapersona (
  									1
  									);
 
-  select
+ select
 	count(pp_idpregunta)
 into
 	resultado
@@ -228,12 +224,12 @@ where
 	pp_idpersona = idPersona and 
 	pp_idpregunta = idPregunta 
 	and pp_Activo = 1;
-  RETURN resultado;
+ RETURN resultado;
 END$$
 
 DROP FUNCTION IF EXISTS `AgregaRepresentante`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaRepresentante` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB  begin
-  	declare resultado blob;
+CREATE FUNCTION `AgregaRepresentante` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB begin
+ 	declare resultado blob;
 	declare nombre varchar(30);
 set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
 insert
@@ -263,7 +259,7 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `AgregarOperacion`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregarOperacion` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB  begin
+CREATE FUNCTION `AgregarOperacion` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB begin
 	declare resultado blob;
 	declare nombre varchar(30);
 	set nombre = JSON_UNQUOTE(json_extract(entrada,'$.NombreRepresentante'));
@@ -294,9 +290,9 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `AgregaUsuario`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB  begin
-  	declare resultado blob;
-  	declare nomuser varchar(30);
+CREATE FUNCTION `AgregaUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB begin
+ 	declare resultado blob;
+ 	declare nomuser varchar(30);
 	set nomuser = JSON_UNQUOTE(json_extract(entrada,'$.NombreUsuario'));
 	insert into usuario (u_NombreUsuario,
  									u_Nombre ,
@@ -317,7 +313,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `AgregaUsuario` (`entrada` TEXT, `lla
  									1
  									);
 
-  select
+ select
 	count(u_NombreUsuario)
 into
 	resultado
@@ -327,18 +323,18 @@ where
 	from_base64(u_NombreUsuario) = nomuser
 	and u_Activo = 1;								
 
-  RETURN resultado;
+ RETURN resultado;
 
 END$$
 
 DROP FUNCTION IF EXISTS `ConsultaEmpresa`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ConsultaEmpresa` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `ConsultaEmpresa` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1 begin
 	declare resultado text;
 	declare idPersona int;
 	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
 select
 	concat('[',
-        GROUP_CONCAT(
+    GROUP_CONCAT(
 			JSON_OBJECT (
 				'Nombre', from_base64(per_Nombre),
 				'Alias', from_base64(per_Alias),
@@ -352,12 +348,12 @@ select
 				'imagenPersona', from_base64(per_logo),
 				'imagenUsuario', from_base64(u.u_imagenUsuario),
 				'idUsuario', u.u_idUsuario)
-			  SEPARATOR ',')
+			 SEPARATOR ',')
 		,']')
 	into resultado
 from
 	persona p
-inner join representantelegal r  
+inner join representantelegal r 
 on p.per_idPersona = from_base64(r.rl_idPersona)
 inner join usuario u 
 on from_base64(r.rl_idPersona) = from_base64(u.u_idPersona)
@@ -379,7 +375,7 @@ return resultado;
 END$$
 
 DROP FUNCTION IF EXISTS `ConsultaPersona`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ConsultaPersona` (`entrada` INT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `ConsultaPersona` (`entrada` INT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1 begin
 
 declare salida text;
 	select
@@ -404,7 +400,7 @@ declare salida text;
 		into salida
 from
 	persona p
-inner join representantelegal r  
+inner join representantelegal r 
 on
 	p.per_idPersona = from_base64(r.rl_idPersona)
 inner join usuario u 
@@ -433,18 +429,18 @@ where
 END$$
 
 DROP FUNCTION IF EXISTS `ConsutlarEstadosMX`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ConsutlarEstadosMX` () RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `ConsutlarEstadosMX` () RETURNS TEXT CHARSET latin1 begin
 
-  declare salida text;
+ declare salida text;
 select
 	concat('[',
-        GROUP_CONCAT(
-            JSON_OBJECT (
+    GROUP_CONCAT(
+      JSON_OBJECT (
 				'id_estado', e.e_IdEstado,
 				'Nombre', e.e_Descripcion,
 				'alias', e.e_alias)
-            SEPARATOR ',')
-    ,']')
+      SEPARATOR ',')
+  ,']')
 into
 	salida
 from
@@ -453,8 +449,8 @@ return salida;
 end$$
 
 DROP FUNCTION IF EXISTS `ExisteRFC`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ExisteRFC` (`entrada` VARCHAR(20), `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1  begin
-  declare salida text;
+CREATE FUNCTION `ExisteRFC` (`entrada` VARCHAR(20), `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1 begin
+ declare salida text;
 select
 	concat_ws("|",
 	concat('RFC:',from_base64(per_RFC)),
@@ -471,20 +467,20 @@ return salida;
 end$$
 
 DROP FUNCTION IF EXISTS `ExisteUsuario`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ExisteUsuario` (`entrada` VARCHAR(50), `llave` VARCHAR(100)) RETURNS INT  BEGIN
+CREATE FUNCTION `ExisteUsuario` (`entrada` VARCHAR(50), `llave` VARCHAR(100)) RETURNS INT BEGIN
 
-  DECLARE salida int;
+ DECLARE salida int;
  	select count(u_NombreUsuario) 
 	into salida 
 	from usuario 
 	where from_base64(u_NombreUsuario) = entrada;
-  RETURN salida;
+ RETURN salida;
 
 END$$
 
 DROP FUNCTION IF EXISTS `UpdateContacto`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateContacto` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
-  	declare resultado text;
+CREATE FUNCTION `UpdateContacto` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
+ 	declare resultado text;
 	declare contenido varchar(50);
 	declare idPersona int(3);
 	declare idTipoContacto int(3);
@@ -511,7 +507,7 @@ insert into contacto (
  		to_base64(contenido),
  		1
  		);
-  
+ 
  	select
 		count(c_Descripcion)
 	into
@@ -523,11 +519,11 @@ insert into contacto (
 		from_base64(c_idPersona) = idPersona and 
 		from_base64(c_Descripcion) = Contenido
 	and c_Activo = 1;
-  RETURN resultado;
+ RETURN resultado;
 END$$
 
 DROP FUNCTION IF EXISTS `UpdateCtaBancaria`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateCtaBancaria` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `UpdateCtaBancaria` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
 
 	declare resultado text;
 	declare idPersona int(3);
@@ -574,10 +570,10 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `UpdateDireccion`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateDireccion` (`entrada` TEXT) RETURNS BLOB  begin
+CREATE FUNCTION `UpdateDireccion` (`entrada` TEXT) RETURNS BLOB begin
 
-  	declare resultado blob;
-  	declare idPersona int(3);
+ 	declare resultado blob;
+ 	declare idPersona int(3);
 	set idPersona = JSON_UNQUOTE(json_extract(entrada,'$.idPersona'));
 update 
 	direccion 
@@ -607,24 +603,24 @@ select
 into
 	resultado
 from
-	direccion d  
+	direccion d 
 where
-	d.d_idPersona  = idPersona  
-and d.d_Activo  = 1 ;
-  RETURN resultado;
+	d.d_idPersona = idPersona 
+and d.d_Activo = 1 ;
+ RETURN resultado;
 
 END$$
 
 DROP FUNCTION IF EXISTS `UpdateLlaveUsuario`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateLlaveUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `UpdateLlaveUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1 begin
 
 	declare resultado text;
-  	declare iduser varchar(100);
-  	declare llave_interna varchar(100);
-  	declare nueva_llave blob;
-  	set iduser = JSON_UNQUOTE(json_extract(entrada,'$.idUsuario'));
-  	set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
-    set nueva_llave = to_base64(md5(llave_interna));
+ 	declare iduser varchar(100);
+ 	declare llave_interna varchar(100);
+ 	declare nueva_llave blob;
+ 	set iduser = JSON_UNQUOTE(json_extract(entrada,'$.idUsuario'));
+ 	set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
+  set nueva_llave = to_base64(md5(llave_interna));
  update
 	usuario u
  set
@@ -649,7 +645,7 @@ return resultado;
 END$$
 
 DROP FUNCTION IF EXISTS `UpdatePersona`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdatePersona` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `UpdatePersona` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET latin1 begin
 
 	declare resultado text;
 	declare rfc varchar(16);
@@ -673,7 +669,7 @@ where
 	p.per_idPersona = idpersona;
 
 select
-	p.per_idPersona  
+	p.per_idPersona 
  into
 	resultado
 from
@@ -686,9 +682,9 @@ return resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `UpdateUsuario`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `UpdateUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB  begin
+CREATE FUNCTION `UpdateUsuario` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS BLOB begin
 
-  	declare resultado blob;
+ 	declare resultado blob;
  	declare nomuser varchar(30);
 	set nomuser = JSON_UNQUOTE(json_extract(entrada,'$.NombreUsuario'));
 
@@ -703,23 +699,23 @@ set
 where 
 	from_base64(u_NombreUsuario) = nomuser;
 	
-  select count(u_NombreUsuario) into resultado
-  from usuario 
-  where from_base64(u_NombreUsuario) = nomuser 
-  and u_Activo = 1;								
+ select count(u_NombreUsuario) into resultado
+ from usuario 
+ where from_base64(u_NombreUsuario) = nomuser 
+ and u_Activo = 1;								
 
 return resultado;
 
 END$$
 
 DROP FUNCTION IF EXISTS `ValidarLlave`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `ValidarLlave` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `ValidarLlave` (`entrada` TEXT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
 
-  declare resultado text;
-  declare usuario varchar(100);
-  declare llave_interna varchar(100);
-  set usuario = JSON_UNQUOTE(json_extract(entrada,'$.Usuario'));
-  set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
+ declare resultado text;
+ declare usuario varchar(100);
+ declare llave_interna varchar(100);
+ set usuario = JSON_UNQUOTE(json_extract(entrada,'$.Usuario'));
+ set llave_interna = JSON_UNQUOTE(json_extract(entrada,'$.Llave'));
  select
  concat_ws("|",
 	concat('Perfil:',p.p_idPerfil),
@@ -737,13 +733,13 @@ RETURN resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `VerBanco`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `VerBanco` (`entrada` VARCHAR(4)) RETURNS VARCHAR(100) CHARSET utf8mb4  begin
-  declare salida varchar(100);
+CREATE FUNCTION `VerBanco` (`entrada` VARCHAR(4)) RETURNS VARCHAR(100) CHARSET utf8mb4 begin
+ declare salida varchar(100);
 select
 	JSON_OBJECT (
 		'idBanco',b.id,
 		'Clave',b.Clave,
-		'Alias',b.Alias  
+		'Alias',b.Alias 
 	)
 into
 	salida
@@ -755,36 +751,36 @@ return salida;
 end$$
 
 DROP FUNCTION IF EXISTS `VerCatPreguntas`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `VerCatPreguntas` () RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `VerCatPreguntas` () RETURNS TEXT CHARSET latin1 begin
 
 	declare salida text;
 	select	
 		concat('[',
-        GROUP_CONCAT(
+    GROUP_CONCAT(
 			JSON_OBJECT (
 				'idpregunta',pg_idpregunta,
 				'pregunta',pg_pregunta
 			 ) 
 	separator ',')
-    , ']')
+  , ']')
 into
 	salida
 from
 	catpreguntas 
 where
-	pg_activo  = 1;
+	pg_activo = 1;
 return salida;
 
 END$$
 
 DROP FUNCTION IF EXISTS `verContacto`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `verContacto` (`entrada` INT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `verContacto` (`entrada` INT, `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
 
-  declare resultado text;
+ declare resultado text;
  
  select
  GROUP_CONCAT(
-  concat_ws("|",
+ concat_ws("|",
 	concat('TipoContacto:',t.tc_Descripcion),
 	concat('Contacto:',from_base64(c.c_Descripcion ))
 	))
@@ -792,23 +788,23 @@ into
 	resultado
 from
 	contacto c 
-inner join tipocontacto t on from_base64(c.c_idTipoContacto) = t.tc_idTipoContacto  
+inner join tipocontacto t on from_base64(c.c_idTipoContacto) = t.tc_idTipoContacto 
 	where
 	 from_base64(c.c_idPersona) = entrada;
 RETURN resultado;
 end$$
 
 DROP FUNCTION IF EXISTS `verGiro`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `verGiro` () RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `verGiro` () RETURNS TEXT CHARSET utf8mb4 begin
 	declare salida text;
 select	
 		concat('[',
-        GROUP_CONCAT(
+    GROUP_CONCAT(
 			JSON_OBJECT (
 				'id_Giro', g_idGiro,
 				'Giro', g_Giro ) 
 	separator ',')
-    , ']')
+  , ']')
 into
 	salida
 from
@@ -819,11 +815,11 @@ return salida;
 end$$
 
 DROP FUNCTION IF EXISTS `VerOperaciones`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `VerOperaciones` (`entrada` INT(4), `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4  begin
+CREATE FUNCTION `VerOperaciones` (`entrada` INT(4), `llave` VARCHAR(100)) RETURNS TEXT CHARSET utf8mb4 begin
 	 declare salida text;
 	select
 		GROUP_CONCAT(
-			concat_ws('|',  
+			concat_ws('|', 
 				concat('FechaEmision:', o.o_FechaEmision),
 				concat('FechaUpdate:',o.o_FechaUpload) ,
 				concat('Total:',o.o_Total) ,
@@ -849,7 +845,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `VerOperaciones` (`entrada` INT(4), `
 					where
 						persona.per_idPersona = c.cp_idPersonaProveedor))
 					))
-	   		into salida
+	  		into salida
 		from
 			operacion o
 		inner join persona p on
@@ -868,7 +864,7 @@ return salida;
 end$$
 
 DROP FUNCTION IF EXISTS `VerRegimenFiscal`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `VerRegimenFiscal` (`tipopersona` INT) RETURNS TEXT CHARSET latin1  begin
+CREATE FUNCTION `VerRegimenFiscal` (`tipopersona` INT) RETURNS TEXT CHARSET latin1 begin
 
 	declare salida text;
 	declare fisica int;
@@ -877,13 +873,13 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `VerRegimenFiscal` (`tipopersona` INT
 	then
 		select	
 		concat('[',
-        	GROUP_CONCAT(
+    	GROUP_CONCAT(
 				JSON_OBJECT (
 					'id_regimen',rg_id_regimen,
 					'Clave',rg_Clave,
 					'Regimen',rg_Regimen ) 
 			separator ',')
-	    , ']')
+	  , ']')
 	into
 		salida
 	from
@@ -895,13 +891,13 @@ elseif tipopersona = 2 then
 
 	select
 		concat('[',
-	        GROUP_CONCAT(
+	    GROUP_CONCAT(
 				JSON_OBJECT (
 					'id_regimen',rg_id_regimen,
 					'Clave',rg_Clave,
-					'Regimen',rg_Regimen  
+					'Regimen',rg_Regimen 
 				) separator ',')
-		    , ']')
+		  , ']')
 	into
 		salida
 	from
@@ -918,26 +914,26 @@ DELIMITER ;
 
 DROP TABLE IF EXISTS `acceso`;
 CREATE TABLE IF NOT EXISTS `acceso` (
-  `a_idAcceso` int NOT NULL AUTO_INCREMENT,
-  `a_idUsuario` int NOT NULL,
-  `a_Llave` varchar(255) NOT NULL,
-  `a_Sesion` varchar(127) NOT NULL,
-  `a_CambiarLlave` tinyint(1) DEFAULT NULL,
-  `a_UlimoAcceso` datetime DEFAULT NULL,
-  `a_Activo` tinyint(1) NOT NULL,
-  `PreguntaSeguridad` varchar(255) DEFAULT NULL,
-  `RespuestaSeguridad` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`a_idAcceso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `a_idAcceso` int NOT NULL AUTO_INCREMENT,
+ `a_idUsuario` int NOT NULL,
+ `a_Llave` varchar(255) NOT NULL,
+ `a_Sesion` varchar(127) NOT NULL,
+ `a_CambiarLlave` tinyint(1) DEFAULT NULL,
+ `a_UlimoAcceso` datetime DEFAULT NULL,
+ `a_Activo` tinyint(1) NOT NULL,
+ `PreguntaSeguridad` varchar(255) DEFAULT NULL,
+ `RespuestaSeguridad` varchar(255) DEFAULT NULL,
+ PRIMARY KEY (`a_idAcceso`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `acceso`;
 DROP TABLE IF EXISTS `catbancos`;
 CREATE TABLE IF NOT EXISTS `catbancos` (
-  `id` int NOT NULL,
-  `Clave` varchar(3) DEFAULT NULL,
-  `Alias` varchar(50) DEFAULT NULL,
-  `Nombre` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `id` int NOT NULL,
+ `Clave` varchar(3) DEFAULT NULL,
+ `Alias` varchar(50) DEFAULT NULL,
+ `Nombre` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catbancos`;
 INSERT INTO `catbancos` (`id`, `Clave`, `Alias`, `Nombre`) VALUES
@@ -1018,7 +1014,7 @@ INSERT INTO `catbancos` (`id`, `Clave`, `Alias`, `Nombre`) VALUES
 (75, '636', 'HDI SEGUROS', 'HDI Seguros, S.A. de C.V. '),
 (76, '637', 'ORDER', 'Order Express Casa de Cambio, S.A. de C.V '),
 (77, '638', 'AKALA', 'Akala, S.A. de C.V., Sociedad Financiera Popular '),
-(78, '640', 'CB  JPMORGAN', 'J.P. Morgan Casa de Bolsa, S.A. de C.V. J.P. Morgan Grupo Financiero '),
+(78, '640', 'CB JPMORGAN', 'J.P. Morgan Casa de Bolsa, S.A. de C.V. J.P. Morgan Grupo Financiero '),
 (79, '642', 'REFORMA', 'Operadora de Recursos Reforma, S.A. de C.V., S.F.P. '),
 (80, '646', 'STP', 'Sistema de Transferencias y Pagos STP, S.A. de C.V.SOFOM ENR '),
 (81, '647', 'TELECOMM', 'Telecomunicaciones de México '),
@@ -1037,11 +1033,11 @@ INSERT INTO `catbancos` (`id`, `Clave`, `Alias`, `Nombre`) VALUES
 
 DROP TABLE IF EXISTS `catgiro`;
 CREATE TABLE IF NOT EXISTS `catgiro` (
-  `g_idGiro` int NOT NULL AUTO_INCREMENT,
-  `g_Giro` varchar(255) NOT NULL,
-  `g_Activo` int NOT NULL,
-  PRIMARY KEY (`g_idGiro`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `g_idGiro` int NOT NULL AUTO_INCREMENT,
+ `g_Giro` varchar(255) NOT NULL,
+ `g_Activo` int NOT NULL,
+ PRIMARY KEY (`g_idGiro`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catgiro`;
 INSERT INTO `catgiro` (`g_idGiro`, `g_Giro`, `g_Activo`) VALUES
@@ -1051,11 +1047,11 @@ INSERT INTO `catgiro` (`g_idGiro`, `g_Giro`, `g_Activo`) VALUES
 
 DROP TABLE IF EXISTS `catpreguntas`;
 CREATE TABLE IF NOT EXISTS `catpreguntas` (
-  `pg_idpregunta` int NOT NULL AUTO_INCREMENT,
-  `pg_pregunta` varchar(255) NOT NULL,
-  `pg_activo` int NOT NULL,
-  PRIMARY KEY (`pg_idpregunta`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `pg_idpregunta` int NOT NULL AUTO_INCREMENT,
+ `pg_pregunta` varchar(255) NOT NULL,
+ `pg_activo` int NOT NULL,
+ PRIMARY KEY (`pg_idpregunta`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catpreguntas`;
 INSERT INTO `catpreguntas` (`pg_idpregunta`, `pg_pregunta`, `pg_activo`) VALUES
@@ -1065,12 +1061,12 @@ INSERT INTO `catpreguntas` (`pg_idpregunta`, `pg_pregunta`, `pg_activo`) VALUES
 
 DROP TABLE IF EXISTS `catregimenfiscal`;
 CREATE TABLE IF NOT EXISTS `catregimenfiscal` (
-  `rg_id_regimen` int DEFAULT NULL,
-  `rg_Clave` int DEFAULT NULL,
-  `rg_Regimen` varchar(128) DEFAULT NULL,
-  `rg_P_Fisica` int DEFAULT NULL,
-  `rg_P_Moral` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `rg_id_regimen` int DEFAULT NULL,
+ `rg_Clave` int DEFAULT NULL,
+ `rg_Regimen` varchar(128) DEFAULT NULL,
+ `rg_P_Fisica` int DEFAULT NULL,
+ `rg_P_Moral` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catregimenfiscal`;
 INSERT INTO `catregimenfiscal` (`rg_id_regimen`, `rg_Clave`, `rg_Regimen`, `rg_P_Fisica`, `rg_P_Moral`) VALUES
@@ -1096,11 +1092,11 @@ INSERT INTO `catregimenfiscal` (`rg_id_regimen`, `rg_Clave`, `rg_Regimen`, `rg_P
 
 DROP TABLE IF EXISTS `cattipovalor`;
 CREATE TABLE IF NOT EXISTS `cattipovalor` (
-  `cv_idTipoValor` int NOT NULL AUTO_INCREMENT,
-  `cv_Descripcion` varchar(255) NOT NULL,
-  `cv_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`cv_idTipoValor`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `cv_idTipoValor` int NOT NULL AUTO_INCREMENT,
+ `cv_Descripcion` varchar(255) NOT NULL,
+ `cv_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`cv_idTipoValor`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `cattipovalor`;
 INSERT INTO `cattipovalor` (`cv_idTipoValor`, `cv_Descripcion`, `cv_Activo`) VALUES
@@ -1110,14 +1106,14 @@ INSERT INTO `cattipovalor` (`cv_idTipoValor`, `cv_Descripcion`, `cv_Activo`) VAL
 
 DROP TABLE IF EXISTS `clienteproveedor`;
 CREATE TABLE IF NOT EXISTS `clienteproveedor` (
-  `cp_idClienteProveedor` int NOT NULL AUTO_INCREMENT,
-  `cp_idPersonaCliente` int NOT NULL,
-  `cp_idPersonaProveedor` varchar(100) NOT NULL,
-  `cp_Nota` varchar(50) NOT NULL,
-  `cp_idEstatusCP` int DEFAULT NULL,
-  `cp_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`cp_idClienteProveedor`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `cp_idClienteProveedor` int NOT NULL AUTO_INCREMENT,
+ `cp_idPersonaCliente` int NOT NULL,
+ `cp_idPersonaProveedor` varchar(100) NOT NULL,
+ `cp_Nota` varchar(50) NOT NULL,
+ `cp_idEstatusCP` int DEFAULT NULL,
+ `cp_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`cp_idClienteProveedor`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `clienteproveedor`;
 INSERT INTO `clienteproveedor` (`cp_idClienteProveedor`, `cp_idPersonaCliente`, `cp_idPersonaProveedor`, `cp_Nota`, `cp_idEstatusCP`, `cp_Activo`) VALUES
@@ -1125,25 +1121,25 @@ INSERT INTO `clienteproveedor` (`cp_idClienteProveedor`, `cp_idPersonaCliente`, 
 
 DROP TABLE IF EXISTS `compensacion`;
 CREATE TABLE IF NOT EXISTS `compensacion` (
-  `cm_idCompensacion` int NOT NULL AUTO_INCREMENT,
-  `cm_idPersonaCliente` int NOT NULL,
-  `cm_idPersonaProveedor` varchar(100) NOT NULL,
-  `cm_idEstatusCM` varchar(50) NOT NULL,
-  `cm_idOperacion` int DEFAULT NULL,
-  `cm_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`cm_idCompensacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `cm_idCompensacion` int NOT NULL AUTO_INCREMENT,
+ `cm_idPersonaCliente` int NOT NULL,
+ `cm_idPersonaProveedor` varchar(100) NOT NULL,
+ `cm_idEstatusCM` varchar(50) NOT NULL,
+ `cm_idOperacion` int DEFAULT NULL,
+ `cm_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`cm_idCompensacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `compensacion`;
 DROP TABLE IF EXISTS `configuracion`;
 CREATE TABLE IF NOT EXISTS `configuracion` (
-  `cnf_idConfiguracion` int NOT NULL AUTO_INCREMENT,
-  `cnf_idPersona` int NOT NULL,
-  `cnf_idElementoConfigurable` int NOT NULL,
-  `cnf_Valor` varchar(100) NOT NULL,
-  `cnf_Activo` int NOT NULL,
-  PRIMARY KEY (`cnf_idConfiguracion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `cnf_idConfiguracion` int NOT NULL AUTO_INCREMENT,
+ `cnf_idPersona` int NOT NULL,
+ `cnf_idElementoConfigurable` int NOT NULL,
+ `cnf_Valor` varchar(100) NOT NULL,
+ `cnf_Activo` int NOT NULL,
+ PRIMARY KEY (`cnf_idConfiguracion`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `configuracion`;
 INSERT INTO `configuracion` (`cnf_idConfiguracion`, `cnf_idPersona`, `cnf_idElementoConfigurable`, `cnf_Valor`, `cnf_Activo`) VALUES
@@ -1151,13 +1147,13 @@ INSERT INTO `configuracion` (`cnf_idConfiguracion`, `cnf_idPersona`, `cnf_idElem
 
 DROP TABLE IF EXISTS `contacto`;
 CREATE TABLE IF NOT EXISTS `contacto` (
-  `c_idContacto` int NOT NULL AUTO_INCREMENT,
-  `c_idTipoContacto` varchar(255) NOT NULL,
-  `c_idPersona` varchar(255) NOT NULL,
-  `c_Descripcion` varchar(255) NOT NULL,
-  `c_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`c_idContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `c_idContacto` int NOT NULL AUTO_INCREMENT,
+ `c_idTipoContacto` varchar(255) NOT NULL,
+ `c_idPersona` varchar(255) NOT NULL,
+ `c_Descripcion` varchar(255) NOT NULL,
+ `c_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`c_idContacto`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `contacto`;
 INSERT INTO `contacto` (`c_idContacto`, `c_idTipoContacto`, `c_idPersona`, `c_Descripcion`, `c_Activo`) VALUES
@@ -1171,12 +1167,12 @@ INSERT INTO `contacto` (`c_idContacto`, `c_idTipoContacto`, `c_idPersona`, `c_De
 
 DROP TABLE IF EXISTS `cuentabancaria`;
 CREATE TABLE IF NOT EXISTS `cuentabancaria` (
-  `b_idCtaBancaria` int NOT NULL AUTO_INCREMENT,
-  `b_idCatBanco` int NOT NULL,
-  `b_CLABE` varchar(255) NOT NULL,
-  `b_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`b_idCtaBancaria`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `b_idCtaBancaria` int NOT NULL AUTO_INCREMENT,
+ `b_idCatBanco` int NOT NULL,
+ `b_CLABE` varchar(255) NOT NULL,
+ `b_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`b_idCtaBancaria`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `cuentabancaria`;
 INSERT INTO `cuentabancaria` (`b_idCtaBancaria`, `b_idCatBanco`, `b_CLABE`, `b_Activo`) VALUES
@@ -1212,16 +1208,16 @@ CREATE TABLE IF NOT EXISTS `datos_persona` (
 
 DROP TABLE IF EXISTS `direccion`;
 CREATE TABLE IF NOT EXISTS `direccion` (
-  `d_idDireccion` int NOT NULL AUTO_INCREMENT,
-  `d_idPersona` int NOT NULL,
-  `d_CalleYNumero` varchar(100) NOT NULL,
-  `d_Colonia` varchar(50) NOT NULL,
-  `d_Ciudad` varchar(50) DEFAULT NULL,
-  `d_Estado` varchar(50) DEFAULT NULL,
-  `d_CodPost` int DEFAULT NULL,
-  `d_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`d_idDireccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `d_idDireccion` int NOT NULL AUTO_INCREMENT,
+ `d_idPersona` int NOT NULL,
+ `d_CalleYNumero` varchar(100) NOT NULL,
+ `d_Colonia` varchar(50) NOT NULL,
+ `d_Ciudad` varchar(50) DEFAULT NULL,
+ `d_Estado` varchar(50) DEFAULT NULL,
+ `d_CodPost` int DEFAULT NULL,
+ `d_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`d_idDireccion`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `direccion`;
 INSERT INTO `direccion` (`d_idDireccion`, `d_idPersona`, `d_CalleYNumero`, `d_Colonia`, `d_Ciudad`, `d_Estado`, `d_CodPost`, `d_Activo`) VALUES
@@ -1234,12 +1230,12 @@ INSERT INTO `direccion` (`d_idDireccion`, `d_idPersona`, `d_CalleYNumero`, `d_Co
 
 DROP TABLE IF EXISTS `elementoconfigurable`;
 CREATE TABLE IF NOT EXISTS `elementoconfigurable` (
-  `ec_idElementoConfigurable` int NOT NULL AUTO_INCREMENT,
-  `ec_Descripcion` varchar(255) NOT NULL,
-  `ec_idTipoValor` int NOT NULL,
-  `ec_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`ec_idElementoConfigurable`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `ec_idElementoConfigurable` int NOT NULL AUTO_INCREMENT,
+ `ec_Descripcion` varchar(255) NOT NULL,
+ `ec_idTipoValor` int NOT NULL,
+ `ec_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`ec_idElementoConfigurable`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `elementoconfigurable`;
 INSERT INTO `elementoconfigurable` (`ec_idElementoConfigurable`, `ec_Descripcion`, `ec_idTipoValor`, `ec_Activo`) VALUES
@@ -1247,10 +1243,10 @@ INSERT INTO `elementoconfigurable` (`ec_idElementoConfigurable`, `ec_Descripcion
 
 DROP TABLE IF EXISTS `estados`;
 CREATE TABLE IF NOT EXISTS `estados` (
-  `e_IdEstado` int DEFAULT NULL,
-  `e_Descripcion` varchar(50) DEFAULT NULL,
-  `e_alias` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `e_IdEstado` int DEFAULT NULL,
+ `e_Descripcion` varchar(50) DEFAULT NULL,
+ `e_alias` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estados`;
 INSERT INTO `estados` (`e_IdEstado`, `e_Descripcion`, `e_alias`) VALUES
@@ -1289,11 +1285,11 @@ INSERT INTO `estados` (`e_IdEstado`, `e_Descripcion`, `e_alias`) VALUES
 
 DROP TABLE IF EXISTS `estatuscm`;
 CREATE TABLE IF NOT EXISTS `estatuscm` (
-  `ec_idEstatusCM` int NOT NULL AUTO_INCREMENT,
-  `ec_Descripcion` varchar(16) NOT NULL,
-  `ec_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`ec_idEstatusCM`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `ec_idEstatusCM` int NOT NULL AUTO_INCREMENT,
+ `ec_Descripcion` varchar(16) NOT NULL,
+ `ec_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`ec_idEstatusCM`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuscm`;
 INSERT INTO `estatuscm` (`ec_idEstatusCM`, `ec_Descripcion`, `ec_Activo`) VALUES
@@ -1303,11 +1299,11 @@ INSERT INTO `estatuscm` (`ec_idEstatusCM`, `ec_Descripcion`, `ec_Activo`) VALUES
 
 DROP TABLE IF EXISTS `estatuscp`;
 CREATE TABLE IF NOT EXISTS `estatuscp` (
-  `ecp_idEstatusCP` int NOT NULL AUTO_INCREMENT,
-  `ecp_Descripcion` varchar(16) NOT NULL,
-  `ecp_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`ecp_idEstatusCP`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `ecp_idEstatusCP` int NOT NULL AUTO_INCREMENT,
+ `ecp_Descripcion` varchar(16) NOT NULL,
+ `ecp_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`ecp_idEstatusCP`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuscp`;
 INSERT INTO `estatuscp` (`ecp_idEstatusCP`, `ecp_Descripcion`, `ecp_Activo`) VALUES
@@ -1317,11 +1313,11 @@ INSERT INTO `estatuscp` (`ecp_idEstatusCP`, `ecp_Descripcion`, `ecp_Activo`) VAL
 
 DROP TABLE IF EXISTS `estatuso`;
 CREATE TABLE IF NOT EXISTS `estatuso` (
-  `eo_idEstatusO` int NOT NULL AUTO_INCREMENT,
-  `eo_Descripcion` varchar(16) NOT NULL,
-  `eo_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`eo_idEstatusO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `eo_idEstatusO` int NOT NULL AUTO_INCREMENT,
+ `eo_Descripcion` varchar(16) NOT NULL,
+ `eo_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`eo_idEstatusO`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuso`;
 INSERT INTO `estatuso` (`eo_idEstatusO`, `eo_Descripcion`, `eo_Activo`) VALUES
@@ -1333,39 +1329,39 @@ INSERT INTO `estatuso` (`eo_idEstatusO`, `eo_Descripcion`, `eo_Activo`) VALUES
 
 DROP TABLE IF EXISTS `moduloperfil`;
 CREATE TABLE IF NOT EXISTS `moduloperfil` (
-  `mp_idModuloPerfil` int NOT NULL AUTO_INCREMENT,
-  `mp_idModulo` tinyint DEFAULT NULL,
-  `mp_idPerfil` tinyint DEFAULT NULL,
-  `mp_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`mp_idModuloPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `mp_idModuloPerfil` int NOT NULL AUTO_INCREMENT,
+ `mp_idModulo` tinyint DEFAULT NULL,
+ `mp_idPerfil` tinyint DEFAULT NULL,
+ `mp_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`mp_idModuloPerfil`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `moduloperfil`;
 DROP TABLE IF EXISTS `modulos`;
 CREATE TABLE IF NOT EXISTS `modulos` (
-  `m_idModulo` tinyint NOT NULL AUTO_INCREMENT,
-  `m_Descripcion` varchar(30) NOT NULL,
-  `m_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`m_idModulo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `m_idModulo` tinyint NOT NULL AUTO_INCREMENT,
+ `m_Descripcion` varchar(30) NOT NULL,
+ `m_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`m_idModulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `modulos`;
 DROP TABLE IF EXISTS `operacion`;
 CREATE TABLE IF NOT EXISTS `operacion` (
-  `o_idOperacion` int NOT NULL AUTO_INCREMENT,
-  `o_NumOperacion` varchar(10) NOT NULL,
-  `o_idPersona` int NOT NULL,
-  `o_FechaEmision` datetime NOT NULL,
-  `o_Total` float DEFAULT NULL,
-  `o_ArchivoXML` text NOT NULL,
-  `o_UUID` varchar(20) NOT NULL,
-  `o_idTipoDocumento` int NOT NULL,
-  `o_SubTotal` float DEFAULT NULL,
-  `o_Impuesto` float NOT NULL,
-  `o_FechaUpload` datetime NOT NULL,
-  `o_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`o_idOperacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `o_idOperacion` int NOT NULL AUTO_INCREMENT,
+ `o_NumOperacion` varchar(10) NOT NULL,
+ `o_idPersona` int NOT NULL,
+ `o_FechaEmision` datetime NOT NULL,
+ `o_Total` float DEFAULT NULL,
+ `o_ArchivoXML` text NOT NULL,
+ `o_UUID` varchar(20) NOT NULL,
+ `o_idTipoDocumento` int NOT NULL,
+ `o_SubTotal` float DEFAULT NULL,
+ `o_Impuesto` float NOT NULL,
+ `o_FechaUpload` datetime NOT NULL,
+ `o_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`o_idOperacion`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `operacion`;
 INSERT INTO `operacion` (`o_idOperacion`, `o_NumOperacion`, `o_idPersona`, `o_FechaEmision`, `o_Total`, `o_ArchivoXML`, `o_UUID`, `o_idTipoDocumento`, `o_SubTotal`, `o_Impuesto`, `o_FechaUpload`, `o_Activo`) VALUES
@@ -1374,11 +1370,11 @@ INSERT INTO `operacion` (`o_idOperacion`, `o_NumOperacion`, `o_idPersona`, `o_Fe
 
 DROP TABLE IF EXISTS `perfil`;
 CREATE TABLE IF NOT EXISTS `perfil` (
-  `p_idPerfil` tinyint NOT NULL AUTO_INCREMENT,
-  `p_Descripcion` varchar(50) NOT NULL,
-  `p_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`p_idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `p_idPerfil` tinyint NOT NULL AUTO_INCREMENT,
+ `p_Descripcion` varchar(50) NOT NULL,
+ `p_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`p_idPerfil`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `perfil`;
 INSERT INTO `perfil` (`p_idPerfil`, `p_Descripcion`, `p_Activo`) VALUES
@@ -1389,20 +1385,20 @@ INSERT INTO `perfil` (`p_idPerfil`, `p_Descripcion`, `p_Activo`) VALUES
 
 DROP TABLE IF EXISTS `persona`;
 CREATE TABLE IF NOT EXISTS `persona` (
-  `per_idPersona` int NOT NULL AUTO_INCREMENT,
-  `per_Nombre` varchar(255) DEFAULT NULL,
-  `per_Apellido` varchar(255) DEFAULT NULL,
-  `per_Alias` varchar(255) DEFAULT NULL,
-  `per_RFC` varchar(255) DEFAULT NULL,
-  `per_idTipoPrersona` varchar(255) DEFAULT NULL,
-  `per_idRol` varchar(255) DEFAULT NULL,
-  `per_ActivoFintec` varchar(255) DEFAULT NULL,
-  `per_RegimenFiscal` varchar(255) DEFAULT NULL,
-  `per_idCtaBanco` varchar(255) DEFAULT NULL,
-  `per_logo` varchar(255) DEFAULT NULL,
-  `per_Activo` int DEFAULT NULL,
-  PRIMARY KEY (`per_idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `per_idPersona` int NOT NULL AUTO_INCREMENT,
+ `per_Nombre` varchar(255) DEFAULT NULL,
+ `per_Apellido` varchar(255) DEFAULT NULL,
+ `per_Alias` varchar(255) DEFAULT NULL,
+ `per_RFC` varchar(255) DEFAULT NULL,
+ `per_idTipoPrersona` varchar(255) DEFAULT NULL,
+ `per_idRol` varchar(255) DEFAULT NULL,
+ `per_ActivoFintec` varchar(255) DEFAULT NULL,
+ `per_RegimenFiscal` varchar(255) DEFAULT NULL,
+ `per_idCtaBanco` varchar(255) DEFAULT NULL,
+ `per_logo` varchar(255) DEFAULT NULL,
+ `per_Activo` int DEFAULT NULL,
+ PRIMARY KEY (`per_idPersona`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `persona`;
 INSERT INTO `persona` (`per_idPersona`, `per_Nombre`, `per_Apellido`, `per_Alias`, `per_RFC`, `per_idTipoPrersona`, `per_idRol`, `per_ActivoFintec`, `per_RegimenFiscal`, `per_idCtaBanco`, `per_logo`, `per_Activo`) VALUES
@@ -1413,13 +1409,13 @@ INSERT INTO `persona` (`per_idPersona`, `per_Nombre`, `per_Apellido`, `per_Alias
 
 DROP TABLE IF EXISTS `preguntapersona`;
 CREATE TABLE IF NOT EXISTS `preguntapersona` (
-  `pp_idpreguntapersona` int NOT NULL AUTO_INCREMENT,
-  `pp_idpersona` int DEFAULT NULL,
-  `pp_idpregunta` int NOT NULL,
-  `pp_respuestapregunta` varchar(255) NOT NULL,
-  `pp_Activo` int DEFAULT NULL,
-  PRIMARY KEY (`pp_idpreguntapersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `pp_idpreguntapersona` int NOT NULL AUTO_INCREMENT,
+ `pp_idpersona` int DEFAULT NULL,
+ `pp_idpregunta` int NOT NULL,
+ `pp_respuestapregunta` varchar(255) NOT NULL,
+ `pp_Activo` int DEFAULT NULL,
+ PRIMARY KEY (`pp_idpreguntapersona`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `preguntapersona`;
 INSERT INTO `preguntapersona` (`pp_idpreguntapersona`, `pp_idpersona`, `pp_idpregunta`, `pp_respuestapregunta`, `pp_Activo`) VALUES
@@ -1430,13 +1426,13 @@ INSERT INTO `preguntapersona` (`pp_idpreguntapersona`, `pp_idpersona`, `pp_idpre
 
 DROP TABLE IF EXISTS `representantelegal`;
 CREATE TABLE IF NOT EXISTS `representantelegal` (
-  `rl_idRepresentante` int NOT NULL AUTO_INCREMENT,
-  `rl_Nombre` varchar(255) DEFAULT NULL,
-  `rl_RFC` varchar(255) DEFAULT NULL,
-  `rl_idPersona` varchar(255) DEFAULT NULL,
-  `rl_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`rl_idRepresentante`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `rl_idRepresentante` int NOT NULL AUTO_INCREMENT,
+ `rl_Nombre` varchar(255) DEFAULT NULL,
+ `rl_RFC` varchar(255) DEFAULT NULL,
+ `rl_idPersona` varchar(255) DEFAULT NULL,
+ `rl_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`rl_idRepresentante`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `representantelegal`;
 INSERT INTO `representantelegal` (`rl_idRepresentante`, `rl_Nombre`, `rl_RFC`, `rl_idPersona`, `rl_Activo`) VALUES
@@ -1447,11 +1443,11 @@ INSERT INTO `representantelegal` (`rl_idRepresentante`, `rl_Nombre`, `rl_RFC`, `
 
 DROP TABLE IF EXISTS `rol`;
 CREATE TABLE IF NOT EXISTS `rol` (
-  `r_idRol` tinyint NOT NULL AUTO_INCREMENT,
-  `r_Descripcion` varchar(50) DEFAULT NULL,
-  `r_Activo` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`r_idRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `r_idRol` tinyint NOT NULL AUTO_INCREMENT,
+ `r_Descripcion` varchar(50) DEFAULT NULL,
+ `r_Activo` tinyint(1) DEFAULT NULL,
+ PRIMARY KEY (`r_idRol`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `rol`;
 INSERT INTO `rol` (`r_idRol`, `r_Descripcion`, `r_Activo`) VALUES
@@ -1460,24 +1456,24 @@ INSERT INTO `rol` (`r_idRol`, `r_Descripcion`, `r_Activo`) VALUES
 
 DROP TABLE IF EXISTS `seguimiento`;
 CREATE TABLE IF NOT EXISTS `seguimiento` (
-  `s_idSeguimiento` int NOT NULL AUTO_INCREMENT,
-  `s_idOperacion` varchar(10) NOT NULL,
-  `s_FechaSeguimiento` datetime NOT NULL,
-  `s_DescripcionOperacion` varchar(255) NOT NULL,
-  `s_idEstatusO` float DEFAULT NULL,
-  `s_UsuarioActualizo` int NOT NULL,
-  `s_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`s_idSeguimiento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `s_idSeguimiento` int NOT NULL AUTO_INCREMENT,
+ `s_idOperacion` varchar(10) NOT NULL,
+ `s_FechaSeguimiento` datetime NOT NULL,
+ `s_DescripcionOperacion` varchar(255) NOT NULL,
+ `s_idEstatusO` float DEFAULT NULL,
+ `s_UsuarioActualizo` int NOT NULL,
+ `s_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`s_idSeguimiento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `seguimiento`;
 DROP TABLE IF EXISTS `tipocontacto`;
 CREATE TABLE IF NOT EXISTS `tipocontacto` (
-  `tc_idTipoContacto` int NOT NULL AUTO_INCREMENT,
-  `tc_Descripcion` varchar(30) NOT NULL,
-  `tc_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`tc_idTipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `tc_idTipoContacto` int NOT NULL AUTO_INCREMENT,
+ `tc_Descripcion` varchar(30) NOT NULL,
+ `tc_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`tc_idTipoContacto`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipocontacto`;
 INSERT INTO `tipocontacto` (`tc_idTipoContacto`, `tc_Descripcion`, `tc_Activo`) VALUES
@@ -1487,11 +1483,11 @@ INSERT INTO `tipocontacto` (`tc_idTipoContacto`, `tc_Descripcion`, `tc_Activo`) 
 
 DROP TABLE IF EXISTS `tipodocumento`;
 CREATE TABLE IF NOT EXISTS `tipodocumento` (
-  `td_idTipoDocumento` int NOT NULL AUTO_INCREMENT,
-  `td_Descripcion` varchar(16) NOT NULL,
-  `td_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`td_idTipoDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `td_idTipoDocumento` int NOT NULL AUTO_INCREMENT,
+ `td_Descripcion` varchar(16) NOT NULL,
+ `td_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`td_idTipoDocumento`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipodocumento`;
 INSERT INTO `tipodocumento` (`td_idTipoDocumento`, `td_Descripcion`, `td_Activo`) VALUES
@@ -1500,11 +1496,11 @@ INSERT INTO `tipodocumento` (`td_idTipoDocumento`, `td_Descripcion`, `td_Activo`
 
 DROP TABLE IF EXISTS `tipopersona`;
 CREATE TABLE IF NOT EXISTS `tipopersona` (
-  `tp_idTipoPersona` tinyint NOT NULL AUTO_INCREMENT,
-  `tp_Descripcion` varchar(50) DEFAULT NULL,
-  `tp_Activo` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`tp_idTipoPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `tp_idTipoPersona` tinyint NOT NULL AUTO_INCREMENT,
+ `tp_Descripcion` varchar(50) DEFAULT NULL,
+ `tp_Activo` tinyint(1) DEFAULT NULL,
+ PRIMARY KEY (`tp_idTipoPersona`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipopersona`;
 INSERT INTO `tipopersona` (`tp_idTipoPersona`, `tp_Descripcion`, `tp_Activo`) VALUES
@@ -1513,17 +1509,17 @@ INSERT INTO `tipopersona` (`tp_idTipoPersona`, `tp_Descripcion`, `tp_Activo`) VA
 
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `u_idUsuario` int NOT NULL AUTO_INCREMENT,
-  `u_idPersona` varchar(255) DEFAULT NULL,
-  `u_NombreUsuario` varchar(255) DEFAULT NULL,
-  `u_Nombre` varchar(255) DEFAULT NULL,
-  `u_Apellidos` varchar(255) DEFAULT NULL,
-  `u_Llaveacceso` varchar(255) DEFAULT NULL,
-  `u_idPerfil` varchar(255) DEFAULT NULL,
-  `u_imagenUsuario` varchar(255) DEFAULT NULL,
-  `u_Activo` tinyint(1) NOT NULL,
-  PRIMARY KEY (`u_idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ `u_idUsuario` int NOT NULL AUTO_INCREMENT,
+ `u_idPersona` varchar(255) DEFAULT NULL,
+ `u_NombreUsuario` varchar(255) DEFAULT NULL,
+ `u_Nombre` varchar(255) DEFAULT NULL,
+ `u_Apellidos` varchar(255) DEFAULT NULL,
+ `u_Llaveacceso` varchar(255) DEFAULT NULL,
+ `u_idPerfil` varchar(255) DEFAULT NULL,
+ `u_imagenUsuario` varchar(255) DEFAULT NULL,
+ `u_Activo` tinyint(1) NOT NULL,
+ PRIMARY KEY (`u_idUsuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `usuario`;
 INSERT INTO `usuario` (`u_idUsuario`, `u_idPersona`, `u_NombreUsuario`, `u_Nombre`, `u_Apellidos`, `u_Llaveacceso`, `u_idPerfil`, `u_imagenUsuario`, `u_Activo`) VALUES
@@ -1534,9 +1530,6 @@ INSERT INTO `usuario` (`u_idUsuario`, `u_idPersona`, `u_NombreUsuario`, `u_Nombr
 DROP TABLE IF EXISTS `datos_persona`;
 
 DROP VIEW IF EXISTS `datos_persona`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `datos_persona`  AS SELECT `p`.`per_idPersona` AS `id_persona`, from_base64(`p`.`per_Nombre`) AS `nombre`, from_base64(`p`.`per_Alias`) AS `alias`, from_base64(`p`.`per_RFC`) AS `rfc`, from_base64(`p`.`per_idTipoPrersona`) AS `idtipopersona`, from_base64(`p`.`per_idRol`) AS `idrol`, from_base64(`p`.`per_ActivoFintec`) AS `activofintec`, from_base64(`p`.`per_RegimenFiscal`) AS `idregimenfiscal`, from_base64(`p`.`per_idCtaBanco`) AS `idcuentabanco`, `c2`.`Alias` AS `banco`, from_base64(`c`.`b_CLABE`) AS `clabe`, from_base64(`p`.`per_logo`) AS `logo_persona`, from_base64(`u`.`u_imagenUsuario`) AS `logo_usuario`, from_base64(`u`.`u_NombreUsuario`) AS `nombre_usuario`, from_base64(`r`.`rl_Nombre`) AS `nombre_representante`, from_base64(`u`.`u_Nombre`) AS `nombre_d_usaurio`, from_base64(`u`.`u_Apellidos`) AS `apellido_usuario`, `u`.`u_idUsuario` AS `id_usuario` FROM (((((((`persona` `p` join `representantelegal` `r` on((`p`.`per_idPersona` = from_base64(`r`.`rl_idPersona`)))) join `usuario` `u` on((from_base64(`r`.`rl_idPersona`) = from_base64(`u`.`u_idPersona`)))) join `tipopersona` `t` on((`t`.`tp_idTipoPersona` = from_base64(`p`.`per_idTipoPrersona`)))) join `cuentabancaria` `c` on((`c`.`b_idCtaBancaria` = from_base64(`p`.`per_idCtaBanco`)))) join `catbancos` `c2` on((`c`.`b_idCatBanco` = `c2`.`id`))) join `rol` on((`rol`.`r_idRol` = from_base64(`p`.`per_idRol`)))) join `perfil` on((`perfil`.`p_idPerfil` = from_base64(`u`.`u_idPerfil`)))) WHERE ((`p`.`per_Activo` = 1) AND (`u`.`u_Activo` = 1) AND (`r`.`rl_Activo` = 1) AND (`t`.`tp_Activo` = 1))  ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `datos_persona` AS SELECT `p`.`per_idPersona` AS `id_persona`, from_base64(`p`.`per_Nombre`) AS `nombre`, from_base64(`p`.`per_Alias`) AS `alias`, from_base64(`p`.`per_RFC`) AS `rfc`, from_base64(`p`.`per_idTipoPrersona`) AS `idtipopersona`, from_base64(`p`.`per_idRol`) AS `idrol`, from_base64(`p`.`per_ActivoFintec`) AS `activofintec`, from_base64(`p`.`per_RegimenFiscal`) AS `idregimenfiscal`, from_base64(`p`.`per_idCtaBanco`) AS `idcuentabanco`, `c2`.`Alias` AS `banco`, from_base64(`c`.`b_CLABE`) AS `clabe`, from_base64(`p`.`per_logo`) AS `logo_persona`, from_base64(`u`.`u_imagenUsuario`) AS `logo_usuario`, from_base64(`u`.`u_NombreUsuario`) AS `nombre_usuario`, from_base64(`r`.`rl_Nombre`) AS `nombre_representante`, from_base64(`u`.`u_Nombre`) AS `nombre_d_usaurio`, from_base64(`u`.`u_Apellidos`) AS `apellido_usuario`, `u`.`u_idUsuario` AS `id_usuario` FROM (((((((`persona` `p` join `representantelegal` `r` on((`p`.`per_idPersona` = from_base64(`r`.`rl_idPersona`)))) join `usuario` `u` on((from_base64(`r`.`rl_idPersona`) = from_base64(`u`.`u_idPersona`)))) join `tipopersona` `t` on((`t`.`tp_idTipoPersona` = from_base64(`p`.`per_idTipoPrersona`)))) join `cuentabancaria` `c` on((`c`.`b_idCtaBancaria` = from_base64(`p`.`per_idCtaBanco`)))) join `catbancos` `c2` on((`c`.`b_idCatBanco` = `c2`.`id`))) join `rol` on((`rol`.`r_idRol` = from_base64(`p`.`per_idRol`)))) join `perfil` on((`perfil`.`p_idPerfil` = from_base64(`u`.`u_idPerfil`)))) WHERE ((`p`.`per_Activo` = 1) AND (`u`.`u_Activo` = 1) AND (`r`.`rl_Activo` = 1) AND (`t`.`tp_Activo` = 1)) ;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
