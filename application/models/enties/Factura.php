@@ -1,46 +1,33 @@
 <?php
 class Factura {
 
-    public $o_idOperacion;
-    public $o_NumOperacion;
-    public $o_idPersona;
-    public $o_FechaEmision;
-    public $o_Total;
-    public $o_ArchivoXML;
-    public $o_UUID;
-    public $o_idTipoDocumento;
-    public $o_SubTotal;
-    public $o_Impuesto;
-    public $o_FechaUpload;
-    public $o_Activo;
+    public $FechaEmision;
+    public $FechaUpdate;
+    public $Total;
+    public $Impuestos;
+    public $Subtotal;
+    public $TipoDocumento;
+    public $EstatusClienteProveedor;
+    public $UUID;
+    public $AliasCliente;
+    public $RFCCliente;
+    public $AliasProvedor;//whitout e
+    public $RFCProveedor;
 
     
-    public function __construct(
-        $idOperacion, 
-        $numOperacion, 
-        $idPersona, 
-        $fechaEmision, 
-        $total, 
-        $archivoXML, 
-        $uuid, 
-        $idTipoDocumento, 
-        $subTotal, 
-        $impuesto, 
-        $fechaUpload, 
-        $activo
-    ) {
-        $this->o_idOperacion = $idOperacion;
-        $this->o_NumOperacion = $numOperacion;
-        $this->o_idPersona = $idPersona;
-        $this->o_FechaEmision = $fechaEmision;
-        $this->o_Total = $total;
-        $this->o_ArchivoXML = $archivoXML;
-        $this->o_UUID = $uuid;
-        $this->o_idTipoDocumento = $idTipoDocumento;
-        $this->o_SubTotal = $subTotal;
-        $this->o_Impuesto = $impuesto;
-        $this->o_FechaUpload = $fechaUpload;
-        $this->o_Activo = $activo;
+    function __construct($fechaEmision, $fechaUpdate, $total, $impuestos, $subtotal, $tipoDocumento, $estatusClienteProveedor, $uuid, $aliasCliente, $rfcCliente, $aliasProvedor, $rfcProveedor) {
+        $this->FechaEmision = $fechaEmision;
+        $this->FechaUpdate = $fechaUpdate;
+        $this->Total = $total;
+        $this->Impuestos = $impuestos;
+        $this->Subtotal = $subtotal;
+        $this->TipoDocumento = $tipoDocumento;
+        $this->EstatusClienteProveedor = $estatusClienteProveedor;
+        $this->UUID = $uuid;
+        $this->AliasCliente = $aliasCliente;
+        $this->RFCCliente = $rfcCliente;
+        $this->AliasProvedor = $aliasProvedor;
+        $this->RFCProveedor = $rfcProveedor;
     }
 }
 

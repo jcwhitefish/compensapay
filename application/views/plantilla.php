@@ -42,9 +42,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="right hide-on-med-and-down px-3">
                             <p class="right-align">Display Name</p>
                             <select name="type" id="type" class="browser-default input-nav">
-                                <option value="perfil1">Vista Cliente</option>
-                                <option value="perfil2">Vista Cliente 2</option>
-                                <option value="perfil3">Vista Cliente 3</option>
+                                <option value="perfil1">Vista Proveedor</option>
+                                <option value="perfil2">Vista Cliente</option>
                             </select>
                         </div>
                         <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
@@ -59,17 +58,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <hr class="line-side">
                 <ul>
                 <ul class="icon-list">
-                    <li><a href="#"><i class="tiny material-icons p-1">notifications_none</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">home</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">import_export</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">pie_chart</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">mail</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">collections</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">today</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">people</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">settings</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">headset_mic</i></a></li>
-                    <li><a href="#"><i class="tiny material-icons p-1">exit_to_app</i></a></li>
+                    <li><a href="#"><i class="material-icons">notifications_none</i></a></li>
+                    <li><a href="#"><i class="material-icons">home</i></a></li>
+                    <li><a href="#"><i class="material-icons">import_export</i></a></li>
+                    <li><a href="#"><i class="material-icons">pie_chart</i></a></li>
+                    <li><a href="#"><i class="material-icons">insert_drive_file</i></a></li>
+                    <li><a href="#"><i class="material-icons">today</i></a></li>
+                    <li><a href="#"><i class="material-icons">people</i></a></li>
+                    <li><a href="#"><i class="material-icons">settings</i></a></li>
+                    <li><a href="#"><i class="material-icons">headset_mic</i></a></li>
+                    <li><a href="#"><i class="material-icons">exit_to_app</i></a></li>
                 </ul>
             </div>
             <div class="container-main">
@@ -132,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         color: #e0e51d;
         background-color: #fff; /* Fondo blanco */
         border-radius: 60%; /* Borde redondeado para crear un círculo */
-        padding: 10px;
+        padding: 5px;
     }
 
     /* Padding si se tiene la barra lateral */
