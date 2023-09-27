@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/compensatest/public_html/
-    - /bin/rsync -av compensapay/* $DEPLOYPATH
