@@ -545,18 +545,30 @@ public function AgregarOperacion($cadenajsonoperacion)
     /  ValidarAcceso 
     /  Entrada -> cadena JSON con datos de acceso
     /  Salida ->    cadena con datoss de acceso
-
+$acceso=$this->Interaccionbd->ValidarAcceso('{"Usuario":"DemoUser","Llave":"A2pw"}');
+print_r($acceso);
     /               0 No se guardo
     */
     public function ValidarAcceso($cadenajsonvalidar)
     {
        $sql="select ValidarLlave('".$cadenajsonvalidar."','".keyvalue."') as existe;";
-        $regreso = $this->db->query ($sql); 
-        if ($regreso)
-         {
-            $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
-			   $final = $this->ajson($tempo);
-         }
+        $regreso = $this->db->query ($sql);
+        
+         echo "Algo : ";
+         $existe=$regreso->result_array()[0]['existe'];
+         print_r($existe);
+
+
+      
+            if ($existe==NULL)
+            {
+                $final=0;
+            }
+            elseif ($existe != NULL)
+            {
+               $tempo=json_encode(explode('|', $regreso->result_array()[0]['existe']));
+               $final = $this->ajson($tempo);
+            }   
         else
         {
            $final=-1;//echo "Algo fallo";
