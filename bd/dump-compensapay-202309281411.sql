@@ -901,7 +901,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `VerOperaciones` (`entrada` INT(4), `
 				concat('Impuestos:',o.o_Impuesto) ,
 				concat('Subtotal:',o.o_SubTotal) ,
 				concat('TipoDocumento:',t.td_Descripcion) ,
-				concat('UUID:',o.o_UUID) ,
+				concat('UUID:',from_base64(o.o_UUID)) ,
 				concat('AliasCliente:',from_base64(p.per_Alias)),
 				concat('Estatus: ',eo.eo_Descripcion),
 				concat('RFCCliente:',from_base64(p.per_RFC)) 
@@ -986,7 +986,7 @@ CREATE TABLE IF NOT EXISTS `acceso` (
   `PreguntaSeguridad` varchar(255) DEFAULT NULL,
   `RespuestaSeguridad` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`a_idAcceso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `acceso`;
 DROP TABLE IF EXISTS `catbancos`;
@@ -995,7 +995,7 @@ CREATE TABLE IF NOT EXISTS `catbancos` (
   `Clave` varchar(3) DEFAULT NULL,
   `Alias` varchar(50) DEFAULT NULL,
   `Nombre` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `catbancos`;
 INSERT INTO `catbancos` (`id`, `Clave`, `Alias`, `Nombre`) VALUES
@@ -1099,7 +1099,7 @@ CREATE TABLE IF NOT EXISTS `catgiro` (
   `g_Giro` varchar(255) NOT NULL,
   `g_Activo` int NOT NULL,
   PRIMARY KEY (`g_idGiro`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `catgiro`;
 INSERT INTO `catgiro` (`g_idGiro`, `g_Giro`, `g_Activo`) VALUES
@@ -1113,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `catpreguntas` (
   `pg_pregunta` varchar(255) NOT NULL,
   `pg_activo` int NOT NULL,
   PRIMARY KEY (`pg_idpregunta`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `catpreguntas`;
 INSERT INTO `catpreguntas` (`pg_idpregunta`, `pg_pregunta`, `pg_activo`) VALUES
@@ -1128,7 +1128,7 @@ CREATE TABLE IF NOT EXISTS `catregimenfiscal` (
   `rg_Regimen` varchar(128) DEFAULT NULL,
   `rg_P_Fisica` int DEFAULT NULL,
   `rg_P_Moral` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `catregimenfiscal`;
 INSERT INTO `catregimenfiscal` (`rg_id_regimen`, `rg_Clave`, `rg_Regimen`, `rg_P_Fisica`, `rg_P_Moral`) VALUES
@@ -1158,7 +1158,7 @@ CREATE TABLE IF NOT EXISTS `cattipovalor` (
   `cv_Descripcion` varchar(255) NOT NULL,
   `cv_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cv_idTipoValor`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `cattipovalor`;
 INSERT INTO `cattipovalor` (`cv_idTipoValor`, `cv_Descripcion`, `cv_Activo`) VALUES
@@ -1175,7 +1175,7 @@ CREATE TABLE IF NOT EXISTS `clienteproveedor` (
   `cp_idEstatusCP` int DEFAULT NULL,
   `cp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cp_idClienteProveedor`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `clienteproveedor`;
 INSERT INTO `clienteproveedor` (`cp_idClienteProveedor`, `cp_idPersonaCliente`, `cp_idPersonaProveedor`, `cp_Nota`, `cp_idEstatusCP`, `cp_Activo`) VALUES
@@ -1190,7 +1190,7 @@ CREATE TABLE IF NOT EXISTS `compensacion` (
   `cm_idOperacion` int DEFAULT NULL,
   `cm_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cm_idCompensacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `compensacion`;
 DROP TABLE IF EXISTS `configuracion`;
@@ -1201,7 +1201,7 @@ CREATE TABLE IF NOT EXISTS `configuracion` (
   `cnf_Valor` varchar(100) NOT NULL,
   `cnf_Activo` int NOT NULL,
   PRIMARY KEY (`cnf_idConfiguracion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `configuracion`;
 INSERT INTO `configuracion` (`cnf_idConfiguracion`, `cnf_idPersona`, `cnf_idElementoConfigurable`, `cnf_Valor`, `cnf_Activo`) VALUES
@@ -1215,7 +1215,7 @@ CREATE TABLE IF NOT EXISTS `contacto` (
   `c_Descripcion` text CHARACTER SET utf8mb4  NOT NULL,
   `c_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`c_idContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `contacto`;
 INSERT INTO `contacto` (`c_idContacto`, `c_idTipoContacto`, `c_idPersona`, `c_Descripcion`, `c_Activo`) VALUES
@@ -1239,7 +1239,7 @@ CREATE TABLE IF NOT EXISTS `cuentabancaria` (
   `b_CLABE` varchar(255) NOT NULL,
   `b_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`b_idCtaBancaria`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `cuentabancaria`;
 INSERT INTO `cuentabancaria` (`b_idCtaBancaria`, `b_idCatBanco`, `b_CLABE`, `b_Activo`) VALUES
@@ -1284,7 +1284,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `d_CodPost` int DEFAULT NULL,
   `d_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`d_idDireccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `direccion`;
 INSERT INTO `direccion` (`d_idDireccion`, `d_idPersona`, `d_CalleYNumero`, `d_Colonia`, `d_Ciudad`, `d_Estado`, `d_CodPost`, `d_Activo`) VALUES
@@ -1302,7 +1302,7 @@ CREATE TABLE IF NOT EXISTS `elementoconfigurable` (
   `ec_idTipoValor` int NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idElementoConfigurable`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `elementoconfigurable`;
 INSERT INTO `elementoconfigurable` (`ec_idElementoConfigurable`, `ec_Descripcion`, `ec_idTipoValor`, `ec_Activo`) VALUES
@@ -1313,7 +1313,7 @@ CREATE TABLE IF NOT EXISTS `estados` (
   `e_IdEstado` int DEFAULT NULL,
   `e_Descripcion` varchar(50) DEFAULT NULL,
   `e_alias` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `estados`;
 INSERT INTO `estados` (`e_IdEstado`, `e_Descripcion`, `e_alias`) VALUES
@@ -1356,7 +1356,7 @@ CREATE TABLE IF NOT EXISTS `estatuscm` (
   `ec_Descripcion` varchar(16) NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idEstatusCM`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `estatuscm`;
 INSERT INTO `estatuscm` (`ec_idEstatusCM`, `ec_Descripcion`, `ec_Activo`) VALUES
@@ -1370,7 +1370,7 @@ CREATE TABLE IF NOT EXISTS `estatuscp` (
   `ecp_Descripcion` varchar(16) NOT NULL,
   `ecp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ecp_idEstatusCP`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `estatuscp`;
 INSERT INTO `estatuscp` (`ecp_idEstatusCP`, `ecp_Descripcion`, `ecp_Activo`) VALUES
@@ -1384,7 +1384,7 @@ CREATE TABLE IF NOT EXISTS `estatuso` (
   `eo_Descripcion` varchar(16) NOT NULL,
   `eo_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`eo_idEstatusO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `estatuso`;
 INSERT INTO `estatuso` (`eo_idEstatusO`, `eo_Descripcion`, `eo_Activo`) VALUES
@@ -1401,7 +1401,7 @@ CREATE TABLE IF NOT EXISTS `moduloperfil` (
   `mp_idPerfil` tinyint DEFAULT NULL,
   `mp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`mp_idModuloPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `moduloperfil`;
 DROP TABLE IF EXISTS `modulos`;
@@ -1410,7 +1410,7 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   `m_Descripcion` varchar(30) NOT NULL,
   `m_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`m_idModulo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `modulos`;
 DROP TABLE IF EXISTS `operacion`;
@@ -1428,7 +1428,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `o_FechaUpload` datetime NOT NULL,
   `o_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`o_idOperacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `operacion`;
 INSERT INTO `operacion` (`o_idOperacion`, `o_NumOperacion`, `o_idPersona`, `o_FechaEmision`, `o_Total`, `o_ArchivoXML`, `o_UUID`, `o_idTipoDocumento`, `o_SubTotal`, `o_Impuesto`, `o_FechaUpload`, `o_Activo`) VALUES
@@ -1443,7 +1443,27 @@ INSERT INTO `operacion` (`o_idOperacion`, `o_NumOperacion`, `o_idPersona`, `o_Fe
 (11, '8382334', 3, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:05:15', 1),
 (12, '832333', 4, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:05:48', 1),
 (13, '832333', 6, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:06:11', 1),
-(14, '832333', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:06:14', 1);
+(14, '832333', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:06:14', 1),
+(15, '8342333', 2, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:17:43', 1),
+(16, '8342334', 1, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:15', 1),
+(17, '43542334', 1, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:23', 1),
+(18, '42442334', 1, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:29', 1),
+(19, '42542334', 2, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:35', 1),
+(20, '434542334', 2, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:39', 1),
+(21, '4342334', 2, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:41', 1),
+(22, '45242334', 3, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:23:48', 1),
+(24, '49942334', 3, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:04', 1),
+(25, '499334', 4, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:10', 1),
+(26, '49989334', 4, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:13', 1),
+(27, '4334', 4, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:16', 1),
+(28, '431034', 6, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:23', 1),
+(29, '431134', 6, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:25', 1),
+(30, '431534', 6, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:27', 1),
+(31, '431734', 6, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:29', 1),
+(32, '42331734', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:35', 1),
+(33, '42431734', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:38', 1),
+(34, '42531734', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:40', 1),
+(35, '42631734', 7, '2023-09-20 00:00:00', 116, '', 'OTUxN2EyMGEtNjE3Yy00MjI0LWJjYjQtYmUyZGE3MjZjZmI0', 2, 100, 16, '2023-09-28 14:24:42', 1);
 
 DROP TABLE IF EXISTS `perfil`;
 CREATE TABLE IF NOT EXISTS `perfil` (
@@ -1451,7 +1471,7 @@ CREATE TABLE IF NOT EXISTS `perfil` (
   `p_Descripcion` varchar(50) NOT NULL,
   `p_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`p_idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `perfil`;
 INSERT INTO `perfil` (`p_idPerfil`, `p_Descripcion`, `p_Activo`) VALUES
@@ -1475,7 +1495,7 @@ CREATE TABLE IF NOT EXISTS `persona` (
   `per_logo` text CHARACTER SET utf8mb4 ,
   `per_Activo` int DEFAULT NULL,
   PRIMARY KEY (`per_idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `persona`;
 INSERT INTO `persona` (`per_idPersona`, `per_Nombre`, `per_Apellido`, `per_Alias`, `per_RFC`, `per_idTipoPrersona`, `per_idRol`, `per_ActivoFintec`, `per_RegimenFiscal`, `per_idCtaBanco`, `per_logo`, `per_Activo`) VALUES
@@ -1494,7 +1514,7 @@ CREATE TABLE IF NOT EXISTS `preguntapersona` (
   `pp_respuestapregunta` varchar(255) NOT NULL,
   `pp_Activo` int DEFAULT NULL,
   PRIMARY KEY (`pp_idpreguntapersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `preguntapersona`;
 INSERT INTO `preguntapersona` (`pp_idpreguntapersona`, `pp_idpersona`, `pp_idpregunta`, `pp_respuestapregunta`, `pp_Activo`) VALUES
@@ -1511,7 +1531,7 @@ CREATE TABLE IF NOT EXISTS `representantelegal` (
   `rl_idPersona` varchar(255) DEFAULT NULL,
   `rl_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`rl_idRepresentante`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `representantelegal`;
 INSERT INTO `representantelegal` (`rl_idRepresentante`, `rl_Nombre`, `rl_RFC`, `rl_idPersona`, `rl_Activo`) VALUES
@@ -1526,7 +1546,7 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `r_Descripcion` varchar(50) DEFAULT NULL,
   `r_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`r_idRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `rol`;
 INSERT INTO `rol` (`r_idRol`, `r_Descripcion`, `r_Activo`) VALUES
@@ -1543,7 +1563,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento` (
   `s_UsuarioActualizo` int NOT NULL,
   `s_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`s_idSeguimiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `seguimiento`;
 INSERT INTO `seguimiento` (`s_idSeguimiento`, `s_idOperacion`, `s_FechaSeguimiento`, `s_DescripcionOperacion`, `s_idEstatusO`, `s_UsuarioActualizo`, `s_Activo`) VALUES
@@ -1552,7 +1572,27 @@ INSERT INTO `seguimiento` (`s_idSeguimiento`, `s_idOperacion`, `s_FechaSeguimien
 (3, '11', '2023-09-28 14:05:15', 'Alta de Documento Comp Egreso', 1, 1, 1),
 (4, '12', '2023-09-28 14:05:48', 'Alta de Documento Comp Egreso', 1, 1, 1),
 (5, '13', '2023-09-28 14:06:11', 'Alta de Documento Comp Egreso', 1, 1, 1),
-(6, '14', '2023-09-28 14:06:14', 'Alta de Documento Comp Egreso', 1, 1, 1);
+(6, '14', '2023-09-28 14:06:14', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(7, '15', '2023-09-28 14:17:43', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(8, '16', '2023-09-28 14:23:15', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(9, '17', '2023-09-28 14:23:23', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(10, '18', '2023-09-28 14:23:29', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(11, '19', '2023-09-28 14:23:35', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(12, '20', '2023-09-28 14:23:39', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(13, '21', '2023-09-28 14:23:41', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(14, '22', '2023-09-28 14:23:48', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(15, '24', '2023-09-28 14:24:04', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(16, '25', '2023-09-28 14:24:10', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(17, '26', '2023-09-28 14:24:13', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(18, '27', '2023-09-28 14:24:16', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(19, '28', '2023-09-28 14:24:23', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(20, '29', '2023-09-28 14:24:25', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(21, '30', '2023-09-28 14:24:27', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(22, '31', '2023-09-28 14:24:29', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(23, '32', '2023-09-28 14:24:35', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(24, '33', '2023-09-28 14:24:38', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(25, '34', '2023-09-28 14:24:40', 'Alta de Documento Comp Egreso', 1, 1, 1),
+(26, '35', '2023-09-28 14:24:42', 'Alta de Documento Comp Egreso', 1, 1, 1);
 
 DROP TABLE IF EXISTS `tipocontacto`;
 CREATE TABLE IF NOT EXISTS `tipocontacto` (
@@ -1560,7 +1600,7 @@ CREATE TABLE IF NOT EXISTS `tipocontacto` (
   `tc_Descripcion` varchar(30) NOT NULL,
   `tc_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`tc_idTipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `tipocontacto`;
 INSERT INTO `tipocontacto` (`tc_idTipoContacto`, `tc_Descripcion`, `tc_Activo`) VALUES
@@ -1574,7 +1614,7 @@ CREATE TABLE IF NOT EXISTS `tipodocumento` (
   `td_Descripcion` varchar(16) NOT NULL,
   `td_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`td_idTipoDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `tipodocumento`;
 INSERT INTO `tipodocumento` (`td_idTipoDocumento`, `td_Descripcion`, `td_Activo`) VALUES
@@ -1587,7 +1627,7 @@ CREATE TABLE IF NOT EXISTS `tipopersona` (
   `tp_Descripcion` varchar(50) DEFAULT NULL,
   `tp_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`tp_idTipoPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `tipopersona`;
 INSERT INTO `tipopersona` (`tp_idTipoPersona`, `tp_Descripcion`, `tp_Activo`) VALUES
@@ -1606,7 +1646,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `u_imagenUsuario` varchar(255) DEFAULT NULL,
   `u_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`u_idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `usuario`;
 INSERT INTO `usuario` (`u_idUsuario`, `u_idPersona`, `u_NombreUsuario`, `u_Nombre`, `u_Apellidos`, `u_Llaveacceso`, `u_idPerfil`, `u_imagenUsuario`, `u_Activo`) VALUES
@@ -1619,4 +1659,5 @@ DROP TABLE IF EXISTS `datos_persona`;
 DROP VIEW IF EXISTS `datos_persona`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `datos_persona`  AS SELECT `p`.`per_idPersona` AS `id_persona`, from_base64(`p`.`per_Nombre`) AS `nombre`, from_base64(`p`.`per_Alias`) AS `alias`, from_base64(`p`.`per_RFC`) AS `rfc`, from_base64(`p`.`per_idTipoPrersona`) AS `idtipopersona`, from_base64(`p`.`per_idRol`) AS `idrol`, from_base64(`p`.`per_ActivoFintec`) AS `activofintec`, from_base64(`p`.`per_RegimenFiscal`) AS `idregimenfiscal`, from_base64(`p`.`per_idCtaBanco`) AS `idcuentabanco`, `c2`.`Alias` AS `banco`, from_base64(`c`.`b_CLABE`) AS `clabe`, from_base64(`p`.`per_logo`) AS `logo_persona`, from_base64(`u`.`u_imagenUsuario`) AS `logo_usuario`, from_base64(`u`.`u_NombreUsuario`) AS `nombre_usuario`, from_base64(`r`.`rl_Nombre`) AS `nombre_representante`, from_base64(`u`.`u_Nombre`) AS `nombre_d_usaurio`, from_base64(`u`.`u_Apellidos`) AS `apellido_usuario`, `u`.`u_idUsuario` AS `id_usuario` FROM (((((((`persona` `p` join `representantelegal` `r` on((`p`.`per_idPersona` = from_base64(`r`.`rl_idPersona`)))) join `usuario` `u` on((from_base64(`r`.`rl_idPersona`) = from_base64(`u`.`u_idPersona`)))) join `tipopersona` `t` on((`t`.`tp_idTipoPersona` = from_base64(`p`.`per_idTipoPrersona`)))) join `cuentabancaria` `c` on((`c`.`b_idCtaBancaria` = from_base64(`p`.`per_idCtaBanco`)))) join `catbancos` `c2` on((`c`.`b_idCatBanco` = `c2`.`id`))) join `rol` on((`rol`.`r_idRol` = from_base64(`p`.`per_idRol`)))) join `perfil` on((`perfil`.`p_idPerfil` = from_base64(`u`.`u_idPerfil`)))) WHERE ((`p`.`per_Activo` = 1) AND (`u`.`u_Activo` = 1) AND (`r`.`rl_Activo` = 1) AND (`t`.`tp_Activo` = 1))  ;
 COMMIT;
+
 
