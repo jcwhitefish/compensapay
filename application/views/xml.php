@@ -145,19 +145,6 @@
         max-height: 85% !important;
         width: 70% !important;
     }
-    .button-blue {
-        transition-duration: 0.4s;
-        background-color: #1565c0 !important;
-        color: white !important;
-        padding: 8px 30px;
-        border: 2px solid #0d47a1 !important;
-        border-radius: 10px !important;
-    }
-
-    .button-blue:hover {
-        background-color: #0d47a1 !important; 
-        color: white !important;
-    }
 
     .input-border input[type=search] {
         border: 3px solid #ddd;
