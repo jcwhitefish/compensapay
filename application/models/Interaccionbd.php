@@ -557,9 +557,6 @@ print_r($acceso);
          echo "Algo : ";
          $existe=$regreso->result_array()[0]['existe'];
          print_r($existe);
-
-
-      
             if ($existe==NULL)
             {
                 $final=0;
