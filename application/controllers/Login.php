@@ -46,23 +46,30 @@ class Login extends CI_Controller {
 		$data['main'] = $this->load->view('login/entrar', '', true);
 		$this->load->view('plantilla', $data);
 	}	
-	public function validarCuenta($idEmpresa = null)
+	public function validarCuenta($AESEmpresa = null)
 	{
 
-		if (isset($idEmpresa)) {
-			$empresa = urldecode($idEmpresa);
+		if (isset($AESEmpresa)) {
+			$empresaDecode = urldecode($AESEmpresa);
+			$empresa = descifrarAES($empresaDecode);
+			echo $empresa;
 			$persona = json_decode($this->Interaccionbd->consultaPersona($empresa));
-			print_r($persona);
 			if ($persona[0]->id_usuario != 0) {
-				$data['main'] = $this->load->view('login/crear_contrasena','', true);
+				$data['nombre_usuario'] = $persona[0]->nombre_usuario;
+				$data['nombre_d_usaurio'] = $persona[0]->nombre_d_usaurio;
+				$data['apellido_usuario'] = $persona[0]->apellido_usuario;
+				$data['main'] = $this->load->view('login/crear_contrasena',$data, true);
 				$this->load->view('plantilla', $data);
 			}else{
 				redirect('registro/empresa');
-				
 			}
 		} else {
 			redirect('registro/empresa');
 		}
+	}
+	public function crearContrasena()
+	{
+		
 	}
 	
 }

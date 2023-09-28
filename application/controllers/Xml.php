@@ -69,33 +69,18 @@ class Xml extends CI_Controller {
 			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
 
 			//Create the instance about "Factura"
-			$factura = new Factura($xmlContent);
+			//$factura = new Factura($xmlContent);
 
-			echo $factura->version;
-			echo "<br>";
-			echo $factura->date;
-			echo "<br>";
+			$xml = simplexml_load_string($xmlContent);
 
-			// Items
-			foreach ($factura->items as $item) {
-				echo $item['description'];
-				echo "<br>";
-			}
-
-			echo $factura->issuerRfc;
-			echo "<br>";
-			echo $factura->receiverRfc;
-			echo "<br>";
-
-			// Impuestos
-			echo $factura->totalTransferredTaxes;
+			print_r($xml);	
 		}
-	}
+	} 				
 	public function notaCredito(){
 
 		if ($_FILES['creditNoteUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['creditNoteUpload']['tmp_name']);
-			$xml = simplexml_load_string((string)$xmlContent);
+			$xml = simplexml_load_string($xmlContent);
 
 			print_r($xml);
 		}

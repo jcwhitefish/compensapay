@@ -130,22 +130,22 @@
             //partes de listar
             const listaPreguntas = ref([]);
 
-            const checkFormat = (fieldName) => {
-                if (!isRef(colorsBorder[fieldName])) {
-                    colorsBorder[fieldName] = ref('');
+            const checkFormat = (nombreInput) => {
+                if (!isRef(colorsBorder[nombreInput])) {
+                    colorsBorder[nombreInput] = ref('');
                 }
-                switch (fieldName) {
+                switch (nombreInput) {
                     case 'user':
                     case 'name':
                     case 'lastname':
                     case 'question':
                     case 'answer':
-                        if (data[fieldName] !== '') {
-                            colorsBorder[fieldName] = {
+                        if (data[nombreInput] !== '') {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
                             };
                         } else {
-                            colorsBorder[fieldName] = {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid red!important',
                             };
                         }
@@ -153,12 +153,12 @@
                     case 'number':
                     case 'validateNumber':
                         // Validación para permitir solo números
-                        if (/^\d{10}$/.test(data[fieldName])) {
-                            colorsBorder[fieldName] = {
+                        if (/^\d{10}$/.test(data[nombreInput])) {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
                             };
                         } else {
-                            colorsBorder[fieldName] = {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid red!important',
                             };
                         }
@@ -183,12 +183,12 @@
                     case 'email':
                     case 'validateEmail':
                         // Validación para un formato de correo electrónico
-                        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data[fieldName])) {
-                            colorsBorder[fieldName] = {
+                        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data[nombreInput])) {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid red!important',
                             };
                         } else {
-                            colorsBorder[fieldName] = {
+                            colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
                             };
                         }
@@ -211,17 +211,22 @@
 
 
                     case 'imageUpload':
-                        if (imageUpload.value.files[0].size <= 1024 * 1024) { // 1 MB en bytes
-                            imageUploadURL.value = URL.createObjectURL(imageUpload.value.files[0])
-                            data[fieldName] = imageUpload.value
-                            // El archivo es demasiado grande, muestra un mensaje de error o realiza alguna acción adecuada.
-                        } else {
-                            alert("El archivo es demasiado grande. Debe ser menor de 1 MB.");
+                        if (imageUpload.value.files.length == 1) {
 
-                            imageUpload.value.files[0].value = null;
-                        }
+                            if (imageUpload.value.files[0].size <= 1024 * 1024) {
+                                imageUploadURL.value = URL.createObjectURL(imageUpload.value.files[0])
+                                data[nombreInput] = imageUpload.value;
+                                subirArchivo(data[nombreInput], 'foto', 1)
 
-                        break;
+                            } else {
+                                imageUploadURL.value = 'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640';
+
+                            }
+
+
+                        } else if (imageUpload.value.files.length == 0) {}
+
+
                     default:
                         break;
                 }
@@ -257,48 +262,52 @@
                 <?php
                 if (isset($datosEmpresa)) {
                     echo 'let empresa = formEmpresa();';
+                }else {
+                    echo 'let empresa = formUsuario();';
                 }
                 ?>
 
             }
-            const formUsuario = (empresa = array('')) => {
+            const formUsuario = (empresa = []) => {
 
                 if (typeof empresa['id'] === 'undefined') {
                     empresa['id'] = 0;
                 }
                 //Aqui iria un echo con una variable de php si el usuario fue invitado
                 // Esto solo sirve en POST
-                const formData = new FormData();
-                for (const key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        formData.append(key, data[key]);
-                    }
-                }
-                formData.append('idEmpresa', empresa['id']);
-                formData.append('imagen', imageUpload.value.files[0]);
-                fetch('<?php echo base_url('registro/registraUsuario') ?>', {
-                        method: 'POST',
-                        body: formData,
-                        redirect: 'follow'
-                    })
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('La solicitud no fue exitosa');
+
+                if (data.email == data.validateEmail && data.number == data.validateNumber) {
+                    const formData = new FormData();
+                    for (const key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            formData.append(key, data[key]);
                         }
-                        return response.json();
-                    })
-                    .then((responseData) => {
-                        console.log(responseData);
-                        console.log(responseData.url);
-                        // Hacer algo con los datos, por ejemplo, retornarlos
-                        // accion = responseData
-                        window.location.replace('<?php echo base_url(); ?>' + responseData.url + '/' + responseData.enlace);
+                    }
+                    formData.append('idEmpresa', empresa['id']);
+                    fetch('<?php echo base_url('registro/registraUsuario') ?>', {
+                            method: 'POST',
+                            body: formData,
+                            redirect: 'follow'
+                        })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('La solicitud no fue exitosa');
+                            }
+                            return response.json();
+                        })
+                        .then((responseData) => {
+                            console.log(responseData);
+                            console.log(responseData.url);
+                            // Hacer algo con los datos, por ejemplo, retornarlos
+                            // accion = responseData
+                            window.location.replace('<?php echo base_url(); ?>' + responseData.url + '/' + responseData.enlace);
 
 
-                    })
-                    .catch((error) => {
-                        console.error('Error al realizar la solicitud fetch:', error);
-                    });
+                        })
+                        .catch((error) => {
+                            console.error('Error al realizar la solicitud fetch:', error);
+                        });
+                } else {}
             };
             <?php
             if (isset($datosEmpresa)) {
@@ -339,6 +348,24 @@
             <?php
             }
             ?>
+            const subirArchivo = (archivo, nombre, lugar = 0) => {
+                const formData = new FormData();
+                formData.append('archivo', archivo.files[0]);
+
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+
+                fetch("<?php echo base_url('herramientas/subirArchivo/'); ?>" + data['uniqueString'] + '/' + nombre + '/' + lugar, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        /*console.log(result)*/
+                    })
+                    .catch(error => console.log('error', error));
+            }
             const idUnico = () => {
                 var requestOptions = {
                     method: 'GET',
@@ -386,7 +413,7 @@
             };
         },
     });
-    //window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
+    window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
 </script>
 
 

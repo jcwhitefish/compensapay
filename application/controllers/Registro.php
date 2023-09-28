@@ -131,7 +131,7 @@ class Registro extends CI_Controller
 		$destinationPath =  './boveda/' . $uniqueString; // Ruta de destino de la carpeta
 
 		$renombre = rename($sourcePath, $destinationPath);
-		
+
 		$agregarpersona = $this->Interaccionbd->AgregaPersona('{"Nombre": "' . $bussinesName . '",
 			"Apellido": "",
 			"Alias": "' . $nameComercial . '",
@@ -142,15 +142,15 @@ class Registro extends CI_Controller
 			"RegimenFical":' . $fiscal . ',
 			"idCtaBanco":1,
 			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-logo.jpeg"}');
-			//Rol indica si es proveedor o no
+		//Rol indica si es proveedor o no
 		$registro['id'] = $agregarpersona;
 
-		$AgregaCuentaBancaria = $this->Interaccionbd->AgregaCuentaBancaria('{"idPersona":'.$registro['id'].',
-			"idBanco":'.$bank.',
-			"CLABE": "'.$clabe.'"}');
+		$AgregaCuentaBancaria = $this->Interaccionbd->AgregaCuentaBancaria('{"idPersona":' . $registro['id'] . ',
+			"idBanco":' . $bank . ',
+			"CLABE": "' . $clabe . '"}');
 
-		$update=$this->Interaccionbd->updatePersona('{
-			"idpersona":"'.$registro['id'].'",   
+		$update = $this->Interaccionbd->updatePersona('{
+			"idpersona":"' . $registro['id'] . '",   
 			"Nombre": "' . $bussinesName . '",
 			"Apellido": "",
 			"Alias": "' . $nameComercial . '",
@@ -181,11 +181,12 @@ class Registro extends CI_Controller
 		$this->form_validation->set_rules('question', 'Pregunta Secreta', 'required');
 		$this->form_validation->set_rules('answer', 'Respuesta', 'required');
 		$this->form_validation->set_rules('idEmpresa', 'ID', 'required');
+		$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
 		if ($this->form_validation->run() === FALSE) {
 			// Si la validación falla, puedes mostrar errores o redirigir al formulario
 			// redirect('controlador/metodo');
 			$validation_errors = validation_errors();
-			echo $validation_errors;
+			//echo $validation_errors;
 		} else {
 
 			// Si la validación es exitosa, obtén los datos del formulario
@@ -199,39 +200,7 @@ class Registro extends CI_Controller
 			$question = $this->input->post('question');
 			$answer = $this->input->post('answer');
 			$idEmpresa = $this->input->post('idEmpresa');
-			//Esto es para guardar el archivo
-			$uniqueString = uniqid();
-			$hora_actual = date("H");
-			$uniqueString = $uniqueString . '-' . $hora_actual;
-			$nombre_carpeta = "./boveda/" . $uniqueString;
-
-			if (!file_exists($nombre_carpeta)) {
-				if (mkdir($nombre_carpeta, 0777, true)) {
-					// echo "Carpeta creada correctamente: $nombre_carpeta";
-				} else {
-					// echo "No se pudo crear la carpeta: $nombre_carpeta";
-				}
-			} else {
-				// echo "La carpeta ya existe: $nombre_carpeta";
-			}
-			$config['upload_path'] = './boveda/' . $uniqueString . '/'; // Carpeta donde se guardarán los archivos
-			$config['allowed_types'] = 'jpeg|jpg'; // Tipos de archivos permitidos
-			$config['max_size'] = 1024; // Tamaño máximo en kilobytes (1 MB)
-
-			$this->upload->initialize($config);
-			if (!$this->upload->do_upload('imagen')) {
-				echo $this->upload->display_errors();
-				// Manejar el error de "gato", mostrarlo o redirigir al formulario de carga
-			} else {
-				// Subida exitosa, obten el nombre original del archivo
-				$uploaded_data = $this->upload->data();
-				$original_name = $uploaded_data['file_name'];
-				// Renombra el archivo agregando la el stringUnico al nombre
-
-				$new_name = $uniqueString . '-foto.jpeg';
-				// Mueve el archivo con el nuevo nombre al directorio de destino
-				rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
-			}
+			$uniqueString = $this->input->post('uniqueString');
 		}
 		//Registramos usuario
 
@@ -240,9 +209,11 @@ class Registro extends CI_Controller
 			"idPersona": ' . $idEmpresa . ',
 			"idPerfil": 1,
 			"urlImagen":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpeg"}');
+
 		$agregarepresentante = $this->Interaccionbd->AgregaRepresentante('{"NombreRepresentante": "' . $name . ' ' . $lastname . '",
 			"RFC":"",
 			"idPersona": "' . $idEmpresa . '"}');
+
 		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 2,
 			"idPersona":' . $idEmpresa . ',
 			"Contenido": "' . $number . '"}');
@@ -258,9 +229,9 @@ class Registro extends CI_Controller
 
 		$dato = array();
 		$dato['url'] = 'registro/finalizado/' . implode('/', $encodedParams);
-		// Enviamos el correo
+		// // Enviamos el correo
 
-		//asi es como
+		// //asi es como
 		$dato['enlace'] = $this->enviarCorreo($idEmpresa);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -269,12 +240,8 @@ class Registro extends CI_Controller
 	}
 	public function enviarCorreo($idEmpresa)
 	{
-		// Esto por el momento esta bien
-		$encodedParams = array();
-		// $encodedParams['idEmpresa'] = urlencode($idEmpresa);
-		// $urlValidadora = base_url('login/validarCuenta/'. implode('/', $encodedParams));
-		$urlValidadora = urlencode($idEmpresa);
-		return $urlValidadora;
+		echo cifrarAES($idEmpresa);
+		return cifrarAES($idEmpresa);
 	}
 	public function catalogoBancos()
 	{

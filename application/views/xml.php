@@ -21,42 +21,43 @@
                 <input type="search" placeholder="Buscar" >
             </form>
             <div>
-                <table>
-                    <thead>
+            <table>
+                <thead>
+                    <tr class="center-align">
+                        <th>Fecha de Emisión</th>
+                        <th>Fecha de Actualización</th>
+                        <th>Total</th>
+                        <th>Impuestos</th>
+                        <th>Subtotal</th>
+                        <th>Tipo de Documento</th>
+                        <th>Estatus</th>
+                        <th>UUID</th>
+                        <th>Alias Cliente</th>
+                        <th>RFC Cliente</th>
+                        <th>Alias Proveedor</th>
+                        <th>RFC Proveedor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($facturas as $factura) : ?>
                         <tr>
-                            <th>ID Operación</th>
-                            <th>Número de Operación</th>
-                            <th>ID Persona</th>
-                            <th>Fecha de Emisión</th>
-                            <th>Total</th>
-                            <th>Archivo XML</th>
-                            <th>UUID</th>
-                            <th>ID Tipo de Documento</th>
-                            <th>Subtotal</th>
-                            <th>Impuesto</th>
-                            <th>Fecha de Upload</th>
-                            <th>Activo</th>
+                            <td><?= $factura->FechaEmision ?></td>
+                            <td><?= $factura->FechaUpdate ?></td>
+                            <td><?= $factura->Total ?></td>
+                            <td><?= $factura->Impuestos ?></td>
+                            <td><?= $factura->Subtotal ?></td>
+                            <td><?= $factura->TipoDocumento ?></td>
+                            <td><?= $factura->EstatusClienteProveedor ?></td>
+                            <td><?= $factura->UUID ?></td>
+                            <td><?= $factura->AliasCliente ?></td>
+                            <td><?= $factura->RFCCliente ?></td>
+                            <td><?= $factura->AliasProvedor ?></td>
+                            <td><?= $factura->RFCProveedor ?></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($facturas as $factura) : ?>
-                            <tr>
-                                <td><?= $factura->o_idOperacion ?></td>
-                                <td><?= $factura->o_NumOperacion ?></td>
-                                <td><?= $factura->o_idPersona ?></td>
-                                <td><?= $factura->o_FechaEmision ?></td>
-                                <td><?= $factura->o_Total ?></td>
-                                <td><?= $factura->o_ArchivoXML ?></td>
-                                <td><?= $factura->o_UUID ?></td>
-                                <td><?= $factura->o_idTipoDocumento ?></td>
-                                <td><?= $factura->o_SubTotal ?></td>
-                                <td><?= $factura->o_Impuesto ?></td>
-                                <td><?= $factura->o_FechaUpload ?></td>
-                                <td><?= $factura->o_Activo ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
   
             </div>
         </div>
@@ -69,7 +70,7 @@
             <h5>Carga tus facturas</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6>Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
+                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
                     <form method="post" action="<?php echo base_url('xml/factura'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l9 input-border">
@@ -77,13 +78,25 @@
                                 <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
                             </div>
                             <div class="col l3 center-align p-5"> 
-                                <label for="invoiceUpload" class="custom-file-upload">Agregar</label>
+                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
                                 <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                             </div>
+                            <div class="col l6">    
+                                <label>
+                                    <input class="filled-in" type="checkbox" />
+                                    <span><p class= "text-modal">Transferir monto de la factura a mi cuenta bancaria externa predeterminada. Administrar cuentas <br><br></p></span>
+                                </label>                             
+                            </div>
+                            <div class="col l6">    
+                                <label>
+                                    <input class="filled-in" type="checkbox" />
+                                    <span><p class= "text-modal">Transferir monto de la factura a mi cuenta de Compensa Pay</p></span>
+                                </label>                             
+                            </div><br>
                             <div class="col l12 center-align">
                                 <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                  &nbsp;
-                                <button class="button-white" type="submit" name="action">Siguiente</button><br><br>
+                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
                                 <p class="text-modal">*Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura, se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente, de acuerdo con lo estipulado en nuestros términos y condiciones</p>
                             </div>
                         </div>
@@ -96,7 +109,7 @@
     <a class="waves-effect waves-light btn modal-trigger" href="#modal-notas" style="display:none;">Añadir Notas de credito</a>
     <div id="modal-notas" class="modal">
         <div class="modal-content">
-            <h5>Carga tus Notas de credito</h5>
+            <h5 >Carga tus Notas de credito</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h2 class="card-title">Nota de credito</h2>
@@ -128,18 +141,9 @@
     .text-modal{
         font-size: 10px;
     }
-    .button-blue {
-        transition-duration: 0.4s;
-        background-color: #1565c0 !important;
-        color: white !important;
-        padding: 8px 30px;
-        border: 2px solid #0d47a1 !important;
-        border-radius: 10px !important;
-    }
-
-    .button-blue:hover {
-        background-color: #0d47a1 !important; 
-        color: white !important;
+    .modal {
+        max-height: 85% !important;
+        width: 70% !important;
     }
 
     .input-border input[type=search] {
