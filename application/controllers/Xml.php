@@ -21,9 +21,11 @@ class Xml extends CI_Controller {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 	public function index(){
-		$user = "1";
+		$user = "6";
 
 		$resultado = $this->Interaccionbd->VerOperaciones($user);
+
+		//print_r($resultado); iprime para ver que es lo que llega
 		
 		// Verifica que $resultado sea un array antes de procesarlo
 		if (is_array($resultado)) {
@@ -43,12 +45,12 @@ class Xml extends CI_Controller {
 						$facturaData->Impuestos,
 						$facturaData->Subtotal,
 						$facturaData->TipoDocumento,
-						$facturaData->EstatusClienteProveedor,
+						$facturaData->Estatus,
 						$facturaData->UUID,
 						$facturaData->AliasCliente,
-						$facturaData->RFCCliente,
-						$facturaData->AliasProvedor,
-						$facturaData->RFCProveedor
+						$facturaData->RFCCliente
+						// $facturaData->AliasProvedor,
+						// $facturaData->RFCProveedor
 					);
 		
 					$facturas[] = $factura;
@@ -57,7 +59,7 @@ class Xml extends CI_Controller {
 		
 			// Ahora tienes un array de objetos Factura
 			
-			$data['facturas'] = $facturas;
+			$data['facturas'] = $facturas; 
 		} 
 		
 		$data['main'] = $this->load->view('xml', $data , true);

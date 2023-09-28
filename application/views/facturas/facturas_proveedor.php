@@ -23,37 +23,19 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="tabla-celda" >Fecha de Emisión</th>
-                            <th class="tabla-celda" >Fecha de Actualización</th>
-                            <th class="tabla-celda" >Total</th>
-                            <th class="tabla-celda" >Impuestos</th>
-                            <th class="tabla-celda" >Subtotal</th>
-                            <th class="tabla-celda" >Tipo de Documento</th>
-                            <th class="tabla-celda" >Estatus</th>
-                            <th class="tabla-celda" >UUID</th>
-                            <th class="tabla-celda" >Alias Cliente</th>
-                            <th class="tabla-celda" >RFC Cliente</th>
-                            <th class="tabla-celda" >Alias Proveedor</th>
-                            <th class="tabla-celda" >RFC Proveedor</th>
+                            <th class="tabla-celda">Crear Operación</th>
+                            <th class="tabla-celda">Emitido por</th>
+                            <th class="tabla-celda">Factura</th>
+                            <th class="tabla-celda">Fecha Factura</th>
+                            <th class="tabla-celda">Fecha Alta</th>
+                            <th class="tabla-celda">Fecha Transacción</th>
+                            <th class="tabla-celda">Estatus</th>
+                            <th class="tabla-celda">Subtotal</th>
+                            <th class="tabla-celda">IVA</th>
+                            <th class="tabla-celda">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($facturas as $factura) : ?>
-                            <tr>
-                                <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
-                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
-                                <td class="tabla-celda"><?= $factura->Total ?></td>
-                                <td class="tabla-celda"><?= $factura->Impuestos ?></td>
-                                <td class="tabla-celda"><?= $factura->Subtotal ?></td>
-                                <td class="tabla-celda"><?= $factura->TipoDocumento ?></td>
-                                <td class="tabla-celda"><?= $factura->Estatus?></td>
-                                <td class="tabla-celda"><?= $factura->UUID ?></td>
-                                <td class="tabla-celda"><?= $factura->AliasCliente ?></td>
-                                <td class="tabla-celda"><?= $factura->RFCCliente ?></td>
-                                <!-- <td><?= $factura->AliasProvedor ?></td>
-                                <td><?= $factura->RFCProveedor ?></td> -->
-                            </tr>
-                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -102,37 +84,6 @@
             </div>
         </div>
     </div>
-
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal-notas" style="display:none;">Añadir Notas de credito</a>
-    <div id="modal-notas" class="modal">
-        <div class="modal-content">
-            <h5 >Carga tus Notas de credito</h5>
-            <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h2 class="card-title">Nota de credito</h2>
-                    <form method="post" action="<?php echo base_url('xml/notaCredito'); ?>" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col l9 input-border">
-                                <input type="text" name="creditNoteDisabled" id="creditNoteDisabled" disabled v-model="creditNoteUploadName">
-                                <label for="creditNoteDisabled">Comprobante de Nota</label>
-                            </div>
-                            <div class="col l3 center-align p-5">
-                                <label for="creditNoteUpload" class="custom-file-upload">Agregar</label>
-                                <input @change="checkFormatNote" name="creditNoteUpload" ref="creditNoteUpload" id="creditNoteUpload" type="file" accept="application/Nota" maxFileSize="5242880" required />
-                            </div>
-                            <div class="col l12 center-align">
-                                <button class="button-white"><a href="#!" class="modal-close waves-effect button-black" style="color:#444;">Cancelar</a></button>
-                                <button class="button-white" type="submit" name="action">Siguiente</button><br><br>
-                                <p class="text-modal">*Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura, se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente, de acuerdo con lo estipulado en nuestros términos y condiciones</p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 </div>
 <style>
     .text-modal{
@@ -175,7 +126,6 @@
         text-align: center; 
         font-size: 13px;
         overflow: hidden;
-        white-space: normal; /* Permite que el texto se divida en dos líneas si es necesario */
         text-overflow: ellipsis;
     }
 </style>
@@ -184,7 +134,6 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
-            const creditNoteUploadName = Vue.ref('');
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -195,20 +144,9 @@
                 }
             };
 
-            const checkFormatNote = (event) => {
-                const fileInput = event.target;
-                if (fileInput.files.length > 0) {
-                    creditNoteUploadName.value = fileInput.files[0].name;
-                } else {
-                    creditNoteUploadName.value = '';
-                }
-            };
-
             return {
                 invoiceUploadName,
-                creditNoteUploadName,
                 checkFormatInvoice,
-                checkFormatNote
             };
         }
     });

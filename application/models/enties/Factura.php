@@ -7,22 +7,21 @@ class Factura {
     public $Impuestos;
     public $Subtotal;
     public $TipoDocumento;
-    public $EstatusClienteProveedor;
+    public $Estatus;
     public $UUID;
     public $AliasCliente;
     public $RFCCliente;
-    public $AliasProvedor;//whitout e
+    public $AliasProvedor;
     public $RFCProveedor;
 
-    
-    function __construct($fechaEmision, $fechaUpdate, $total, $impuestos, $subtotal, $tipoDocumento, $estatusClienteProveedor, $uuid, $aliasCliente, $rfcCliente, $aliasProvedor, $rfcProveedor) {
+    function __construct($fechaEmision, $fechaUpdate, $total, $impuestos, $subtotal, $tipoDocumento, $estatus, $uuid, $aliasCliente, $rfcCliente, $aliasProvedor = null, $rfcProveedor = null) {
         $this->FechaEmision = $fechaEmision;
         $this->FechaUpdate = $fechaUpdate;
         $this->Total = $total;
         $this->Impuestos = $impuestos;
         $this->Subtotal = $subtotal;
         $this->TipoDocumento = $tipoDocumento;
-        $this->EstatusClienteProveedor = $estatusClienteProveedor;
+        $this->Estatus = $estatus;
         $this->UUID = $uuid;
         $this->AliasCliente = $aliasCliente;
         $this->RFCCliente = $rfcCliente;
