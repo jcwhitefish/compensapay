@@ -347,7 +347,8 @@ Salida -> Logica 1 Si se agrego
 			 "Total":"1160",
 			"ArchivoXML":"",
 			"UID":"9517a20a-617c-4224-bcb4-be2da726cfb4",
-		"idTipoDocumento":1
+         "idTipoDocumento":1,
+         "idUsuario":1
 		}');
 		print_r($cargo);
 */
