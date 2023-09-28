@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends MY_Loggedout
+{
 	/**
 	 * Index Page for this controller.
 	 *
@@ -18,49 +19,28 @@ class Login extends CI_Controller {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 
-	 public function index() {
-		if ($this->input->post()) {
-			$user = $this->input->post('user');
-			$password = $this->input->post('password');
-			// Change the array in json
-			$data = [
-				'Usuario' => $user,
-				'Llave' => $password
-			];
-			$cadenajsonvalidar = json_encode($data);
-			$resultado = $this->Interaccionbd->ValidarAcceso($cadenajsonvalidar);
-			$perfil = json_decode($resultado, true);
-	
-	
-			if ($perfil['Perfil'] === 0) {
-				// if your profile is 0 
-
-				//$data['error_message'] = 'Usuario o contraseña incorrectos.';
-				print_r($perfil['Perfil']);
-			} else {
-				print_r($perfil['Perfil']);
-			}
-		} 
-
-		// assign isLog for validate if show in the screen
+	public function index()
+	{
 		$data['main'] = $this->load->view('login/entrar', '', true);
 		$this->load->view('plantilla', $data);
-	}	
+	}
 	public function validarCuenta($AESEmpresa = null)
 	{
 
 		if (isset($AESEmpresa)) {
 			$empresaDecode = urldecode($AESEmpresa);
 			$empresa = descifrarAES($empresaDecode);
-			echo $empresa;
+			//echo $empresa;
 			$persona = json_decode($this->Interaccionbd->consultaPersona($empresa));
+			echo ($persona[0]->id_usuario);
 			if ($persona[0]->id_usuario != 0) {
+				$data['id_usuario'] = $persona[0]->id_usuario;
 				$data['nombre_usuario'] = $persona[0]->nombre_usuario;
 				$data['nombre_d_usaurio'] = $persona[0]->nombre_d_usaurio;
 				$data['apellido_usuario'] = $persona[0]->apellido_usuario;
-				$data['main'] = $this->load->view('login/crear_contrasena',$data, true);
+				$data['main'] = $this->load->view('login/crear_contrasena', $data, true);
 				$this->load->view('plantilla', $data);
-			}else{
+			} else {
 				redirect('registro/empresa');
 			}
 		} else {
@@ -69,7 +49,54 @@ class Login extends CI_Controller {
 	}
 	public function crearContrasena()
 	{
-		
+		$dato = array();
+		$this->form_validation->set_rules('userId', 'UserId', 'required');
+		$this->form_validation->set_rules('passwordValidate', 'PasswordValidate', 'required|regex_match[/^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$%@&?!])(?=.*\d).{8,15}$/]');
+
+		if ($this->form_validation->run() === FALSE) {
+			// Si la validación falla, puedes mostrar errores o redirigir al formulario
+			// redirect('controlador/metodo');
+			$dato['status'] = validation_errors();
+			//echo $validation_errors;
+		} else {
+
+			// Si la validación es exitosa, obtén los datos del formulario
+			$user = $this->input->post('userId');
+			$pass = $this->input->post('passwordValidate');
+
+			$cambio = $this->Interaccionbd->UpdateLlaveUsuario('{"idUsuario":' . $user . ',"Llave":"' . $pass . '"}');
+			$dato['status'] = $cambio;
+		}
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
 	}
-	
+	public function validaAcceso()
+	{
+
+		//TODO: Asi es como debe de hacerse un envio de datos por GET y todas las acciones se deben de hacer si se envian los datos correctos dentro del if no fuera
+		$dato = array();
+
+
+
+		$user = $this->input->get('user');
+		$password = $this->input->get('password');
+		$resultado = $this->Interaccionbd->ValidarAcceso('{"Usuario":"' . $user . '","Llave":"' . $password . '"}');
+		//Verificamos que no si exista el usuario
+
+
+		if ($resultado != 0) {
+			$resultadoJSON = json_encode($resultado);
+
+			$this->session->set_userdata('logged_in', TRUE);
+
+
+		}else{$dato['status'] = 'ok';}
+
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
 }

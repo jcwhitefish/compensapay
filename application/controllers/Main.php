@@ -22,7 +22,7 @@ class Main extends CI_Controller
 	public function index()
 	{
 		if ($_SERVER['HTTP_HOST'] != 'localhost') {
-			redirect(base_url());
+			redirect('');
 		} else {
 			//mostramos en pantalla welcome_message.php
 			$data['main'] = $this->load->view('main', '', true);

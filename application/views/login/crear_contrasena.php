@@ -2,7 +2,7 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-            <h6>Bienvenido <?= $nombre_d_usaurio; ?> <?= $apellido_usuario; ?>, tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>
+                <h6>Bienvenido <?= $nombre_d_usaurio; ?> <?= $apellido_usuario; ?>, tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>
 
                 <div class="col l6 center-align">
                     <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
@@ -13,21 +13,19 @@
                         <div class="container input-border">
                             <input v-model="data['userValidate']" @blur="checkFormat('userValidate')" :style="colorsBorder['userValidate'] || {}" type="text" name="userValidate" id="userValidate" :placeholder="data['userValidate']" required disabled>
                             <label for="userValidate">Usuario</label>
-                            <input v-model="data['passwordValidate']" @blur="checkFormat('passwordValidate')" :style="colorsBorder['passwordValidate'] || {}" type="password" name="passwordValidate" id="passwordValidate" placeholder="Verificar contraseña" required>
+                            <input v-model="data['passwordValidate']" @blur="checkFormat('passwordValidate')" :style="colorsBorder['passwordValidate'] || {}" type="password" name="passwordValidate" id="passwordValidate" placeholder="Crea contraseña" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$%@&?!])(?=.*\d).{8,15}$" title="Debe tener una letra mayuscula, una letra minuscula, un caracter especial, un caracter numerico y de 8 a 15 caracteres" required>
                             <label for="passwordValidate">Contraseña</label>
-                            <p v-if="colorsBorder['passwordValidate'] && colorsBorder['passwordValidate'].border === '1px solid red!important'" class="error-message">!Contraseña inválida! Asegurate de tener una letra mayuscula, una letra minuscula, una caracter especial y una caracter numerico</p>
-                            <input v-model="data['passwordCompareValidate']" @blur="checkFormat('passwordCompareValidate')" :style="colorsBorder['passwordCompareValidate'] || {}" type="password" name="passwordCompareValidate" id="passwordCompareValidate" placeholder="Verificar contraseña" required>
+                            <p v-if="colorsBorder['passwordValidate'] && colorsBorder['passwordValidate'].border === '1px solid red!important'" class="error-message">!Contraseña inválida! Asegurate de tener una letra mayuscula, una letra minuscula, un caracter especial, un caracter numerico y de 8 a 15 caracteres</p>
+                            <input v-model="data['passwordCompareValidate']" @blur="checkFormat('passwordCompareValidate')" :style="colorsBorder['passwordCompareValidate'] || {}" type="password" name="passwordCompareValidate" id="passwordCompareValidate" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$%@&?!])(?=.*\d).{8,15}$" placeholder="Verificar contraseña" required>
                             <label for="passwordCompareValidate">Verificar contraseña</label>
                             <p v-if="colorsBorder['passwordCompareValidate'] && colorsBorder['passwordCompareValidate'].border === '1px solid red!important'" class="error-message">Tus contraseñas no coinciden!</p>
                         </div>
-                        <div class="container right-align">
-                            <label>
-                                <input v-model="data['sessionValidate']" class="filled-in" type="checkbox" />
-                                <span>Guardar datos en este equipo</span>
-                            </label>
-                        </div>
+
                         <div class="center-align p-5">
                             <p>aquí va el captcha xd</p>
+                        </div>
+                        <div class="right-align container">
+                            <button class="button-gray waves-effect waves-teal" type="submit">Ingresar</button>
                         </div>
 
                     </form>
@@ -38,19 +36,26 @@
 </div>
 
 <script>
-    const { createApp, computed, reactive, ref, isRef } = Vue;
+    const {
+        createApp,
+        computed,
+        reactive,
+        ref,
+        isRef
+    } = Vue;
 
     const app = createApp({
         setup() {
             const data = reactive({
+                userId: ref('<?= $id_usuario;  ?>'),
                 userValidate: ref('<?= $nombre_usuario;  ?>'),
                 passwordValidate: ref(''),
                 passwordCompareValidate: ref(''),
-                sessionValidate:ref(true)
+                sessionValidate: ref(true)
             });
 
             const colorsBorder = reactive({});
-            
+
 
             const checkFormat = (nombreInput) => {
                 if (!isRef(colorsBorder[nombreInput])) {
@@ -60,7 +65,7 @@
                 switch (nombreInput) {
                     case 'passwordValidate':
                         const password = data[nombreInput];
-                        const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$%&?!])(?=.*\d).{8,15}$/;
+                        const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$%@&?!])(?=.*\d).{8,15}$/;
                         if (regex.test(password)) {
                             colorsBorder[nombreInput] = {
                                 border: '1px solid #03BB85!important',
@@ -70,7 +75,7 @@
                                 border: '1px solid red!important',
                             };
                         }
-                        break;    
+                        break;
                     case 'passwordCompareValidate':
                         if (data['passwordValidate'] == data['passwordCompareValidate']) {
                             colorsBorder[nombreInput] = {
@@ -81,12 +86,55 @@
                                 border: '1px solid red!important',
                             };
                         }
-                    break;
+                        break;
                     default:
                 }
             };
-            const submitForm = () =>{
-                
+            const submitForm = () => {
+                //console.log('Verificamos que no esten en rojo');
+                //TODO:esta es la forma correcta de validar los formularios
+                for (const key in data) {
+
+                    if (key != 'sessionValidate' && key != 'userValidate') {
+                        if (JSON.stringify(colorsBorder[key]) === JSON.stringify({
+                                border: '1px solid red!important'
+                            })) {
+                            return; //detiene el codigo
+                        }
+
+                    }
+
+                }
+                const formData = new FormData();
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        formData.append(key, data[key]);
+                    }
+                }
+                fetch('<?php echo base_url('login/crearContrasena') ?>', {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('La solicitud no fue exitosa');
+                        }
+                        return response.json();
+                    })
+                    .then((responseData) => {
+                        //console.log(responseData);
+                        // Hacer algo con los datos, por ejemplo, retornarlos
+                        // accion = responseData
+                        window.location.replace('<?php echo base_url('login'); ?>');
+
+
+                    })
+                    .catch((error) => {
+                        console.error('Error al realizar la solicitud fetch:', error);
+                    });
+
+
             }
 
             return {
@@ -119,10 +167,15 @@
         border-right: 1px solid #ddd;
         height: 800px;
     }
+
     .error-message {
         color: red;
         font-size: 10px;
         top: -25px;
         position: relative;
+    }
+
+    .btn:hover {
+        background: #e0e51d;
     }
 </style>
