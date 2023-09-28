@@ -1,12 +1,7 @@
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
-CREATE DATABASE IF NOT EXISTS `compensapay` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `compensapay` DEFAULT CHARACTER SET utf8mb4 ;
 USE compensapay;
 
 DELIMITER $$
@@ -991,7 +986,7 @@ CREATE TABLE IF NOT EXISTS `acceso` (
   `PreguntaSeguridad` varchar(255) DEFAULT NULL,
   `RespuestaSeguridad` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`a_idAcceso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `acceso`;
 DROP TABLE IF EXISTS `catbancos`;
@@ -1000,7 +995,7 @@ CREATE TABLE IF NOT EXISTS `catbancos` (
   `Clave` varchar(3) DEFAULT NULL,
   `Alias` varchar(50) DEFAULT NULL,
   `Nombre` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catbancos`;
 INSERT INTO `catbancos` (`id`, `Clave`, `Alias`, `Nombre`) VALUES
@@ -1104,7 +1099,7 @@ CREATE TABLE IF NOT EXISTS `catgiro` (
   `g_Giro` varchar(255) NOT NULL,
   `g_Activo` int NOT NULL,
   PRIMARY KEY (`g_idGiro`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catgiro`;
 INSERT INTO `catgiro` (`g_idGiro`, `g_Giro`, `g_Activo`) VALUES
@@ -1118,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `catpreguntas` (
   `pg_pregunta` varchar(255) NOT NULL,
   `pg_activo` int NOT NULL,
   PRIMARY KEY (`pg_idpregunta`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catpreguntas`;
 INSERT INTO `catpreguntas` (`pg_idpregunta`, `pg_pregunta`, `pg_activo`) VALUES
@@ -1133,7 +1128,7 @@ CREATE TABLE IF NOT EXISTS `catregimenfiscal` (
   `rg_Regimen` varchar(128) DEFAULT NULL,
   `rg_P_Fisica` int DEFAULT NULL,
   `rg_P_Moral` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `catregimenfiscal`;
 INSERT INTO `catregimenfiscal` (`rg_id_regimen`, `rg_Clave`, `rg_Regimen`, `rg_P_Fisica`, `rg_P_Moral`) VALUES
@@ -1163,7 +1158,7 @@ CREATE TABLE IF NOT EXISTS `cattipovalor` (
   `cv_Descripcion` varchar(255) NOT NULL,
   `cv_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cv_idTipoValor`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `cattipovalor`;
 INSERT INTO `cattipovalor` (`cv_idTipoValor`, `cv_Descripcion`, `cv_Activo`) VALUES
@@ -1180,7 +1175,7 @@ CREATE TABLE IF NOT EXISTS `clienteproveedor` (
   `cp_idEstatusCP` int DEFAULT NULL,
   `cp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cp_idClienteProveedor`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `clienteproveedor`;
 INSERT INTO `clienteproveedor` (`cp_idClienteProveedor`, `cp_idPersonaCliente`, `cp_idPersonaProveedor`, `cp_Nota`, `cp_idEstatusCP`, `cp_Activo`) VALUES
@@ -1195,7 +1190,7 @@ CREATE TABLE IF NOT EXISTS `compensacion` (
   `cm_idOperacion` int DEFAULT NULL,
   `cm_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`cm_idCompensacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `compensacion`;
 DROP TABLE IF EXISTS `configuracion`;
@@ -1206,7 +1201,7 @@ CREATE TABLE IF NOT EXISTS `configuracion` (
   `cnf_Valor` varchar(100) NOT NULL,
   `cnf_Activo` int NOT NULL,
   PRIMARY KEY (`cnf_idConfiguracion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `configuracion`;
 INSERT INTO `configuracion` (`cnf_idConfiguracion`, `cnf_idPersona`, `cnf_idElementoConfigurable`, `cnf_Valor`, `cnf_Activo`) VALUES
@@ -1215,12 +1210,12 @@ INSERT INTO `configuracion` (`cnf_idConfiguracion`, `cnf_idPersona`, `cnf_idElem
 DROP TABLE IF EXISTS `contacto`;
 CREATE TABLE IF NOT EXISTS `contacto` (
   `c_idContacto` int NOT NULL AUTO_INCREMENT,
-  `c_idTipoContacto` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `c_idPersona` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `c_Descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `c_idTipoContacto` text CHARACTER SET utf8mb4  NOT NULL,
+  `c_idPersona` text CHARACTER SET utf8mb4  NOT NULL,
+  `c_Descripcion` text CHARACTER SET utf8mb4  NOT NULL,
   `c_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`c_idContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `contacto`;
 INSERT INTO `contacto` (`c_idContacto`, `c_idTipoContacto`, `c_idPersona`, `c_Descripcion`, `c_Activo`) VALUES
@@ -1244,7 +1239,7 @@ CREATE TABLE IF NOT EXISTS `cuentabancaria` (
   `b_CLABE` varchar(255) NOT NULL,
   `b_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`b_idCtaBancaria`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `cuentabancaria`;
 INSERT INTO `cuentabancaria` (`b_idCtaBancaria`, `b_idCatBanco`, `b_CLABE`, `b_Activo`) VALUES
@@ -1289,7 +1284,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `d_CodPost` int DEFAULT NULL,
   `d_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`d_idDireccion`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `direccion`;
 INSERT INTO `direccion` (`d_idDireccion`, `d_idPersona`, `d_CalleYNumero`, `d_Colonia`, `d_Ciudad`, `d_Estado`, `d_CodPost`, `d_Activo`) VALUES
@@ -1307,7 +1302,7 @@ CREATE TABLE IF NOT EXISTS `elementoconfigurable` (
   `ec_idTipoValor` int NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idElementoConfigurable`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `elementoconfigurable`;
 INSERT INTO `elementoconfigurable` (`ec_idElementoConfigurable`, `ec_Descripcion`, `ec_idTipoValor`, `ec_Activo`) VALUES
@@ -1318,7 +1313,7 @@ CREATE TABLE IF NOT EXISTS `estados` (
   `e_IdEstado` int DEFAULT NULL,
   `e_Descripcion` varchar(50) DEFAULT NULL,
   `e_alias` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estados`;
 INSERT INTO `estados` (`e_IdEstado`, `e_Descripcion`, `e_alias`) VALUES
@@ -1361,7 +1356,7 @@ CREATE TABLE IF NOT EXISTS `estatuscm` (
   `ec_Descripcion` varchar(16) NOT NULL,
   `ec_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ec_idEstatusCM`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuscm`;
 INSERT INTO `estatuscm` (`ec_idEstatusCM`, `ec_Descripcion`, `ec_Activo`) VALUES
@@ -1375,7 +1370,7 @@ CREATE TABLE IF NOT EXISTS `estatuscp` (
   `ecp_Descripcion` varchar(16) NOT NULL,
   `ecp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`ecp_idEstatusCP`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuscp`;
 INSERT INTO `estatuscp` (`ecp_idEstatusCP`, `ecp_Descripcion`, `ecp_Activo`) VALUES
@@ -1389,7 +1384,7 @@ CREATE TABLE IF NOT EXISTS `estatuso` (
   `eo_Descripcion` varchar(16) NOT NULL,
   `eo_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`eo_idEstatusO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `estatuso`;
 INSERT INTO `estatuso` (`eo_idEstatusO`, `eo_Descripcion`, `eo_Activo`) VALUES
@@ -1406,7 +1401,7 @@ CREATE TABLE IF NOT EXISTS `moduloperfil` (
   `mp_idPerfil` tinyint DEFAULT NULL,
   `mp_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`mp_idModuloPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `moduloperfil`;
 DROP TABLE IF EXISTS `modulos`;
@@ -1415,7 +1410,7 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   `m_Descripcion` varchar(30) NOT NULL,
   `m_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`m_idModulo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `modulos`;
 DROP TABLE IF EXISTS `operacion`;
@@ -1425,15 +1420,15 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `o_idPersona` int NOT NULL,
   `o_FechaEmision` datetime NOT NULL,
   `o_Total` float DEFAULT NULL,
-  `o_ArchivoXML` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `o_UUID` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `o_ArchivoXML` text CHARACTER SET utf8mb4  NOT NULL,
+  `o_UUID` text CHARACTER SET utf8mb4  NOT NULL,
   `o_idTipoDocumento` int NOT NULL,
   `o_SubTotal` float DEFAULT NULL,
   `o_Impuesto` float NOT NULL,
   `o_FechaUpload` datetime NOT NULL,
   `o_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`o_idOperacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `operacion`;
 INSERT INTO `operacion` (`o_idOperacion`, `o_NumOperacion`, `o_idPersona`, `o_FechaEmision`, `o_Total`, `o_ArchivoXML`, `o_UUID`, `o_idTipoDocumento`, `o_SubTotal`, `o_Impuesto`, `o_FechaUpload`, `o_Activo`) VALUES
@@ -1456,7 +1451,7 @@ CREATE TABLE IF NOT EXISTS `perfil` (
   `p_Descripcion` varchar(50) NOT NULL,
   `p_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`p_idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `perfil`;
 INSERT INTO `perfil` (`p_idPerfil`, `p_Descripcion`, `p_Activo`) VALUES
@@ -1468,19 +1463,19 @@ INSERT INTO `perfil` (`p_idPerfil`, `p_Descripcion`, `p_Activo`) VALUES
 DROP TABLE IF EXISTS `persona`;
 CREATE TABLE IF NOT EXISTS `persona` (
   `per_idPersona` int NOT NULL AUTO_INCREMENT,
-  `per_Nombre` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_Apellido` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_Alias` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_RFC` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_idTipoPrersona` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_idRol` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_ActivoFintec` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_RegimenFiscal` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_idCtaBanco` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `per_logo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `per_Nombre` text CHARACTER SET utf8mb4 ,
+  `per_Apellido` text CHARACTER SET utf8mb4 ,
+  `per_Alias` text CHARACTER SET utf8mb4 ,
+  `per_RFC` text CHARACTER SET utf8mb4 ,
+  `per_idTipoPrersona` text CHARACTER SET utf8mb4 ,
+  `per_idRol` text CHARACTER SET utf8mb4 ,
+  `per_ActivoFintec` text CHARACTER SET utf8mb4 ,
+  `per_RegimenFiscal` text CHARACTER SET utf8mb4 ,
+  `per_idCtaBanco` text CHARACTER SET utf8mb4 ,
+  `per_logo` text CHARACTER SET utf8mb4 ,
   `per_Activo` int DEFAULT NULL,
   PRIMARY KEY (`per_idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `persona`;
 INSERT INTO `persona` (`per_idPersona`, `per_Nombre`, `per_Apellido`, `per_Alias`, `per_RFC`, `per_idTipoPrersona`, `per_idRol`, `per_ActivoFintec`, `per_RegimenFiscal`, `per_idCtaBanco`, `per_logo`, `per_Activo`) VALUES
@@ -1499,7 +1494,7 @@ CREATE TABLE IF NOT EXISTS `preguntapersona` (
   `pp_respuestapregunta` varchar(255) NOT NULL,
   `pp_Activo` int DEFAULT NULL,
   PRIMARY KEY (`pp_idpreguntapersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `preguntapersona`;
 INSERT INTO `preguntapersona` (`pp_idpreguntapersona`, `pp_idpersona`, `pp_idpregunta`, `pp_respuestapregunta`, `pp_Activo`) VALUES
@@ -1516,7 +1511,7 @@ CREATE TABLE IF NOT EXISTS `representantelegal` (
   `rl_idPersona` varchar(255) DEFAULT NULL,
   `rl_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`rl_idRepresentante`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `representantelegal`;
 INSERT INTO `representantelegal` (`rl_idRepresentante`, `rl_Nombre`, `rl_RFC`, `rl_idPersona`, `rl_Activo`) VALUES
@@ -1531,7 +1526,7 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `r_Descripcion` varchar(50) DEFAULT NULL,
   `r_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`r_idRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `rol`;
 INSERT INTO `rol` (`r_idRol`, `r_Descripcion`, `r_Activo`) VALUES
@@ -1548,7 +1543,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento` (
   `s_UsuarioActualizo` int NOT NULL,
   `s_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`s_idSeguimiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `seguimiento`;
 INSERT INTO `seguimiento` (`s_idSeguimiento`, `s_idOperacion`, `s_FechaSeguimiento`, `s_DescripcionOperacion`, `s_idEstatusO`, `s_UsuarioActualizo`, `s_Activo`) VALUES
@@ -1565,7 +1560,7 @@ CREATE TABLE IF NOT EXISTS `tipocontacto` (
   `tc_Descripcion` varchar(30) NOT NULL,
   `tc_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`tc_idTipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipocontacto`;
 INSERT INTO `tipocontacto` (`tc_idTipoContacto`, `tc_Descripcion`, `tc_Activo`) VALUES
@@ -1579,7 +1574,7 @@ CREATE TABLE IF NOT EXISTS `tipodocumento` (
   `td_Descripcion` varchar(16) NOT NULL,
   `td_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`td_idTipoDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipodocumento`;
 INSERT INTO `tipodocumento` (`td_idTipoDocumento`, `td_Descripcion`, `td_Activo`) VALUES
@@ -1592,7 +1587,7 @@ CREATE TABLE IF NOT EXISTS `tipopersona` (
   `tp_Descripcion` varchar(50) DEFAULT NULL,
   `tp_Activo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`tp_idTipoPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `tipopersona`;
 INSERT INTO `tipopersona` (`tp_idTipoPersona`, `tp_Descripcion`, `tp_Activo`) VALUES
@@ -1611,7 +1606,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `u_imagenUsuario` varchar(255) DEFAULT NULL,
   `u_Activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`u_idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ;
 
 TRUNCATE TABLE `usuario`;
 INSERT INTO `usuario` (`u_idUsuario`, `u_idPersona`, `u_NombreUsuario`, `u_Nombre`, `u_Apellidos`, `u_Llaveacceso`, `u_idPerfil`, `u_imagenUsuario`, `u_Activo`) VALUES
@@ -1625,6 +1620,3 @@ DROP VIEW IF EXISTS `datos_persona`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `datos_persona`  AS SELECT `p`.`per_idPersona` AS `id_persona`, from_base64(`p`.`per_Nombre`) AS `nombre`, from_base64(`p`.`per_Alias`) AS `alias`, from_base64(`p`.`per_RFC`) AS `rfc`, from_base64(`p`.`per_idTipoPrersona`) AS `idtipopersona`, from_base64(`p`.`per_idRol`) AS `idrol`, from_base64(`p`.`per_ActivoFintec`) AS `activofintec`, from_base64(`p`.`per_RegimenFiscal`) AS `idregimenfiscal`, from_base64(`p`.`per_idCtaBanco`) AS `idcuentabanco`, `c2`.`Alias` AS `banco`, from_base64(`c`.`b_CLABE`) AS `clabe`, from_base64(`p`.`per_logo`) AS `logo_persona`, from_base64(`u`.`u_imagenUsuario`) AS `logo_usuario`, from_base64(`u`.`u_NombreUsuario`) AS `nombre_usuario`, from_base64(`r`.`rl_Nombre`) AS `nombre_representante`, from_base64(`u`.`u_Nombre`) AS `nombre_d_usaurio`, from_base64(`u`.`u_Apellidos`) AS `apellido_usuario`, `u`.`u_idUsuario` AS `id_usuario` FROM (((((((`persona` `p` join `representantelegal` `r` on((`p`.`per_idPersona` = from_base64(`r`.`rl_idPersona`)))) join `usuario` `u` on((from_base64(`r`.`rl_idPersona`) = from_base64(`u`.`u_idPersona`)))) join `tipopersona` `t` on((`t`.`tp_idTipoPersona` = from_base64(`p`.`per_idTipoPrersona`)))) join `cuentabancaria` `c` on((`c`.`b_idCtaBancaria` = from_base64(`p`.`per_idCtaBanco`)))) join `catbancos` `c2` on((`c`.`b_idCatBanco` = `c2`.`id`))) join `rol` on((`rol`.`r_idRol` = from_base64(`p`.`per_idRol`)))) join `perfil` on((`perfil`.`p_idPerfil` = from_base64(`u`.`u_idPerfil`)))) WHERE ((`p`.`per_Activo` = 1) AND (`u`.`u_Activo` = 1) AND (`r`.`rl_Activo` = 1) AND (`t`.`tp_Activo` = 1))  ;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
