@@ -334,6 +334,47 @@ public function VerOperaciones($idPersona)
 }
 
 
+/* AgregarOperacion 
+Entrada -> Cadena Json con datos del documento
+Salida -> Logica 1 Si se agrego
+                  0 no se agrego
+                  	$cargo = $this->Interaccionbd->AgregarOperacion('{   
+			"NumOperacion": "839667766",
+			"idPersona": "2",
+			"FechaEmision": "2023-09-20",
+			"SubTotal":"1000",
+			"Impuesto":"160",
+			 "Total":"1160",
+			"ArchivoXML":"",
+			"UID":"9517a20a-617c-4224-bcb4-be2da726cfb4",
+		"idTipoDocumento":1
+		}');
+		print_r($cargo);
+*/
+public function AgregarOperacion($cadenajsonoperacion)
+{
+   $sql="select AgregarOperacion('".$cadenajsonoperacion."','".keyvalue."') as existe;";
+   $regreso = $this->db->query ($sql); 
+   if ($regreso)
+   {
+    $regreso = $regreso->result_array()[0]['existe'];
+    
+    }
+    elseif ($regreso == NULL)
+      {
+          $regreso=0;
+       }
+   
+   else
+   {
+      $regreso=-1;//echo "Algo fallo";
+   }
+
+  return $regreso;
+}
+
+
+
   /*
     /  AgragaContacto 
     /  Entrada -> cadena JSON con datos para tipo de contacto
