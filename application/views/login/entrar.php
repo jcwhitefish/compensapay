@@ -13,6 +13,8 @@
                             <label for="user">Usuario</label>
                             <input v-model="data['password']" @blur="checkFormat('password')" :style="colorsBorder['password'] || {}" type="password" name="password" id="password" placeholder="Contraseña" required>
                             <label for="password">Contraseña</label>
+                            <p v-if="fallo == true" class="error-message">¡Usuario o contraseña incorrectos!</p>
+
                         </div>
                         <?php
                         if (isset($error_message) && !empty($error_message)) {
@@ -29,7 +31,7 @@
                         </div>
                         <div class="right-align container">
                             <button class="button-gray" type="submit">Iniciar Sesión</button>
-                            <p class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
+                            <p v-if="false" class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
                         </div>
                     </form>
                 </div>
@@ -54,30 +56,11 @@
                 password: ref(''),
                 session: ref(true)
             });
-
+            
             const colorsBorder = reactive({});
-
+            const fallo = ref(false);
 
             const checkFormat = (nombreInput) => {
-                if (!isRef(colorsBorder[nombreInput])) {
-                    colorsBorder[nombreInput] = ref('');
-                }
-
-                switch (nombreInput) {
-                    case 'user':
-                    case 'password':
-                        if (data[nombreInput] !== '') {
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid #03BB85!important',
-                            };
-                        } else {
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid red!important',
-                            };
-                        }
-                        break;
-                    default:
-                }
             };
 
             const submitForm = () => {
@@ -94,10 +77,15 @@
                         return response.json();
                     })
                     .then((responseData) => {
-                        console.log(responseData);
                         // Hacer algo con los datos, por ejemplo, retornarlos
                         // accion = responseData
-                        //window.location.replace('<?php echo base_url('login'); ?>');
+                        //console.log( responseData.status);
+                        if (responseData.status == 1) {
+                            window.location.replace('<?php echo base_url('home'); ?>');
+
+                        }else{
+                                fallo.value = true;
+                        }
 
 
                     })
@@ -112,7 +100,8 @@
                 data,
                 colorsBorder,
                 checkFormat,
-                submitForm
+                submitForm,
+                fallo
             };
         },
     });
@@ -137,6 +126,12 @@
     .line-card-right {
         border-right: 1px solid #ddd;
         height: 800px;
+    }
+    .error-message {
+        color: red;
+        font-size: 10px;
+        top: -25px;
+        position: relative;
     }
 </style>
 

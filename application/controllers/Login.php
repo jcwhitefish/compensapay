@@ -85,15 +85,16 @@ class Login extends MY_Loggedout
 		$resultado = $this->Interaccionbd->ValidarAcceso('{"Usuario":"' . $user . '","Llave":"' . $password . '"}');
 		//Verificamos que no si exista el usuario
 
-
-		if ($resultado != 0) {
+		if ($resultado !== 0) {
+			//TODO:Esto es para tener los datos del usuario que inicio sesion
 			$resultadoJSON = json_encode($resultado);
 
 			$this->session->set_userdata('logged_in', TRUE);
 
-
-		}else{$dato['status'] = 'ok';}
-
+			$dato['status'] = 1;
+		} else {
+			$dato['status'] = 0;
+		}
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
