@@ -21,11 +21,12 @@ class Xml extends MY_Loggedin {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 	public function index(){
-		$user = "6";
+		$user = "1";
+		$usuario = "Abdiel";
 
 		$resultado = $this->Interaccionbd->VerOperaciones($user);
 
-		//print_r($resultado); iprime para ver que es lo que llega
+		print_r($resultado); 
 		
 		// Verifica que $resultado sea un array antes de procesarlo
 		if (is_array($resultado)) {
@@ -39,6 +40,7 @@ class Xml extends MY_Loggedin {
 		
 				if ($facturaData !== null) {
 					$factura = new Factura(
+						$facturaData->NumOperacion,
 						$facturaData->FechaEmision,
 						$facturaData->FechaUpdate,
 						$facturaData->Total,
@@ -52,6 +54,8 @@ class Xml extends MY_Loggedin {
 						// $facturaData->AliasProvedor,
 						// $facturaData->RFCProveedor
 					);
+					$factura->Usuario = 'nombre_usuario';
+					$factura->IdUsuario = 12345;
 		
 					$facturas[] = $factura;
 				}

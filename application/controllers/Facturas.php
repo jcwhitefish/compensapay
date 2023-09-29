@@ -24,16 +24,166 @@ class Facturas extends MY_Loggedin {
 		echo "hola messi";
 	}	
     public function facturas_cliente(){
+		$user = "6";
+
+		$resultado = $this->Interaccionbd->VerOperaciones($user);
+
+		//print_r($resultado); iprime para ver que es lo que llega
 		
-		$data['main'] = $this->load->view('facturas/facturas_cliente','' , true);
+		// Verifica que $resultado sea un array antes de procesarlo
+		if (is_array($resultado)) {
+			// Inicializa un array para almacenar objetos Factura
+			$facturas = array();
+		
+			// Itera sobre el array de resultados
+			foreach ($resultado as $jsonFactura) {
+				// Decodifica cada cadena JSON y crea una instancia de la clase Factura
+				$facturaData = json_decode($jsonFactura);
+		
+				if ($facturaData !== null) {
+					$factura = new Factura(
+						$facturaData->NumOperacion,
+						$facturaData->FechaEmision,
+						$facturaData->FechaUpdate,
+						$facturaData->Total,
+						$facturaData->Impuestos,
+						$facturaData->Subtotal,
+						$facturaData->TipoDocumento,
+						$facturaData->Estatus,
+						$facturaData->UUID,
+						$facturaData->AliasCliente,
+						$facturaData->RFCCliente
+						// $facturaData->AliasProvedor,
+						// $facturaData->RFCProveedor
+					);
+					$factura->Usuario = 'UserDemo';
+					$factura->IdUsuario = $user;
+		
+					$facturas[] = $factura;
+				}
+			}
+		
+			// Ahora tienes un array de objetos Factura
+			
+			$data['facturas'] = $facturas; 
+		} 
+		
+		$data['main'] = $this->load->view('facturas/facturas_cliente', $data , true);
 		$this->load->view('plantilla', $data);
 		
 	}	
     public function facturas_proveedor(){
 		
-		$data['main'] = $this->load->view('facturas/facturas_proveedor','' , true);
+		$user = "6";
+
+		$resultado = $this->Interaccionbd->VerOperaciones($user);
+
+		//print_r($resultado); iprime para ver que es lo que llega
+		
+		// Verifica que $resultado sea un array antes de procesarlo
+		if (is_array($resultado)) {
+			// Inicializa un array para almacenar objetos Factura
+			$facturas = array();
+		
+			// Itera sobre el array de resultados
+			foreach ($resultado as $jsonFactura) {
+				// Decodifica cada cadena JSON y crea una instancia de la clase Factura
+				$facturaData = json_decode($jsonFactura);
+		
+				if ($facturaData !== null) {
+					$factura = new Factura(
+						$facturaData->NumOperacion,
+						$facturaData->FechaEmision,
+						$facturaData->FechaUpdate,
+						$facturaData->Total,
+						$facturaData->Impuestos,
+						$facturaData->Subtotal,
+						$facturaData->TipoDocumento,
+						$facturaData->Estatus,
+						$facturaData->UUID,
+						$facturaData->AliasCliente,
+						$facturaData->RFCCliente
+						// $facturaData->AliasProvedor,
+						// $facturaData->RFCProveedor
+					);
+					$factura->Usuario = 'UserDemo';
+					$factura->IdUsuario = $user;
+		
+					$facturas[] = $factura;
+				}
+			}
+		
+			// Ahora tienes un array de objetos Factura
+			
+			$data['facturas'] = $facturas; 
+		} 
+		
+		$data['main'] = $this->load->view('facturas/facturas_proveedor', $data , true);
 		$this->load->view('plantilla', $data);
 		
-	}				
+	}	
+
+    public function correcto(){
+		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
+			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
+
+			//Create the instance about "Factura"
+			//$factura = new Factura($xmlContent);
+
+			$xml = simplexml_load_string($xmlContent);
+
+			$user = "6";
+
+			$resultado = $this->Interaccionbd->VerOperaciones($user);
+
+			//print_r($resultado); iprime para ver que es lo que llega
+			
+			// Verifica que $resultado sea un array antes de procesarlo
+			if (is_array($resultado)) {
+				// Inicializa un array para almacenar objetos Factura
+				$facturas = array();
+			
+				// Itera sobre el array de resultados
+				foreach ($resultado as $jsonFactura) {
+					// Decodifica cada cadena JSON y crea una instancia de la clase Factura
+					$facturaData = json_decode($jsonFactura);
+			
+					if ($facturaData !== null) {
+						$factura = new Factura(
+							$facturaData->NumOperacion,
+							$facturaData->FechaEmision,
+							$facturaData->FechaUpdate,
+							$facturaData->Total,
+							$facturaData->Impuestos,
+							$facturaData->Subtotal,
+							$facturaData->TipoDocumento,
+							$facturaData->Estatus,
+							$facturaData->UUID,
+							$facturaData->AliasCliente,
+							$facturaData->RFCCliente
+							// $facturaData->AliasProvedor,
+							// $facturaData->RFCProveedor
+						);
+						$factura->Usuario = 'UserDemo';
+						$factura->IdUsuario = $user;
+			
+						$facturas[] = $factura;
+					}
+				}
+			
+				// Ahora tienes un array de objetos Factura
+				
+				$data['facturas'] = $facturas; 
+			} 
+			$data['xml'] = $xml; 
+
+			$data['main'] = $this->load->view('pruebasxml', $data , true);
+			$this->load->view('plantilla', $data);
+			
+
+		}
+		
+	}
+				
 
 }

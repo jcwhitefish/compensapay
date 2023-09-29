@@ -40,6 +40,7 @@
                     <tbody>
                         <?php foreach ($facturas as $factura) : ?>
                             <tr>
+                                <td class="tabla-celda"><?= $factura->NumOperacion ?></td>
                                 <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
                                 <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
                                 <td class="tabla-celda"><?= $factura->Total ?></td>
@@ -50,8 +51,8 @@
                                 <td class="tabla-celda"><?= $factura->UUID ?></td>
                                 <td class="tabla-celda"><?= $factura->AliasCliente ?></td>
                                 <td class="tabla-celda"><?= $factura->RFCCliente ?></td>
-                                <!-- <td><?= $factura->AliasProvedor ?></td>
-                                <td><?= $factura->RFCProveedor ?></td> -->
+                                <td><?= $factura->Usuario ?></td>
+                                <td><?= $factura->IdUsuario ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

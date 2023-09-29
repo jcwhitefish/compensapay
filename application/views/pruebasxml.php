@@ -1,3 +1,4 @@
+<?php print_r($xml)?>
 <div class="p-5" id="app">
     <div class="row">
         <p class="px-3">Periodo:</p>
@@ -26,7 +27,7 @@
                         Operaciones
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                    <button class="selected" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
                 </div>
@@ -37,7 +38,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table>
                     <thead>
                         <tr>
                             <th class="tabla-celda">Crear Operación</th>
@@ -53,11 +54,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($facturas as $factura) : ?>
+                            <tr>
+                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
+                                <td class="tabla-celda">DemoUser</td><!--aqui deberia estar factura -->
+                                <td class="tabla-celda">CAFJ741213UG4</td><!--aqui deberia estar las fechas bien -->
+                                <td class="tabla-celda">2023-06-29T14:51:32</td>
+                                <td class="tabla-celda">2023-06-29T14:51:30</td>
+                                <td class="tabla-celda">2023-06-29T14:51:32</td>
+                                <td class="tabla-celda">Por pagar</td>
+                                <td class="tabla-celda">480.00</td>
+                                <td class="tabla-celda">480.00</td>
+                                <td class="tabla-celda">3000.00</td>
+                            </tr>
+                    <?php foreach ($facturas as $factura) : ?>
                             <tr>
                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
                                 <td class="tabla-celda"><?= $factura->Usuario ?></td>
-                                <td class="tabla-celda"><?= $factura->RFCCliente ?></td><!--aqui deberia estar factura -->
+                                <td class="tabla-celda"><?= $factura->NumOperacion ?></td><!--aqui deberia estar factura -->
                                 <td class="tabla-celda"><?= $factura->FechaUpdate ?></td><!--aqui deberia estar las fechas bien -->
                                 <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
                                 <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
@@ -67,27 +80,6 @@
                                 <td class="tabla-celda"><?= $factura->Total ?></td>
                             </tr>
                         <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
-                    <thead>
-                        <tr>
-                            <th class="tabla-celda">Aprobacion</th>
-                            <th class="tabla-celda">ID Operacion</th>
-                            <th class="tabla-celda">Proveedor</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Nota de Débito/Factura Proveedor</th>
-                            <th class="tabla-celda">Fecha Nota de Débito / Fact Proveedor</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Monto Ingreso</th>
-                            <th class="tabla-celda">Monto Egreso</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
                     </tbody>
                 </table>
             </div>
@@ -102,7 +94,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-                    <form method="post" action="<?php echo base_url('xml/factura'); ?>" enctype="multipart/form-data">
+                    <form method="post" action="<?php echo base_url('facturas/correcto'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l9 input-border">
                                 <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
