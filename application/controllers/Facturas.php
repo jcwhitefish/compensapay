@@ -177,7 +177,7 @@ class Facturas extends MY_Loggedin {
 			} 
 			$data['xml'] = $xml; 
 
-			$data['main'] = $this->load->view('pruebasxml', $data , true);
+			$data['main'] = $this->load->view('xml', $data , true);
 			$this->load->view('plantilla', $data);
 			
 
