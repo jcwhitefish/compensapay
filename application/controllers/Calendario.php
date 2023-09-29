@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Calendario extends MY_Loggedout {
+class Calendario extends MY_Loggedin{
 
 	/**
 	 * Index Page for this controller.
