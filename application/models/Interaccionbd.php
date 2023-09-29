@@ -626,41 +626,39 @@ Salida, json con los datos recibidos
             $campo=str_replace(']',"",$campo);
             $campos=explode(":",$campo);
             $j_valida=$j_valida.'"'.$campos[0].'":"'.$campos[1].'",';
-      }
-      $j_valida=substr($j_valida, 0, -1); 
-      $j_valida=$j_valida."}";
-      $final=json_encode($j_valida);
-      switch(json_last_error()) 
-      {
-         case JSON_ERROR_NONE:
-            $final= $final;
-         break;
-         case JSON_ERROR_DEPTH:
-            $final= ' - Excedido tamaño máximo de la pila';
-         break;
-         case JSON_ERROR_STATE_MISMATCH:
-            $final= ' - Desbordamiento de buffer o los modos no coinciden';
-         break;
-         case JSON_ERROR_CTRL_CHAR:
-            $final= ' - Encontrado carácter de control no esperado';
-         break;
-         case JSON_ERROR_SYNTAX:
-            $final= ' - Error de sintaxis, JSON mal formado';
-         break;
-         case JSON_ERROR_UTF8:
-            $final= ' - Caracteres UTF-8 malformados, posiblemente están mal codificados';
-         break;
-         default:
-         $final= ' - Error desconocido';
-         break;
-      }
-      return json_decode($final);
-      }
+         }
+         $j_valida=substr($j_valida, 0, -1); 
+         $j_valida=$j_valida."}";
+         $final=json_encode($j_valida);
+         switch(json_last_error()) 
+         {
+            case JSON_ERROR_NONE:
+               $final= $final;
+            break;
+            case JSON_ERROR_DEPTH:
+               $final= ' - Excedido tamaño máximo de la pila';
+            break;
+            case JSON_ERROR_STATE_MISMATCH:
+               $final= ' - Desbordamiento de buffer o los modos no coinciden';
+            break;
+            case JSON_ERROR_CTRL_CHAR:
+               $final= ' - Encontrado carácter de control no esperado';
+            break;
+            case JSON_ERROR_SYNTAX:
+               $final= ' - Error de sintaxis, JSON mal formado';
+            break;
+            case JSON_ERROR_UTF8:
+               $final= ' - Caracteres UTF-8 malformados, posiblemente están mal codificados';
+            break;
+            default:
+               $final= ' - Error desconocido';
+            break;
+         }
+         return json_decode($final);
+      }  
       else
       {
          return NULL;
       } 
    }
-
-
 }
