@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Calendario extends CI_Controller {
+class Calendario extends MY_Loggedout {
 
 	/**
 	 * Index Page for this controller.
@@ -19,7 +19,7 @@ class Calendario extends CI_Controller {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 	public function index(){
-		$data['main'] = $this->load->view('welcome_message','', true);
+		$data['main'] = $this->load->view('calendario','', true);
 		$this->load->view('plantilla', $data);
 	}				
 

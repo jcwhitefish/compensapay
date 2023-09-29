@@ -23,7 +23,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <?php
     
-    $navbar = true; //Segun yo siempre es true
     if ($this->session->userdata('logged_in')) {
         $sidebar = true;
         $isLog = true;
@@ -31,38 +30,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $sidebar = false;
         $isLog = false;
     }
-
-
-    if ($navbar) {
     ?>
-        <nav>
-            <div class="nav nav-wrapper">
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
-                <!-- If the user is log show the $navbar complements -->
-                <?php if ($isLog) : ?>
-                    <!-- If the user has a photo show that if not show the name -->
-                    <?php if (true) : ?>
-                        <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
-                    <?php else : ?>
-                        <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
-                    <?php endif; ?>
-                    <div class="right hide-on-med-and-down px-3">
-                        <label class="px-3">Balance</label>
-                        <p class="nav-price"><a href="">$200.000</a></p>
-                    </div>
-                    <div class="right hide-on-med-and-down px-3">
-                        <p class="right-align">Display Name</p>
-                        <select name="type" id="type" class="browser-default input-nav">
-                            <option value="perfil1">Vista Proveedor</option>
-                            <option value="perfil2">Vista Cliente</option>
-                        </select>
-                    </div>
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+    <nav>
+        <div class="nav nav-wrapper">
+            <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
+            <!-- If the user is log show the $navbar complements -->
+            <?php if ($isLog) : ?>
+                <!-- If the user has a photo show that if not show the name -->
+                <?php if (true) : ?>
+                    <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
+                <?php else : ?>
+                    <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
                 <?php endif; ?>
-            </div>
-        </nav>
+                <div class="right hide-on-med-and-down px-3">
+                    <label class="px-3">Balance</label>
+                    <p class="nav-price"><a href="">$200.000</a></p>
+                </div>
+                <div class="right hide-on-med-and-down px-3">
+                    <p class="right-align">Display Name</p>
+                    <select name="type" id="type" class="browser-default input-nav">
+                        <option value="perfil1">Vista Proveedor</option>
+                        <option value="perfil2">Vista Cliente</option>
+                    </select>
+                </div>
+                <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+            <?php endif; ?>
+        </div>
+    </nav>
     <?php
-    } if ($sidebar) {?>
+    if ($sidebar) {?>
         <div class="sidebar center-align">
             <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <hr class="line-side">

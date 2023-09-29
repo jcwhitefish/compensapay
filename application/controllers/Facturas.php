@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once APPPATH . 'models/enties/Factura.php';
 
-class Facturas extends CI_Controller {
+class Facturas extends MY_Loggedout {
 
 	/**
 	 * Index Page for this controller.
