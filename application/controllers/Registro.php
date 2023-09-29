@@ -1,13 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Registro extends CI_Controller
+class Registro extends MY_Loggedout
 {
-	public function __construct()
-	{
-		parent::__construct();
-		$this->load->library('form_validation');
-	}
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -206,6 +202,8 @@ class Registro extends CI_Controller
 
 		$agregausuario = $this->Interaccionbd->AgregaUsuario('{
 			"NombreUsuario": "' . $user . '",
+			"Nombre": "' . $name . '",
+			"Apellidos": "' . $lastname . '",
 			"idPersona": ' . $idEmpresa . ',
 			"idPerfil": 1,
 			"urlImagen":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpeg"}');

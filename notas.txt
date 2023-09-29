@@ -1,0 +1,10 @@
+Cosas para hoy 29/09
+
+>Explicarle a Abdi como va a quedar el archivo de provedor y cliente (nota ya no va a ser como lo habia pensado de un controlador para provedor y otro para cliente )
+- Se va a hacer un controlador por cada uno provedor y cliente asi cada uno tiene sus propios metodos ahi mismo
+- Para que no puedan acceder desde la ruta se va a hacer con variables de sesion y con ifs de dependiendo si la variable este an provedor o usuario se le mestrara una vista u otra
+- Tiene que ser 2 vistas para que las condicionales las haga el controlador no la vista el controllador decide cual llamar
+>Arreglar registro los cargando
+>Arreglar navbar para que automaticamente detecte que ruta es
+>Hacer calendario
+>Hacer Preguntas frecuentes

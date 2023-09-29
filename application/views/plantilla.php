@@ -22,69 +22,69 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php } ?>
 
     <?php
-    $navbar = true;
-    $sidebar = true;
-    $isLog = true;
-
-    if ($navbar) {
-    ?>
-        <nav>
-            <div class="nav nav-wrapper">
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
-                <!-- If the user is log show the $navbar complements -->
-                <?php if ($isLog) : ?>
-                    <!-- If the user has a photo show that if not show the name -->
-                    <?php if (true) : ?>
-                        <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
-                    <?php else : ?>
-                        <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
-                    <?php endif; ?>
-                    <div class="right hide-on-med-and-down px-3">
-                        <label class="px-3">Balance</label>
-                        <p class="nav-price"><a href="">$200.000</a></p>
-                    </div>
-                    <div class="right hide-on-med-and-down px-3">
-                        <p class="right-align">Display Name</p>
-                        <select name="type" id="type" class="browser-default input-nav">
-                            <option value="perfil1">Vista Proveedor</option>
-                            <option value="perfil2">Vista Cliente</option>
-                        </select>
-                    </div>
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
-                <?php endif; ?>
-            </div>
-        </nav>
-    <?php
+    
+    if ($this->session->userdata('logged_in')) {
+        $sidebar = true;
+        $isLog = true;
+    }else{
+        $sidebar = false;
+        $isLog = false;
     }
-    if ($sidebar) {
     ?>
+    <nav>
+        <div class="nav nav-wrapper">
+            <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
+            <!-- If the user is log show the $navbar complements -->
+            <?php if ($isLog) : ?>
+                <!-- If the user has a photo show that if not show the name -->
+                <?php if (true) : ?>
+                    <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
+                <?php else : ?>
+                    <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
+                <?php endif; ?>
+                <div class="right hide-on-med-and-down px-3">
+                    <label class="px-3">Balance</label>
+                    <p class="nav-price"><a href="">$200.000</a></p>
+                </div>
+                <div class="right hide-on-med-and-down px-3">
+                    <p class="right-align">Display Name</p>
+                    <select name="type" id="type" class="browser-default input-nav">
+                        <option value="perfil1">Vista Proveedor</option>
+                        <option value="perfil2">Vista Cliente</option>
+                    </select>
+                </div>
+                <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+            <?php endif; ?>
+        </div>
+    </nav>
+    <?php
+    if ($sidebar) {?>
         <div class="sidebar center-align">
-            <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></img></a>
+            <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <hr class="line-side">
             <ul>
                 <ul class="icon-list">
-                    <li><a href="#"><i class="material-icons">notifications_none</i></a></li>
-                    <li><a href="#"><i class="material-icons">home</i></a></li>
-                    <li><a href="#"><i class="material-icons">import_export</i></a></li>
-                    <li><a href="#"><i class="material-icons">pie_chart</i></a></li>
-                    <li><a href="#"><i class="material-icons">insert_drive_file</i></a></li>
-                    <li><a href="#"><i class="material-icons">today</i></a></li>
-                    <li><a href="#"><i class="material-icons">people</i></a></li>
-                    <li><a href="#"><i class="material-icons">settings</i></a></li>
-                    <li><a href="#"><i class="material-icons">headset_mic</i></a></li>
-                    <li><a href="#"><i class="material-icons">exit_to_app</i></a></li>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>' ,base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('xml'), (strpos(current_url(), 'facturas/facturas_proveedor')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('xml'), (strpos(current_url(), 'xml')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url(''), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <li><a href="<?= base_url('logout'); ?>"><i class="material-icons">exit_to_app</i></a></li>
                 </ul>
+            </ul>
         </div>
         <div class="container-main">
-        <?php
-    }
+    <?php }
     if (isset($main)) {
         echo $main;
     }
     if ($sidebar) {
         echo '</div>';
-    }
-        ?>
+    } ?>
 
         <script>
             if (typeof app !== 'undefined') {
@@ -96,9 +96,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <script>
             M.AutoInit();
         </script>
-
-
-
 </body>
 
 <style>
@@ -140,10 +137,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     .icon-list li a:hover i {
         color: #e0e51d;
+    }
+
+    .icon-list-hover{
+        color: #e0e51d;
         background-color: #fff;
-        /* Fondo blanco */
         border-radius: 60%;
-        /* Borde redondeado para crear un círculo */
         padding: 5px;
     }
 
@@ -179,6 +178,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding: 5px !important;
         margin-top: -45px !important;
         text-decoration: underline;
+    }
+
+    .nav-image{
+        max-width: 125%; 
+        max-height: 125%; 
+        width: auto; 
+        height: auto;
     }
 
     .image-center {

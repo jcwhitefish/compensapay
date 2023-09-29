@@ -11,7 +11,7 @@
                             </div>
                             <div class="input-border col l12">
                                 <input v-model="data['bussinesName']" @blur="checkFormat('bussinesName')" :style="colorsBorder['bussinesName'] || {}" type="text" name="bussinesName" id="bussinesName" required>
-                                <label for="bussinesName">Razón Social</label>
+                                <label for="bussinesName">Razón Social *</label>
                                 <p v-if="colorsBorder['bussinesName'] && colorsBorder['bussinesName'].border === '1px solid red!important'" class="error-message">¡Razón Social inválida!</p>
                             </div>
 
@@ -19,7 +19,7 @@
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['nameComercial']" @blur="checkFormat('nameComercial')" :style="colorsBorder['nameComercial'] || {}" type="text" name="nameComercial" id="nameComercial" required>
-                                <label for="nameComercial">Nombre Comercial</label>
+                                <label for="nameComercial">Nombre Comercial *</label>
                                 <p v-if="colorsBorder['nameComercial'] && colorsBorder['nameComercial'].border === '1px solid red!important'" class="error-message">¡Nombre Comercial inválido!</p>
                             </div>
                             <div class="input-border col l6">
@@ -27,13 +27,13 @@
                                     <option v-for="giro in listaGiros" :key="giro.id_Giro" :value="giro.id_Giro">{{ giro.Giro }}</option>
 
                                 </select>
-                                <label for="giro">Giro</label>
+                                <label for="giro">Giro *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['rfc']" @blur="checkFormat('rfc')" :style="colorsBorder['rfc'] || {}" type="text" name="rfc" id="rfc" minlength="12" maxlength="13" pattern="[A-Z0-9]{12,13}" title="Debe tener de 12 a 13 caracteres alfanuméricos" required>
-                                <label for="rfc">RFC</label>
+                                <label for="rfc">RFC *</label>
                                 <p v-if="colorsBorder['rfc'] && colorsBorder['rfc'].border === '1px solid red!important'" class="error-message">¡RFC inválido!</p>
                             </div>
                             <div class="input-border col l6">
@@ -41,13 +41,13 @@
                                     <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{ regimen.Regimen }}</option>
 
                                 </select>
-                                <label for="regimen">Regimen Fiscal</label>
+                                <label for="regimen">Regimen Fiscal *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['codigoPostal']" @blur="checkFormat('codigoPostal')" :style="colorsBorder['codigoPostal'] || {}" type="text" name="codigoPostal" id="codigoPostal" maxlength="5" pattern="[0-9]{5}" required>
-                                <label for="codigoPostal">Codigo Postal</label>
+                                <label for="codigoPostal">Codigo Postal *</label>
                                 <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
@@ -55,20 +55,20 @@
                                     <option v-for="estado in listaEstados" :key="estado.id_estado" :value="estado.id_estado">{{ estado.Nombre }}</option>
 
                                 </select>
-                                <label for="estado">Estado</label>
+                                <label for="estado">Estado *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
                                 <input v-model="data['direccion']" @blur="checkFormat('direccion')" :style="colorsBorder['direccion'] || {}" type="text" name="direccion" id="direccion" required>
-                                <label for="direccion">Direccion</label>
+                                <label for="direccion">Direccion *</label>
                                 <p v-if="colorsBorder['direccion'] && colorsBorder['direccion'].border === '1px solid red!important'" class="error-message">¡Direccion inválida!</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
                                 <input v-model="data['telefono']" @blur="checkFormat('telefono')" :style="colorsBorder['telefono'] || {}" type="text" name="telefono" id="telefono" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa exactamente 10 dígitos numéricos.">
-                                <label for="telefono">Telefono</label>
+                                <label for="telefono">Telefono *</label>
                                 <p v-if="colorsBorder['telefono'] && colorsBorder['telefono'].border === '1px solid red!important'" class="error-message">¡Telefono inválido!</p>
                             </div>
                         </div>
@@ -80,14 +80,14 @@
                             </div>
                             <div class="input-border col l12">
                                 <input v-model="data['clabe']" @blur="checkFormat('clabe')" :style="colorsBorder['clabe'] || {}" type="text" name="clabe" id="clabe" required pattern="[0-9]{18}" maxlength="18" title="Por favor, ingresa exactamente 18 dígitos numéricos.">
-                                <label for="clabe">Cuenta CLABE</label>
+                                <label for="clabe">Cuenta CLABE *</label>
                                 <p v-if="colorsBorder['clabe'] && colorsBorder['clabe'].border === '1px solid red!important'" class="error-message">¡Cuenta CLABE inválido!</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
                                 <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['Alias']" required>
-                                <label for="bank">Banco emisor</label>
+                                <label for="bank">Banco emisor *</label>
                             </div>
                         </div>
                         <div v-if="false" class="row">
@@ -97,7 +97,7 @@
                             </p>
                             <div class="input-border col l12">
                                 <input type="text" name="partner" id="partner" disabled>
-                                <label for="partner">Cliente</label>
+                                <label for="partner">Cliente *</label>
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="cSfDisabled" id="cSfDisabled" disabled :value="csfUploadName">
-                            <label for="cSfDisabled"> Constancia de Situación Fiscal</label>
+                            <label for="cSfDisabled"> Constancia de Situación Fiscal *</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="csfUpload" class="custom-file-upload">Agregar </label>
@@ -128,7 +128,7 @@
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="actaConstitutivaDisabled" id="actaConstitutivaDisabled" disabled :value="actaConstitutivaUploadName">
-                            <label for="actaConstitutivaDisabled">Acta Constitutiva</label>
+                            <label for="actaConstitutivaDisabled">Acta Constitutiva *</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
@@ -136,7 +136,7 @@
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="comprobanteDomicilioDisabled" id="comprobanteDomicilioDisabled" disabled :value="comprobanteDomicilioUploadName">
-                            <label for="comprobanteDomicilioDisabled">Comprobante de Domicilio</label>
+                            <label for="comprobanteDomicilioDisabled">Comprobante de Domicilio *</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
@@ -144,7 +144,7 @@
                         </div>
                         <div class="col l9 input-border">
                             <input type="text" name="representanteLegalDisabled" id="representanteLegalDisabled" disabled :value="representanteLegalUploadName">
-                            <label for="representanteLegalDisabled">Identificacion de Representante Legal</label>
+                            <label for="representanteLegalDisabled">Identificacion de Representante Legal *</label>
                         </div>
                         <div class="col l3 center-align p-5">
                             <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
