@@ -22,9 +22,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php } ?>
 
     <?php
-    $navbar = true;
-    $sidebar = true;
-    $isLog = true;
+    
+    $navbar = true; //Segun yo siempre es true
+    if ($this->session->userdata('logged_in')) {
+        $sidebar = true;
+        $isLog = true;
+    }else{
+        $sidebar = false;
+        $isLog = false;
+    }
+
 
     if ($navbar) {
     ?>
