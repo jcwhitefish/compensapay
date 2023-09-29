@@ -553,7 +553,7 @@ print_r($acceso);
     {
        $sql="select ValidarLlave('".$cadenajsonvalidar."','".keyvalue."') as existe;";
         $regreso = $this->db->query ($sql);
-         $existe=$regreso->result_array()[0]['existe'];
+        $existe=$regreso->result_array()[0]['existe'];
             if ($existe==NULL)
             {
                 $final=0;
