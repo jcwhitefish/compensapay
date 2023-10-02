@@ -271,7 +271,7 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
-            const selectedButton = Vue.ref(null);
+            const selectedButton = Vue.ref('Facturas');
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
