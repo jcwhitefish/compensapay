@@ -90,7 +90,7 @@ class Login extends MY_Loggedout
 			$resultadoJSON = json_encode($resultado);
 			$resultadoArray = json_decode($resultado,true);
 			$this->session->set_userdata('logged_in', TRUE);
-			$this->session->set_userdata('persona', $resultadoArray['Persona']);
+			$this->session->set_userdata('idPersona', $resultadoArray['Persona']);
 
 			$dato['status'] = 1;
 		} else {
