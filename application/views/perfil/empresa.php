@@ -130,8 +130,12 @@
                     <th>
                         <p>Documento</p>
                     </th>
-                    <th>Archivo</th>
-                    <th>Actualizar</th>
+                    <th>
+                        <p>Archivo</p>
+                    </th>
+                    <th>
+                        <p>Actualizar</p>
+                    </th>
                 </tr>
             </thead>
 
@@ -141,7 +145,9 @@
                         <p>Acta Constitutiva</p>
                     </td>
                     <td><a href="">actaConstitutiva</a></td>
-                    <td> <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
+                    <td>
+                        <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                        <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                     </td>
                 </tr>
                 <tr>
@@ -149,7 +155,9 @@
                         <p>Constancia de Situacion Fiscal</p>
                     </td>
                     <td><a href="">constanciaSituacionFiscal</a></td>
-                    <td> <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
+                    <td>
+                        <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                        <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                     </td>
                 </tr>
                 <tr>
@@ -157,7 +165,9 @@
                         <p>Comprobante de Domicilio</p>
                     </td>
                     <td><a href="">comprobanteDomicilio</a></td>
-                    <td> <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
+                    <td>
+                        <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                        <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                     </td>
                 </tr>
                 <tr>
@@ -165,8 +175,9 @@
                         <p>Identificacion de Representante Legal</p>
                     </td>
                     <td><a href="">representanteLegal</a></td>
-                    <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
-                    <td> <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
+                    <td>
+                        <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                        <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                     </td>
                 </tr>
             </tbody>
@@ -176,7 +187,9 @@
     </div>
     <div class="row">
         <div class="col l12 right-align p-5">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Siguiente</button>
+            <button class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
+
+            <button class="btn waves-effect waves-light guardar" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
         </div>
     </div>
 
@@ -199,24 +212,23 @@
     const app = createApp({
         setup() {
             const data = reactive({
-                bussinesName: ref(''),
-                nameComercial: ref(''),
-                rfc: ref(''),
-                clabe: ref(''),
-                bank: ref(''),
+                bussinesName: ref('whiteFish'),
+                nameComercial: ref('whiteFish'),
+                rfc: ref('RORA004223WA'),
+                clabe: ref('012345678908765434'),
+                bank: ref('<?php  ?>'), //Este dato se teiene que sacar el Id
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
                 comprobanteDomicilioUpload: ref(''),
                 representanteLegalUpload: ref(''),
-                codigoPostal: ref(''),
-                estado: ref(null),
-                regimen: ref(null),
-                codigoPostal: ref(''),
-                direccion: ref(''),
-                telefono: ref(''),
+                codigoPostal: ref('05120'),
+                estado: ref(9),
+                regimen: ref(1),
+                direccion: ref('Bosque de Radiatas 26-piso 7'),
+                telefono: ref('5527720256'),
                 uniqueString: ref(''),
-                giro: ref(null)
+                giro: ref(2)
             });
             // partes del image
             const imageUpload = ref(null);
@@ -425,6 +437,7 @@
                             if (csfUpload.value.files[0].size <= 1024 * 1024 * 30) {
                                 csfUploadName.value = csfUpload.value.files[0].name;
                                 data[nombreInput] = csfUpload.value;
+
                                 subirArchivo(data[nombreInput], 'constanciaSituacionFiscal')
 
                             } else {
@@ -503,6 +516,21 @@
                         /*console.log(result)*/
                     })
                     .catch(error => console.log('error', error));
+            }
+            const buscarBanco = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data['clabe'].toString().substring(0, 3), requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        data['bank'] = JSON.parse(result)
+                    })
+                    .catch(error => console.log('error', error));
+
+
             }
             const listarEstados = () => {
                 var requestOptions = {
@@ -588,6 +616,7 @@
                     listarEstados();
                     listarRegimen();
                     listarGiro();
+                    buscarBanco();
                 }
             )
 
@@ -660,5 +689,19 @@
 
     .linkConfiguracion {
         color: black;
+    }
+
+    .custom-file-upload:hover {
+        border: none;
+    }
+
+    .cancelar:hover,
+    .cancelar:focus {
+        background-color: #444 !important;
+    }
+
+    .guardar,
+    .cancelar:focus {
+        background-color: #e0e51d !important;
     }
 </style>

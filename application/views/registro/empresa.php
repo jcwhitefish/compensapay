@@ -186,7 +186,6 @@
                 codigoPostal: ref(''),
                 estado: ref(null),
                 regimen: ref(null),
-                codigoPostal: ref(''),
                 direccion: ref(''),
                 telefono: ref(''),
                 uniqueString: ref(''),
