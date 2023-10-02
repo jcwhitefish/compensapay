@@ -102,7 +102,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-                    <form method="post" action="<?php echo base_url('xml/factura'); ?>" enctype="multipart/form-data">
+                    <form method="post" action="<?php echo base_url('facturas/subida'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l9 input-border">
                                 <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
@@ -131,7 +131,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
-                    <form method="post" action="<?php echo base_url('xml/factura'); ?>" enctype="multipart/form-data">
+                    <form method="post" action="<?php echo base_url('facturas'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">

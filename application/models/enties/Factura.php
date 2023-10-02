@@ -34,7 +34,7 @@ class Factura {
         $usuario = null,
         $idUsuario = null
     ) {
-        $this->NumOperacion = $numOperacion; // Asignar el nuevo parámetro
+        $this->NumOperacion = $numOperacion;
         $this->FechaEmision = $fechaEmision;
         $this->FechaUpdate = $fechaUpdate;
         $this->Total = $total;
