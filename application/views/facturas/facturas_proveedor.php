@@ -1,3 +1,4 @@
+
 <div class="p-5" id="app">
     <div class="row">
         <p class="px-3">Periodo:</p>
@@ -52,19 +53,20 @@
                             <th class="tabla-celda">Total</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        <?php foreach ($facturas as $factura) : ?>
+                        <?php foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
-                                <td class="tabla-celda"><?= $factura->Usuario ?></td>
-                                <td class="tabla-celda"><?= $factura->RFCCliente ?></td><!--aqui deberia estar factura -->
-                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
-                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
-                                <td class="tabla-celda"><?= $factura->Estatus?></td>
-                                <td class="tabla-celda"><?= $factura->Subtotal ?></td>
-                                <td class="tabla-celda"><?= $factura->Impuestos ?></td>
-                                <td class="tabla-celda"><?= $factura->Total ?></td>
+                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
+                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                <td class="tabla-celda">Cargada</td>
+                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
+                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
+                                <td class="tabla-celda"><?= $row->o_Total ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -161,12 +163,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($facturas as $factura) : ?>
+                                        <!-- <?php foreach ($facturas as $factura) : ?>
                                             <tr>
                                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
                                                 <td class="tabla-celda"><?= $factura->Usuario ?></td>
-                                                <td class="tabla-celda"><?= $factura->NumOperacion ?></td><!--aqui deberia estar factura -->
-                                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td><!--aqui deberian estar las fechas bien -->
+                                                <td class="tabla-celda"><?= $factura->NumOperacion ?></td>aqui deberia estar factura
+                                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>aqui deberian estar las fechas bien
                                                 <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
                                                 <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
                                                 <td class="tabla-celda"><?= $factura->Estatus?></td>
@@ -174,7 +176,7 @@
                                                 <td class="tabla-celda"><?= $factura->Impuestos ?></td>
                                                 <td class="tabla-celda"><?= $factura->Total ?></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        <?php endforeach; ?> -->
                                     </tbody>
                                 </table>
                             </div><br>
