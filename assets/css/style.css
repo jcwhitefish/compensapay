@@ -176,3 +176,10 @@ input[type="number"] {
     width: auto; 
     height: auto;
 }
+
+.d-flex{
+    display: flex;
+}
+.space-between{
+    justify-content: space-between;
+}

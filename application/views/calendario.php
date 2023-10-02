@@ -36,7 +36,7 @@
         </div>
     </div>
     <!-- Aqui va lo de mes -->
-    <div class="row" v-if="modeloTabla == 2">
+    <div class="row tablas" v-if="modeloTabla == 2">
         <table>
             <thead>
                 <tr>
@@ -214,15 +214,15 @@
         outline: none;
         background-color: #e0e51d;
     }
-    thead{
+    .tablas thead{
         background-color: #eeeeee;
     }
-    td{
+    .tablas td{
         border: 1px solid #eeeeee;
         height: 3cm;
         width: 3cm;
     }
-    td span{
+    .tablas td span{
         position: relative;
         top: -1cm;
         right: -4cm;

@@ -71,7 +71,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil'), (strpos(current_url(), 'perfil')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url(''), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
                     <li><a href="<?= base_url('logout'); ?>"><i class="material-icons">exit_to_app</i></a></li>
                 </ul>
