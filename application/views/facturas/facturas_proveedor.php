@@ -61,7 +61,7 @@
                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
                                 <td class="tabla-celda">Cargada</td>
                                 <td class="tabla-celda"><?= $row->o_SubTotal ?></td>

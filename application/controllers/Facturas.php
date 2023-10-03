@@ -54,7 +54,7 @@ class Facturas extends MY_Loggedin {
 	
 	public function subida(){
 
-		$user = 6;
+		$user = "6";
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
@@ -64,7 +64,7 @@ class Facturas extends MY_Loggedin {
 			$factura = procesar_xml($xml);
 			$factura = array(
 				"o_NumOperacion" => $factura->o_NumOperacion,
-				"o_idPersona" =>  $factura->$user,
+				"o_idPersona" =>  $user,
 				"o_FechaEmision" => $factura->o_FechaEmision,
 				"o_Total" => $factura->o_Total,
 				"o_ArchivoXML" => $factura->o_ArchivoXML,
@@ -75,7 +75,7 @@ class Facturas extends MY_Loggedin {
 				"o_FechaUpload" => $factura->o_FechaUpload,
 				"o_Activo" => $factura->o_Activo
 			);
-			$this->db->insert('operacion', $facturaData);
+			$this->db->insert('operacion', $factura);
 		}
 		
 		

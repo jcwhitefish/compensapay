@@ -66,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>' ,base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('main'), (strpos(current_url(), 'main')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas/facturas_cliente'), (strpos(current_url(), 'facturas/facturas_cliente') !== false || strpos(current_url(), 'facturas/facturas_proveedor') !== false) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : '');?>
