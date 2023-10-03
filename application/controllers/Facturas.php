@@ -32,20 +32,33 @@ class Facturas extends MY_Loggedin {
 			$this->db->select('*');
 			$this->db->from('operacion');
 			$this->db->where('o_idPersona', $user);
-			$query = $this->db->get();
-			$facturas = $query->result();
-			//Pasa arreglo de tabla de operaciones de la db al front
-			$data['facturas'] = $facturas;		
+			$queryFacturas = $this->db->get();
+			$facturas = $queryFacturas->result();
+			$data['facturas'] = $facturas;	
+
+			$this->db->select('*');
+			$this->db->from('tabla_ejemplo');
+			$queryOperacion = $this->db->get();
+			$operaciones = $queryOperacion->result();
+			$data['operaciones'] = $operaciones;
+
+
 			$data['main'] = $this->load->view('facturas/facturas_cliente', $data , true);
 			$this->load->view('plantilla', $data);
 		}else{
 			$this->db->select('*');
 			$this->db->from('operacion');
 			$this->db->where('o_idPersona', $user);
-			$query = $this->db->get();
-			$facturas = $query->result();
+			$queryFacturas = $this->db->get();
+			$facturas = $queryFacturas->result();
+			$data['facturas'] = $facturas;	
 
-			$data['facturas'] = $facturas;		
+			$this->db->select('*');
+			$this->db->from('tabla_ejemplo');
+			$queryOperacion = $this->db->get();
+			$operaciones = $queryOperacion->result();
+			$data['operaciones'] = $operaciones;
+				
 			$data['main'] = $this->load->view('facturas/facturas_proveedor', $data , true);
 			$this->load->view('plantilla', $data);
 		}

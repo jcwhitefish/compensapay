@@ -89,7 +89,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        <?php foreach ($operaciones as $operacion) : ?>
+                            <tr>
+                            <td class="tabla-celda">
+                                    <?php
+                                    if ($operacion->Aprobacion == 0) {
+                                        echo '<a href="#modal-unica-operacion">Crear operación</a>';
+                                    } elseif ($operacion->Aprobacion == 1) {
+                                        echo '<i class="tiny material-icons">check_box</i>';
+                                    }
+                                    ?>
+                                </td>
+                                <td class="tabla-celda"><?php echo $operacion->ID_Operacion; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Proveedor; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Fecha_Factura; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Fecha_Alta; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Factura; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Fecha_Nota_Debito_Fact_Proveedor; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Fecha_Transaccion; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Monto_Ingreso; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Monto_Egreso; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -127,6 +150,8 @@
         </div>
     </div>
 
+
+
     <div id="modal-operacion" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
@@ -163,20 +188,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- <?php foreach ($facturas as $factura) : ?>
+                                        <?php foreach ($facturas as $row) : ?>
                                             <tr>
                                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
-                                                <td class="tabla-celda"><?= $factura->Usuario ?></td>
-                                                <td class="tabla-celda"><?= $factura->NumOperacion ?></td>aqui deberia estar factura
-                                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>aqui deberian estar las fechas bien
-                                                <td class="tabla-celda"><?= $factura->FechaEmision ?></td>
-                                                <td class="tabla-celda"><?= $factura->FechaUpdate ?></td>
-                                                <td class="tabla-celda"><?= $factura->Estatus?></td>
-                                                <td class="tabla-celda"><?= $factura->Subtotal ?></td>
-                                                <td class="tabla-celda"><?= $factura->Impuestos ?></td>
-                                                <td class="tabla-celda"><?= $factura->Total ?></td>
+                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
+                                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
+                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                                <td class="tabla-celda">Cargada</td>
+                                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
+                                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
+                                                <td class="tabla-celda"><?= $row->o_Total ?></td>
                                             </tr>
-                                        <?php endforeach; ?> -->
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div><br>
@@ -193,7 +218,73 @@
             </div>
         </div>
     </div>
-
+    
+    <div id="modal-unica-operacion" class="modal">
+        <div class="modal-content">
+            <h5>Crear Operación</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
+                    <form method="post" action="<?php echo base_url('facturas'); ?>" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col l3 input-border">
+                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
+                                <label for="invoiceDisabled">Tu factura XML</label>
+                            </div>
+                            <div class="col l4 input-border">
+                                <br>
+                            </div>
+                            <div class="col l5 input-border">
+                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
+                                <label for="invoiceDisabled">Proveedor</label>
+                            </div>
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="tabla-celda">Crear Operación</th>
+                                            <th class="tabla-celda">Emitido por</th>
+                                            <th class="tabla-celda">Factura</th>
+                                            <th class="tabla-celda">Fecha Factura</th>
+                                            <th class="tabla-celda">Fecha Alta</th>
+                                            <th class="tabla-celda">Fecha Transacción</th>
+                                            <th class="tabla-celda">Estatus</th>
+                                            <th class="tabla-celda">Subtotal</th>
+                                            <th class="tabla-celda">IVA</th>
+                                            <th class="tabla-celda">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($facturas as $row) : ?>
+                                            <tr>
+                                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
+                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
+                                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
+                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                                <td class="tabla-celda">Cargada</td>
+                                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
+                                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
+                                                <td class="tabla-celda"><?= $row->o_Total ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div><br>
+                            <div class="col l12 center-align">
+                                <button class="button-blue" type="submit" name="action">Solicitar Factura</button>
+                                &nbsp;
+                                <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                 &nbsp;
+                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <style>
     .text-modal{
