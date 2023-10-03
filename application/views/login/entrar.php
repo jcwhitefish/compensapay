@@ -81,7 +81,7 @@
                         // accion = responseData
                         //console.log( responseData.status);
                         if (responseData.status == 1) {
-                            window.location.replace('<?php echo base_url('home'); ?>');
+                            window.location.replace('<?php echo base_url('inicio'); ?>');
 
                         }else{
                                 fallo.value = true;

@@ -33,7 +33,7 @@
             <h5><i class="material-icons iconoSetting">ondemand_video</i> Tutoriales</h5>
         </div>
         <div class="col l12 ">
-            
+
             <div class="row">
                 <!-- este es el modelo para el for de vue o php -->
                 <div class="col l3">
@@ -85,6 +85,31 @@
         <div class="col l12">
             <h5><i class="material-icons iconoSetting">chat</i> Levantar Ticket</h5>
         </div>
+        <div class="col l12">
+            <div class="row">
+                <div class="col l6 input-border">
+                    <input type="text" name="asunto" id="asunto" required>
+                    <label for="asunto">Asunto</label>
+                </div>
+                <div class="col l1"></div>
+                <div class="col l5 input-border">
+                    <select name="regimen" id="regimen" disabled>
+                        <option value="0" default>Cliente</option>
+
+                    </select>
+                    <label for="regimen">Regimen Fiscal *</label>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col l12 input-border">
+                    <!-- TODO: Se tienen que corregir los labels de Abdi quitar el position relative -->
+                    <label style="top: 0!important;" for="descripcion">Descripcion</label>
+                    <textarea  id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
+                    
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -108,9 +133,10 @@
         padding: 10px;
         min-height: 300px;
         border-radius: 15px !important;
-        
+
     }
-    .textoCard{
+
+    .textoCard {
         font-size: 18px;
     }
 </style>

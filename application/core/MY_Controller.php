@@ -18,7 +18,7 @@ class MY_Loggedin extends CI_Controller {
         if ($this->session->userdata('logged_in')) {
             
         }else{
-            redirect('login'); // Redirigir al inicio de sesión si no está autenticado
+            redirect(base_url('login')); // Redirigir al inicio de sesión si no está autenticado
         }
     }
 }
@@ -30,7 +30,7 @@ class MY_Loggedout extends CI_Controller {
         
         // Verificar si el usuario ha iniciado sesión en todas las páginas protegidas
         if ($this->session->userdata('logged_in')) {
-            redirect('home'); // Redirigir al Dashboard
+            redirect(base_url('inicio')); // Redirigir al Dashboard
         }else{
             
         }

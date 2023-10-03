@@ -20,6 +20,6 @@ class Logout extends MY_Loggedin {
 	 */
 	public function index(){
         $this->session->sess_destroy();
-		redirect('');
+		redirect(base_url(''));
 	}				
 }
