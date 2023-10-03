@@ -3,12 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Perfil extends MY_Loggedin
 {
-	public function __construct() {
-        parent::__construct();
+	public function __construct()
+	{
+		parent::__construct();
 
-        // Cargar la biblioteca de sesión
-        $this->load->library('session');
-    }
+		// Cargar la biblioteca de sesión
+		$this->load->library('session');
+	}
 
 	/**
 	 * Index Page for this controller.
@@ -27,12 +28,21 @@ class Perfil extends MY_Loggedin
 	 */
 	public function index()
 	{
-		if ($_SERVER['HTTP_HOST'] != 'localhost') {
-			redirect('');
-		} else {
-			//mostramos en pantalla welcome_message.php
-			$data['main'] = $this->load->view('perfil/empresa', '', true);
-			$this->load->view('plantilla', $data);
-		}
+		//Obtenermos los datos de datosEmpresa y los enviamos al front
+
+		$data['main'] = $this->load->view('perfil/empresa', '', true);
+
+		$this->load->view('plantilla', $data);
+
+	}
+	public function datosEmpresa()
+	{
+		//Esta funciona ya no se puede usar tal cual pero aqui es donde se tenian que llamar los datos
+		$dato = array();
+		$resultado = json_decode($this->Interaccionbd->consultaPersona($this->session->userdata('idPersona') - 1),true);
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
 	}
 }
