@@ -257,6 +257,10 @@
     .currency {
       text-align: right;
     }
+    .container {
+  width: 90%;
+  max-width:initial;
+}
   </style>
 
 
