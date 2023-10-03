@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends MY_Loggedin {
+class Inicio extends MY_Loggedin {
 
 	/**
 	 * Index Page for this controller.
@@ -18,8 +18,14 @@ class Home extends MY_Loggedin {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
-	public function index(){
-        $data['main'] = $this->load->view('main', '', true);
-        $this->load->view('plantilla', $data);
-	}				
+	public function index()
+	{
+		if ($_SERVER['HTTP_HOST'] != 'localhost') {
+			redirect('');
+		} else {
+			//mostramos en pantalla welcome_message.php
+			$data['main'] = $this->load->view('inicio','', true);
+			$this->load->view('plantilla', $data);
+		}
+	}			
 }
