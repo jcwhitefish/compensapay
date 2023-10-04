@@ -24,11 +24,11 @@ class Facturas extends MY_Loggedin {
 	public function index(){
 
 		//Se verifica si esta en la pantalla de cliente
-		$isClient = false;
+		$isClient = $this->session->userdata('vista');
 		$user = 6;
 
-		if($isClient){
-			//Accede a la db 
+		//1 si es cliente o si es proveedor
+		if($isClient == 1){
 			$this->db->select('*');
 			$this->db->from('operacion');
 			$this->db->where('o_idPersona', $user);

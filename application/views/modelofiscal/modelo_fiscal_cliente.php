@@ -27,11 +27,6 @@
                         Comprobantes de pago
                     </button>            
                 </div>
-                <div class="col 8">
-                    <form class="input-border" action="#" method="post" style="display: flex;">
-                        <input type="search" placeholder="Buscar" >
-                    </form>
-                </div>
             </div>
             <div style="overflow-x: auto;">
                 <table v-if="selectedButton === 'Facturas'" class="visible-table">

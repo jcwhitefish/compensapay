@@ -24,10 +24,10 @@ class ModeloFiscal extends MY_Loggedin {
 	public function index(){
 
 		//Se verifica si esta en la pantalla de cliente
-		$isClient = true;
+		$isClient = $this->session->userdata('vista');
 		$user = 6;
 
-		if($isClient){
+		if($isClient == 1){
 			//Accede a la db 
 			$this->db->select('*');
 			$this->db->from('operacion');
@@ -59,7 +59,7 @@ class ModeloFiscal extends MY_Loggedin {
 			$operaciones = $queryOperacion->result();
 			$data['operaciones'] = $operaciones;
 				
-			$data['main'] = $this->load->view('modelo_fiscal/modelo_fiscal_proveedor', $data , true);
+			$data['main'] = $this->load->view('modelofiscal/modelo_fiscal_proveedor', $data , true);
 			$this->load->view('plantilla', $data);
 		}
 

@@ -12,37 +12,31 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l6 right-align p-5">
-            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
-            Añadir Facturas
-            </a>
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
-            Crear Operaciones
-            </a>
+            <button @click="downloadFile" class="button-blue">Descargar</button>
         </div>
     </div>
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-                <div class="col l3 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
-                        Operaciones
-                    </button>
-                    &nbsp;
+                <div class="col l6 p-3">
                     <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
-                </div>
-                <div class="col 9">
-                    <form class="input-border" action="#" method="post" style="display: flex;">
-                        <input type="search" placeholder="Buscar" >
-                    </form>
+                    &nbsp;
+                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
+                        Comprobantes de pago
+                    </button>
+                    &nbsp;
+                    <button class="button-table" :class="{ 'selected': selectedButton == 'Cuenta' }" @click="selectButton('Cuenta')">
+                        Estados de cuenta
+                    </button>         
                 </div>
             </div>
             <div style="overflow-x: auto;">
                 <table v-if="selectedButton === 'Facturas'" class="visible-table">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Crear Operación</th>
+                            <th class="tabla-celda">Seleccionar</th>
                             <th class="tabla-celda">Emitido por</th>
                             <th class="tabla-celda">Factura</th>
                             <th class="tabla-celda">Fecha Factura</th>
@@ -58,7 +52,7 @@
                     <tbody>
                         <?php foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
+                                <td class="tabla-celda"><input type="checkbox"></td>
                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
@@ -75,214 +69,143 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Aprobacion</th>
-                            <th class="tabla-celda">ID Operacion</th>
-                            <th class="tabla-celda">Proveedor</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Nota de Débito/Factura Proveedor</th>
-                            <th class="tabla-celda">Fecha Nota de Débito / Fact Proveedor</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Monto Ingreso</th>
-                            <th class="tabla-celda">Monto Egreso</th>
+                            <th class="tabla-celda">Seleccionar</th>
+                            <th class="tabla-celda">Institucion emisora</th>
+                            <th class="tabla-celda">Clave de rastreo</th>
+                            <th class="tabla-celda">Numero de referencia</th>
+                            <th class="tabla-celda">Fecha de pago</th>
+                            <th class="tabla-celda">Institución receptora</th>
+                            <th class="tabla-celda">Monto del pago</th>
+                            <th class="tabla-celda">Cuenta beneficiaria</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($operaciones as $operacion) : ?>
+                        <?php foreach ($facturas as $row) : ?>
                             <tr>
-                            <td class="tabla-celda">
-                                    <?php
-                                    if ($operacion->Aprobacion == 0) {
-                                        echo '<a href="#modal-unica-operacion">Crear operación</a>';
-                                    } elseif ($operacion->Aprobacion == 1) {
-                                        echo '<i class="tiny material-icons">check_box</i>';
-                                    }
-                                    ?>
-                                </td>
-                                <td class="tabla-celda"><?php echo $operacion->ID_Operacion; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Proveedor; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Factura; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Alta; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Factura; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Nota_Debito_Fact_Proveedor; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Transaccion; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Monto_Ingreso; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Monto_Egreso; ?></td>
+                                <td class="tabla-celda"><input type="checkbox"></td>
+                                <td class="tabla-celda">BBVA</td><!--aqui deberia estar usuario -->
+                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td class="tabla-celda">REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
+                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
+                                <td class="tabla-celda">Banregio</td>
+                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
+                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div id="modal-factura" class="modal">
-        <div class="modal-content">
-            <h5>Carga tus facturas</h5>
-            <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-                    <form method="post" action="<?php echo base_url('facturas/subida'); ?>" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col l9 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
-                            </div>
-                            <div class="col l3 center-align p-5"> 
-                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
-                            </div><br>
-                            <div class="col l12 center-align">
-                                <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
-                                <p class="text-modal">*Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura, se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente, de acuerdo con lo estipulado en nuestros términos y condiciones</p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div id="modal-operacion" class="modal">
-        <div class="modal-content">
-            <h5>Crear Operación</h5>
-            <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
-                    <form method="post" action="<?php echo base_url('facturas'); ?>" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col l3 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Tu factura XML</label>
-                            </div>
-                            <div class="col l4 input-border">
-                                <br>
-                            </div>
-                            <div class="col l5 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Proveedor</label>
-                            </div>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th class="tabla-celda">Crear Operación</th>
-                                            <th class="tabla-celda">Emitido por</th>
-                                            <th class="tabla-celda">Factura</th>
-                                            <th class="tabla-celda">Fecha Factura</th>
-                                            <th class="tabla-celda">Fecha Alta</th>
-                                            <th class="tabla-celda">Fecha Transacción</th>
-                                            <th class="tabla-celda">Estatus</th>
-                                            <th class="tabla-celda">Subtotal</th>
-                                            <th class="tabla-celda">IVA</th>
-                                            <th class="tabla-celda">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($facturas as $row) : ?>
-                                            <tr>
-                                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
-                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
-                                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
-                                                <td class="tabla-celda">Cargada</td>
-                                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
-                                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
-                                                <td class="tabla-celda"><?= $row->o_Total ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div><br>
-                            <div class="col l12 center-align">
-                                <button class="button-blue" type="submit" name="action">Solicitar Factura</button>
-                                &nbsp;
-                                <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="modal-unica-operacion" class="modal">
-        <div class="modal-content">
-            <h5>Crear Operación</h5>
-            <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
-                    <form method="post" action="<?php echo base_url('facturas'); ?>" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col l3 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Tu factura XML</label>
-                            </div>
-                            <div class="col l4 input-border">
-                                <br>
-                            </div>
-                            <div class="col l5 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Proveedor</label>
-                            </div>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th class="tabla-celda">Crear Operación</th>
-                                            <th class="tabla-celda">Emitido por</th>
-                                            <th class="tabla-celda">Factura</th>
-                                            <th class="tabla-celda">Fecha Factura</th>
-                                            <th class="tabla-celda">Fecha Alta</th>
-                                            <th class="tabla-celda">Fecha Transacción</th>
-                                            <th class="tabla-celda">Estatus</th>
-                                            <th class="tabla-celda">Subtotal</th>
-                                            <th class="tabla-celda">IVA</th>
-                                            <th class="tabla-celda">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($facturas as $row) : ?>
-                                            <tr>
-                                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
-                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
-                                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
-                                                <td class="tabla-celda">Cargada</td>
-                                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
-                                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
-                                                <td class="tabla-celda"><?= $row->o_Total ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div><br>
-                            <div class="col l12 center-align">
-                                <button class="button-blue" type="submit" name="action">Solicitar Factura</button>
-                                &nbsp;
-                                <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <table v-if="selectedButton === 'Cuenta'" class="visible-table">       
+                    <thead>
+                        <th class="tabla-celda">Seleccionar</th>
+                        <th class="tabla-celda">Mes</th>
+                        <th class="tabla-celda">Días del periodo</th>
+                        <th class="tabla-celda">Depósitos</th>
+                        <th class="tabla-celda">Retiros</th>
+                        <th class="tabla-celda">Depósitos</th>
+                        <th class="tabla-celda">Retiros</th>
+                        <th class="tabla-celda">Saldo inicial</th>
+                        <th class="tabla-celda">Saldo final</th>
+                        <th class="tabla-celda">Movimientos</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Noviembre</td>
+                            <td class="tabla-celda">30</td>
+                            <td class="tabla-celda">3</td>
+                            <td class="tabla-celda">1</td>
+                            <td class="tabla-celda">$3,452.16</td>
+                            <td class="tabla-celda">$25,028</td>
+                            <td class="tabla-celda">$254,339</td>
+                            <td class="tabla-celda">$21,576</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Octubre</td>
+                            <td class="tabla-celda">31</td>
+                            <td class="tabla-celda">5</td>
+                            <td class="tabla-celda">5</td>
+                            <td class="tabla-celda">$5,599.68</td>
+                            <td class="tabla-celda">$40,589</td>
+                            <td class="tabla-celda">$149,993</td>
+                            <td class="tabla-celda">$34,998</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Noviembre</td>
+                            <td class="tabla-celda">30</td>
+                            <td class="tabla-celda">3</td>
+                            <td class="tabla-celda">1</td>
+                            <td class="tabla-celda">$3,452.16</td>
+                            <td class="tabla-celda">$25,028</td>
+                            <td class="tabla-celda">$254,339</td>
+                            <td class="tabla-celda">$21,576</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Octubre</td>
+                            <td class="tabla-celda">31</td>
+                            <td class="tabla-celda">5</td>
+                            <td class="tabla-celda">5</td>
+                            <td class="tabla-celda">$5,599.68</td>
+                            <td class="tabla-celda">$40,589</td>
+                            <td class="tabla-celda">$149,993</td>
+                            <td class="tabla-celda">$34,998</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Septiembre</td>
+                            <td class="tabla-celda">30</td>
+                            <td class="tabla-celda">2</td>
+                            <td class="tabla-celda">2</td>
+                            <td class="tabla-celda">$15,232.16</td>
+                            <td class="tabla-celda">$110,433</td>
+                            <td class="tabla-celda">$145,990</td>
+                            <td class="tabla-celda">$95,201</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Agosto</td>
+                            <td class="tabla-celda">31</td>
+                            <td class="tabla-celda">8</td>
+                            <td class="tabla-celda">4</td>
+                            <td class="tabla-celda">$6,544.32</td>
+                            <td class="tabla-celda">$47,446</td>
+                            <td class="tabla-celda">$124,990</td>
+                            <td class="tabla-celda">$40,902</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Julio</td>
+                            <td class="tabla-celda">31</td>
+                            <td class="tabla-celda">4</td>
+                            <td class="tabla-celda">3</td>
+                            <td class="tabla-celda">$11,351.22</td>
+                            <td class="tabla-celda">$82,296</td>
+                            <td class="tabla-celda">$98,259</td>
+                            <td class="tabla-celda">$70,945</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                        <tr>
+                            <td class="tabla-celda"><input type="checkbox"></td>
+                            <td class="tabla-celda">Junio</td>
+                            <td class="tabla-celda">30</td>
+                            <td class="tabla-celda">3</td>
+                            <td class="tabla-celda">3</td>
+                            <td class="tabla-celda">$15,873.44</td>
+                            <td class="tabla-celda">$115,082</td>
+                            <td class="tabla-celda">$56,998</td>
+                            <td class="tabla-celda">$99,209</td>
+                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                        </tr>
+                   </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -331,9 +254,6 @@
         text-overflow: ellipsis;
     }
 
-
-    /* BORRAR */
-
     .selected {
         background-color: black !important;
         color: white;
@@ -346,7 +266,7 @@
         background-color: white;
         border: 2px solid white;
         height: 50px;
-        width: 110px
+        width: 180px
     }
 
     .button-table:focus {
@@ -356,7 +276,12 @@
         border: 2px solid black !important;
         border-radius: 10px;
     }
-   
+    
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        opacity: 1;
+        position: relative;
+        pointer-events: auto;
+    }
 </style>
 
 <script>
@@ -382,12 +307,26 @@
                 }
             };
 
+            const downloadFile = () => {
+                const archivoPrueba = "Este es el contenido del archivo de prueba.";
+                const nombreArchivo = "archivos.zip";
+                const blob = new Blob([archivoPrueba], { type: "text/plain" });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = nombreArchivo;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            };
+
             return {
                 invoiceUploadName,
                 selectedButton,
                 checkFormatInvoice,
                 selectButton,
+                downloadFile,
             };
-        }
-    });
+        },
+    }).mount("#app");
 </script>
+

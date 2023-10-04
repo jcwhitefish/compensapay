@@ -48,7 +48,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <div class="right hide-on-med-and-down px-3">
                     <p class="right-align">Display Name</p>
-
                     <select onchange="cambiarVista(this.value)" name="type" id="type" class="browser-default input-nav">
                         <!-- cliente 1 provedor 2 -->
                         <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
@@ -80,14 +79,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </ul>
         </div>
         <div class="container-main">
-        <?php }
-    if (isset($main)) {
-        echo $main;
-    }
-    if ($sidebar) {
-        echo '</div>';
-    } ?>
-
+        <?php } if (isset($main)) {
+                echo $main;
+            }
+            if ($sidebar) {
+                echo '</div>';
+            } ?>
         <script>
             if (typeof app !== 'undefined') {
                 app.mount('#app');

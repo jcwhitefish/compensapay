@@ -42,7 +42,7 @@
                     <thead>
                         <tr>
                             <th class="tabla-celda">Crear Operación</th>
-                            <th class="tabla-celda">Emitido por</th>
+                            <th class="tabla-celda">Cliente</th>
                             <th class="tabla-celda">Factura</th>
                             <th class="tabla-celda">Fecha Factura</th>
                             <th class="tabla-celda">Fecha Alta</th>
@@ -176,7 +176,7 @@
                                     <thead>
                                         <tr>
                                             <th class="tabla-celda">Crear Operación</th>
-                                            <th class="tabla-celda">Emitido por</th>
+                                            <th class="tabla-celda">Cliente</th>
                                             <th class="tabla-celda">Factura</th>
                                             <th class="tabla-celda">Fecha Factura</th>
                                             <th class="tabla-celda">Fecha Alta</th>
