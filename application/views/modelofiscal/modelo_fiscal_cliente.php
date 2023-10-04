@@ -12,7 +12,7 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l6 right-align p-5">
-            <button class="button-blue">Descargar</button>
+            <button @click="downloadFile" class="button-blue">Descargar</button>
         </div>
     </div>
     <div class="card esquinasRedondas">
@@ -68,34 +68,29 @@
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
-                <thead>
+                    <thead>
                         <tr>
+                            <th class="tabla-celda">Seleccionar</th>
                             <th class="tabla-celda">Institucion emisora</th>
                             <th class="tabla-celda">Clave de rastreo</th>
                             <th class="tabla-celda">Numero de referencia</th>
-                            <th class="tabla-celda">Fecha de pagog</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Subtotal</th>
-                            <th class="tabla-celda">IVA</th>
-                            <th class="tabla-celda">Total</th>
+                            <th class="tabla-celda">Fecha de pago</th>
+                            <th class="tabla-celda">Institución receptora</th>
+                            <th class="tabla-celda">Monto del pago</th>
+                            <th class="tabla-celda">Cuenta beneficiaria</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <?php foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                <td class="tabla-celda">BBVA</td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
+                                <td class="tabla-celda">REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
                                 <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
-                                <td class="tabla-celda">Cargada</td>
-                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
-                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
-                                <td class="tabla-celda"><?= $row->o_Total ?></td>
+                                <td class="tabla-celda">Banregio</td>
+                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
+                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -201,12 +196,37 @@
                 }
             };
 
+            const downloadFile = () => {
+                // Simulamos la descarga de un archivo de prueba
+                const archivoPrueba = "Este es el contenido del archivo de prueba.";
+                const nombreArchivo = "archivos.zip";
+
+                // Crea un objeto Blob con el contenido del archivo
+                const blob = new Blob([archivoPrueba], { type: "text/plain" });
+
+                // Crea una URL de objeto Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crea un elemento de enlace para iniciar la descarga
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = nombreArchivo;
+
+                // Simula un clic en el enlace para iniciar la descarga
+                a.click();
+
+                // Limpia la URL de objeto Blob después de la descarga
+                window.URL.revokeObjectURL(url);
+            };
+
             return {
                 invoiceUploadName,
                 selectedButton,
                 checkFormatInvoice,
                 selectButton,
+                downloadFile,
             };
-        }
-    });
+        },
+    }).mount("#app");
 </script>
+
