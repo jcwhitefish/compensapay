@@ -46,7 +46,8 @@
                     </thead>
 
                     <tbody>
-                        <?php foreach ($facturas as $row) : ?>
+                        <?php $facturas = array_reverse($facturas);
+                            foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><input type="checkbox"></td>
                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->

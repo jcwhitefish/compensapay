@@ -55,7 +55,8 @@
                     </thead>
 
                     <tbody>
-                        <?php foreach ($facturas as $row) : ?>
+                        <?php $facturas = array_reverse($facturas);
+                            foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
@@ -362,7 +363,7 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
-            const selectedButton = Vue.ref('Facturas');
+            const selectedButton = Vue.ref('Operaciones');
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;

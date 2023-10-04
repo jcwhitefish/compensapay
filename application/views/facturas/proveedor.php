@@ -55,7 +55,8 @@
                     </thead>
 
                     <tbody>
-                        <?php foreach ($facturas as $row) : ?>
+                        <?php $facturas = array_reverse($facturas);
+                            foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
@@ -76,25 +77,26 @@
                         <tr>
                             <th class="tabla-celda">Aprobacion</th>
                             <th class="tabla-celda">ID Operacion</th>
-                            <th class="tabla-celda">Proveedor</th>
+                            <th class="tabla-celda">Cliente</th>
                             <th class="tabla-celda">Fecha Factura</th>
                             <th class="tabla-celda">Fecha Alta</th>
                             <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Nota de Débito/Factura Proveedor</th>
-                            <th class="tabla-celda">Fecha Nota de Débito / Fact Proveedor</th>
+                            <th class="tabla-celda">Nota de Débito</th>
+                            <th class="tabla-celda">Fecha Nota de Débito</th>
                             <th class="tabla-celda">Fecha Transacción</th>
                             <th class="tabla-celda">Estatus</th>
                             <th class="tabla-celda">Monto Ingreso</th>
                             <th class="tabla-celda">Monto Egreso</th>
+                            <th class="tabla-celda">Adelanta tu pago</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($operaciones as $operacion) : ?>
                             <tr>
-                            <td class="tabla-celda">
+                                <td class="tabla-celda">
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
-                                        echo '<a href="#modal-unica-operacion">Crear operación</a>';
+                                        echo '';
                                     } elseif ($operacion->Aprobacion == 1) {
                                         echo '<i class="tiny material-icons">check_box</i>';
                                     }
@@ -111,6 +113,13 @@
                                 <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Monto_Ingreso; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Monto_Egreso; ?></td>
+                                <td class="tabla-celda">
+                                    <?php
+                                    if ($operacion->Aprobacion == 0) {
+                                        echo '<a href="#modal-unica-operacion">Adelantar pago</a>';
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -362,7 +371,7 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
-            const selectedButton = Vue.ref('Facturas');
+            const selectedButton = Vue.ref('Operaciones');
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
