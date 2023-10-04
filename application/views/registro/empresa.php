@@ -1,3 +1,6 @@
+<?php 
+ //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
+?>
 <div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
