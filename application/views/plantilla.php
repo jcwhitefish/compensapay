@@ -66,12 +66,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <ul>
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'perfil', 'soporte', 'modelofiscal', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'modelofiscal', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
                     <!-- <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?> -->
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'modelofiscal')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('clientesproveedores'), (strpos(current_url(), 'clientesproveedores')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil'), (strpos(current_url(), 'perfil')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url('soporte'), (strpos(current_url(), 'soporte')) ? ' icon-list-hover' : ''); ?>
                     <li><a href="<?= base_url('logout'); ?>"><i class="material-icons">exit_to_app</i></a></li>

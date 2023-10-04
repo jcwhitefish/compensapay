@@ -43,7 +43,7 @@ class ModeloFiscal extends MY_Loggedin {
 			$data['operaciones'] = $operaciones;
 
 
-			$data['main'] = $this->load->view('modelofiscal/modelo_fiscal_cliente', $data , true);
+			$data['main'] = $this->load->view('modelofiscal/cliente', $data , true);
 			$this->load->view('plantilla', $data);
 		}else{
 			$this->db->select('*');
@@ -59,7 +59,7 @@ class ModeloFiscal extends MY_Loggedin {
 			$operaciones = $queryOperacion->result();
 			$data['operaciones'] = $operaciones;
 				
-			$data['main'] = $this->load->view('modelofiscal/modelo_fiscal_proveedor', $data , true);
+			$data['main'] = $this->load->view('modelofiscal/proveedor', $data , true);
 			$this->load->view('plantilla', $data);
 		}
 
