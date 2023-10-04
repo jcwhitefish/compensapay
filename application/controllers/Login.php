@@ -89,9 +89,9 @@ class Login extends MY_Loggedout
 			//TODO:Esto es para tener los datos del usuario que inicio sesion
 			$resultadoJSON = json_encode($resultado);
 			$resultadoArray = json_decode($resultado,true);
-			$this->session->set_userdata('logged_in', TRUE);
+			$this->session->set_userdata('logged_in', true);
 			$this->session->set_userdata('idPersona', $resultadoArray['Persona']);
-
+			$this->session->set_userdata('vista', 1);
 			$dato['status'] = 1;
 		} else {
 			$dato['status'] = 0;
