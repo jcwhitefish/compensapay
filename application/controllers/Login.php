@@ -75,7 +75,7 @@ class Login extends MY_Loggedout
 	public function validaAcceso()
 	{
 
-		//TODO: Asi es como debe de hacerse un envio de datos por GET y todas las acciones se deben de hacer si se envian los datos correctos dentro del if no fuera
+		//TODO: Asi es como debe de hacerse una extraccion de datos por GET y todas las acciones se deben de hacer si se envian los datos correctos dentro del if no fuera
 		$dato = array();
 
 

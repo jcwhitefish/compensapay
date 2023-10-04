@@ -15,18 +15,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
-    <?php    if ($_SERVER['HTTP_HOST'] != 'localhost') { ?>
+    <?php if ($_SERVER['HTTP_HOST'] != 'localhost') { ?>
         <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
     <?php } else { ?>
         <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.js"></script>
     <?php } ?>
 
     <?php
-    
+
     if ($this->session->userdata('logged_in')) {
         $sidebar = true;
         $isLog = true;
-    }else{
+    } else {
         $sidebar = false;
         $isLog = false;
     }
@@ -48,9 +48,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <div class="right hide-on-med-and-down px-3">
                     <p class="right-align">Display Name</p>
-                    <select name="type" id="type" class="browser-default input-nav">
-                        <option value="perfil1">Vista Cliente</option>
-                        <option value="perfil2">Vista Proveedor</option>
+
+                    <select onchange="cambiarVista(this.value)" name="type" id="type" class="browser-default input-nav">
+                        <!-- cliente 1 provedor 2 -->
+                        <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
+                        <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
                     </select>
                 </div>
                 <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
@@ -58,27 +60,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </nav>
     <?php
-    if ($sidebar) {?>
+    if ($sidebar) { ?>
         <div class="sidebar center-align">
             <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <hr class="line-side">
             <ul>
                 <ul class="icon-list">
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>' ,base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'perfil', 'soporte', 'modelofiscal', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : '');?>
-                    <!-- <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?> -->
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'modelofiscal')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil'), (strpos(current_url(), 'perfil')) ? ' icon-list-hover' : '');?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url('soporte'), (strpos(current_url(), 'soporte')) ? ' icon-list-hover' : '');?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
+                    <!-- <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?> -->
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'modelofiscal')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil'), (strpos(current_url(), 'perfil')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url('soporte'), (strpos(current_url(), 'soporte')) ? ' icon-list-hover' : ''); ?>
                     <li><a href="<?= base_url('logout'); ?>"><i class="material-icons">exit_to_app</i></a></li>
                 </ul>
             </ul>
         </div>
         <div class="container-main">
-    <?php }
+        <?php }
     if (isset($main)) {
         echo $main;
     }
@@ -95,6 +97,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <script src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
         <script>
             M.AutoInit();
+        </script>
+        <script>
+            function cambiarVista(valor = '') {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?php echo base_url('herramientas/cambiarVista/'); ?>" + valor.toString() , requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        // let resultado = result;
+                        // console.log(resultado);
+                        location.reload(true);
+
+                    })
+                    .catch(error => console.log('error', error));
+
+
+            }
         </script>
 </body>
 
@@ -139,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         color: #e0e51d;
     }
 
-    .icon-list-hover{
+    .icon-list-hover {
         color: #e0e51d;
         background-color: #fff;
         border-radius: 60%;
@@ -180,10 +202,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         text-decoration: underline;
     }
 
-    .nav-image{
-        max-width: 125%; 
-        max-height: 125%; 
-        width: auto; 
+    .nav-image {
+        max-width: 125%;
+        max-height: 125%;
+        width: auto;
         height: auto;
     }
 
