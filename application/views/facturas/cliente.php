@@ -136,21 +136,33 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-                    <form method="post" action="<?php echo base_url('facturas/subida'); ?>" enctype="multipart/form-data">
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l9 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
+                                <input
+                                type="text"
+                                name="invoiceDisabled"
+                                id="invoiceDisabled"
+                                disabled
+                                v-model="invoiceUploadName"
+                                />
                                 <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
                             </div>
-                            <div class="col l3 center-align p-5"> 
+                            <div class="col l3 center-align p-5">
                                 <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
                                 <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                             </div><br>
                             <div class="col l12 center-align">
-                                <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
-                                <p class="text-modal">*Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura, se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente, de acuerdo con lo estipulado en nuestros términos y condiciones</p>
+                                <a href="#!" class="modal-close button-gray" style="color: #fff; color:hover: #"
+                                >Cancelar</a
+                                >
+                                &nbsp;
+                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button><br /><br />
+                                <p class="text-modal">
+                                *Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura,
+                                se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente,
+                                de acuerdo con lo estipulado en nuestros términos y condiciones
+                                </p>
                             </div>
                         </div>
                     </form>
@@ -167,18 +179,21 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
-                    <form method="post" action="<?php echo base_url('facturas'); ?>" enctype="multipart/form-data">
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
                                 <label for="invoiceDisabled">Tu factura XML</label>
                             </div>
-                            <div class="col l4 input-border">
-                                <br>
+                            <div class="col l4 left-align p-5">
+                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                             </div>
-                            <div class="col l5 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Proveedor</label>
+                            <div class="col l5 input-border select-white">
+                                <select disabled>
+                                    <option>Provedor 1</option>
+                                </select>
+                                <label>Proveedor</label>
                             </div>
                             <div>
                                 <table>
@@ -214,11 +229,11 @@
                                 </table>
                             </div><br>
                             <div class="col l12 center-align">
-                                <button class="button-blue" type="submit" name="action">Solicitar Factura</button>
+                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button><br><br>
                                 &nbsp;
                                 <a href="#!" class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button><br><br>
+                                &nbsp;
+                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button><br><br>
                             </div>
                         </div>
                     </form>
@@ -343,7 +358,7 @@
 
     .selected {
         background-color: black !important;
-        color: white;
+        color: white !important;
         height: 50px;
         border: 2px solid black !important;
         border-radius: 10px;
@@ -368,6 +383,9 @@
         position: relative;
         pointer-events: auto;
     }
+
+
+    
    
 </style>
 
@@ -386,6 +404,31 @@
                 }
             };
 
+            const uploadFile = async () => {
+                if (selectedButton.value === 'Facturas') {
+                    const fileInput = document.getElementById('invoiceUpload');
+                    const formData = new FormData();
+                    formData.append('user', 6);
+                    formData.append('invoiceUpload', fileInput.files[0]);
+
+                    try {
+                        const response = await fetch('facturas', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            console.log('Carga exitosa');
+                            window.location.href = 'facturas';
+                        } else {
+                            console.error('Error al cargar el archivo');
+                        }
+                    } catch (error) {
+                        console.error('Error de red:', error);
+                    }
+                }
+            };
+
             const selectButton = (buttonName) => {
                 if (selectedButton.value == buttonName) {
                     selectedButton.value = null;
@@ -398,6 +441,7 @@
                 invoiceUploadName,
                 selectedButton,
                 checkFormatInvoice,
+                uploadFile,
                 selectButton,
             };
         }
