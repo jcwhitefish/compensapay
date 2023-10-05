@@ -199,8 +199,7 @@
                                     <tbody>
                                         <?php foreach ($facturas as $row) : ?>
                                             <tr>
-                                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
-                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                                <td class="tabla-celda"><input type="checkbox"></td>                                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
                                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
                                                 <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
@@ -266,7 +265,7 @@
                                     <tbody>
                                         <?php foreach ($facturas as $row) : ?>
                                             <tr>
-                                                <td class="tabla-celda"><i class="tiny material-icons">check_box</i></td>                
+                                                <td class="tabla-celda"><input type="checkbox"></td>               
                                                 <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
                                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
@@ -364,6 +363,11 @@
         border: 2px solid black !important;
         border-radius: 10px;
     }
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        opacity: 1;
+        position: relative;
+        pointer-events: auto;
+    }
    
 </style>
 
@@ -371,7 +375,7 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
-            const selectedButton = Vue.ref('Operaciones');
+            const selectedButton = Vue.ref('Facturas');
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;

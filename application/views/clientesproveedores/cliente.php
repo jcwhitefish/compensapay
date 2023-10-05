@@ -1,34 +1,20 @@
 
 <div class="p-5" id="app">
     <div class="row">
-        <p class="px-3">Periodo:</p>
-        <div class="col l3">
-            <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
-            <label for="start">Inicio:</label>
-        </div>
-        <div class="col l3">
-            <input type="date" id="fin" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
-            <label for="fin">Fin:</label>
-        </div>
-        <div class="col l6 right-align p-5">
-            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
-            Clientes
-            </a>
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
-            Proveedores
-            </a>
+        <div class="col l12 right-align p-5">
+            <a class="modal-trigger button-blue">Invitar Cliente</a>
         </div>
     </div>
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
                 <div class="col l3 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
-                        Operaciones
+                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                        Clientes
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
-                        Facturas
+                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
+                        Proveedores
                     </button>
                 </div>
                 <div class="col 9">
