@@ -251,7 +251,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close">Solicitar Factura</a>
+                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
