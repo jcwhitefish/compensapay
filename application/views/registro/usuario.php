@@ -125,7 +125,7 @@
             });
 
             const imageUpload = ref(null);
-            const imageUploadURL = ref('https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640');
+            const imageUploadURL = ref('https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg');
             const colorsBorder = reactive({});
             //partes de listar
             const listaPreguntas = ref([]);
@@ -219,7 +219,7 @@
                                 subirArchivo(data[nombreInput], 'foto', 1)
 
                             } else {
-                                imageUploadURL.value = 'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640';
+                                imageUploadURL.value = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
 
                             }
 

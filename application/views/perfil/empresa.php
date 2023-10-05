@@ -232,7 +232,7 @@
             });
             // partes del image
             const imageUpload = ref(null);
-            const imageUploadURL = ref('https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640');
+            const imageUploadURL = ref("<?= base_url('assets/images/trafiguraoLogo.png'); ?>");
             const colorsBorder = reactive({});
             //partes del pdf
             const csfUpload = ref(null);
@@ -420,7 +420,7 @@
                                 subirArchivo(data[nombreInput], 'logo')
 
                             } else {
-                                imageUploadURL.value = 'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640';
+                                imageUploadURL.value = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
 
                             }
 

@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <?php if ($isLog) : ?>
                 <!-- If the user has a photo show that if not show the name -->
                 <?php if (true) : ?>
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
+                    <img src="<?= base_url('assets/images/trafiguraoLogo.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
                 <?php else : ?>
                     <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
                 <?php endif; ?>
@@ -46,15 +46,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label class="px-3">Balance</label>
                     <p class="nav-price"><a href="">$200.000</a></p>
                 </div>
-                <div class="right hide-on-med-and-down px-3">
-                    <p class="right-align">Display Name</p>
+                <div class="right hide-on-med-and-down px-3 d-flex flex-direction-column ">
+                    <p style="padding-left: 10px;">Noe Salgado</p>
                     <select onchange="cambiarVista(this.value)" name="type" id="type" class="browser-default input-nav">
                         <!-- cliente 1 provedor 2 -->
                         <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
                         <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
                     </select>
                 </div>
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+                <img src="<?= base_url('assets/images/mark-zuckerberg-bio.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
             <?php endif; ?>
         </div>
     </nav>
@@ -159,7 +159,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     .icon-list-hover {
-        color: #e0e51d;
+        color: #444;
         background-color: #fff;
         border-radius: 60%;
         padding: 5px;

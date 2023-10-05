@@ -55,44 +55,124 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><span>1</span></td>
-                    <td><span>2</span></td>
-                    <td><span>3</span></td>
+                    <td><span>
+                            <p>1</p>
+                            
+                            <a class="btnLeyenda btn-small red accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>2</p>
+                        </span></td>
+                    <td><span>
+                            <p>3</p>
+                        </span></td>
                 </tr>
                 <tr>
-                    <td><span>4</span></td>
-                    <td><span>5</span></td>
-                    <td><span>6</span></td>
-                    <td><span>7</span></td>
-                    <td><span>8</span></td>
-                    <td><span>9</span></td>
-                    <td><span>10</span></td>
+                    <td><span>
+                            <p>4</p>
+                        </span></td>
+                    <td><span>
+                            <p>5</p>
+                        </span></td>
+                    <td><span>
+                            <p>6</p>
+                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>7</p>
+                        </span></td>
+                    <td><span>
+                            <p>8</p>
+                        </span></td>
+                    <td><span>
+                            <p>9</p>
+                        </span></td>
+                    <td><span>
+                            <p>10</p>
+                        </span></td>
                 </tr>
                 <tr>
-                    <td><span>11</span></td>
-                    <td><span>12</span></td>
-                    <td><span>13</span></td>
-                    <td><span>14</span></td>
-                    <td><span>15</span></td>
-                    <td><span>16</span></td>
-                    <td><span>17</span></td>
+                    <td><span>
+                            <p>11</p>
+                        </span></td>
+                    <td><span>
+                            <p>12</p>
+                            
+                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>13</p>
+                        </span></td>
+                    <td><span>
+                            <p>14</p>
+
+                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>15</p>
+                        </span></td>
+                    <td><span>
+                            <p>16</p>
+                        </span></td>
+                    <td>
+                        <span>
+                            <p>17</p>
+                            <a class="btnLeyenda btn-small red accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span>
+
+                    </td>
                 </tr>
                 <tr>
-                    <td><span>18</span></td>
-                    <td><span>19</span></td>
-                    <td><span>20</span></td>
-                    <td><span>21</span></td>
-                    <td><span>22</span></td>
-                    <td><span>23</span></td>
-                    <td><span>24</span></td>
+                    <td><span>
+                            <p>18</p>
+                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>19</p>
+
+                        </span></td>
+                    <td><span>
+                            <p>20</p>
+                        </span></td>
+                    <td><span>
+                            <p>21</p>
+                        </span></td>
+                    <td><span>
+                            <p>22</p>
+                            
+                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
+                    <td><span>
+                            <p>23</p>
+                        </span></td>
+                    <td><span>
+                            <p>24</p>
+                        </span></td>
                 </tr>
                 <tr>
-                    <td><span>25</span></td>
-                    <td><span>26</span></td>
-                    <td><span>27</span></td>
-                    <td><span>28</span></td>
-                    <td><span>29</span></td>
-                    <td><span>30</span></td>
+                    <td><span>
+                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                            <p>25</p>
+                        </span></td>
+                    <td><span>
+                            <p>26</p>
+                        </span></td>
+                    <td><span>
+                            <p>27</p>
+                        </span></td>
+                    <td><span>
+                            <p>28</p>
+                        </span></td>
+                    <td><span>
+                            <p>29</p>
+                        </span></td>
+                    <td><span>
+                            <p>30</p>
+                            
+                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                            
+                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
+                        </span></td>
                     <!-- Puedes añadir más días si es necesario -->
                 </tr>
             </tbody>
@@ -214,19 +294,29 @@
         outline: none;
         background-color: #e0e51d;
     }
-    .tablas thead{
+
+    .tablas thead {
         background-color: #eeeeee;
     }
-    .tablas td{
+
+    .tablas td {
         border: 1px solid #eeeeee;
         height: 3cm;
         width: 3cm;
     }
-    .tablas td span{
-        position: relative;
-        top: -1cm;
-        right: -4cm;
+
+    .tablas td span {
+
+        flex-direction: column;
         font-weight: bold;
+        display: flex;
+        align-items: center
+    }
+
+    .tablas td span p {
+        position: relative;
+        width: 100%;
+        text-align: right;
     }
 </style>
 
