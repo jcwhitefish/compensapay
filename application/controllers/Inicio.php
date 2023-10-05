@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Inicio extends MY_Loggedin {
+class Inicio extends MY_Loggedin
+{
 
 	/**
 	 * Index Page for this controller.
@@ -20,12 +21,9 @@ class Inicio extends MY_Loggedin {
 	 */
 	public function index()
 	{
-		if ($_SERVER['HTTP_HOST'] != 'localhost') {
-			redirect('');
-		} else {
-			//mostramos en pantalla welcome_message.php
-			$data['main'] = $this->load->view('inicio','', true);
-			$this->load->view('plantilla', $data);
-		}
-	}			
+
+		//mostramos en pantalla welcome_message.php
+		$data['main'] = $this->load->view('inicio', '', true);
+		$this->load->view('plantilla', $data);
+	}
 }
