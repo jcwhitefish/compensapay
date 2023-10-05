@@ -50,15 +50,15 @@
                             foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td class="tabla-celda"><a href="#modal-unica-operacion">Frontier</a></td><!--aqui deberia estar usuario -->
+                                <td class="tabla-celda"><a href="#modal-unica-operacion"><?= $row->o_NumOperacion ?></a></td><!--aqui deberia estar row -->
                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
                                 <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
                                 <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
                                 <td class="tabla-celda">Cargada</td>
-                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
-                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
-                                <td class="tabla-celda"><?= $row->o_Total ?></td>
+                                <td class="tabla-celda">$<?= $row->o_SubTotal ?></td>
+                                <td class="tabla-celda">$<?= $row->o_Impuesto ?></td>
+                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

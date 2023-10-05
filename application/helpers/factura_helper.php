@@ -22,7 +22,7 @@ if (!function_exists('procesar_xml')) {
             $comprobante->getAttribute('SubTotal'),
             $traslado->getAttribute('Importe'),
             date('Y-m-d H:i:s'),
-            "1"
+            "0"
         );
 
         return $factura;

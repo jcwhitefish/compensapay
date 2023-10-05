@@ -66,11 +66,12 @@ class Facturas extends MY_Loggedin {
 	}	
 	
 	public function subida(){
-
+		$dato = array();
 		$user = "6";
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
+			// $dato['datos'] = $xmlContent;
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
@@ -91,9 +92,36 @@ class Facturas extends MY_Loggedin {
 			$this->db->insert('operacion', $factura);
 		}
 		
+
+		$dato['status'] = 'ok' ;
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));		
+	}	
+	
+	public function carga(){
 		
-		redirect('facturas');
 		
-	}					
+		$factura = array(
+			"Aprobacion" => "0",
+			"ID_Operacion" =>  "1111",
+			"Proveedor" => "Provedor1",
+			"Fecha_Factura" => "2023-05-15",
+			"Fecha_Alta" => "2023-10-05",
+			"Factura" => "FAC002",
+			"Nota_Debito_Factura_Proveedor" => "ND001",
+			"Fecha_Nota_Debito_Fact_Proveedor" => "ND001",
+			"Fecha_Transaccion" => "2023-10-05",
+			"Estatus" => "Pendiente",
+			"Monto_Ingreso" => "0.00",
+			"Monto_Egreso" => "0.00",
+		);
+
+		$this->db->insert('tabla_ejemplo', $factura);
+
+		redirect("facturas");
+			
+	}	
 
 }
