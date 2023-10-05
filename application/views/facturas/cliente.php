@@ -110,7 +110,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($operaciones as $operacion) : ?>
+                        <?php $operaciones = array_reverse($operaciones);
+                            foreach ($operaciones as $operacion) : ?>
                             <tr>
                                 <td class="tabla-celda">
                                     <?php
