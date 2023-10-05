@@ -197,6 +197,7 @@
     <div id="modal-operacion" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
+            
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>

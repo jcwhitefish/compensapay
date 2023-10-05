@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="center-align p-5">
-                            <p>aquí va el captcha xd</p>
+                            <p></p>
                         </div>
                         <div class="right-align container">
                             <button class="button-gray waves-effect waves-teal" type="submit">Ingresar</button>
