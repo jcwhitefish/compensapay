@@ -286,13 +286,13 @@
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" placeholder="92387278.xml">
-                                <label for="invoiceDisabled">Tu Nota de debito en XML</label>
+                                <label for="invoiceDisabled">Tu factura XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" placeholder="Frontier">
-                                <label for="providerDisabled">Cliente</label>
+                                <label for="providerDisabled">Proveedor</label>
                             </div>
                             <div>
                                 <table class="striped">

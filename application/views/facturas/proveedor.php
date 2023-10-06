@@ -200,22 +200,21 @@
 
 
 
-
     <div id="modal-operacion" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu nota de debito y selecciona una factura del proveedor</h6>
+                    <h6 class="p-3">Carga tu nota de debito y selecciona una factura</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
-                                <label for="invoiceDisabled">Tu Nota de debito en XML</label>
+                                <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
+                                <label for="operationDisabled">Tu Nota de debito en XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
-                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" />
+                                <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input @change="checkFormatOperation" name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" />
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
@@ -274,6 +273,9 @@
 
 
 
+
+
+
     <div id="modal-operacion-unico" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
@@ -283,15 +285,13 @@
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
-                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
+                                <input type="text" placeholder="92387278.xml">
                                 <label for="invoiceDisabled">Tu Nota de debito en XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
-                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" />
                             </div>
                             <div class="col l5 input-border select-white">
-                                <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
+                                <input type="text" placeholder="Frontier">
                                 <label for="providerDisabled">Cliente</label>
                             </div>
                             <div>
@@ -310,7 +310,7 @@
                                             <th class="tabla-celda">Total</th>
                                         </tr>
                                     </thead>
-                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
+                                    <tbody class="striped">
                                     <?php
                                         $primerRegistro = null; // Inicializa una variable para almacenar el primer registro que cumple la condición
 
@@ -340,7 +340,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName != ''">Solicitar Factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -354,9 +354,6 @@
         </div>
     </div>
     
-
-
-
 </div>
 <style>
     .text-modal{
@@ -450,6 +447,7 @@
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
+            const operationUploadName = Vue.ref('');
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
@@ -459,13 +457,10 @@
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
                     invoiceUploadName.value = fileInput.files[0].name;
-                    providerUploadName.value = 'Frontier';
                 } else {
                     invoiceUploadName.value = '';
-                    providerUploadName.value = '';
                 }
             };
-
 
             const uploadFile = async () => {
                 if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
@@ -473,6 +468,41 @@
                     const formData = new FormData();
                     formData.append('user', 6);
                     formData.append('invoiceUpload', fileInput.files[0]);
+
+                    const response = await fetch("<?= base_url('facturas/subida') ?>", {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    });
+
+                    if (response.ok) {
+                        console.log('se subió');
+                        window.location.href = '<?php base_url('facturas') ?>';
+                    } else {
+                        console.error('Error');
+                    }
+                }else{
+                    alert('Ingresa una factura y acepta los terminos')
+                }
+            };
+
+            const checkFormatOperation = (event) => {
+                const fileInput = event.target;
+                if (fileInput.files.length > 0) {
+                    operationUploadName.value = fileInput.files[0].name; 
+                    providerUploadName.value = 'Frontier';
+                } else {
+                    operationUploadName.value = '';
+                    providerUploadName.value = '';
+                }
+            };
+
+            const uploadOperation = async () => {
+                if (selectedButton.value === 'operation') {
+                    const fileInput = document.getElementById('operationUpload');
+                    const formData = new FormData();
+                    formData.append('user', 6);
+                    formData.append('operationUpload', fileInput.files[0]);
 
                     const response = await fetch("<?= base_url('facturas/subida') ?>", {
                         method: 'POST',
@@ -509,9 +539,11 @@
 
             return {
                 invoiceUploadName,
+                operationUploadName,
                 providerUploadName,
                 selectedButton,
                 checkFormatInvoice,
+                checkFormatOperation,
                 checkboxChecked,
                 uploadFile,
                 modificarFecha,
