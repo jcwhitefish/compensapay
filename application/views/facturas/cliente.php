@@ -189,7 +189,6 @@
                                         Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
                                     </p><br>
                                 </div>
-
                             </div>
                             </div>
                             <div class="col l12 center-align">
