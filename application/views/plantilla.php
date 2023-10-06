@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
     ?>
     <nav>
-        <div class="nav nav-wrapper">
+        <div class="nav nav-wrapper navegador">
             <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
             <!-- If the user is log show the $navbar complements -->
             <?php if ($isLog) : ?>

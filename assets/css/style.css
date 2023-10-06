@@ -204,3 +204,21 @@ input[type="number"] {
 .align-items-flex-start{
     align-items: flex-start;
 }
+/* Estilos para las tablas */
+tbody tr:hover{
+    background-color: #fffeb1 !important;
+}
+thead, thead tr,thead tr th{
+    background-color: #eee;
+    border-collapse: collapse;
+    border-radius: 0!important;
+    
+}
+.currency{
+    text-align: right;
+}
+/* EStos estilos son para el navegador */
+.navegador{
+    background-color: #F7F6F6;
+}
+

@@ -118,8 +118,8 @@
         <th>Factura</th>
         <th>Nota de Débito</th>
         <th>Estatus</th>
-        <th>Monto Ingreso</th>
-        <th>Monto Egreso</th>
+        <th class="currency">Monto Ingreso</th>
+        <th class="currency">Monto Egreso</th>
       </tr>
     </thead>
     <tbody>
@@ -254,17 +254,12 @@
 
 <style>
     
-    .currency {
-      text-align: right;
-    }
     .container {
   width: 90%;
   max-width:initial;
 }
 
-tr:hover{
-    background-color: #fffeb1 !important;
-}
+
 </style>
 
 

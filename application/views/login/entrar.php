@@ -4,7 +4,6 @@
             <div class="row">
                 <div class="col l6 center-align">
                     <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
-                    <p>¿Aún no eres socio?, regístrate <a href="<?= base_url('registro/Empresa');  ?>">aquí</a></p><br>
                 </div>
                 <div class="col l6 p-5">
                     <form @submit.prevent="submitForm" method="get" action="<?= base_url('login'); ?>">
@@ -26,12 +25,16 @@
                                 <span>Guardar datos en este equipo</span>
                             </label>
                         </div>
+
                         <div class="center-align p-5">
-                            <p></p>
+                            <p> </p>
                         </div>
+
                         <div class="right-align container">
                             <button class="button-gray" type="submit">Iniciar Sesión</button>
-                            <p v-if="false" class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
+                            <p v-if="true" class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
+                            
+                            <p>¿Aún no eres socio?, regístrate <a href="<?= base_url('registro/Empresa');  ?>">aquí</a></p><br>
                         </div>
                     </form>
                 </div>

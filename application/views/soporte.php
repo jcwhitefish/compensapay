@@ -1,7 +1,7 @@
 <div class="p-5" id="app">
     <div class="row">
         <div class="col l12">
-            <p>Te sugerimos consultar las guias que hemos desarrollado y/o videos de procesos, aqui podras encontrar respuesta a las dudas y procesos mas frecuetnes.</p>
+            <p>Te sugerimos consultar las guias que hemos desarrollado y/o videos de procesos, aqui podras encontrar respuesta a las dudas y procesos mas frecuentes.</p>
             <p>Si tienes alguna otra duda o algun proceso no responde de la manera correcta, puedes enviarnos un ticket y nuestro departamento de soporte te apoyara para resolverlo</p>
 
         </div>
