@@ -72,7 +72,7 @@
                                     }
                                     ?>
                                 </td>             
-                                <td class="tabla-celda"><a href="#">Empresa 1</a></td><!--aqui deberia estar usuario -->
+                                <td class="tabla-celda"><a href="#">Frontier</a></td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                 <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
                                 <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
@@ -86,9 +86,9 @@
                                     }
                                     ?>
                                 </td>   
-                                <td class="tabla-celda">$<?= $row->o_SubTotal ?></td>
-                                <td class="tabla-celda">$<?= $row->o_Impuesto ?></td>
-                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_SubTotal); ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_Impuesto); ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_Total); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -133,8 +133,8 @@
                                 <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Fecha_Transaccion; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Monto_Ingreso; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Monto_Egreso; ?></td>
+                                <td class="tabla-celda">$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
+                                <td class="tabla-celda">$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
                                 <td class="tabla-celda">
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
@@ -241,16 +241,16 @@
                                         <?php foreach ($facturas as $row) : ?>
                                             <?php if ($row->o_Activo == 0) : ?> <!-- Verificar si o_Activo es igual a 0 -->
                                                 <tr>
-                                                    <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" require></td>
+                                                    <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
                                                     <td class="tabla-celda">Frontier</td><!-- Aquí debería estar usuario -->
                                                     <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
                                                     <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
                                                     <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
                                                     <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
                                                     <td class="tabla-celda">Pendiente</td>
-                                                    <td class="tabla-celda">$<?= $row->o_SubTotal ?></td>
-                                                    <td class="tabla-celda">$<?= $row->o_Impuesto ?></td>
-                                                    <td class="tabla-celda">$<?= $row->o_Total ?></td>
+                                                    <td class="tabla-celda">$<?= number_format($row->o_SubTotal); ?></td>
+                                                    <td class="tabla-celda">$<?= number_format($row->o_Impuesto); ?></td>
+                                                    <td class="tabla-celda">$<?= number_format($row->o_Total); ?></td>
                                                 </tr>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -401,7 +401,9 @@
                     } else {
                         console.error('Error');
                     }
-                }else{}
+                }else{
+                    alert('Ingresa una factura y acepta los terminos')
+                }
             };
 
             const modificarFecha = (fecha) =>{

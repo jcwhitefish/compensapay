@@ -105,8 +105,8 @@ class Facturas extends MY_Loggedin {
 		
 		$factura = array(
 			"Aprobacion" => "0",
-			"ID_Operacion" =>  "1111",
-			"Proveedor" => "Provedor1",
+			"ID_Operacion" =>  str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+			"Proveedor" => "Frontier",
 			"Fecha_Factura" => "2023-05-15",
 			"Fecha_Alta" => "2023-10-05",
 			"Factura" => "FAC002",

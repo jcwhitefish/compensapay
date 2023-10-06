@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 12:25 AM
+-- Generation Time: Oct 06, 2023 at 08:51 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -1792,9 +1792,9 @@ CREATE TABLE `tabla_ejemplo` (
 --
 
 INSERT INTO `tabla_ejemplo` (`ID`, `Aprobacion`, `ID_Operacion`, `Proveedor`, `Fecha_Factura`, `Fecha_Alta`, `Factura`, `Nota_Debito_Factura_Proveedor`, `Fecha_Nota_Debito_Fact_Proveedor`, `Fecha_Transaccion`, `Estatus`, `Monto_Ingreso`, `Monto_Egreso`) VALUES
-(1, 1, 1001, 'Proveedor1', '2023-01-15', '2023-01-20', 'FAC001', 'ND001', '2023-01-22', '2023-01-25', 'Aprobada', '1500.00', '0.00'),
-(2, 0, 1002, 'Proveedor2', '2023-02-10', '2023-02-12', 'FAC002', NULL, NULL, '2023-02-15', 'Pendiente', '0.00', '750.00'),
-(3, 1, 1003, 'Proveedor3', '2023-03-05', '2023-03-08', 'FAC003', 'ND002', '2023-03-10', '2023-03-12', 'Aprobada', '2000.00', '0.00');
+(1, 1, 52147483, 'Frontier', '2023-01-15', '2023-01-20', 'FAC001', 'ND001', '2023-01-22', '2023-01-25', 'Aprobada', '1500.00', '0.00'),
+(2, 0, 13234343, 'Frontier', '2023-02-10', '2023-02-12', 'FAC002', NULL, NULL, '2023-02-15', 'Pendiente', '0.00', '750.00'),
+(3, 1, 89023923, 'Frontier', '2023-03-05', '2023-03-08', 'FAC003', 'ND002', '2023-03-10', '2023-03-12', 'Aprobada', '2000.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2170,7 +2170,7 @@ ALTER TABLE `modulos`
 -- AUTO_INCREMENT for table `operacion`
 --
 ALTER TABLE `operacion`
-  MODIFY `o_idOperacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `o_idOperacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `perfil`
@@ -2212,7 +2212,7 @@ ALTER TABLE `seguimiento`
 -- AUTO_INCREMENT for table `tabla_ejemplo`
 --
 ALTER TABLE `tabla_ejemplo`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tipocontacto`
