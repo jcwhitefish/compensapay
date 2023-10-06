@@ -98,7 +98,9 @@
                     <div class="input-border col l12">
                         <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['Alias']" required>
                         <label for="bank">Banco emisor *</label>
+                        <p>Esta es la cuenta a la cual te enviaremos los fondos de las transferencias</p>
                     </div>
+                    
                 </div>
                 <div v-if="false" class="row">
 
