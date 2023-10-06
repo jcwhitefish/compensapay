@@ -217,7 +217,10 @@ thead, thead tr,thead tr th{
 .currency{
     text-align: right;
 }
-/* EStos estilos son para el navegador */
+.iconostabla{
+    text-align: center;
+}
+/* Estos estilos son para el navegador */
 .navegador{
     background-color: #F7F6F6;
 }
