@@ -63,7 +63,7 @@
                         <?php $facturas = array_reverse($facturas);
                             foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda iconosTabla">
+                                <td class="tabla-celda center-align">
                                     <?php
                                     if ($row->o_Activo == 0) {
                                         echo '<a href="#">Crear Operación</a>';
@@ -175,7 +175,7 @@
                                 <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                             </div><br>
                             <div class="col l10">
-                                <p class="text-modal" :class="{ 'text-error': selectedButton.value === 'Facturas' && !checkboxChecked }">
+                                <p class="text-modal" :style="{ color: isTextRed ? 'red' : '' }">
                                     *Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura,
                                     se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente,
                                     de acuerdo con lo estipulado en nuestros términos y condiciones
@@ -368,6 +368,7 @@
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
+            const isTextRed = Vue.computed(() => selectedButton.value === 'Facturas' && !checkboxChecked.value);
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -428,6 +429,7 @@
                 uploadFile,
                 modificarFecha,
                 selectButton,
+                isTextRed,
             };
         }
     }); 
