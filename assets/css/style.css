@@ -225,4 +225,7 @@ thead, thead tr,thead tr th{
 .navegador{
     background-color: #F7F6F6;
 }
+.small{
+ font-size: 20px!important;
+}
 

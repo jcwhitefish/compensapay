@@ -68,7 +68,7 @@
                                     if ($row->o_Activo == 0) {
                                         echo '<a href="#">Crear Operación</a>';
                                     } elseif ($row->o_Activo == 1) {
-                                        echo '<i class="tiny material-icons" style="color: green;">check_circle</i>';
+                                        echo '<i class="small material-icons" style="color: green;">check_circle</i>';
                                     }
                                     ?>
                                 </td>             
@@ -120,7 +120,7 @@
                                     if ($operacion->Aprobacion == 0) {
                                         echo '';
                                     } elseif ($operacion->Aprobacion == 1) {
-                                        echo '<i class="tiny material-icons" style="color: green;">check_circle</i>';
+                                        echo '<i class="small material-icons" style="color: green;">check_circle</i>';
                                     }
                                     ?>
                                 </td>
