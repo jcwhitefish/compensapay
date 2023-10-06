@@ -179,16 +179,18 @@
                             </div>
 
                             <div class="row">
-                                <div class="col l1 center-align p-3">
-                                    <input type="checkbox" v-model="checkboxChecked" required>
-                                </div>
-                                <div class="col l11">
+                                <div class="row">
+                                <div class="col l12 d-flex">
+                                    <div class="p-5">
+                                        <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
+                                    </div>
                                     <p class="text-modal">
                                         El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
                                         Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
                                     </p><br>
                                 </div>
 
+                            </div>
                             </div>
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #"
