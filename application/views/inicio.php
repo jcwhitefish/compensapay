@@ -83,7 +83,7 @@
 <div class="container">
     <div class="row section">
         <div class="col s8">
-            <div class="card" style="border-radius: 15px; height:450px;">
+            <div class="card" style="border-radius: 15px; height:600px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Ingresos vs. Egresos</strong></span>
                     <div>
@@ -93,7 +93,7 @@
             </div>
         </div>
         <div class="col s4">
-            <div class="card" style="border-radius: 15px; height:450px;">
+            <div class="card" style="border-radius: 15px; height:600px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Proveedores Principales</strong></span>
                     <div>
@@ -125,7 +125,7 @@
     <tbody>
       <!-- Fila 1 -->
       <tr>
-        <td>1</td>
+        <td>01864921</td>
         <td>Proveedor A (Acero)</td>
         <td>2023-09-01</td>
         <td>Factura001</td>
@@ -136,7 +136,7 @@
       </tr>
       <!-- Fila 2 -->
       <tr>
-        <td>2</td>
+        <td>1682372</td>
         <td>Proveedor B (Otro)</td>
         <td>2023-09-02</td>
         <td>Factura002</td>
@@ -152,7 +152,7 @@
 
       <!-- Fila 3 -->
       <tr>
-        <td>3</td>
+        <td>4656836484</td>
         <td>Proveedor C (Acero)</td>
         <td>2023-09-03</td>
         <td>Factura003</td>
@@ -164,7 +164,7 @@
 
       <!-- Fila 4 -->
       <tr>
-        <td>4</td>
+        <td>45647527</td>
         <td>Proveedor D (Otro)</td>
         <td>2023-09-04</td>
         <td>Factura004</td>
@@ -176,7 +176,7 @@
 
       <!-- Fila 5 -->
       <tr>
-        <td>5</td>
+        <td>54867915</td>
         <td>Proveedor E (Acero)</td>
         <td>2023-09-05</td>
         <td>Factura005</td>
@@ -188,7 +188,7 @@
 
       <!-- Fila 6 -->
       <tr>
-        <td>6</td>
+        <td>48967913</td>
         <td>Proveedor F (Otro)</td>
         <td>2023-09-06</td>
         <td>Factura006</td>
@@ -200,7 +200,7 @@
 
       <!-- Fila 7 -->
       <tr>
-        <td>7</td>
+        <td>718734861</td>
         <td>Proveedor G (Acero)</td>
         <td>2023-09-07</td>
         <td>Factura007</td>
@@ -212,7 +212,7 @@
 
       <!-- Fila 8 -->
       <tr>
-        <td>8</td>
+        <td>1568368</td>
         <td>Proveedor H (Otro)</td>
         <td>2023-09-08</td>
         <td>Factura008</td>
@@ -224,7 +224,7 @@
 
       <!-- Fila 9 -->
       <tr>
-        <td>9</td>
+        <td>91837213</td>
         <td>Proveedor I (Acero)</td>
         <td>2023-09-09</td>
         <td>Factura009</td>
@@ -236,7 +236,7 @@
 
       <!-- Fila 10 -->
       <tr>
-        <td>10</td>
+        <td>14837690</td>
         <td>Proveedor J (Otro)</td>
         <td>2023-09-10</td>
         <td>Factura010</td>
