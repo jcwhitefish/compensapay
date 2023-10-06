@@ -6,7 +6,7 @@
 
         </div>
         <div class="col l12">
-            <h5><i class="material-icons iconoSetting">help_outline</i> FAQs</h5>
+            <h5><i class="material-icons iconoSetting">help_outline</i> Preguntas Frecuentes</h5>
         </div>
         <div class="col l12">
             <ul class="collapsible">
