@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th class="tabla-celda">Seleccionar</th>
@@ -67,7 +67,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
                             <th class="tabla-celda">Seleccionar</th>
@@ -95,7 +95,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Cuenta'" class="visible-table">       
+                <table v-if="selectedButton === 'Cuenta'" class="visible-table striped">       
                     <thead>
                         <th class="tabla-celda">Seleccionar</th>
                         <th class="tabla-celda">Mes</th>

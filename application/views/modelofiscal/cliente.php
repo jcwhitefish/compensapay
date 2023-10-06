@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th class="tabla-celda">Seleccionar</th>
@@ -52,9 +52,9 @@
                                 <td class="tabla-celda"><input type="checkbox"></td>
                                 <td class="tabla-celda"><a href="#modal-unica-operacion">Frontier</a></td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><a href="#modal-unica-operacion"><?= $row->o_NumOperacion ?></a></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
+                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
+                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
+                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
                                 <td class="tabla-celda">Cargada</td>
                                 <td class="tabla-celda">$<?= $row->o_SubTotal ?></td>
                                 <td class="tabla-celda">$<?= $row->o_Impuesto ?></td>
@@ -63,7 +63,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
                             <th class="tabla-celda">Seleccionar</th>
@@ -83,7 +83,7 @@
                                 <td class="tabla-celda">BBVA</td><!--aqui deberia estar usuario -->
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
                                 <td class="tabla-celda">REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
+                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
                                 <td class="tabla-celda">Banregio</td>
                                 <td class="tabla-celda">$<?= $row->o_Total ?></td>
                                 <td class="tabla-celda"><?= $row->o_NumOperacion ?></td>
@@ -192,6 +192,14 @@
                 }
             };
 
+            const modificarFecha = (fecha) =>{
+                    fecha = fecha.split(' ');
+
+                    fecha[1] = '';
+                    fecha = fecha.join(' ');
+                    return fecha;
+                };
+
             const downloadFile = () => {
                 // Simulamos la descarga de un archivo de prueba
                 const archivoPrueba = "Este es el contenido del archivo de prueba.";
@@ -220,6 +228,7 @@
                 selectedButton,
                 checkFormatInvoice,
                 selectButton,
+                modificarFecha,
                 downloadFile,
             };
         },

@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th class="tabla-celda">RFC</th>
@@ -147,7 +147,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                 <thead>
                         <tr>
                             <th class="tabla-celda">RFC</th>

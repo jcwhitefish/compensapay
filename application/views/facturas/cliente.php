@@ -1,13 +1,15 @@
 
 <div class="p-5" id="app">
+
+
     <div class="row">
         <p class="px-3">Periodo:</p>
         <div class="col l3">
-            <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+            <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
             <label for="start">Inicio:</label>
         </div>
         <div class="col l3">
-            <input type="date" id="fin" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+            <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
             <label for="fin">Fin:</label>
         </div>
         <div class="col l6 right-align p-5">
@@ -41,7 +43,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th class="tabla-celda">Crear Operación</th>
@@ -61,7 +63,7 @@
                         <?php $facturas = array_reverse($facturas);
                             foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda">
+                                <td class="tabla-celda iconosTabla">
                                     <?php
                                     if ($row->o_Activo == 0) {
                                         echo '<a href="#">Crear Operación</a>';
@@ -91,7 +93,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
                             <th class="tabla-celda">Aprobacion</th>
@@ -113,7 +115,7 @@
                         <?php $operaciones = array_reverse($operaciones);
                             foreach ($operaciones as $operacion) : ?>
                             <tr>
-                                <td class="tabla-celda">
+                                <td class="tabla-celda center-align">
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
                                         echo '';
@@ -123,12 +125,12 @@
                                     ?>
                                 </td>
                                 <td class="tabla-celda"><?php echo $operacion->ID_Operacion; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Proveedor; ?></td>
+                                <td class="tabla-celda"><a><?php echo $operacion->Proveedor; ?></a></td>
                                 <td class="tabla-celda"><?php echo $operacion->Fecha_Factura; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Fecha_Alta; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Factura; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Nota_Debito_Fact_Proveedor; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
+                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Fecha_Transaccion; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
                                 <td class="tabla-celda"><?php echo $operacion->Monto_Ingreso; ?></td>
@@ -172,17 +174,22 @@
                                 <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
                                 <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                             </div><br>
+                            <div class="col l10">
+                                <p class="text-modal" :class="{ 'text-error': selectedButton.value === 'Facturas' && !checkboxChecked }">
+                                    *Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura,
+                                    se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente,
+                                    de acuerdo con lo estipulado en nuestros términos y condiciones
+                                </p><br>
+                            </div>
+                            <div class="col l2 center-align">
+                                <input type="checkbox" v-model="checkboxChecked" required>
+                            </div>
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #"
                                 >Cancelar</a
                                 >
                                 &nbsp;
-                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button><br /><br />
-                                <p class="text-modal">
-                                *Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura,
-                                se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente,
-                                de acuerdo con lo estipulado en nuestros términos y condiciones
-                                </p>
+                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -215,7 +222,7 @@
                                 <label for="providerDisabled">Proveedor</label>
                             </div>
                             <div>
-                                <table>
+                                <table class="striped">
                                     <thead>
                                         <tr>
                                             <th class="tabla-celda">Crear Operación</th>
@@ -230,11 +237,11 @@
                                             <th class="tabla-celda">Total</th>
                                         </tr>
                                     </thead>
-                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table">
+                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
                                         <?php foreach ($facturas as $row) : ?>
                                             <?php if ($row->o_Activo == 0) : ?> <!-- Verificar si o_Activo es igual a 0 -->
                                                 <tr>
-                                                    <td class="tabla-celda"><input type="radio" name="grupo" value="opcion1"></td>
+                                                    <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" require></td>
                                                     <td class="tabla-celda">Frontier</td><!-- Aquí debería estar usuario -->
                                                     <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
                                                     <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
@@ -304,7 +311,6 @@
         min-width: 100px;
         max-width: 150px; 
         padding: 5px; 
-        text-align: center; 
         font-size: 13px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -347,6 +353,10 @@
         pointer-events: auto;
     }
 
+    .text-error {
+        color: red;
+    }
+
     
    
 </style>
@@ -357,6 +367,7 @@
             const invoiceUploadName = Vue.ref('');
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
+            const checkboxChecked = Vue.ref(false);
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -371,28 +382,25 @@
 
 
             const uploadFile = async () => {
-                if (selectedButton.value === 'Facturas') {
-                    
+                if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
                     const fileInput = document.getElementById('invoiceUpload');
                     const formData = new FormData();
                     formData.append('user', 6);
                     formData.append('invoiceUpload', fileInput.files[0]);
 
-                 
-                        const response = await fetch("<?= base_url('facturas/subida') ?>", {
-                            method: 'POST',
-                            body: formData,
-                            redirect: 'follow'
-                        });
+                    const response = await fetch("<?= base_url('facturas/subida') ?>", {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    });
 
-                        if (response.ok) {
-                            console.log('se subio');
-                            window.location.href = '<?php base_url('facturas') ?>';
-                        } else {
-                            console.error('Error');
-                        }
-
-                }
+                    if (response.ok) {
+                        console.log('se subió');
+                        window.location.href = '<?php base_url('facturas') ?>';
+                    } else {
+                        console.error('Error');
+                    }
+                }else{}
             };
 
             const modificarFecha = (fecha) =>{
@@ -401,7 +409,7 @@
                     fecha[1] = '';
                     fecha = fecha.join(' ');
                     return fecha;
-                }
+                };
 
             const selectButton = (buttonName) => {
                 if (selectedButton.value == buttonName) {
@@ -416,6 +424,7 @@
                 providerUploadName,
                 selectedButton,
                 checkFormatInvoice,
+                checkboxChecked,
                 uploadFile,
                 modificarFecha,
                 selectButton,

@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table">
+                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th class="tabla-celda">Crear Operación</th>
@@ -91,7 +91,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
                             <th class="tabla-celda">Aprobacion</th>
@@ -216,7 +216,7 @@
                                 <label for="providerDisabled">Proveedor</label>
                             </div>
                             <div>
-                                <table>
+                                <table class="striped">
                                     <thead>
                                         <tr>
                                             <th class="tabla-celda">Crear Operación</th>
@@ -231,7 +231,7 @@
                                             <th class="tabla-celda">Total</th>
                                         </tr>
                                     </thead>
-                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table">
+                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
                                         <?php foreach ($facturas as $row) : ?>
                                             <?php if ($row->o_Activo == 0) : ?> <!-- Verificar si o_Activo es igual a 0 -->
                                                 <tr>
