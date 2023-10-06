@@ -31,7 +31,7 @@
             <!-- <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div> -->
         </li>
     </ul>
-    <h5><i class="material-icons iconoSetting">import_contacts</i> FAQs</h5>
+    <h5><i class="material-icons iconoSetting">import_contacts</i> Bitacora de Usuario</h5>
     <ul class="collapsible">
         <li>
             <div class="collapsible-header"><i class="material-icons">manage_accounts</i>Actualización de estado: Jose a cambiado su estado.<span style="position:absolute;right:30px;">23 / 09 / 2023</span></div>
