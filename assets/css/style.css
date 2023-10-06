@@ -131,7 +131,7 @@ input[type="number"] {
     padding-right: 7%!important;
 }
 .nav a{
-    color: #666 !important;
+    color: blue !important;
     font-size: large;  
 }
 
@@ -187,6 +187,12 @@ input[type="number"] {
 .custom-image{
     max-width: 100%; 
     max-height: 100%; 
+    width: auto; 
+    height: auto;
+}
+.custom-logo{
+    max-width: 85%; 
+    max-height: 85%; 
     width: auto; 
     height: auto;
 }

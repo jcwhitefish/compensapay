@@ -54,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
                     </select>
                 </div>
-                <img src="<?= base_url('assets/images/mark-zuckerberg-bio.png'); ?>" alt="Logo" class="custom-image hide-on-med-and-down">
+                <img src="<?= base_url('assets/images/mark-zuckerberg-bio.png'); ?>" alt="Logo" class="custom-logo hide-on-med-and-down">
             <?php endif; ?>
         </div>
     </nav>
@@ -65,9 +65,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <hr class="line-side">
             <ul>
                 <ul class="icon-list">
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications_none</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'modelofiscal', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">import_export</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">swap_horiz</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
                     <!-- <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?> -->
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'modelofiscal')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
@@ -196,7 +196,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         margin: 0 !important;
         padding: 5px !important;
         margin-top: -45px !important;
-        text-decoration: underline;
     }
 
     .nav-image {

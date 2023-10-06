@@ -115,7 +115,7 @@
             <div class="col l3 center-align">
                 <div class="container">
                     <h5 class="card-title">Seleccionar logotipo</h5>
-                    <img :src="imageUploadURL" alt="" style="max-width: 140px; height: 140px;"><br>
+                    <img :src="imageUploadURL" alt="" style="max-width: 140px; max-height: 140px;"><br>
                     <label for="imageUpload" class="custom-file-upload p-5">
                         Seleccionar Imagen
                     </label>
