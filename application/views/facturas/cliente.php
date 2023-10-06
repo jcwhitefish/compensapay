@@ -160,29 +160,35 @@
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col l9 input-border">
-                                <input
-                                type="text"
-                                name="invoiceDisabled"
-                                id="invoiceDisabled"
-                                disabled
-                                v-model="invoiceUploadName"
-                                />
-                                <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
+
+                            <div class="row">
+                                <div class="col l9 input-border">
+                                    <input
+                                    type="text"
+                                    name="invoiceDisabled"
+                                    id="invoiceDisabled"
+                                    disabled
+                                    v-model="invoiceUploadName"
+                                    />
+                                    <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
+                                </div>
+                                <div class="col l3 center-align p-5">
+                                    <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                    <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
+                                </div>
                             </div>
-                            <div class="col l3 center-align p-5">
-                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
-                            </div><br>
-                            <div class="col l10">
-                                <p class="text-modal" :style="{ color: isTextRed ? 'red' : '' }">
-                                    *Al dar clic en "crear operación", el proveedor acepta que al concluir la transacción por el pago de la factura,
-                                    se descontará y enviará al cliente de forma automática el monto de la nota de débito o factura del cliente,
-                                    de acuerdo con lo estipulado en nuestros términos y condiciones
-                                </p><br>
-                            </div>
-                            <div class="col l2 center-align">
-                                <input type="checkbox" v-model="checkboxChecked" required>
+
+                            <div class="row">
+                                <div class="col l2 center-align p-3">
+                                    <input type="checkbox" v-model="checkboxChecked" required>
+                                </div>
+                                <div class="col l10">
+                                    <p class="text-modal">
+                                        El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
+                                        Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
+                                    </p><br>
+                                </div>
+
                             </div>
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #"
@@ -434,11 +440,6 @@
         position: relative;
         pointer-events: auto;
     }
-
-    .text-error {
-        color: red;
-    }
-
     
    
 </style>
@@ -451,7 +452,6 @@
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
-            const isTextRed = Vue.computed(() => selectedButton.value === 'Facturas' && !checkboxChecked.value);
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -482,7 +482,7 @@
                         console.error('Error');
                     }
                 }else{
-                    alert('Ingresa una factura y acepta los terminos')
+                    alert('Ingresa una factura y acepta los terminos');
                 }
             };
 
@@ -548,7 +548,6 @@
                 uploadFile,
                 modificarFecha,
                 selectButton,
-                isTextRed,
             };
         }
     }); 
