@@ -56,9 +56,9 @@
                                 <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
                                 <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
                                 <td class="tabla-celda">Cargada</td>
-                                <td class="tabla-celda">$<?= $row->o_SubTotal ?></td>
-                                <td class="tabla-celda">$<?= $row->o_Impuesto ?></td>
-                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_SubTotal,2) ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_Impuesto,2) ?></td>
+                                <td class="tabla-celda">$<?= number_format($row->o_Total,2) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
