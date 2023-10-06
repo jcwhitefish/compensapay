@@ -261,7 +261,11 @@
   width: 90%;
   max-width:initial;
 }
-  </style>
+
+tr:hover{
+    background-color: #fffeb1 !important;
+}
+</style>
 
 
 
