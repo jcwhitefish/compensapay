@@ -66,7 +66,7 @@
                                 <td class="tabla-celda center-align">
                                     <?php
                                     if ($row->o_Activo == 0) {
-                                        echo '<a href="#">Crear Operación</a>';
+                                        echo '<a class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>';
                                     } elseif ($row->o_Activo == 1) {
                                         echo '<i class="small material-icons" style="color: green;">check_circle</i>';
                                     }
@@ -271,7 +271,92 @@
             </div>
         </div>
     </div>
+
+
+
+    <div id="modal-operacion-unico" class="modal">
+        <div class="modal-content">
+            <h5>Crear Operación</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <h6 class="p-3">Carga tu nota de debito y selecciona una factura del proveedor</h6>
+                    <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col l3 input-border">
+                                <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName">
+                                <label for="invoiceDisabled">Tu Nota de debito en XML</label>
+                            </div>
+                            <div class="col l4 left-align p-5">
+                                <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" />
+                            </div>
+                            <div class="col l5 input-border select-white">
+                                <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
+                                <label for="providerDisabled">Cliente</label>
+                            </div>
+                            <div>
+                                <table class="striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="tabla-celda">Crear Operación</th>
+                                            <th class="tabla-celda">Proveedor</th>
+                                            <th class="tabla-celda">Factura</th>
+                                            <th class="tabla-celda">Fecha Factura</th>
+                                            <th class="tabla-celda">Fecha Alta</th>
+                                            <th class="tabla-celda">Fecha Transacción</th>
+                                            <th class="tabla-celda">Estatus</th>
+                                            <th class="tabla-celda">Subtotal</th>
+                                            <th class="tabla-celda">IVA</th>
+                                            <th class="tabla-celda">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
+                                    <?php
+                                        $primerRegistro = null; // Inicializa una variable para almacenar el primer registro que cumple la condición
+
+                                        foreach ($facturas as $row) {
+                                            if ($row->o_Activo == 0) {
+                                                $primerRegistro = $row; // Almacena el primer registro que cumple la condición
+                                                break; // Sale del bucle después de encontrar el primer registro
+                                            }
+                                        }
+                                        ?>
+
+                                        <?php if ($primerRegistro !== null) : ?> <!-- Verifica si se encontró un primer registro -->
+                                            <tr>
+                                                <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
+                                                <td class="tabla-celda">Frontier</td><!-- Aquí debería estar usuario -->
+                                                <td class="tabla-celda"><?= $primerRegistro->o_NumOperacion ?></td><!-- Aquí debería estar row -->
+                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
+                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaUpload ?></td>
+                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaEmision ?></td>
+                                                <td class="tabla-celda">Pendiente</td>
+                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_SubTotal); ?></td>
+                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_Impuesto); ?></td>
+                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_Total); ?></td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div><br>
+                            <div class="col l8">
+                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                            </div>
+                            <div class="col l4 center-align">
+                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                &nbsp;
+                                <button class="button-blue" type="submit" name="action">Siguiente</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     
+
+
+
 </div>
 <style>
     .text-modal{
