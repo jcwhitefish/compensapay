@@ -215,12 +215,6 @@ thead, thead tr,thead tr th{
     color: white;
     
 }
-.currency{
-    text-align: right;
-}
-.iconosTabla{
-    text-align: center;
-}
 /* Estos estilos son para el navegador */
 .navegador{
     background-color: #F7F6F6;

@@ -83,7 +83,7 @@
 <div class="container">
     <div class="row section">
         <div class="col s8">
-            <div class="card" style="border-radius: 15px;">
+            <div class="card" style="border-radius: 15px; height:450px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Ingresos vs. Egresos</strong></span>
                     <div>
@@ -93,7 +93,7 @@
             </div>
         </div>
         <div class="col s4">
-            <div class="card" style="border-radius: 15px;">
+            <div class="card" style="border-radius: 15px; height:450px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Proveedores Principales</strong></span>
                     <div>
@@ -118,8 +118,8 @@
         <th>Factura</th>
         <th>Nota de Débito</th>
         <th>Estatus</th>
-        <th class="currency">Monto Ingreso</th>
-        <th class="currency">Monto Egreso</th>
+        <th class="right-align">Monto Ingreso</th>
+        <th class="right-align">Monto Egreso</th>
       </tr>
     </thead>
     <tbody>
@@ -131,8 +131,8 @@
         <td>Factura001</td>
         <td>Debito001</td>
         <td>Aprobado</td>
-        <td class="currency"> $1,500.50</td>
-        <td class="currency"> $1,200.25</td>
+        <td class="right-align"> $1,500.50</td>
+        <td class="right-align"> $1,200.25</td>
       </tr>
       <!-- Fila 2 -->
       <tr>
@@ -142,8 +142,8 @@
         <td>Factura002</td>
         <td>Debito002</td>
         <td>Pendiente</td>
-        <td class="currency"> $800.75</td>
-        <td class="currency"> $500.25</td>
+        <td class="right-align"> $800.75</td>
+        <td class="right-align"> $500.25</td>
       </tr>
       <!-- Filas 3 a 10 (datos aleatorios) -->
       <!-- Puedes generar datos aleatorios con un lenguaje de programación como Python o JavaScript -->
@@ -158,8 +158,8 @@
         <td>Factura003</td>
         <td>Debito003</td>
         <td>Aprobado</td>
-        <td class="currency"> $2,300.25</td>
-        <td class="currency"> $1,800.50</td>
+        <td class="right-align"> $2,300.25</td>
+        <td class="right-align"> $1,800.50</td>
       </tr>
 
       <!-- Fila 4 -->
@@ -170,8 +170,8 @@
         <td>Factura004</td>
         <td>Debito004</td>
         <td>Pendiente</td>
-        <td class="currency"> $1,200.50</td>
-        <td class="currency"> $900.75</td>
+        <td class="right-align"> $1,200.50</td>
+        <td class="right-align"> $900.75</td>
       </tr>
 
       <!-- Fila 5 -->
@@ -182,8 +182,8 @@
         <td>Factura005</td>
         <td>Debito005</td>
         <td>Aprobado</td>
-        <td class="currency"> $900.25</td>
-        <td class="currency"> $600.50</td>
+        <td class="right-align"> $900.25</td>
+        <td class="right-align"> $600.50</td>
       </tr>
 
       <!-- Fila 6 -->
@@ -194,8 +194,8 @@
         <td>Factura006</td>
         <td>Debito006</td>
         <td>Pendiente</td>
-        <td class="currency"> $1,600.75</td>
-        <td class="currency"> $1,200.25</td>
+        <td class="right-align"> $1,600.75</td>
+        <td class="right-align"> $1,200.25</td>
       </tr>
 
       <!-- Fila 7 -->
@@ -206,8 +206,8 @@
         <td>Factura007</td>
         <td>Debito007</td>
         <td>Aprobado</td>
-        <td class="currency"> $2,100.50</td>
-        <td class="currency"> $1,600.75</td>
+        <td class="right-align"> $2,100.50</td>
+        <td class="right-align"> $1,600.75</td>
       </tr>
 
       <!-- Fila 8 -->
@@ -218,8 +218,8 @@
         <td>Factura008</td>
         <td>Debito008</td>
         <td>Pendiente</td>
-        <td class="currency"> $700.25</td>
-        <td class="currency"> $400.50</td>
+        <td class="right-align"> $700.25</td>
+        <td class="right-align"> $400.50</td>
       </tr>
 
       <!-- Fila 9 -->
@@ -230,8 +230,8 @@
         <td>Factura009</td>
         <td>Debito009</td>
         <td>Aprobado</td>
-        <td class="currency"> $1,400.50</td>
-        <td class="currency"> $1,100.75</td>
+        <td class="right-align"> $1,400.50</td>
+        <td class="right-align"> $1,100.75</td>
       </tr>
 
       <!-- Fila 10 -->
@@ -242,8 +242,8 @@
         <td>Factura010</td>
         <td>Debito010</td>
         <td>Pendiente</td>
-        <td class="currency"> $1,900.75</td>
-        <td class="currency"> $1,400.25</td>
+        <td class="right-align"> $1,900.75</td>
+        <td class="right-align"> $1,400.25</td>
       </tr>
 
     </tbody>
