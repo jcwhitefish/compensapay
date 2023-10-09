@@ -112,38 +112,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $operaciones = array_reverse($operaciones);
-                            foreach ($operaciones as $operacion) : ?>
-                            <tr>
-                                <td class="tabla-celda center-align">
-                                    <?php
-                                    if ($operacion->Aprobacion == 0) {
-                                        echo '';
-                                    } elseif ($operacion->Aprobacion == 1) {
-                                        echo '<i class="small material-icons" style="color: green;">check_circle</i>';
-                                    }
-                                    ?>
-                                </td>
-                                <td ><?php echo $operacion->ID_Operacion; ?></td>
-                                <td ><a><?php echo $operacion->Proveedor; ?></a></td>
-                                <td ><?php echo $operacion->Fecha_Factura; ?></td>
-                                <td ><?php echo $operacion->Fecha_Alta; ?></td>
-                                <td ><?php echo $operacion->Factura; ?></td>
-                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td ><?php echo $operacion->Fecha_Transaccion; ?></td>
-                                <td ><?php echo $operacion->Estatus; ?></td>
-                                <td >$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
-                                <td >$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
-                                <!-- <td >
-                                    <?php
-                                    if ($operacion->Aprobacion == 0) {
-                                        echo '<a href="#modal-unica-operacion">Adelantar pago</a>';
-                                    }
-                                    ?>
-                                </td> -->
-                            </tr>
-                        <?php endforeach; ?>
+                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
+                            <td class="tabla-celda center-align">
+                                <i v-if="operacion.Aprobacion == 1"  class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="operacion.Aprobacion == 0">Cargar Factura</a>
+                            </td>
+                            <td>{{ operacion.ID_Operacion }}</td>
+                            <td>{{ operacion.Proveedor }}</td>
+                            <td>{{ operacion.Fecha_Factura }}</td>
+                            <td>{{ operacion.Fecha_Alta }}</td>
+                            <td>{{ operacion.Factura }}</td>
+                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
+                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
+                            <td>{{ operacion.Fecha_Transaccion }}</td>
+                            <td>{{ operacion.Estatus }}</td>
+                            <td>$ {{ operacion.Monto_Ingreso }}</td>
+                            <td>$ {{ operacion.Monto_Egreso }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -413,6 +398,7 @@
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
+            const operaciones = Vue.ref([]);
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -482,6 +468,18 @@
                 }
             };
 
+            const getOperations = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaOperaciones")?>", requestOptions)
+                .then(response => response.json())
+                .then(result => { operaciones.value = result.operaciones; console.log(operaciones.value);})
+                .catch(error => console.log('error', error));
+            };
+
             const modificarFecha = (fecha) =>{
                     fecha = fecha.split(' ');
 
@@ -498,6 +496,12 @@
                 }
             };
 
+            Vue.onMounted (
+                () => {
+                    getOperations();
+                }
+            )
+
             return {
                 invoiceUploadName,
                 operationUploadName,
@@ -509,6 +513,7 @@
                 uploadFile,
                 modificarFecha,
                 selectButton,
+                operaciones,
             };
         }
     }); 

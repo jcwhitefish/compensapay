@@ -107,13 +107,14 @@
                             <th >Estatus</th>
                             <th >Monto Ingreso</th>
                             <th >Monto Egreso</th>
-                            <th >Adelanta tu pago</th>
+                            <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
-                                <i v-if="operacion.Aprobacion === 1" class="small material-icons" style="color: green;">check_circle</i>
+                                <i v-if="operacion.Aprobacion == 1"  class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="operacion.Aprobacion == 0">Cargar Factura</a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
                             <td>{{ operacion.Proveedor }}</td>
@@ -126,9 +127,6 @@
                             <td>{{ operacion.Estatus }}</td>
                             <td>$ {{ operacion.Monto_Ingreso }}</td>
                             <td>$ {{ operacion.Monto_Egreso }}</td>
-                            <td>
-                                <a v-if="operacion.Aprobacion === 0" href="#modal-unica-operacion">Adelantar pago</a>
-                            </td>
                         </tr>
                         <!-- <?php $operaciones = array_reverse($operaciones);
                             foreach ($operaciones as $operacion) : ?>
