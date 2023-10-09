@@ -101,7 +101,7 @@
                         <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Aprobar</a>
+                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Autorizar</a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
                             <td>{{ operacion.Proveedor }}</td>
@@ -146,12 +146,11 @@
                             <div class="row">
                                 <div class="row">
                                     <div class="col l12 d-flex">
-                                        <div class="p-5">
+                                        <div class="p-3">
                                             <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
                                         </div>
                                         <p class="text-modal">
-                                            El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
-                                            Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
+                                            Al momento en dar click en “Aceptar” el Cliente acuerda que la factura en cuestión será utilizada para efectos de las operaciones en la Plataforma conforme a los <a href="terminosycondiciones">Términos y Condiciones</a>.
                                         </p><br>
                                     </div>
                                 </div>
@@ -175,7 +174,7 @@
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor</h6>
+                    <h6 class="p-3">Carga tu nota de debito relacionada a una factura</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
@@ -240,7 +239,6 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
         <div class="modal-content" v-if='solicitud == 1'>
@@ -260,8 +258,6 @@
                                 <button class="button-blue" type="submit">Solicitar</button>
                             </div>
                         </div>
-
-
                     </div>
                 </form>
             </div>
@@ -296,13 +292,13 @@
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
-                                <input type="text" placeholder="92387278.xml">
+                                <input type="text" placeholder="92387278.xml" disabled>
                                 <label for="invoiceDisabled">Tu factura XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                             </div>
                             <div class="col l5 input-border select-white">
-                                <input type="text" placeholder="Frontier">
+                                <input type="text" placeholder="Frontier" disabled>
                                 <label for="providerDisabled">Proveedor</label>
                             </div>
                             <div>
@@ -322,25 +318,24 @@
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
-                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
-                                            <td class="tabla-celda center-align">
-                                                <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;"><input type="radio"></i>
-                                                <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
-                                            </td>
-                                            <td><a href="#">Frontier</a></td>
-                                            <td>{{facturas[0].o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>
-                                                <p v-if="facturas[0].o_Activo == 1">Pendiente</p>
-                                                <p v-if="facturas[0].o_Activo == 0">Cargada</p>
-                                            </td>
-                                            <td>${{facturas[0].o_SubTotal}}</td>
-                                            <td>${{facturas[0].o_Impuesto}}</td>
-                                            <td>${{facturas[0].o_Total}}</td>
+                                        <tr v-for="factura in facturas" :key="factura.o_idPersona">
+                                            <template v-if="factura.o_Activo == 1">
+                                                <td class="tabla-celda center-align">
+                                                    <input type="radio" id="1" name="1" value="1" required></i>
+                                                </td>
+                                                <td><a href="#">Frontier</a></td>
+                                                <td>{{factura.o_NumOperacion}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                                <td>
+                                                    <p>Pendiente</p>
+                                                </td>
+                                                <td>${{factura.o_SubTotal}}</td>
+                                                <td>${{factura.o_Impuesto}}</td>
+                                                <td>${{factura.o_Total}}</td>
+                                            </template>
                                         </tr>
-                                          
                                     </tbody>
                                 </table>
                             </div><br>
@@ -350,7 +345,7 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button onclick="M.toast({html: 'Se ha subido la factura'})" class="button-blue modal-close" type="submit" name="action">Siguiente</button>
+                                <button class="button-blue" type="submit" name="action">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -407,7 +402,7 @@
                                     <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
                                     <label for="start">Inicio:</label>
                                 </div>
-                                <div class="col l4 input-border P-5">
+                                <div class="col l4 input-border p-1">
                                     <input type="text" placeholder="123456789098745612" disabled />
                                     <label for="invoiceDisabled">Cuenta CLABE del proveedor</label>
                                 </div>
@@ -419,7 +414,7 @@
                                 <div class="col l4 center-align">
                                     <a onclick="M.toast({html: 'Se rechazo'})" class="button-white modal-close">Rechazar</a>
                                     &nbsp;
-                                    <button onclick="M.toast({html: 'Se ha autorizado'})" class="button-blue modal-close">Siguiente</button>
+                                    <button onclick="alert('Se autorizo la operacion con exito')" class="button-blue modal-close">Autorizar</button>
                                 </div>
                             </div>
                         </div>
