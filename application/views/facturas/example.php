@@ -11,16 +11,7 @@
             <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
             <label for="fin">Fin:</label>
         </div>
-        <div class="col l3">
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
-                        Clientes
-                    </button>
-                    &nbsp;
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
-                        Provedores
-                    </button>
-                </div>
-        <div class="col l3">
+        <div class="col l6 right-align p-5">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
                 Añadir Facturas
             </a>
@@ -184,7 +175,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu nota de debito relacionada a una factura</h6>
-                    <form @submit.prevent="cambiarSolicitud('validador')" method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
+                    <form @submit.prevent="cambiarSolicitud(4)" method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -612,17 +603,11 @@
             )
             const cambiarSolicitud = (valor) => {
                 
-                if (valor == 'recarga' ) {
-                        solicitud.value = 0;
-                        window.location.replace('<?php echo base_url("facturas/carga"); ?>');
+                if (valor == 'recarga') {
+                    solicitud.value = 0;
+                    window.location.replace('<?php echo base_url("facturas/carga"); ?>');
 
-
-                }else if(valor == 'validador'){
-                    if (operationUploadName.value != '') {
-                        solicitud.value = 4;
-                    }
-                }
-                else {
+                }else{
                     solicitud.value = valor;
                 }
                 // console.log(solicitud);
