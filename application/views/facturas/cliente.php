@@ -111,7 +111,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operations" :key="operacion.ID_Operacion">
+                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion === 1" class="small material-icons" style="color: green;">check_circle</i>
                             </td>
@@ -429,7 +429,7 @@
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
             const operaciones = Vue.ref([]); 
-
+            
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
@@ -463,18 +463,16 @@
                 }
             };
 
-            const getOperations = async () => {
-                try {
-                    const response = await fetch('facturas/tablaOperaciones');
-                    if (!response.ok) {
-                    throw new Error('Error al obtener los datos');
-                    }
-                    const data = await response.json();
-                    return data.operaciones;
-                } catch (error) {
-                    console.error('Error al obtener los datos', error);
-                    return []; 
-                }
+            const getOperations = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaOperaciones")?>", requestOptions)
+                .then(response => response.json())
+                .then(result => { operaciones.value = result.operaciones; console.log(operaciones.value);})
+                .catch(error => console.log('error', error));
             };
 
             const checkFormatOperation = (event) => {
@@ -527,10 +525,12 @@
                     selectedButton.value = buttonName;
                 }
             };
+            Vue.onMounted (
+                () => {
+                    getOperations();
+                }
+            )
 
-            getOperations().then((data) => {
-                operaciones.value = data; // Asigna los datos a la propiedad operaciones de tu aplicación Vue
-            });
 
             return {
                 invoiceUploadName,

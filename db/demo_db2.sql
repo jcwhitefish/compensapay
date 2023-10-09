@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 08:51 PM
+-- Generation Time: Oct 09, 2023 at 06:24 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -1773,6 +1773,7 @@ INSERT INTO `seguimiento` (`s_idSeguimiento`, `s_idOperacion`, `s_FechaSeguimien
 
 CREATE TABLE `tabla_ejemplo` (
   `ID` int(11) NOT NULL,
+  `ID_Persona` int(11) NOT NULL,
   `Aprobacion` int(11) DEFAULT NULL,
   `ID_Operacion` int(11) DEFAULT NULL,
   `Proveedor` varchar(255) DEFAULT NULL,
@@ -1791,10 +1792,11 @@ CREATE TABLE `tabla_ejemplo` (
 -- Dumping data for table `tabla_ejemplo`
 --
 
-INSERT INTO `tabla_ejemplo` (`ID`, `Aprobacion`, `ID_Operacion`, `Proveedor`, `Fecha_Factura`, `Fecha_Alta`, `Factura`, `Nota_Debito_Factura_Proveedor`, `Fecha_Nota_Debito_Fact_Proveedor`, `Fecha_Transaccion`, `Estatus`, `Monto_Ingreso`, `Monto_Egreso`) VALUES
-(1, 1, 52147483, 'Frontier', '2023-01-15', '2023-01-20', 'FAC001', 'ND001', '2023-01-22', '2023-01-25', 'Aprobada', '1500.00', '0.00'),
-(2, 0, 13234343, 'Frontier', '2023-02-10', '2023-02-12', 'FAC002', NULL, NULL, '2023-02-15', 'Pendiente', '0.00', '750.00'),
-(3, 1, 89023923, 'Frontier', '2023-03-05', '2023-03-08', 'FAC003', 'ND002', '2023-03-10', '2023-03-12', 'Aprobada', '2000.00', '0.00');
+INSERT INTO `tabla_ejemplo` (`ID`, `ID_Persona`, `Aprobacion`, `ID_Operacion`, `Proveedor`, `Fecha_Factura`, `Fecha_Alta`, `Factura`, `Nota_Debito_Factura_Proveedor`, `Fecha_Nota_Debito_Fact_Proveedor`, `Fecha_Transaccion`, `Estatus`, `Monto_Ingreso`, `Monto_Egreso`) VALUES
+(1, 6, 1, 52147483, 'Frontier', '2023-01-15', '2023-01-20', 'FAC001', 'ND001', '2023-01-22', '2023-01-25', 'Aprobada', '1500.00', '0.00'),
+(2, 6, 0, 13234343, 'Frontier', '2023-02-10', '2023-02-12', 'FAC002', NULL, NULL, '2023-02-15', 'Pendiente', '0.00', '750.00'),
+(3, 6, 1, 89023923, 'Frontier', '2023-03-05', '2023-03-08', 'FAC003', 'ND002', '2023-03-10', '2023-03-12', 'Aprobada', '2000.00', '0.00'),
+(8, 6, 0, 80980165, 'Frontier', '2023-05-15', '2023-10-05', 'FAC002', 'ND001', '0000-00-00', '2023-10-05', 'Pendiente', '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2212,7 +2214,7 @@ ALTER TABLE `seguimiento`
 -- AUTO_INCREMENT for table `tabla_ejemplo`
 --
 ALTER TABLE `tabla_ejemplo`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tipocontacto`

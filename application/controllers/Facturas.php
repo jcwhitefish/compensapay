@@ -55,11 +55,11 @@ class Facturas extends MY_Loggedin {
 		$dato = array();
 		
 		$this->db->select('*');
-		$this->db->from('tabla_ejemplo');
-		$this->db->where('ID_Persona', $this->user);
-		$queryOperacion = $this->db->get();
-		$operaciones = $queryOperacion->result();
-		$dato['operaciones'] = $operaciones;
+		$this->db->from('operacion');
+		$this->db->where('o_idPersona', $this->user);
+		$queryFacturas = $this->db->get();
+		$facturas = $queryFacturas->result();
+		$dato['facturas'] = $facturas;	
 
 		$dato['status'] = 'ok' ;
 		// Configura la respuesta para que sea en formato JSON
@@ -70,13 +70,13 @@ class Facturas extends MY_Loggedin {
 	
 	public function tablaOperaciones(){
 		$dato = array();
-		
+	
 		$this->db->select('*');
-		$this->db->from('operacion');
-		$this->db->where('o_idPersona', $this->user);
-		$queryFacturas = $this->db->get();
-		$facturas = $queryFacturas->result();
-		$dato['facturas'] = $facturas;	
+		$this->db->from('tabla_ejemplo');
+		$this->db->where('ID_Persona', $this->user);
+		$queryOperacion = $this->db->get();
+		$operaciones = $queryOperacion->result();
+		$dato['operaciones'] = $operaciones;
 
 		$dato['status'] = 'ok' ;
 		// Configura la respuesta para que sea en formato JSON
