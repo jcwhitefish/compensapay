@@ -32,16 +32,16 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Seleccionar</th>
-                            <th class="tabla-celda">Emitido por</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Subtotal</th>
-                            <th class="tabla-celda">IVA</th>
-                            <th class="tabla-celda">Total</th>
+                            <th>Seleccionar</th>
+                            <th>Emitido por</th>
+                            <th>Factura</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Subtotal</th>
+                            <th>IVA</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
 
@@ -49,16 +49,16 @@
                         <?php $facturas = array_reverse($facturas);
                             foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda"><a href="#modal-unica-operacion">Frontier</a></td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><a href="#modal-unica-operacion"><?= $row->o_NumOperacion ?></a></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
-                                <td class="tabla-celda">Cargada</td>
-                                <td class="tabla-celda">$<?= number_format($row->o_SubTotal,2); ?></td>
-                                <td class="tabla-celda">$<?= number_format($row->o_Impuesto,2); ?></td>
-                                <td class="tabla-celda">$<?= number_format($row->o_Total,2); ?></td>
+                                <td class="center-align"><input type="checkbox"></td>
+                                <td><a href="#modal-unica-operacion">Frontier</a></td><!--aqui deberia estar usuario -->
+                                <td><a href="#modal-unica-operacion"><?= $row->o_NumOperacion ?></a></td><!--aqui deberia estar row -->
+                                <td>{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
+                                <td>{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
+                                <td>{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
+                                <td>Cargada</td>
+                                <td>$<?= number_format($row->o_SubTotal,2); ?></td>
+                                <td>$<?= number_format($row->o_Impuesto,2); ?></td>
+                                <td>$<?= number_format($row->o_Total,2); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -66,27 +66,27 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Seleccionar</th>
-                            <th class="tabla-celda">Institucion emisora</th>
-                            <th class="tabla-celda">Clave de rastreo</th>
-                            <th class="tabla-celda">Numero de referencia</th>
-                            <th class="tabla-celda">Fecha de pago</th>
-                            <th class="tabla-celda">Institución receptora</th>
-                            <th class="tabla-celda">Monto del pago</th>
-                            <th class="tabla-celda">Cuenta beneficiaria</th>
+                            <th>Seleccionar</th>
+                            <th>Institucion emisora</th>
+                            <th>Clave de rastreo</th>
+                            <th>Numero de referencia</th>
+                            <th>Fecha de pago</th>
+                            <th>Institución receptora</th>
+                            <th>Monto del pago</th>
+                            <th>Cuenta beneficiaria</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda">BBVA</td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda">REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
-                                <td class="tabla-celda">Banregio</td>
-                                <td class="tabla-celda">$<?= number_format($row->o_Total); ?></td>
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td>
+                                <td class="center-align"><input type="checkbox"></td>
+                                <td>BBVA</td><!--aqui deberia estar usuario -->
+                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td>REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
+                                <td>{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
+                                <td>Banregio</td>
+                                <td>$<?= number_format($row->o_Total); ?></td>
+                                <td><?= $row->o_NumOperacion ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

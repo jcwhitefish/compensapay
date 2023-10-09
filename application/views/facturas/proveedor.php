@@ -108,7 +108,7 @@
                             <th >Estatus</th>
                             <th >Monto Ingreso</th>
                             <th >Monto Egreso</th>
-                            <th >Adelanta tu pago</th>
+                            <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -135,13 +135,13 @@
                                 <td ><?php echo $operacion->Estatus; ?></td>
                                 <td >$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
                                 <td >$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
-                                <td >
+                                <!-- <td >
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
                                         echo '<a href="#modal-unica-operacion">Adelantar pago</a>';
                                     }
                                     ?>
-                                </td>
+                                </td> -->
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

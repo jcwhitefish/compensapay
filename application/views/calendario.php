@@ -318,6 +318,11 @@
         width: 100%;
         text-align: right;
     }
+
+    /* quitar el hover */
+    tbody tr:hover{
+        background-color: white !important;
+    }
 </style>
 
 <!-- cadena_validar = '{"Usuario":"DemoUser","Llave":"Pasrd"}';
