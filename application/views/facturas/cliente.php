@@ -12,13 +12,13 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l3">
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
+                    <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
                         Clientes
                     </button>
                     &nbsp;
                     <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
                         Provedores
-                    </button>
+                    </button> -->
                 </div>
         <div class="col l3">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
@@ -184,7 +184,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu nota de debito relacionada a una factura</h6>
-                    <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
+                    <form @submit.prevent="cambiarSolicitud('validador')" method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -271,15 +271,15 @@
                 </form>
             </div>
         </div>
-        <div class="modal-content" v-if='solicitud == 2'>
+        <div class="modal-content" v-if='solicitud == 2 || solicitud == 4' >
             <h5>&nbsp;</h5>
             <div class="card esquinasRedondas   center-align">
                 <div class="row">
                     <div class="col l12 ">
 
-                        <h5 style="margin: 120px auto;">Solicitud hecha correctamente</h5>
+                        <h5 style="margin: 120px auto;">{{ `${solicitud == 2 ? 'Solicitud hecha correctamente' : solicitud == 4 ? 'Operacion hecha correctamente' : ''} `}}</h5>
 
-                        <a @click='cambiarSolicitud(0)' class="modal-close button-gray" style="position:relative; top:-30px; color:#fff; color:hover:#">Salir</a>
+                        <a @click="cambiarSolicitud('recarga')" class="modal-close button-gray" style="position:relative; top:-30px; color:#fff; color:hover:#">Salir</a>
                     </div>
                 </div>
 
@@ -610,7 +610,20 @@
                 }
             )
             const cambiarSolicitud = (valor) => {
-                solicitud.value = valor;
+                
+                if (valor == 'recarga' ) {
+                        solicitud.value = 0;
+                        window.location.replace('<?php echo base_url("facturas/carga"); ?>');
+
+
+                }else if(valor == 'validador'){
+                    if (operationUploadName.value != '') {
+                        solicitud.value = 4;
+                    }
+                }
+                else {
+                    solicitud.value = valor;
+                }
                 // console.log(solicitud);
             };
 
