@@ -33,19 +33,12 @@ class Facturas extends MY_Loggedin {
 
 		$isClient = $this->session->userdata('vista');
 
-		$this->db->select('*');
-		$this->db->from('operacion');
-		$this->db->where('o_idPersona', $this->user);
-		$queryFacturas = $this->db->get();
-		$facturas = $queryFacturas->result();
-		$data['facturas'] = $facturas;	
-
 		// If is client
 		if($isClient == 1){
-			$data['main'] = $this->load->view('facturas/cliente', $data , true);
+			$data['main'] = $this->load->view('facturas/cliente', '' , true);
 			$this->load->view('plantilla', $data);
 		}else{				
-			$data['main'] = $this->load->view('facturas/proveedor', $data , true);
+			$data['main'] = $this->load->view('facturas/proveedor', '' , true);
 			$this->load->view('plantilla', $data);
 		}
 
