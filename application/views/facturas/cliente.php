@@ -111,7 +111,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $operaciones = array_reverse($operaciones);
+                        <tr v-for="operacion in operations" :key="operacion.ID_Operacion">
+                            <td class="tabla-celda center-align">
+                                <i v-if="operacion.Aprobacion === 1" class="small material-icons" style="color: green;">check_circle</i>
+                            </td>
+                            <td>{{ operacion.ID_Operacion }}</td>
+                            <td>{{ operacion.Proveedor }}</td>
+                            <td>{{ operacion.Fecha_Factura }}</td>
+                            <td>{{ operacion.Fecha_Alta }}</td>
+                            <td>{{ operacion.Factura }}</td>
+                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
+                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
+                            <td>{{ operacion.Fecha_Transaccion }}</td>
+                            <td>{{ operacion.Estatus }}</td>
+                            <td>$ {{ operacion.Monto_Ingreso }}</td>
+                            <td>$ {{ operacion.Monto_Egreso }}</td>
+                            <td>
+                                <a v-if="operacion.Aprobacion === 0" href="#modal-unica-operacion">Adelantar pago</a>
+                            </td>
+                        </tr>
+                        <!-- <?php $operaciones = array_reverse($operaciones);
                             foreach ($operaciones as $operacion) : ?>
                             <tr>
                                 <td class="tabla-celda center-align">
@@ -142,7 +161,7 @@
                                     ?>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endforeach; ?> -->
                     </tbody>
                 </table>
             </div>
@@ -409,6 +428,7 @@
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
+            const operaciones = Vue.ref([]); 
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -440,6 +460,20 @@
                     }
                 }else{
                     alert('Ingresa una factura y acepta los terminos');
+                }
+            };
+
+            const getOperations = async () => {
+                try {
+                    const response = await fetch('facturas/tablaOperaciones');
+                    if (!response.ok) {
+                    throw new Error('Error al obtener los datos');
+                    }
+                    const data = await response.json();
+                    return data.operaciones;
+                } catch (error) {
+                    console.error('Error al obtener los datos', error);
+                    return []; 
                 }
             };
 
@@ -494,6 +528,10 @@
                 }
             };
 
+            getOperations().then((data) => {
+                operaciones.value = data; // Asigna los datos a la propiedad operaciones de tu aplicación Vue
+            });
+
             return {
                 invoiceUploadName,
                 operationUploadName,
@@ -505,6 +543,7 @@
                 uploadFile,
                 modificarFecha,
                 selectButton,
+                operaciones,
             };
         }
     }); 

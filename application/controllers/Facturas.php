@@ -6,6 +6,14 @@ require_once APPPATH . 'helpers/factura_helper.php';
 
 class Facturas extends MY_Loggedin {
 
+	private $user;
+
+    public function __construct() {
+        parent::__construct();
+		// Cambia por el usuario
+        $this->user = "6";
+    }
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -23,62 +31,72 @@ class Facturas extends MY_Loggedin {
 	 */
 	public function index(){
 
-		//Se verifica si esta en la pantalla de cliente
 		$isClient = $this->session->userdata('vista');
-		$user = 6;
 
-		//1 si es cliente o si es proveedor
+		$this->db->select('*');
+		$this->db->from('operacion');
+		$this->db->where('o_idPersona', $this->user);
+		$queryFacturas = $this->db->get();
+		$facturas = $queryFacturas->result();
+		$data['facturas'] = $facturas;	
+
+		// If is client
 		if($isClient == 1){
-			$this->db->select('*');
-			$this->db->from('operacion');
-			$this->db->where('o_idPersona', $user);
-			$queryFacturas = $this->db->get();
-			$facturas = $queryFacturas->result();
-			$data['facturas'] = $facturas;	
-
-			$this->db->select('*');
-			$this->db->from('tabla_ejemplo');
-			$queryOperacion = $this->db->get();
-			$operaciones = $queryOperacion->result();
-			$data['operaciones'] = $operaciones;
-
-
 			$data['main'] = $this->load->view('facturas/cliente', $data , true);
 			$this->load->view('plantilla', $data);
-		}else{
-			$this->db->select('*');
-			$this->db->from('operacion');
-			$this->db->where('o_idPersona', $user);
-			$queryFacturas = $this->db->get();
-			$facturas = $queryFacturas->result();
-			$data['facturas'] = $facturas;	
-
-			$this->db->select('*');
-			$this->db->from('tabla_ejemplo');
-			$queryOperacion = $this->db->get();
-			$operaciones = $queryOperacion->result();
-			$data['operaciones'] = $operaciones;
-				
+		}else{				
 			$data['main'] = $this->load->view('facturas/proveedor', $data , true);
 			$this->load->view('plantilla', $data);
 		}
 
 	}	
+
+	public function tablaFacturas(){
+		$dato = array();
+		
+		$this->db->select('*');
+		$this->db->from('tabla_ejemplo');
+		$this->db->where('ID_Persona', $this->user);
+		$queryOperacion = $this->db->get();
+		$operaciones = $queryOperacion->result();
+		$dato['operaciones'] = $operaciones;
+
+		$dato['status'] = 'ok' ;
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));		
+	}
 	
+	public function tablaOperaciones(){
+		$dato = array();
+		
+		$this->db->select('*');
+		$this->db->from('operacion');
+		$this->db->where('o_idPersona', $this->user);
+		$queryFacturas = $this->db->get();
+		$facturas = $queryFacturas->result();
+		$dato['facturas'] = $facturas;	
+
+		$dato['status'] = 'ok' ;
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));		
+	}
+
 	public function subida(){
 		$dato = array();
-		$user = "6";
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
-			// $dato['datos'] = $xmlContent;
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
 			$factura = procesar_xml($xml);
 			$factura = array(
 				"o_NumOperacion" => $factura->o_NumOperacion,
-				"o_idPersona" =>  $user,
+				"o_idPersona" =>  $this->user,
 				"o_FechaEmision" => $factura->o_FechaEmision,
 				"o_Total" => $factura->o_Total,
 				"o_ArchivoXML" => $factura->o_ArchivoXML,
@@ -105,6 +123,7 @@ class Facturas extends MY_Loggedin {
 		
 		$factura = array(
 			"Aprobacion" => "0",
+			"ID_Persona" => "6",
 			"ID_Operacion" =>  str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"Proveedor" => "Frontier",
 			"Fecha_Factura" => "2023-05-15",
