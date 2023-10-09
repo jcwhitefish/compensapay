@@ -1,4 +1,3 @@
-
 <div class="p-5" id="app">
 
 
@@ -46,16 +45,16 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Crear Operación</th>
-                            <th class="tabla-celda">Proveedor</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Subtotal</th>
-                            <th class="tabla-celda">IVA</th>
-                            <th class="tabla-celda">Total</th>
+                            <th >Crear Operación</th>
+                            <th >Proveedor</th>
+                            <th >Factura</th>
+                            <th >Fecha Factura</th>
+                            <th >Fecha Alta</th>
+                            <th >Fecha Transacción</th>
+                            <th >Estatus</th>
+                            <th >Subtotal</th>
+                            <th >IVA</th>
+                            <th >Total</th>
                         </tr>
                     </thead>
 
@@ -72,12 +71,12 @@
                                     }
                                     ?>
                                 </td>             
-                                <td class="tabla-celda"><a href="#">Frontier</a></td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
-                                <td class="tabla-celda">{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
-                                <td class="tabla-celda">
+                                <td ><a href="#">Frontier</a></td><!--aqui deberia estar usuario -->
+                                <td ><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td >{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
+                                <td >{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
+                                <td >{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
+                                <td >
                                     <?php
                                     if ($row->o_Activo == 0) {
                                         echo 'Pendiente';
@@ -86,9 +85,9 @@
                                     }
                                     ?>
                                 </td>   
-                                <td class="tabla-celda">$<?= number_format($row->o_SubTotal); ?></td>
-                                <td class="tabla-celda">$<?= number_format($row->o_Impuesto); ?></td>
-                                <td class="tabla-celda">$<?= number_format($row->o_Total); ?></td>
+                                <td >$<?= number_format($row->o_SubTotal); ?></td>
+                                <td >$<?= number_format($row->o_Impuesto); ?></td>
+                                <td >$<?= number_format($row->o_Total); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -96,19 +95,19 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Aprobacion</th>
-                            <th class="tabla-celda">ID Operacion</th>
-                            <th class="tabla-celda">Proveedor</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Nota de Débito</th>
-                            <th class="tabla-celda">Fecha Nota de Débito</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Monto Ingreso</th>
-                            <th class="tabla-celda">Monto Egreso</th>
-                            <th class="tabla-celda">Adelanta tu pago</th>
+                            <th >Aprobacion</th>
+                            <th >ID Operacion</th>
+                            <th >Proveedor</th>
+                            <th >Fecha Factura</th>
+                            <th >Fecha Alta</th>
+                            <th >Factura</th>
+                            <th >Nota de Débito</th>
+                            <th >Fecha Nota de Débito</th>
+                            <th >Fecha Transacción</th>
+                            <th >Estatus</th>
+                            <th >Monto Ingreso</th>
+                            <th >Monto Egreso</th>
+                            <th >Adelanta tu pago</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -124,18 +123,18 @@
                                     }
                                     ?>
                                 </td>
-                                <td class="tabla-celda"><?php echo $operacion->ID_Operacion; ?></td>
-                                <td class="tabla-celda"><a><?php echo $operacion->Proveedor; ?></a></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Factura; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Alta; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Factura; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Fecha_Transaccion; ?></td>
-                                <td class="tabla-celda"><?php echo $operacion->Estatus; ?></td>
-                                <td class="tabla-celda">$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
-                                <td class="tabla-celda">$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
-                                <td class="tabla-celda">
+                                <td ><?php echo $operacion->ID_Operacion; ?></td>
+                                <td ><a><?php echo $operacion->Proveedor; ?></a></td>
+                                <td ><?php echo $operacion->Fecha_Factura; ?></td>
+                                <td ><?php echo $operacion->Fecha_Alta; ?></td>
+                                <td ><?php echo $operacion->Factura; ?></td>
+                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
+                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
+                                <td ><?php echo $operacion->Fecha_Transaccion; ?></td>
+                                <td ><?php echo $operacion->Estatus; ?></td>
+                                <td >$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
+                                <td >$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
+                                <td >
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
                                         echo '<a href="#modal-unica-operacion">Adelantar pago</a>';
@@ -231,16 +230,16 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th class="tabla-celda">Crear Operación</th>
-                                            <th class="tabla-celda">Proveedor</th>
-                                            <th class="tabla-celda">Factura</th>
-                                            <th class="tabla-celda">Fecha Factura</th>
-                                            <th class="tabla-celda">Fecha Alta</th>
-                                            <th class="tabla-celda">Fecha Transacción</th>
-                                            <th class="tabla-celda">Estatus</th>
-                                            <th class="tabla-celda">Subtotal</th>
-                                            <th class="tabla-celda">IVA</th>
-                                            <th class="tabla-celda">Total</th>
+                                            <th >Crear Operación</th>
+                                            <th >Proveedor</th>
+                                            <th >Factura</th>
+                                            <th >Fecha Factura</th>
+                                            <th >Fecha Alta</th>
+                                            <th >Fecha Transacción</th>
+                                            <th >Estatus</th>
+                                            <th >Subtotal</th>
+                                            <th >IVA</th>
+                                            <th >Total</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
@@ -248,15 +247,15 @@
                                             <?php if ($row->o_Activo == 0) : ?> <!-- Verificar si o_Activo es igual a 0 -->
                                                 <tr>
                                                     <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
-                                                    <td class="tabla-celda">Frontier</td><!-- Aquí debería estar usuario -->
-                                                    <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
-                                                    <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
-                                                    <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                                    <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
-                                                    <td class="tabla-celda">Pendiente</td>
-                                                    <td class="tabla-celda">$<?= number_format($row->o_SubTotal); ?></td>
-                                                    <td class="tabla-celda">$<?= number_format($row->o_Impuesto); ?></td>
-                                                    <td class="tabla-celda">$<?= number_format($row->o_Total); ?></td>
+                                                    <td >Frontier</td><!-- Aquí debería estar usuario -->
+                                                    <td ><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
+                                                    <td ><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
+                                                    <td ><?= $row->o_FechaUpload ?></td>
+                                                    <td ><?= $row->o_FechaEmision ?></td>
+                                                    <td >Pendiente</td>
+                                                    <td >$<?= number_format($row->o_SubTotal); ?></td>
+                                                    <td >$<?= number_format($row->o_Impuesto); ?></td>
+                                                    <td >$<?= number_format($row->o_Total); ?></td>
                                                 </tr>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -305,16 +304,16 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th class="tabla-celda">Crear Operación</th>
-                                            <th class="tabla-celda">Proveedor</th>
-                                            <th class="tabla-celda">Factura</th>
-                                            <th class="tabla-celda">Fecha Factura</th>
-                                            <th class="tabla-celda">Fecha Alta</th>
-                                            <th class="tabla-celda">Fecha Transacción</th>
-                                            <th class="tabla-celda">Estatus</th>
-                                            <th class="tabla-celda">Subtotal</th>
-                                            <th class="tabla-celda">IVA</th>
-                                            <th class="tabla-celda">Total</th>
+                                            <th >Crear Operación</th>
+                                            <th >Proveedor</th>
+                                            <th >Factura</th>
+                                            <th >Fecha Factura</th>
+                                            <th >Fecha Alta</th>
+                                            <th >Fecha Transacción</th>
+                                            <th >Estatus</th>
+                                            <th >Subtotal</th>
+                                            <th >IVA</th>
+                                            <th >Total</th>
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
@@ -332,15 +331,15 @@
                                         <?php if ($primerRegistro !== null) : ?> <!-- Verifica si se encontró un primer registro -->
                                             <tr>
                                                 <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
-                                                <td class="tabla-celda">Frontier</td><!-- Aquí debería estar usuario -->
-                                                <td class="tabla-celda"><?= $primerRegistro->o_NumOperacion ?></td><!-- Aquí debería estar row -->
-                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
-                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaUpload ?></td>
-                                                <td class="tabla-celda"><?= $primerRegistro->o_FechaEmision ?></td>
-                                                <td class="tabla-celda">Pendiente</td>
-                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_SubTotal); ?></td>
-                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_Impuesto); ?></td>
-                                                <td class="tabla-celda">$<?= number_format($primerRegistro->o_Total); ?></td>
+                                                <td >Frontier</td><!-- Aquí debería estar usuario -->
+                                                <td ><?= $primerRegistro->o_NumOperacion ?></td><!-- Aquí debería estar row -->
+                                                <td ><?= $primerRegistro->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
+                                                <td ><?= $primerRegistro->o_FechaUpload ?></td>
+                                                <td ><?= $primerRegistro->o_FechaEmision ?></td>
+                                                <td >Pendiente</td>
+                                                <td >$<?= number_format($primerRegistro->o_SubTotal); ?></td>
+                                                <td >$<?= number_format($primerRegistro->o_Impuesto); ?></td>
+                                                <td >$<?= number_format($primerRegistro->o_Total); ?></td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -362,74 +361,22 @@
     </div>
     
 </div>
+
 <style>
+
+    /* Modal */
+
     .text-modal{
         font-size: 13px;
     }
+
     .modal {
         max-height: 83% !important;
         width: 80% !important;
     }
 
-    .input-border input[type=search] {
-        border: 3px solid #ddd;
-        border-radius: 30px !important;
-        padding: 0 8px !important;
-        margin: 15px 0 10px 0 !important;
-        height: 35px !important;
-        width: 180px !important;
-    }
+    /* Fix show checkbox and radiobuttons*/
 
-    .input-border input[type=search]:focus{
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -75px;
-        position: relative;
-        font-weight: bold !important;
-    }
-
-    .input-border input[type=search]:focus + label {
-        color: #111 !important;
-    }
-    .tabla-celda {
-        min-width: 100px;
-        max-width: 150px; 
-        padding: 5px; 
-        font-size: 13px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-
-    /* BORRAR */
-
-    .selected {
-        background-color: black !important;
-        color: white !important;
-        height: 50px;
-        border: 2px solid black !important;
-        border-radius: 10px;
-    }
-
-    .button-table {
-        background-color: white;
-        border: 2px solid white;
-        height: 50px;
-        width: 110px
-    }
-
-    .button-table:focus {
-        background-color: black !important;
-        color: white;
-        height: 50px;
-        border: 2px solid black !important;
-        border-radius: 10px;
-    }
     [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
         opacity: 1;
         position: relative;
@@ -441,7 +388,16 @@
         position: relative;
         pointer-events: auto;
     }
-    
+
+    /* Fix button selected but all class selected afect */
+
+    .selected {
+        background-color: black !important;
+        color: white !important;
+        height: 50px;
+        border: 2px solid black !important;
+        border-radius: 10px;
+    }  
    
 </style>
 

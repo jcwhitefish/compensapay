@@ -27,247 +27,247 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">RFC</th>
-                            <th class="tabla-celda">Alias</th>
-                            <th class="tabla-celda">Razón Social</th>
-                            <th class="tabla-celda">Dirección</th>
-                            <th class="tabla-celda">Contacto</th>
-                            <th class="tabla-celda">Teléfono</th>
-                            <th class="tabla-celda">Correo electrónico</th>
-                            <th class="tabla-celda">Fecha de alta</th>
+                            <th >RFC</th>
+                            <th >Alias</th>
+                            <th >Razón Social</th>
+                            <th >Dirección</th>
+                            <th >Contacto</th>
+                            <th >Teléfono</th>
+                            <th >Correo electrónico</th>
+                            <th >Fecha de alta</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa1</td>
-                            <td class="tabla-celda">Nombre Empresa 1</td>
-                            <td class="tabla-celda">Dirección Empresa 1</td>
-                            <td class="tabla-celda">Contacto Empresa 1</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo1@example.com</td>
-                            <td class="tabla-celda">2023-01-15</td>
+                            <td >ABC123456</td>
+                            <td >Empresa1</td>
+                            <td >Nombre Empresa 1</td>
+                            <td >Dirección Empresa 1</td>
+                            <td >Contacto Empresa 1</td>
+                            <td >123-456-7890</td>
+                            <td >correo1@example.com</td>
+                            <td >2023-01-15</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">DEF789012</td>
-                            <td class="tabla-celda">Empresa2</td>
-                            <td class="tabla-celda">Nombre Empresa 2</td>
-                            <td class="tabla-celda">Dirección Empresa 2</td>
-                            <td class="tabla-celda">Contacto Empresa 2</td>
-                            <td class="tabla-celda">987-654-3210</td>
-                            <td class="tabla-celda">correo2@example.com</td>
-                            <td class="tabla-celda">2022-08-20</td>
+                            <td >DEF789012</td>
+                            <td >Empresa2</td>
+                            <td >Nombre Empresa 2</td>
+                            <td >Dirección Empresa 2</td>
+                            <td >Contacto Empresa 2</td>
+                            <td >987-654-3210</td>
+                            <td >correo2@example.com</td>
+                            <td >2022-08-20</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa3</td>
-                            <td class="tabla-celda">Nombre Empresa 3</td>
-                            <td class="tabla-celda">Dirección Empresa 3</td>
-                            <td class="tabla-celda">Contacto Empresa 3</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo3@example.com</td>
-                            <td class="tabla-celda">2022-09-15</td>
-                        </tr>
-
-                        <tr>
-                            <td class="tabla-celda">XYZ789012</td>
-                            <td class="tabla-celda">Empresa4</td>
-                            <td class="tabla-celda">Nombre Empresa 4</td>
-                            <td class="tabla-celda">Dirección Empresa 4</td>
-                            <td class="tabla-celda">Contacto Empresa 4</td>
-                            <td class="tabla-celda">345-678-9012</td>
-                            <td class="tabla-celda">correo4@example.com</td>
-                            <td class="tabla-celda">2022-10-05</td>
+                            <td >ABC123456</td>
+                            <td >Empresa3</td>
+                            <td >Nombre Empresa 3</td>
+                            <td >Dirección Empresa 3</td>
+                            <td >Contacto Empresa 3</td>
+                            <td >123-456-7890</td>
+                            <td >correo3@example.com</td>
+                            <td >2022-09-15</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">GHI345678</td>
-                            <td class="tabla-celda">Empresa5</td>
-                            <td class="tabla-celda">Nombre Empresa 5</td>
-                            <td class="tabla-celda">Dirección Empresa 5</td>
-                            <td class="tabla-celda">Contacto Empresa 5</td>
-                            <td class="tabla-celda">567-890-1234</td>
-                            <td class="tabla-celda">correo5@example.com</td>
-                            <td class="tabla-celda">2022-11-12</td>
+                            <td >XYZ789012</td>
+                            <td >Empresa4</td>
+                            <td >Nombre Empresa 4</td>
+                            <td >Dirección Empresa 4</td>
+                            <td >Contacto Empresa 4</td>
+                            <td >345-678-9012</td>
+                            <td >correo4@example.com</td>
+                            <td >2022-10-05</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">JKL678901</td>
-                            <td class="tabla-celda">Empresa6</td>
-                            <td class="tabla-celda">Nombre Empresa 6</td>
-                            <td class="tabla-celda">Dirección Empresa 6</td>
-                            <td class="tabla-celda">Contacto Empresa 6</td>
-                            <td class="tabla-celda">678-901-2345</td>
-                            <td class="tabla-celda">correo6@example.com</td>
-                            <td class="tabla-celda">2022-12-20</td>
+                            <td >GHI345678</td>
+                            <td >Empresa5</td>
+                            <td >Nombre Empresa 5</td>
+                            <td >Dirección Empresa 5</td>
+                            <td >Contacto Empresa 5</td>
+                            <td >567-890-1234</td>
+                            <td >correo5@example.com</td>
+                            <td >2022-11-12</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">MNO901234</td>
-                            <td class="tabla-celda">Empresa7</td>
-                            <td class="tabla-celda">Nombre Empresa 7</td>
-                            <td class="tabla-celda">Dirección Empresa 7</td>
-                            <td class="tabla-celda">Contacto Empresa 7</td>
-                            <td class="tabla-celda">789-012-3456</td>
-                            <td class="tabla-celda">correo7@example.com</td>
-                            <td class="tabla-celda">2023-01-25</td>
+                            <td >JKL678901</td>
+                            <td >Empresa6</td>
+                            <td >Nombre Empresa 6</td>
+                            <td >Dirección Empresa 6</td>
+                            <td >Contacto Empresa 6</td>
+                            <td >678-901-2345</td>
+                            <td >correo6@example.com</td>
+                            <td >2022-12-20</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">PQR567890</td>
-                            <td class="tabla-celda">Empresa8</td>
-                            <td class="tabla-celda">Nombre Empresa 8</td>
-                            <td class="tabla-celda">Dirección Empresa 8</td>
-                            <td class="tabla-celda">Contacto Empresa 8</td>
-                            <td class="tabla-celda">890-123-4567</td>
-                            <td class="tabla-celda">correo8@example.com</td>
-                            <td class="tabla-celda">2023-02-18</td>
+                            <td >MNO901234</td>
+                            <td >Empresa7</td>
+                            <td >Nombre Empresa 7</td>
+                            <td >Dirección Empresa 7</td>
+                            <td >Contacto Empresa 7</td>
+                            <td >789-012-3456</td>
+                            <td >correo7@example.com</td>
+                            <td >2023-01-25</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">STU678901</td>
-                            <td class="tabla-celda">Empresa9</td>
-                            <td class="tabla-celda">Nombre Empresa 9</td>
-                            <td class="tabla-celda">Dirección Empresa 9</td>
-                            <td class="tabla-celda">Contacto Empresa 9</td>
-                            <td class="tabla-celda">901-234-5678</td>
-                            <td class="tabla-celda">correo9@example.com</td>
-                            <td class="tabla-celda">2023-03-10</td>
+                            <td >PQR567890</td>
+                            <td >Empresa8</td>
+                            <td >Nombre Empresa 8</td>
+                            <td >Dirección Empresa 8</td>
+                            <td >Contacto Empresa 8</td>
+                            <td >890-123-4567</td>
+                            <td >correo8@example.com</td>
+                            <td >2023-02-18</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">VWX789012</td>
-                            <td class="tabla-celda">Empresa10</td>
-                            <td class="tabla-celda">Nombre Empresa 10</td>
-                            <td class="tabla-celda">Dirección Empresa 10</td>
-                            <td class="tabla-celda">Contacto Empresa 10</td>
-                            <td class="tabla-celda">012-345-6789</td>
-                            <td class="tabla-celda">correo10@example.com</td>
-                            <td class="tabla-celda">2023-04-05</td>
+                            <td >STU678901</td>
+                            <td >Empresa9</td>
+                            <td >Nombre Empresa 9</td>
+                            <td >Dirección Empresa 9</td>
+                            <td >Contacto Empresa 9</td>
+                            <td >901-234-5678</td>
+                            <td >correo9@example.com</td>
+                            <td >2023-03-10</td>
+                        </tr>
+
+                        <tr>
+                            <td >VWX789012</td>
+                            <td >Empresa10</td>
+                            <td >Nombre Empresa 10</td>
+                            <td >Dirección Empresa 10</td>
+                            <td >Contacto Empresa 10</td>
+                            <td >012-345-6789</td>
+                            <td >correo10@example.com</td>
+                            <td >2023-04-05</td>
                         </tr>
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                 <thead>
                         <tr>
-                            <th class="tabla-celda">RFC</th>
-                            <th class="tabla-celda">Alias</th>
-                            <th class="tabla-celda">Razón Social</th>
-                            <th class="tabla-celda">Dirección</th>
-                            <th class="tabla-celda">Contacto</th>
-                            <th class="tabla-celda">Teléfono</th>
-                            <th class="tabla-celda">Correo electrónico</th>
-                            <th class="tabla-celda">Fecha de alta</th>
+                            <th >RFC</th>
+                            <th >Alias</th>
+                            <th >Razón Social</th>
+                            <th >Dirección</th>
+                            <th >Contacto</th>
+                            <th >Teléfono</th>
+                            <th >Correo electrónico</th>
+                            <th >Fecha de alta</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa1</td>
-                            <td class="tabla-celda">Nombre Empresa 1</td>
-                            <td class="tabla-celda">Dirección Empresa 1</td>
-                            <td class="tabla-celda">Contacto Empresa 1</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo1@example.com</td>
-                            <td class="tabla-celda">2023-01-15</td>
+                            <td >ABC123456</td>
+                            <td >Empresa1</td>
+                            <td >Nombre Empresa 1</td>
+                            <td >Dirección Empresa 1</td>
+                            <td >Contacto Empresa 1</td>
+                            <td >123-456-7890</td>
+                            <td >correo1@example.com</td>
+                            <td >2023-01-15</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">DEF789012</td>
-                            <td class="tabla-celda">Empresa2</td>
-                            <td class="tabla-celda">Nombre Empresa 2</td>
-                            <td class="tabla-celda">Dirección Empresa 2</td>
-                            <td class="tabla-celda">Contacto Empresa 2</td>
-                            <td class="tabla-celda">987-654-3210</td>
-                            <td class="tabla-celda">correo2@example.com</td>
-                            <td class="tabla-celda">2022-08-20</td>
+                            <td >DEF789012</td>
+                            <td >Empresa2</td>
+                            <td >Nombre Empresa 2</td>
+                            <td >Dirección Empresa 2</td>
+                            <td >Contacto Empresa 2</td>
+                            <td >987-654-3210</td>
+                            <td >correo2@example.com</td>
+                            <td >2022-08-20</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa3</td>
-                            <td class="tabla-celda">Nombre Empresa 3</td>
-                            <td class="tabla-celda">Dirección Empresa 3</td>
-                            <td class="tabla-celda">Contacto Empresa 3</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo3@example.com</td>
-                            <td class="tabla-celda">2022-09-15</td>
-                        </tr>
-
-                        <tr>
-                            <td class="tabla-celda">XYZ789012</td>
-                            <td class="tabla-celda">Empresa4</td>
-                            <td class="tabla-celda">Nombre Empresa 4</td>
-                            <td class="tabla-celda">Dirección Empresa 4</td>
-                            <td class="tabla-celda">Contacto Empresa 4</td>
-                            <td class="tabla-celda">345-678-9012</td>
-                            <td class="tabla-celda">correo4@example.com</td>
-                            <td class="tabla-celda">2022-10-05</td>
+                            <td >ABC123456</td>
+                            <td >Empresa3</td>
+                            <td >Nombre Empresa 3</td>
+                            <td >Dirección Empresa 3</td>
+                            <td >Contacto Empresa 3</td>
+                            <td >123-456-7890</td>
+                            <td >correo3@example.com</td>
+                            <td >2022-09-15</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">GHI345678</td>
-                            <td class="tabla-celda">Empresa5</td>
-                            <td class="tabla-celda">Nombre Empresa 5</td>
-                            <td class="tabla-celda">Dirección Empresa 5</td>
-                            <td class="tabla-celda">Contacto Empresa 5</td>
-                            <td class="tabla-celda">567-890-1234</td>
-                            <td class="tabla-celda">correo5@example.com</td>
-                            <td class="tabla-celda">2022-11-12</td>
+                            <td >XYZ789012</td>
+                            <td >Empresa4</td>
+                            <td >Nombre Empresa 4</td>
+                            <td >Dirección Empresa 4</td>
+                            <td >Contacto Empresa 4</td>
+                            <td >345-678-9012</td>
+                            <td >correo4@example.com</td>
+                            <td >2022-10-05</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">JKL678901</td>
-                            <td class="tabla-celda">Empresa6</td>
-                            <td class="tabla-celda">Nombre Empresa 6</td>
-                            <td class="tabla-celda">Dirección Empresa 6</td>
-                            <td class="tabla-celda">Contacto Empresa 6</td>
-                            <td class="tabla-celda">678-901-2345</td>
-                            <td class="tabla-celda">correo6@example.com</td>
-                            <td class="tabla-celda">2022-12-20</td>
+                            <td >GHI345678</td>
+                            <td >Empresa5</td>
+                            <td >Nombre Empresa 5</td>
+                            <td >Dirección Empresa 5</td>
+                            <td >Contacto Empresa 5</td>
+                            <td >567-890-1234</td>
+                            <td >correo5@example.com</td>
+                            <td >2022-11-12</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">MNO901234</td>
-                            <td class="tabla-celda">Empresa7</td>
-                            <td class="tabla-celda">Nombre Empresa 7</td>
-                            <td class="tabla-celda">Dirección Empresa 7</td>
-                            <td class="tabla-celda">Contacto Empresa 7</td>
-                            <td class="tabla-celda">789-012-3456</td>
-                            <td class="tabla-celda">correo7@example.com</td>
-                            <td class="tabla-celda">2023-01-25</td>
+                            <td >JKL678901</td>
+                            <td >Empresa6</td>
+                            <td >Nombre Empresa 6</td>
+                            <td >Dirección Empresa 6</td>
+                            <td >Contacto Empresa 6</td>
+                            <td >678-901-2345</td>
+                            <td >correo6@example.com</td>
+                            <td >2022-12-20</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">PQR567890</td>
-                            <td class="tabla-celda">Empresa8</td>
-                            <td class="tabla-celda">Nombre Empresa 8</td>
-                            <td class="tabla-celda">Dirección Empresa 8</td>
-                            <td class="tabla-celda">Contacto Empresa 8</td>
-                            <td class="tabla-celda">890-123-4567</td>
-                            <td class="tabla-celda">correo8@example.com</td>
-                            <td class="tabla-celda">2023-02-18</td>
+                            <td >MNO901234</td>
+                            <td >Empresa7</td>
+                            <td >Nombre Empresa 7</td>
+                            <td >Dirección Empresa 7</td>
+                            <td >Contacto Empresa 7</td>
+                            <td >789-012-3456</td>
+                            <td >correo7@example.com</td>
+                            <td >2023-01-25</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">STU678901</td>
-                            <td class="tabla-celda">Empresa9</td>
-                            <td class="tabla-celda">Nombre Empresa 9</td>
-                            <td class="tabla-celda">Dirección Empresa 9</td>
-                            <td class="tabla-celda">Contacto Empresa 9</td>
-                            <td class="tabla-celda">901-234-5678</td>
-                            <td class="tabla-celda">correo9@example.com</td>
-                            <td class="tabla-celda">2023-03-10</td>
+                            <td >PQR567890</td>
+                            <td >Empresa8</td>
+                            <td >Nombre Empresa 8</td>
+                            <td >Dirección Empresa 8</td>
+                            <td >Contacto Empresa 8</td>
+                            <td >890-123-4567</td>
+                            <td >correo8@example.com</td>
+                            <td >2023-02-18</td>
                         </tr>
 
                         <tr>
-                            <td class="tabla-celda">VWX789012</td>
-                            <td class="tabla-celda">Empresa10</td>
-                            <td class="tabla-celda">Nombre Empresa 10</td>
-                            <td class="tabla-celda">Dirección Empresa 10</td>
-                            <td class="tabla-celda">Contacto Empresa 10</td>
-                            <td class="tabla-celda">012-345-6789</td>
-                            <td class="tabla-celda">correo10@example.com</td>
-                            <td class="tabla-celda">2023-04-05</td>
+                            <td >STU678901</td>
+                            <td >Empresa9</td>
+                            <td >Nombre Empresa 9</td>
+                            <td >Dirección Empresa 9</td>
+                            <td >Contacto Empresa 9</td>
+                            <td >901-234-5678</td>
+                            <td >correo9@example.com</td>
+                            <td >2023-03-10</td>
+                        </tr>
+
+                        <tr>
+                            <td >VWX789012</td>
+                            <td >Empresa10</td>
+                            <td >Nombre Empresa 10</td>
+                            <td >Dirección Empresa 10</td>
+                            <td >Contacto Empresa 10</td>
+                            <td >012-345-6789</td>
+                            <td >correo10@example.com</td>
+                            <td >2023-04-05</td>
                         </tr>
                     </tbody>
                 </table>
@@ -275,52 +275,10 @@
         </div>
     </div>
 </div>
+
 <style>
-    .text-modal{
-        font-size: 10px;
-    }
-    .modal {
-        max-height: 83% !important;
-        width: 80% !important;
-    }
 
-    .input-border input[type=search] {
-        border: 3px solid #ddd;
-        border-radius: 30px !important;
-        padding: 0 8px !important;
-        margin: 15px 0 10px 0 !important;
-        height: 35px !important;
-        width: 180px !important;
-    }
-
-    .input-border input[type=search]:focus{
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -75px;
-        position: relative;
-        font-weight: bold !important;
-    }
-
-    .input-border input[type=search]:focus + label {
-        color: #111 !important;
-    }
-    .tabla-celda {
-        min-width: 100px;
-        max-width: 150px; 
-        padding: 5px; 
-        text-align: center; 
-        font-size: 13px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-
-    /* BORRAR */
+    /* Fix button selected but all class selected afect */
 
     .selected {
         background-color: black !important;
@@ -330,21 +288,6 @@
         border-radius: 10px;
     }
 
-    .button-table {
-        background-color: white;
-        border: 2px solid white;
-        height: 50px;
-        width: 110px
-    }
-
-    .button-table:focus {
-        background-color: black !important;
-        color: white;
-        height: 50px;
-        border: 2px solid black !important;
-        border-radius: 10px;
-    }
-   
 </style>
 
 <script>

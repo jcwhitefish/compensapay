@@ -95,57 +95,28 @@
         </div>
     </div>
 </div>
+
 <style>
-    .text-modal{
-        font-size: 10px;
-    }
-    .modal {
-        max-height: 83% !important;
-        width: 80% !important;
-    }
 
-    .input-border input[type=search] {
-        border: 3px solid #ddd;
-        border-radius: 30px !important;
-        padding: 0 8px !important;
-        margin: 15px 0 10px 0 !important;
-        height: 35px !important;
-        width: 180px !important;
-    }
+    /* Fix show checkbox and radiobuttons*/
 
-    .input-border input[type=search]:focus{
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -75px;
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        opacity: 1;
         position: relative;
-        font-weight: bold !important;
+        pointer-events: auto;
     }
 
-    .input-border input[type=search]:focus + label {
-        color: #111 !important;
-    }
-    .tabla-celda {
-        min-width: 100px;
-        max-width: 150px; 
-        padding: 5px; 
-        text-align: center; 
-        font-size: 13px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+    /* Fix button selected but all class selected afect */
 
     .selected {
         background-color: black !important;
-        color: white;
+        color: white !important;
         height: 50px;
         border: 2px solid black !important;
         border-radius: 10px;
-    }
+    }  
+
+    /* Buttons */
 
     .button-table {
         background-color: white;
@@ -154,19 +125,6 @@
         width: 180px
     }
 
-    .button-table:focus {
-        background-color: black !important;
-        color: white;
-        height: 50px;
-        border: 2px solid black !important;
-        border-radius: 10px;
-    }
-    
-    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-        opacity: 1;
-        position: relative;
-        pointer-events: auto;
-    }
 </style>
 
 <script>

@@ -2,6 +2,7 @@
 input[type="file"] {
     display: none;
 }
+
 .custom-file-upload {
     color: white;
     background: #444;
@@ -10,10 +11,12 @@ input[type="file"] {
     cursor: pointer;
     border-radius: 3px !important;
 }
+
 .custom-file-upload:hover {
     background: #e0e51d;
     border: 2px solid #e0e51d;
 }
+
 .custom-file-upload:focus {
     background: #e0e51d !important;
     border: 2px solid #e0e51d ;
@@ -29,6 +32,7 @@ input[type="file"] {
     margin: 15px 0 10px 0 !important;
     height: 40px !important;
 }
+
 .input-border textarea {
     border: 2px solid #ddd;
     border-radius: 3px !important;
@@ -45,7 +49,6 @@ input[type="file"] {
     border-bottom: 1px solid #444 !important;
     box-shadow: 0 1px 0 0 #444 !important;
 }
-
 .input-border textarea:focus {
     border-color: #444 !important;
     border-bottom: 1px solid #444 !important;
@@ -57,6 +60,7 @@ input[type="file"] {
     position: relative;
     font-weight: bold !important;
 }
+
 .input-border input[type=text]:focus + label,
 .input-border input[type=password]:focus + label,
 .input-border input[type=number]:focus + label,
@@ -77,7 +81,27 @@ input[type="file"] {
 input[type="number"] {
     -moz-appearance: textfield; /* Firefox */
     appearance: textfield; /* Otros navegadores */
-  }
+}
+
+/* input for search */
+.input-border input[type=search] {
+    border: 3px solid #ddd;
+    border-radius: 30px !important;
+    padding: 0 8px !important;
+    margin: 15px 0 10px 0 !important;
+    height: 35px !important;
+    width: 180px !important;
+}
+
+.input-border input[type=search]:focus{
+    border-color: #444 !important;
+    border-bottom: 1px solid #444 !important;
+    box-shadow: 0 1px 0 0 #444 !important;
+}
+
+.input-border input[type=search]:focus + label {
+    color: #111 !important;
+}
 
 /* texto en negritas */
 .bold{
@@ -89,10 +113,12 @@ input[type="number"] {
     border-right: 1px solid #ddd;
     height: 400px;
 }
+
 .line-card-l{
     border-left: 1px solid #ddd;
     height: 400px;
 }
+
 .esquinasRedondas {
     border-radius: 25px !important;
 }
@@ -130,6 +156,7 @@ input[type="number"] {
     padding-left: 7% !important;
     padding-right: 7%!important;
 }
+
 .nav a{
     color: blue !important;
     font-size: large;  
@@ -182,6 +209,21 @@ input[type="number"] {
     color: white !important;
 }
 
+.button-table {
+    background-color: white;
+    border: 2px solid white;
+    height: 50px;
+    width: 110px
+}
+
+.button-table:focus {
+    background-color: black !important;
+    color: white;
+    height: 50px;
+    border: 2px solid black !important;
+    border-radius: 10px;
+}
+
 /* images */
 
 .custom-image{
@@ -190,6 +232,7 @@ input[type="number"] {
     width: auto; 
     height: auto;
 }
+
 .custom-logo{
     max-width: 85%; 
     max-height: 85%; 
@@ -200,6 +243,7 @@ input[type="number"] {
 .d-flex{
     display: flex;
 }
+
 .justify-content-space-between,.space-between{
     justify-content: space-between;
 }
@@ -207,13 +251,16 @@ input[type="number"] {
 .flex-direction-column{
     flex-direction: column;
 }
+
 .align-items-flex-start{
     align-items: flex-start;
 }
+
 /* Estilos para las tablas */
 tbody tr:hover{
     background-color: #fffeb1 !important;
 }
+
 thead, thead tr,thead tr th{
     background-color:#17a2b8 ;
     border-collapse: collapse;
@@ -221,6 +268,7 @@ thead, thead tr,thead tr th{
     color: white;
     
 }
+
 /* Estos estilos son para el navegador */
 .navegador{
     background-color: #F7F6F6;

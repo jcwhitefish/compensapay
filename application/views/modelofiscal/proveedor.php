@@ -36,16 +36,16 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Seleccionar</th>
-                            <th class="tabla-celda">Emitido por</th>
-                            <th class="tabla-celda">Factura</th>
-                            <th class="tabla-celda">Fecha Factura</th>
-                            <th class="tabla-celda">Fecha Alta</th>
-                            <th class="tabla-celda">Fecha Transacción</th>
-                            <th class="tabla-celda">Estatus</th>
-                            <th class="tabla-celda">Subtotal</th>
-                            <th class="tabla-celda">IVA</th>
-                            <th class="tabla-celda">Total</th>
+                            <th>Seleccionar</th>
+                            <th>Emitido por</th>
+                            <th>Factura</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Subtotal</th>
+                            <th>IVA</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
 
@@ -53,16 +53,16 @@
                         <?php $facturas = array_reverse($facturas);
                             foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda"><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                <td class="tabla-celda"><?= $row->o_FechaEmision ?></td>
-                                <td class="tabla-celda">Cargada</td>
-                                <td class="tabla-celda"><?= $row->o_SubTotal ?></td>
-                                <td class="tabla-celda"><?= $row->o_Impuesto ?></td>
-                                <td class="tabla-celda"><?= $row->o_Total ?></td>
+                                <td class="center-align"><input type="checkbox"></td>
+                                <td><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
+                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
+                                <td><?= $row->o_FechaUpload ?></td>
+                                <td><?= $row->o_FechaEmision ?></td>
+                                <td>Cargada</td>
+                                <td><?= $row->o_SubTotal ?></td>
+                                <td><?= $row->o_Impuesto ?></td>
+                                <td><?= $row->o_Total ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -70,140 +70,140 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                     <thead>
                         <tr>
-                            <th class="tabla-celda">Seleccionar</th>
-                            <th class="tabla-celda">Institucion emisora</th>
-                            <th class="tabla-celda">Clave de rastreo</th>
-                            <th class="tabla-celda">Numero de referencia</th>
-                            <th class="tabla-celda">Fecha de pago</th>
-                            <th class="tabla-celda">Institución receptora</th>
-                            <th class="tabla-celda">Monto del pago</th>
-                            <th class="tabla-celda">Cuenta beneficiaria</th>
+                            <th>Seleccionar</th>
+                            <th>Institucion emisora</th>
+                            <th>Clave de rastreo</th>
+                            <th>Numero de referencia</th>
+                            <th>Fecha de pago</th>
+                            <th>Institución receptora</th>
+                            <th>Monto del pago</th>
+                            <th>Cuenta beneficiaria</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($facturas as $row) : ?>
                             <tr>
-                                <td class="tabla-celda"><input type="checkbox"></td>
-                                <td class="tabla-celda">BBVA</td><!--aqui deberia estar usuario -->
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td class="tabla-celda">REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
-                                <td class="tabla-celda"><?= $row->o_FechaUpload ?></td>
-                                <td class="tabla-celda">Banregio</td>
-                                <td class="tabla-celda">$<?= $row->o_Total ?></td>
-                                <td class="tabla-celda"><?= $row->o_NumOperacion ?></td>
+                                <td class="center-align"><input type="checkbox"></td>
+                                <td>BBVA</td><!--aqui deberia estar usuario -->
+                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td>REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
+                                <td><?= $row->o_FechaUpload ?></td>
+                                <td>Banregio</td>
+                                <td>$<?= $row->o_Total ?></td>
+                                <td><?= $row->o_NumOperacion ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Cuenta'" class="visible-table striped">       
                     <thead>
-                        <th class="tabla-celda">Seleccionar</th>
-                        <th class="tabla-celda">Mes</th>
-                        <th class="tabla-celda">Días del periodo</th>
-                        <th class="tabla-celda">Depósitos</th>
-                        <th class="tabla-celda">Retiros</th>
-                        <th class="tabla-celda">Depósitos</th>
-                        <th class="tabla-celda">Retiros</th>
-                        <th class="tabla-celda">Saldo inicial</th>
-                        <th class="tabla-celda">Saldo final</th>
-                        <th class="tabla-celda">Movimientos</th>
+                        <th>Seleccionar</th>
+                        <th>Mes</th>
+                        <th>Días del periodo</th>
+                        <th>Depósitos</th>
+                        <th>Retiros</th>
+                        <th>Depósitos</th>
+                        <th>Retiros</th>
+                        <th>Saldo inicial</th>
+                        <th>Saldo final</th>
+                        <th>Movimientos</th>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Noviembre</td>
-                            <td class="tabla-celda">30</td>
-                            <td class="tabla-celda">3</td>
-                            <td class="tabla-celda">1</td>
-                            <td class="tabla-celda">$3,452.16</td>
-                            <td class="tabla-celda">$25,028</td>
-                            <td class="tabla-celda">$254,339</td>
-                            <td class="tabla-celda">$21,576</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Noviembre</td>
+                            <td>30</td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>$3,452.16</td>
+                            <td>$25,028</td>
+                            <td>$254,339</td>
+                            <td>$21,576</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Octubre</td>
-                            <td class="tabla-celda">31</td>
-                            <td class="tabla-celda">5</td>
-                            <td class="tabla-celda">5</td>
-                            <td class="tabla-celda">$5,599.68</td>
-                            <td class="tabla-celda">$40,589</td>
-                            <td class="tabla-celda">$149,993</td>
-                            <td class="tabla-celda">$34,998</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Octubre</td>
+                            <td>31</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>$5,599.68</td>
+                            <td>$40,589</td>
+                            <td>$149,993</td>
+                            <td>$34,998</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Noviembre</td>
-                            <td class="tabla-celda">30</td>
-                            <td class="tabla-celda">3</td>
-                            <td class="tabla-celda">1</td>
-                            <td class="tabla-celda">$3,452.16</td>
-                            <td class="tabla-celda">$25,028</td>
-                            <td class="tabla-celda">$254,339</td>
-                            <td class="tabla-celda">$21,576</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Noviembre</td>
+                            <td>30</td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>$3,452.16</td>
+                            <td>$25,028</td>
+                            <td>$254,339</td>
+                            <td>$21,576</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Octubre</td>
-                            <td class="tabla-celda">31</td>
-                            <td class="tabla-celda">5</td>
-                            <td class="tabla-celda">5</td>
-                            <td class="tabla-celda">$5,599.68</td>
-                            <td class="tabla-celda">$40,589</td>
-                            <td class="tabla-celda">$149,993</td>
-                            <td class="tabla-celda">$34,998</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Octubre</td>
+                            <td>31</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>$5,599.68</td>
+                            <td>$40,589</td>
+                            <td>$149,993</td>
+                            <td>$34,998</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Septiembre</td>
-                            <td class="tabla-celda">30</td>
-                            <td class="tabla-celda">2</td>
-                            <td class="tabla-celda">2</td>
-                            <td class="tabla-celda">$15,232.16</td>
-                            <td class="tabla-celda">$110,433</td>
-                            <td class="tabla-celda">$145,990</td>
-                            <td class="tabla-celda">$95,201</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Septiembre</td>
+                            <td>30</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>$15,232.16</td>
+                            <td>$110,433</td>
+                            <td>$145,990</td>
+                            <td>$95,201</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Agosto</td>
-                            <td class="tabla-celda">31</td>
-                            <td class="tabla-celda">8</td>
-                            <td class="tabla-celda">4</td>
-                            <td class="tabla-celda">$6,544.32</td>
-                            <td class="tabla-celda">$47,446</td>
-                            <td class="tabla-celda">$124,990</td>
-                            <td class="tabla-celda">$40,902</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Agosto</td>
+                            <td>31</td>
+                            <td>8</td>
+                            <td>4</td>
+                            <td>$6,544.32</td>
+                            <td>$47,446</td>
+                            <td>$124,990</td>
+                            <td>$40,902</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Julio</td>
-                            <td class="tabla-celda">31</td>
-                            <td class="tabla-celda">4</td>
-                            <td class="tabla-celda">3</td>
-                            <td class="tabla-celda">$11,351.22</td>
-                            <td class="tabla-celda">$82,296</td>
-                            <td class="tabla-celda">$98,259</td>
-                            <td class="tabla-celda">$70,945</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Julio</td>
+                            <td>31</td>
+                            <td>4</td>
+                            <td>3</td>
+                            <td>$11,351.22</td>
+                            <td>$82,296</td>
+                            <td>$98,259</td>
+                            <td>$70,945</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda"><input type="checkbox"></td>
-                            <td class="tabla-celda">Junio</td>
-                            <td class="tabla-celda">30</td>
-                            <td class="tabla-celda">3</td>
-                            <td class="tabla-celda">3</td>
-                            <td class="tabla-celda">$15,873.44</td>
-                            <td class="tabla-celda">$115,082</td>
-                            <td class="tabla-celda">$56,998</td>
-                            <td class="tabla-celda">$99,209</td>
-                            <td class="tabla-celda"><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input type="checkbox"></td>
+                            <td>Junio</td>
+                            <td>30</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>$15,873.44</td>
+                            <td>$115,082</td>
+                            <td>$56,998</td>
+                            <td>$99,209</td>
+                            <td><a href="#">Ver detalles</a></td>
                         </tr>
                    </tbody>
                 </table>
@@ -211,57 +211,28 @@
         </div>
     </div>
 </div>
+
 <style>
-    .text-modal{
-        font-size: 10px;
-    }
-    .modal {
-        max-height: 83% !important;
-        width: 80% !important;
-    }
 
-    .input-border input[type=search] {
-        border: 3px solid #ddd;
-        border-radius: 30px !important;
-        padding: 0 8px !important;
-        margin: 15px 0 10px 0 !important;
-        height: 35px !important;
-        width: 180px !important;
-    }
+    /* Fix show checkbox and radiobuttons*/
 
-    .input-border input[type=search]:focus{
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -75px;
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        opacity: 1;
         position: relative;
-        font-weight: bold !important;
+        pointer-events: auto;
     }
 
-    .input-border input[type=search]:focus + label {
-        color: #111 !important;
-    }
-    .tabla-celda {
-        min-width: 100px;
-        max-width: 150px; 
-        padding: 5px; 
-        text-align: center; 
-        font-size: 13px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+    /* Fix button selected but all class selected afect */
 
     .selected {
         background-color: black !important;
-        color: white;
+        color: white !important;
         height: 50px;
         border: 2px solid black !important;
         border-radius: 10px;
-    }
+    }  
+
+    /* Buttons */
 
     .button-table {
         background-color: white;
@@ -278,11 +249,6 @@
         border-radius: 10px;
     }
     
-    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-        opacity: 1;
-        position: relative;
-        pointer-events: auto;
-    }
 </style>
 
 <script>
@@ -293,7 +259,7 @@
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
-                if (fileInput.files.length > 0) {
+                if (fileInput.files.length> 0) {
                     invoiceUploadName.value = fileInput.files[0].name;
                 } else {
                     invoiceUploadName.value = '';

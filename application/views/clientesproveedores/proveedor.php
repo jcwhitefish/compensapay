@@ -27,74 +27,74 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th class="tabla-celda">RFC</th>
-                            <th class="tabla-celda">Alias</th>
-                            <th class="tabla-celda">Razón Social</th>
-                            <th class="tabla-celda">Dirección</th>
-                            <th class="tabla-celda">Contacto</th>
-                            <th class="tabla-celda">Teléfono</th>
-                            <th class="tabla-celda">Correo electrónico</th>
-                            <th class="tabla-celda">Fecha de alta</th>
+                            <th >RFC</th>
+                            <th >Alias</th>
+                            <th >Razón Social</th>
+                            <th >Dirección</th>
+                            <th >Contacto</th>
+                            <th >Teléfono</th>
+                            <th >Correo electrónico</th>
+                            <th >Fecha de alta</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa1</td>
-                            <td class="tabla-celda">Nombre Empresa 1</td>
-                            <td class="tabla-celda">Dirección Empresa 1</td>
-                            <td class="tabla-celda">Contacto Empresa 1</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo1@example.com</td>
-                            <td class="tabla-celda">2023-01-15</td>
+                            <td >ABC123456</td>
+                            <td >Empresa1</td>
+                            <td >Nombre Empresa 1</td>
+                            <td >Dirección Empresa 1</td>
+                            <td >Contacto Empresa 1</td>
+                            <td >123-456-7890</td>
+                            <td >correo1@example.com</td>
+                            <td >2023-01-15</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">DEF789012</td>
-                            <td class="tabla-celda">Empresa2</td>
-                            <td class="tabla-celda">Nombre Empresa 2</td>
-                            <td class="tabla-celda">Dirección Empresa 2</td>
-                            <td class="tabla-celda">Contacto Empresa 2</td>
-                            <td class="tabla-celda">987-654-3210</td>
-                            <td class="tabla-celda">correo2@example.com</td>
-                            <td class="tabla-celda">2022-08-20</td>
+                            <td >DEF789012</td>
+                            <td >Empresa2</td>
+                            <td >Nombre Empresa 2</td>
+                            <td >Dirección Empresa 2</td>
+                            <td >Contacto Empresa 2</td>
+                            <td >987-654-3210</td>
+                            <td >correo2@example.com</td>
+                            <td >2022-08-20</td>
                         </tr>
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
                 <thead>
                         <tr>
-                            <th class="tabla-celda">RFC</th>
-                            <th class="tabla-celda">Alias</th>
-                            <th class="tabla-celda">Razón Social</th>
-                            <th class="tabla-celda">Dirección</th>
-                            <th class="tabla-celda">Contacto</th>
-                            <th class="tabla-celda">Teléfono</th>
-                            <th class="tabla-celda">Correo electrónico</th>
-                            <th class="tabla-celda">Fecha de alta</th>
+                            <th >RFC</th>
+                            <th >Alias</th>
+                            <th >Razón Social</th>
+                            <th >Dirección</th>
+                            <th >Contacto</th>
+                            <th >Teléfono</th>
+                            <th >Correo electrónico</th>
+                            <th >Fecha de alta</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td class="tabla-celda">ABC123456</td>
-                            <td class="tabla-celda">Empresa1</td>
-                            <td class="tabla-celda">Nombre Empresa 1</td>
-                            <td class="tabla-celda">Dirección Empresa 1</td>
-                            <td class="tabla-celda">Contacto Empresa 1</td>
-                            <td class="tabla-celda">123-456-7890</td>
-                            <td class="tabla-celda">correo1@example.com</td>
-                            <td class="tabla-celda">2023-01-15</td>
+                            <td >ABC123456</td>
+                            <td >Empresa1</td>
+                            <td >Nombre Empresa 1</td>
+                            <td >Dirección Empresa 1</td>
+                            <td >Contacto Empresa 1</td>
+                            <td >123-456-7890</td>
+                            <td >correo1@example.com</td>
+                            <td >2023-01-15</td>
                         </tr>
                         <tr>
-                            <td class="tabla-celda">DEF789012</td>
-                            <td class="tabla-celda">Empresa2</td>
-                            <td class="tabla-celda">Nombre Empresa 2</td>
-                            <td class="tabla-celda">Dirección Empresa 2</td>
-                            <td class="tabla-celda">Contacto Empresa 2</td>
-                            <td class="tabla-celda">987-654-3210</td>
-                            <td class="tabla-celda">correo2@example.com</td>
-                            <td class="tabla-celda">2022-08-20</td>
+                            <td >DEF789012</td>
+                            <td >Empresa2</td>
+                            <td >Nombre Empresa 2</td>
+                            <td >Dirección Empresa 2</td>
+                            <td >Contacto Empresa 2</td>
+                            <td >987-654-3210</td>
+                            <td >correo2@example.com</td>
+                            <td >2022-08-20</td>
                         </tr>
                     </tbody>
                 </table>
@@ -102,52 +102,10 @@
         </div>
     </div>
 </div>
+
 <style>
-    .text-modal{
-        font-size: 10px;
-    }
-    .modal {
-        max-height: 83% !important;
-        width: 80% !important;
-    }
 
-    .input-border input[type=search] {
-        border: 3px solid #ddd;
-        border-radius: 30px !important;
-        padding: 0 8px !important;
-        margin: 15px 0 10px 0 !important;
-        height: 35px !important;
-        width: 180px !important;
-    }
-
-    .input-border input[type=search]:focus{
-        border-color: #444 !important;
-        border-bottom: 1px solid #444 !important;
-        box-shadow: 0 1px 0 0 #444 !important;
-    }
-
-    .input-border label {
-        color: black;
-        top: -75px;
-        position: relative;
-        font-weight: bold !important;
-    }
-
-    .input-border input[type=search]:focus + label {
-        color: #111 !important;
-    }
-    .tabla-celda {
-        min-width: 100px;
-        max-width: 150px; 
-        padding: 5px; 
-        text-align: center; 
-        font-size: 13px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-
-    /* BORRAR */
+    /* Fix button selected but all class selected afect */
 
     .selected {
         background-color: black !important;
@@ -157,21 +115,6 @@
         border-radius: 10px;
     }
 
-    .button-table {
-        background-color: white;
-        border: 2px solid white;
-        height: 50px;
-        width: 110px
-    }
-
-    .button-table:focus {
-        background-color: black !important;
-        color: white;
-        height: 50px;
-        border: 2px solid black !important;
-        border-radius: 10px;
-    }
-   
 </style>
 
 <script>

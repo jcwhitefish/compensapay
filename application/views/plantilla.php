@@ -118,7 +118,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </body>
 
 <style>
-    /* Estilos de la barra lateral */
+    /* Styles sidebar */
     .sidebar {
         position: fixed;
         top: 0;
@@ -165,11 +165,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding: 5px;
     }
 
-    /* Padding si se tiene la barra lateral */
-    .container-main {
-        padding-left: 5%;
-        flex-grow: 1;
-    }
+    /* Styles navbar */
 
     .nav {
         background: #fff;
@@ -218,6 +214,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .input-nav:focus {
         outline: none;
         /* Eliminar el borde al enfocar */
+    }
+
+    /* Padding si se tiene la barra lateral */
+    .container-main {
+        padding-left: 5%;
+        flex-grow: 1;
     }
 
     #header {
