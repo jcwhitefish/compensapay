@@ -284,3 +284,17 @@ thead, thead tr,thead tr th{
  font-size: 20px!important;
 }
 
+/* Indicador de provedores-clientes */
+.button-indicador {
+    background-color: white;
+    border: 2px solid white;
+    height: 50px;
+    width: 120px
+}
+
+.button-indicador:focus {
+    background-color: white;
+    border: 2px solid white;
+    height: 50px;
+}
+
