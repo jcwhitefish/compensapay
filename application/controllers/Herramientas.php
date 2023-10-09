@@ -129,4 +129,36 @@ class Herramientas extends CI_Controller
         // Envía los datos en formato JSON
         $this->output->set_output(json_encode($datos));
     }
+    public function cambiarVista($valor = '')
+    {
+        $datos = array();
+        $this->load->library('session');
+
+
+        // Verificar si el usuario ha iniciado sesión en todas las páginas protegidas
+        if ($this->session->userdata('logged_in')) {
+
+
+            switch ($valor) {
+                case 1:
+                    $this->session->set_userdata('vista', 1);
+                    $datos['status'] = 'ok';
+                    break;
+                case 2:
+                    $this->session->set_userdata('vista', 2);
+                    $datos['status'] = 'ok';
+                    break;
+                default:
+                    $datos['status'] = 'Error en los parametros';
+                    # code...
+                    break;
+            }
+            // Configura la respuesta para que sea en formato JSON
+            $this->output->set_content_type('application/json');
+            // Envía los datos en formato JSON
+            $this->output->set_output(json_encode($datos));
+        } else {
+            redirect(base_url('login')); // Redirigir al inicio de sesión si no está autenticado
+        }
+    }
 }

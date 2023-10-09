@@ -1,7 +1,5 @@
 <?php
 class Factura {
-
-    public $o_idOperacion;
     public $o_NumOperacion;
     public $o_idPersona;
     public $o_FechaEmision;
@@ -14,33 +12,30 @@ class Factura {
     public $o_FechaUpload;
     public $o_Activo;
 
-    
     public function __construct(
-        $idOperacion, 
-        $numOperacion, 
-        $idPersona, 
-        $fechaEmision, 
-        $total, 
-        $archivoXML, 
-        $uuid, 
-        $idTipoDocumento, 
-        $subTotal, 
-        $impuesto, 
-        $fechaUpload, 
-        $activo
+        $o_NumOperacion = null,
+        $o_idPersona = null,
+        $o_FechaEmision = null,
+        $o_Total = null,
+        $o_ArchivoXML = null,
+        $o_UUID = null,
+        $o_idTipoDocumento = null,
+        $o_SubTotal = null,
+        $o_Impuesto = null,
+        $o_FechaUpload = null,
+        $o_Activo = null
     ) {
-        $this->o_idOperacion = $idOperacion;
-        $this->o_NumOperacion = $numOperacion;
-        $this->o_idPersona = $idPersona;
-        $this->o_FechaEmision = $fechaEmision;
-        $this->o_Total = $total;
-        $this->o_ArchivoXML = $archivoXML;
-        $this->o_UUID = $uuid;
-        $this->o_idTipoDocumento = $idTipoDocumento;
-        $this->o_SubTotal = $subTotal;
-        $this->o_Impuesto = $impuesto;
-        $this->o_FechaUpload = $fechaUpload;
-        $this->o_Activo = $activo;
+        $this->o_NumOperacion = $o_NumOperacion;
+        $this->o_idPersona = $o_idPersona;
+        $this->o_FechaEmision = $o_FechaEmision;
+        $this->o_Total = $o_Total;
+        $this->o_ArchivoXML = $o_ArchivoXML;
+        $this->o_UUID = $o_UUID;
+        $this->o_idTipoDocumento = $o_idTipoDocumento;
+        $this->o_SubTotal = $o_SubTotal;
+        $this->o_Impuesto = $o_Impuesto;
+        $this->o_FechaUpload = $o_FechaUpload;
+        $this->o_Activo = $o_Activo;
     }
-}
 
+}

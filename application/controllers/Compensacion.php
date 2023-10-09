@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once APPPATH . 'models/enties/Factura.php';
 
-class Xml extends CI_Controller {
+class Compensacion extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -29,13 +29,14 @@ class Xml extends CI_Controller {
 		if (is_array($resultado)) {
 			// Inicializa un array para almacenar objetos Factura
 			$facturas = array();
-		
 			// Itera sobre el array de resultados
+			//print_r($resultado);
 			foreach ($resultado as $jsonFactura) {
 				// Decodifica cada cadena JSON y crea una instancia de la clase Factura
 				$facturaData = json_decode($jsonFactura);
 		
 				if ($facturaData !== null) {
+					//Create the instance about "Factura"
 					$factura = new Factura(
 						$facturaData->FechaEmision,
 						$facturaData->FechaUpdate,
@@ -43,12 +44,10 @@ class Xml extends CI_Controller {
 						$facturaData->Impuestos,
 						$facturaData->Subtotal,
 						$facturaData->TipoDocumento,
-						$facturaData->EstatusClienteProveedor,
+						$facturaData->Estatus,
 						$facturaData->UUID,
 						$facturaData->AliasCliente,
-						$facturaData->RFCCliente,
-						$facturaData->AliasProvedor,
-						$facturaData->RFCProveedor
+						$facturaData->RFCCliente
 					);
 		
 					$facturas[] = $factura;
@@ -64,39 +63,21 @@ class Xml extends CI_Controller {
 		$this->load->view('plantilla', $data);
 		
 	}
+
 	public function factura() {
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
-
 			//Create the instance about "Factura"
-			$factura = new Factura($xmlContent);
-
-			echo $factura->version;
-			echo "<br>";
-			echo $factura->date;
-			echo "<br>";
-
-			// Items
-			foreach ($factura->items as $item) {
-				echo $item['description'];
-				echo "<br>";
-			}
-
-			echo $factura->issuerRfc;
-			echo "<br>";
-			echo $factura->receiverRfc;
-			echo "<br>";
-
-			// Impuestos
-			echo $factura->totalTransferredTaxes;
+			//$factura = new Factura($xmlContent);
+			$xml = simplexml_load_string($xmlContent);
+			print_r($xml);	
 		}
-	}
+	} 				
 	public function notaCredito(){
 
 		if ($_FILES['creditNoteUpload']['error'] == UPLOAD_ERR_OK) {
 			$xmlContent = file_get_contents($_FILES['creditNoteUpload']['tmp_name']);
-			$xml = simplexml_load_string((string)$xmlContent);
-
+			$xml = simplexml_load_string($xmlContent);
 			print_r($xml);
 		}
 	}
