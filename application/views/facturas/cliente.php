@@ -242,7 +242,7 @@
                                         <tr v-for="factura in facturas.reverse()" :key="factura.o_idPersona">
                                             <template v-if="factura.o_Activo == 1">
                                                 <td class="tabla-celda center-align">
-                                                    <i class="small material-icons" style="color: green;">check_circle</i>
+                                                    <input type="radio" id="1" name="1" value="1" require></i>
                                                 </td>
                                                 <td><a href="#">Frontier</a></td>
                                                 <td>{{factura.o_NumOperacion}}</td>
@@ -377,7 +377,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName != ''">Solicitar Factura</a>
+                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName != ''">Solicitar otra Factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
