@@ -261,7 +261,7 @@
 
                             </div>
                             <div class="col l12 d-flex justify-content-flex-end">
-                                <a @click='cambiarSolicitud(0)' class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                <a @click='cambiarSolicitud(0)' class="button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
                                 <button class="button-blue" type="submit">Solicitar</button>
                             </div>
