@@ -58,7 +58,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="factura in facturas.reverse()" :key="facturas.o_idPersona">
+                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
 
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
@@ -98,7 +98,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operaciones.reverse()" :key="operacion.ID_Operacion">
+                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Aprobar</a>
@@ -115,38 +115,6 @@
                             <td>${{operacion.Monto_Ingreso}}</td>
                             <td>${{operacion.Monto_Egreso}}</td>
                         </tr>
-                        <!-- <?php $operaciones = array_reverse($operaciones);
-                                foreach ($operaciones as $operacion) : ?>
-                            <tr>
-                                <td class="tabla-celda center-align">
-                                    <?php
-                                    if ($operacion->Aprobacion == 0) {
-                                        echo '';
-                                    } elseif ($operacion->Aprobacion == 1) {
-                                        echo '<i class="small material-icons" style="color: green;">check_circle</i>';
-                                    }
-                                    ?>
-                                </td>
-                                <td ><?php echo $operacion->ID_Operacion; ?></td>
-                                <td ><a><?php echo $operacion->Proveedor; ?></a></td>
-                                <td ><?php echo $operacion->Fecha_Factura; ?></td>
-                                <td ><?php echo $operacion->Fecha_Alta; ?></td>
-                                <td ><?php echo $operacion->Factura; ?></td>
-                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td ><?php echo $operacion->Nota_Debito_Factura_Proveedor !== null ? $operacion->Nota_Debito_Factura_Proveedor : 'N/A'; ?></td>
-                                <td ><?php echo $operacion->Fecha_Transaccion; ?></td>
-                                <td ><?php echo $operacion->Estatus; ?></td>
-                                <td >$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
-                                <td >$<?php echo number_format($operacion->Monto_Egreso); ?></td>
-                                <td >
-                                    <?php
-                                    if ($operacion->Aprobacion == 0) {
-                                        echo '<a href="#modal-unica-operacion">Adelantar pago</a>';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?> -->
                     </tbody>
                 </table>
             </div>
@@ -191,7 +159,7 @@
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
-                                <button onclick="M.toast({html: 'Se ha subido la factura'})" class="button-blue modal-close" type="button" name="action" @click="uploadFile">Siguiente</button>
+                                <button class="button-blue" :class="{ 'modal-close': checkboxChecked }"  type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -239,7 +207,7 @@
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
-                                        <tr v-for="factura in facturas.reverse()" :key="factura.o_idPersona">
+                                        <tr v-for="factura in facturas" :key="factura.o_idPersona">
                                             <template v-if="factura.o_Activo == 1">
                                                 <td class="tabla-celda center-align">
                                                     <input type="radio" id="1" name="1" value="1" require></i>
@@ -449,7 +417,7 @@
                                     <a class="button-gray modal-close">Cancelar</a>
                                 </div>
                                 <div class="col l4 center-align">
-                                    <a onclick="M.toast({html: 'Se ha cancelado'})" class="button-white modal-close">Rechazar</a>
+                                    <a onclick="M.toast({html: 'Se rechazo'})" class="button-white modal-close">Rechazar</a>
                                     &nbsp;
                                     <button onclick="M.toast({html: 'Se ha autorizado'})" class="button-blue modal-close">Siguiente</button>
                                 </div>
@@ -543,11 +511,9 @@
                         body: formData,
                         redirect: 'follow'
                     });
-
                     if (response.ok) {
+                        M.toast({html: 'Se ha subido la factura'});
                         getFacturas();
-                    } else {
-                        console.error('Error');
                     }
                 } else {
                     alert('Ingresa una factura y acepta los terminos');
@@ -564,7 +530,7 @@
                     .then(response => response.json())
                     .then(result => {
                         operaciones.value = result.operaciones;
-                        console.log(operaciones.value);
+                        operaciones.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
@@ -579,7 +545,7 @@
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;
-                        console.log(facturas.value);
+                        facturas.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
