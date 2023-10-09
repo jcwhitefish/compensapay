@@ -255,6 +255,13 @@ input[type="number"] {
 .align-items-flex-start{
     align-items: flex-start;
 }
+.align-items-flex-end{
+    align-items: flex-end;
+}
+.justify-content-flex-end{
+    justify-content: flex-end;
+}
+
 
 /* Estilos para las tablas */
 tbody tr:hover{

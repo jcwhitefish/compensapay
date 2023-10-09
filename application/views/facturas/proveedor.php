@@ -1,4 +1,3 @@
-
 <div class="p-5" id="app">
 
 
@@ -14,16 +13,16 @@
         </div>
         <div class="col l6 right-align p-5">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
-            Añadir Facturas
+                Añadir Facturas
             </a>
             <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
-            Crear Operaciones
+                Crear Operaciones
             </a>
         </div>
     </div>
 
 
-    
+
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
@@ -38,7 +37,7 @@
                 </div>
                 <div class="col 9">
                     <form class="input-border" action="#" method="post" style="display: flex;">
-                        <input type="search" placeholder="Buscar" >
+                        <input type="search" placeholder="Buscar">
                     </form>
                 </div>
             </div>
@@ -46,22 +45,22 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th >Crear Operación</th>
-                            <th >Proveedor</th>
-                            <th >Factura</th>
-                            <th >Fecha Factura</th>
-                            <th >Fecha Alta</th>
-                            <th >Fecha Transacción</th>
-                            <th >Estatus</th>
-                            <th >Subtotal</th>
-                            <th >IVA</th>
-                            <th >Total</th>
+                            <th>Crear Operación</th>
+                            <th>Proveedor</th>
+                            <th>Factura</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Subtotal</th>
+                            <th>IVA</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <?php $facturas = array_reverse($facturas);
-                            foreach ($facturas as $row) : ?>
+                        foreach ($facturas as $row) : ?>
                             <tr>
                                 <td class="tabla-celda center-align">
                                     <?php
@@ -71,13 +70,13 @@
                                         echo '<i class="small material-icons" style="color: green;">check_circle</i>';
                                     }
                                     ?>
-                                </td>             
-                                <td ><a href="#">Frontier</a></td><!--aqui deberia estar usuario -->
-                                <td ><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td >{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
-                                <td >{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
-                                <td >{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
-                                <td >
+                                </td>
+                                <td><a href="#">Frontier</a></td><!--aqui deberia estar usuario -->
+                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
+                                <td>{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td><!--aqui deberia estar las fechas bien -->
+                                <td>{{modificarFecha('<?= $row->o_FechaUpload ?>')}}</td>
+                                <td>{{modificarFecha('<?= $row->o_FechaEmision ?>')}}</td>
+                                <td>
                                     <?php
                                     if ($row->o_Activo == 0) {
                                         echo 'Pendiente';
@@ -85,36 +84,36 @@
                                         echo 'Cargada';
                                     }
                                     ?>
-                                </td>   
-                                <td >$<?= number_format($row->o_SubTotal); ?></td>
-                                <td >$<?= number_format($row->o_Impuesto); ?></td>
-                                <td >$<?= number_format($row->o_Total); ?></td>
+                                </td>
+                                <td>$<?= number_format($row->o_SubTotal); ?></td>
+                                <td>$<?= number_format($row->o_Impuesto); ?></td>
+                                <td>$<?= number_format($row->o_Total); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th >Aprobacion</th>
-                            <th >ID Operacion</th>
-                            <th >Proveedor</th>
-                            <th >Fecha Factura</th>
-                            <th >Fecha Alta</th>
-                            <th >Factura</th>
-                            <th >Nota de Débito</th>
-                            <th >Fecha Nota de Débito</th>
-                            <th >Fecha Transacción</th>
-                            <th >Estatus</th>
-                            <th >Monto Ingreso</th>
-                            <th >Monto Egreso</th>
+                            <th>Aprobacion</th>
+                            <th>ID Operacion</th>
+                            <th>Proveedor</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Factura</th>
+                            <th>Nota de Débito</th>
+                            <th>Fecha Nota de Débito</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Monto Ingreso</th>
+                            <th>Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
-                                <i v-if="operacion.Aprobacion == 1"  class="small material-icons" style="color: green;">check_circle</i>
+                                <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0">Cargar Factura</a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
@@ -148,13 +147,7 @@
 
                             <div class="row">
                                 <div class="col l9 input-border">
-                                    <input
-                                    type="text"
-                                    name="invoiceDisabled"
-                                    id="invoiceDisabled"
-                                    disabled
-                                    v-model="invoiceUploadName"
-                                    />
+                                    <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
                                     <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
                                 </div>
                                 <div class="col l3 center-align p-5">
@@ -162,7 +155,7 @@
                                     <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
                                 </div>
                             </div>
-                                <div class="row">
+                            <div class="row">
                                 <div class="col l12 d-flex">
                                     <div class="p-5">
                                         <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
@@ -174,9 +167,7 @@
                                 </div>
                             </div>
                             <div class="col l12 center-align">
-                                <a class="modal-close button-gray" style="color: #fff; color:hover: #"
-                                >Cancelar</a
-                                >
+                                <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
                                 <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
@@ -190,7 +181,7 @@
 
 
     <div id="modal-operacion" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" v-if='solicitud == 0'>
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
@@ -213,16 +204,16 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th >Crear Operación</th>
-                                            <th >Proveedor</th>
-                                            <th >Factura</th>
-                                            <th >Fecha Factura</th>
-                                            <th >Fecha Alta</th>
-                                            <th >Fecha Transacción</th>
-                                            <th >Estatus</th>
-                                            <th >Subtotal</th>
-                                            <th >IVA</th>
-                                            <th >Total</th>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
@@ -230,15 +221,15 @@
                                             <?php if ($row->o_Activo == 0) : ?> <!-- Verificar si o_Activo es igual a 0 -->
                                                 <tr>
                                                     <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
-                                                    <td >Frontier</td><!-- Aquí debería estar usuario -->
-                                                    <td ><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
-                                                    <td ><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
-                                                    <td ><?= $row->o_FechaUpload ?></td>
-                                                    <td ><?= $row->o_FechaEmision ?></td>
-                                                    <td >Pendiente</td>
-                                                    <td >$<?= number_format($row->o_SubTotal); ?></td>
-                                                    <td >$<?= number_format($row->o_Impuesto); ?></td>
-                                                    <td >$<?= number_format($row->o_Total); ?></td>
+                                                    <td>Frontier</td><!-- Aquí debería estar usuario -->
+                                                    <td><?= $row->o_NumOperacion ?></td><!-- Aquí debería estar row -->
+                                                    <td><?= $row->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
+                                                    <td><?= $row->o_FechaUpload ?></td>
+                                                    <td><?= $row->o_FechaEmision ?></td>
+                                                    <td>Pendiente</td>
+                                                    <td>$<?= number_format($row->o_SubTotal); ?></td>
+                                                    <td>$<?= number_format($row->o_Impuesto); ?></td>
+                                                    <td>$<?= number_format($row->o_Total); ?></td>
                                                 </tr>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -246,7 +237,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                                <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -256,6 +247,43 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+        <div class="modal-content" v-if='solicitud == 1'>
+            <h5>Solicitar Factura</h5>
+            <div class="card esquinasRedondas">
+                <form @submit.prevent='cambiarSolicitud(2)' action="" method="post">
+                    <div class="card-content ">
+                        <div class="row">
+                            <div class="col l12">
+                                <label style="top: 0!important;" for="descripcion">Mensaje para Solicitar</label>
+                                <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+
+                            </div>
+                            <div class="col l12 d-flex justify-content-flex-end">
+                                <a @click='cambiarSolicitud(0)' class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                &nbsp;
+                                <button class="button-blue" type="submit">Solicitar</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-content" v-if='solicitud == 2'>
+            <h5>&nbsp;</h5>
+            <div class="card esquinasRedondas   center-align">
+                <div class="row">
+                    <div class="col l12 ">
+
+                        <h5 style="margin: 120px auto;">Solicitud hecha correctamente</h5>
+
+                        <a @click='cambiarSolicitud(0)' class="modal-close button-gray" style="position:relative; top:-30px; color:#fff; color:hover:#">Salir</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -287,20 +315,20 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th >Crear Operación</th>
-                                            <th >Proveedor</th>
-                                            <th >Factura</th>
-                                            <th >Fecha Factura</th>
-                                            <th >Fecha Alta</th>
-                                            <th >Fecha Transacción</th>
-                                            <th >Estatus</th>
-                                            <th >Subtotal</th>
-                                            <th >IVA</th>
-                                            <th >Total</th>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
-                                    <?php
+                                        <?php
                                         $primerRegistro = null; // Inicializa una variable para almacenar el primer registro que cumple la condición
 
                                         foreach ($facturas as $row) {
@@ -314,15 +342,15 @@
                                         <?php if ($primerRegistro !== null) : ?> <!-- Verifica si se encontró un primer registro -->
                                             <tr>
                                                 <td class="tabla-celda center-align"><input type="radio" name="grupo" value="opcion1" v-model="checkboxChecked" required></td>
-                                                <td >Frontier</td><!-- Aquí debería estar usuario -->
-                                                <td ><?= $primerRegistro->o_NumOperacion ?></td><!-- Aquí debería estar row -->
-                                                <td ><?= $primerRegistro->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
-                                                <td ><?= $primerRegistro->o_FechaUpload ?></td>
-                                                <td ><?= $primerRegistro->o_FechaEmision ?></td>
-                                                <td >Pendiente</td>
-                                                <td >$<?= number_format($primerRegistro->o_SubTotal); ?></td>
-                                                <td >$<?= number_format($primerRegistro->o_Impuesto); ?></td>
-                                                <td >$<?= number_format($primerRegistro->o_Total); ?></td>
+                                                <td>Frontier</td><!-- Aquí debería estar usuario -->
+                                                <td><?= $primerRegistro->o_NumOperacion ?></td><!-- Aquí debería estar row -->
+                                                <td><?= $primerRegistro->o_FechaEmision ?></td><!-- Aquí debería estar las fechas bien -->
+                                                <td><?= $primerRegistro->o_FechaUpload ?></td>
+                                                <td><?= $primerRegistro->o_FechaEmision ?></td>
+                                                <td>Pendiente</td>
+                                                <td>$<?= number_format($primerRegistro->o_SubTotal); ?></td>
+                                                <td>$<?= number_format($primerRegistro->o_Impuesto); ?></td>
+                                                <td>$<?= number_format($primerRegistro->o_Total); ?></td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -342,13 +370,12 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 <style>
-
     /* main styles */
 
-    .text-modal{
+    .text-modal {
         font-size: 13px;
     }
 
@@ -366,13 +393,15 @@
 
     /* Fix show checkbox and radio buttons*/
 
-    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
         opacity: 1;
         position: relative;
         pointer-events: auto;
     }
 
-    [type="radio"]:not(:checked), [type="radio"]:checked {
+    [type="radio"]:not(:checked),
+    [type="radio"]:checked {
         opacity: 1;
         position: relative;
         pointer-events: auto;
@@ -386,8 +415,7 @@
         height: 50px;
         border: 2px solid black !important;
         border-radius: 10px;
-    }  
-   
+    }
 </style>
 
 <script>
@@ -399,7 +427,7 @@
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
             const operaciones = Vue.ref([]);
-
+            const solicitud = Vue.ref(0);
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
@@ -423,12 +451,12 @@
                     });
 
                     if (response.ok) {
-                        console.log('se subió');
+                        // console.log('se subió');
                         window.location.href = '<?php base_url('facturas') ?>';
                     } else {
                         console.error('Error');
                     }
-                }else{
+                } else {
                     alert('Ingresa una factura y acepta los terminos');
                 }
             };
@@ -436,7 +464,7 @@
             const checkFormatOperation = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
-                    operationUploadName.value = fileInput.files[0].name; 
+                    operationUploadName.value = fileInput.files[0].name;
                     providerUploadName.value = 'Frontier';
                 } else {
                     operationUploadName.value = '';
@@ -458,12 +486,12 @@
                     });
 
                     if (response.ok) {
-                        console.log('se subió');
+                        // console.log('se subió');
                         window.location.href = '<?php base_url('facturas') ?>';
                     } else {
                         console.error('Error');
                     }
-                }else{
+                } else {
                     alert('Ingresa una factura y acepta los terminos')
                 }
             };
@@ -474,19 +502,24 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaOperaciones")?>", requestOptions)
-                .then(response => response.json())
-                .then(result => { operaciones.value = result.operaciones; console.log(operaciones.value);})
-                .catch(error => console.log('error', error));
+                fetch("<?= base_url("facturas/tablaOperaciones") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        operaciones.value = result.operaciones;
+                        // console.log(operaciones.value);
+                    })
+                    .catch(error => {
+                        //console.log('error', error)
+                    });
             };
 
-            const modificarFecha = (fecha) =>{
-                    fecha = fecha.split(' ');
+            const modificarFecha = (fecha) => {
+                fecha = fecha.split(' ');
 
-                    fecha[1] = '';
-                    fecha = fecha.join(' ');
-                    return fecha;
-                };
+                fecha[1] = '';
+                fecha = fecha.join(' ');
+                return fecha;
+            };
 
             const selectButton = (buttonName) => {
                 if (selectedButton.value == buttonName) {
@@ -496,12 +529,15 @@
                 }
             };
 
-            Vue.onMounted (
+            Vue.onMounted(
                 () => {
                     getOperations();
                 }
             )
-
+            const cambiarSolicitud = (valor) => {
+                solicitud.value = valor;
+                // console.log(solicitud);
+            };
             return {
                 invoiceUploadName,
                 operationUploadName,
@@ -514,7 +550,9 @@
                 modificarFecha,
                 selectButton,
                 operaciones,
+                solicitud,
+                cambiarSolicitud
             };
         }
-    }); 
+    });
 </script>
