@@ -98,10 +98,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
+                        <tr v-for="operacion in operaciones.reverse()" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Cargar Factura</a>
+                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
                             <td>{{ operacion.Proveedor }}</td>
@@ -191,7 +191,7 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th>Crear Operación</th>
+                                            <!-- <th>Crear Operación</th> -->
                                             <th>Proveedor</th>
                                             <th>Factura</th>
                                             <th>Fecha Factura</th>
@@ -204,34 +204,34 @@
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
-                                        <tr v-for="factura in facturas.reverse()" :key="factura.o_idPersona">
-                                            <template v-if="factura.o_Activo == 1">
-                                            <td class="tabla-celda center-align">
-                                                <i class="small material-icons" style="color: green;">check_circle</i>
-                                            </td>
+                                    <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
+                                            <!-- <td class="tabla-celda center-align">
+                                                <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
+                                                <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
+                                            </td> -->
                                             <td><a href="#">Frontier</a></td>
-                                            <td>{{factura.o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                            <td>{{facturas[0].o_NumOperacion}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaUpload)}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
                                             <td>
-                                                <p>Pendiente</p>
-                                            </td>   
-                                            <td>${{factura.o_SubTotal}}</td>
-                                            <td>${{factura.o_Impuesto}}</td>
-                                            <td>${{factura.o_Total}}</td>
-                                            </template>
+                                                <p v-if="facturas[0].o_Activo == 1">Pendiente</p>
+                                                <p v-if="facturas[0].o_Activo == 0">Cargada</p>
+                                            </td>
+                                            <td>${{facturas[0].o_SubTotal}}</td>
+                                            <td>${{facturas[0].o_Impuesto}}</td>
+                                            <td>${{facturas[0].o_Total}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                                <!-- <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Cargar Factura</a> -->
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button>
+                                <button onclick="M.toast({html: 'Operacion creada con exito'})" class="button-blue" type="submit" name="action">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -304,7 +304,7 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th>Crear Operación</th>
+                                            <!-- <th>Crear Operación</th> -->
                                             <th>Proveedor</th>
                                             <th>Factura</th>
                                             <th>Fecha Factura</th>
@@ -342,7 +342,7 @@
                                 <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName != ''">Canceler</a>
                             </div>
                             <div class="col l4 center-align">
-                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Rechazar</a>
+                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
                                 <button class="button-blue" type="submit" name="action">Siguiente</button>
                             </div>
@@ -403,10 +403,10 @@
                             </div>
                             <div class="col l12">
                                 <div class="col l8">
-                                    <a class="button-gray modal-close">Solicitar Factura</a>
+                                    <a class="button-gray modal-close">Cancelar</a>
                                 </div>
                                 <div class="col l4 center-align">
-                                    <a onclick="M.toast({html: 'Se ha cancelado'})" class="button-white modal-close">Cancelar</a>
+                                    <a onclick="M.toast({html: 'Se ha cancelado'})" class="button-white modal-close">Rechazar</a>
                                     &nbsp;
                                     <button onclick="M.toast({html: 'Se ha autorizado'})" class="button-blue modal-close">Siguiente</button>
                                 </div>
@@ -501,8 +501,7 @@
                     });
 
                     if (response.ok) {
-                        // console.log('se subió');
-                        window.location.href = '<?php base_url('facturas') ?>';
+                        getOperations();
                     } else {
                         console.error('Error');
                     }
@@ -537,7 +536,7 @@
 
                     if (response.ok) {
                         // console.log('se subió');
-                        window.location.href = '<?php base_url('facturas') ?>';
+                        getOperations();
                     } else {
                         console.error('Error');
                     }

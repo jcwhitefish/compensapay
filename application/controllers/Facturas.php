@@ -124,7 +124,7 @@ class Facturas extends MY_Loggedin {
 			"Factura" => "FAC002",
 			"Nota_Debito_Factura_Proveedor" => "ND001",
 			"Fecha_Nota_Debito_Fact_Proveedor" => "ND001",
-			"Fecha_Transaccion" => "2023-10-05",
+			"Fecha_Transaccion" => "2023-10-09",
 			"Estatus" => "Pendiente",
 			"Monto_Ingreso" => "0.00",
 			"Monto_Egreso" => "0.00",

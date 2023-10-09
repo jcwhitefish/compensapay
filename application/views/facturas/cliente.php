@@ -13,16 +13,16 @@
         </div>
         <div class="col l6 right-align p-5">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
-            Añadir Facturas
+                Añadir Facturas
             </a>
             <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
-            Crear Operaciones
+                Crear Operaciones
             </a>
         </div>
     </div>
 
 
-    
+
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="col 9">
                     <form class="input-border" action="#" method="post" style="display: flex;">
-                        <input type="search" placeholder="Buscar" >
+                        <input type="search" placeholder="Buscar">
                     </form>
                 </div>
             </div>
@@ -45,63 +45,63 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th >Crear Operación</th>
-                            <th >Proveedor</th>
-                            <th >Factura</th>
-                            <th >Fecha Factura</th>
-                            <th >Fecha Alta</th>
-                            <th >Fecha Transacción</th>
-                            <th >Estatus</th>
-                            <th >Subtotal</th>
-                            <th >IVA</th>
-                            <th >Total</th>
+                            <th>Crear Operación</th>
+                            <th>Proveedor</th>
+                            <th>Factura</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Subtotal</th>
+                            <th>IVA</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="factura in facturas.reverse()" :key="facturas.o_idPersona">
 
                             <td class="tabla-celda center-align">
-                                <i v-if="factura.o_Activo == 1"  class="small material-icons" style="color: green;">check_circle</i>
+                                <i v-if="factura.o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.o_Activo == 0" class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>
-                            </td>             
+                            </td>
                             <td><a href="#">Frontier</a></td>
                             <td>{{factura.o_NumOperacion}}</td>
                             <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
                             <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
                             <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
                             <td>
-                                <p v-if="factura.o_Activo == 1" >Pendiente</p>
-                                <p v-if="factura.o_Activo == 0" >Cargada</p>
-                            </td>   
-                            <td >${{factura.o_SubTotal}}</td>
-                            <td >${{factura.o_Impuesto}}</td>
-                            <td >${{factura.o_Total}}</td>
+                                <p v-if="factura.o_Activo == 1">Pendiente</p>
+                                <p v-if="factura.o_Activo == 0">Cargada</p>
+                            </td>
+                            <td>${{factura.o_SubTotal}}</td>
+                            <td>${{factura.o_Impuesto}}</td>
+                            <td>${{factura.o_Total}}</td>
                         </tr>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
+                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th >Aprobacion</th>
-                            <th >ID Operacion</th>
-                            <th >Proveedor</th>
-                            <th >Fecha Factura</th>
-                            <th >Fecha Alta</th>
-                            <th >Factura</th>
-                            <th >Nota de Débito</th>
-                            <th >Fecha Nota de Débito</th>
-                            <th >Fecha Transacción</th>
-                            <th >Estatus</th>
-                            <th >Monto Ingreso</th>
-                            <th >Monto Egreso</th>
+                            <th>Aprobacion</th>
+                            <th>ID Operacion</th>
+                            <th>Proveedor</th>
+                            <th>Fecha Factura</th>
+                            <th>Fecha Alta</th>
+                            <th>Factura</th>
+                            <th>Nota de Débito</th>
+                            <th>Fecha Nota de Débito</th>
+                            <th>Fecha Transacción</th>
+                            <th>Estatus</th>
+                            <th>Monto Ingreso</th>
+                            <th>Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="operacion in operaciones.reverse()" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
-                                <i v-if="operacion.Aprobacion == 1"  class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Cargar Factura</a>
+                                <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Aprobar</a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
                             <td>{{ operacion.Proveedor }}</td>
@@ -116,7 +116,7 @@
                             <td>${{operacion.Monto_Egreso}}</td>
                         </tr>
                         <!-- <?php $operaciones = array_reverse($operaciones);
-                            foreach ($operaciones as $operacion) : ?>
+                                foreach ($operaciones as $operacion) : ?>
                             <tr>
                                 <td class="tabla-celda center-align">
                                     <?php
@@ -137,7 +137,7 @@
                                 <td ><?php echo $operacion->Fecha_Transaccion; ?></td>
                                 <td ><?php echo $operacion->Estatus; ?></td>
                                 <td >$<?php echo number_format($operacion->Monto_Ingreso); ?></td>
-                                <td >$<?php echo number_format( $operacion->Monto_Egreso); ?></td>
+                                <td >$<?php echo number_format($operacion->Monto_Egreso); ?></td>
                                 <td >
                                     <?php
                                     if ($operacion->Aprobacion == 0) {
@@ -166,13 +166,7 @@
 
                             <div class="row">
                                 <div class="col l9 input-border">
-                                    <input
-                                    type="text"
-                                    name="invoiceDisabled"
-                                    id="invoiceDisabled"
-                                    disabled
-                                    v-model="invoiceUploadName"
-                                    />
+                                    <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
                                     <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
                                 </div>
                                 <div class="col l3 center-align p-5">
@@ -183,21 +177,19 @@
 
                             <div class="row">
                                 <div class="row">
-                                <div class="col l12 d-flex">
-                                    <div class="p-5">
-                                        <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
+                                    <div class="col l12 d-flex">
+                                        <div class="p-5">
+                                            <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
+                                        </div>
+                                        <p class="text-modal">
+                                            El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
+                                            Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
+                                        </p><br>
                                     </div>
-                                    <p class="text-modal">
-                                        El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
-                                        Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
-                                    </p><br>
                                 </div>
                             </div>
-                            </div>
                             <div class="col l12 center-align">
-                                <a class="modal-close button-gray" style="color: #fff; color:hover: #"
-                                >Cancelar</a
-                                >
+                                <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
                                 <button onclick="M.toast({html: 'Se ha subido la factura'})" class="button-blue modal-close" type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
@@ -214,8 +206,8 @@
         <div class="modal-content" v-if='solicitud == 0'>
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
-                <div class="card-content" >
-                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
+                <div class="card-content">
+                    <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
@@ -234,35 +226,35 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th >Crear Operación</th>
-                                            <th >Proveedor</th>
-                                            <th >Factura</th>
-                                            <th >Fecha Factura</th>
-                                            <th >Fecha Alta</th>
-                                            <th >Fecha Transacción</th>
-                                            <th >Estatus</th>
-                                            <th >Subtotal</th>
-                                            <th >IVA</th>
-                                            <th >Total</th>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
                                         <tr v-for="factura in facturas.reverse()" :key="factura.o_idPersona">
                                             <template v-if="factura.o_Activo == 1">
-                                            <td class="tabla-celda center-align">
-                                                <i class="small material-icons" style="color: green;">check_circle</i>
-                                            </td>
-                                            <td><a href="#">Frontier</a></td>
-                                            <td>{{factura.o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                                            <td>
-                                                <p>Pendiente</p>
-                                            </td>   
-                                            <td>${{factura.o_SubTotal}}</td>
-                                            <td>${{factura.o_Impuesto}}</td>
-                                            <td>${{factura.o_Total}}</td>
+                                                <td class="tabla-celda center-align">
+                                                    <i class="small material-icons" style="color: green;">check_circle</i>
+                                                </td>
+                                                <td><a href="#">Frontier</a></td>
+                                                <td>{{factura.o_NumOperacion}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
+                                                <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                                <td>
+                                                    <p>Pendiente</p>
+                                                </td>
+                                                <td>${{factura.o_SubTotal}}</td>
+                                                <td>${{factura.o_Impuesto}}</td>
+                                                <td>${{factura.o_Total}}</td>
                                             </template>
                                         </tr>
                                     </tbody>
@@ -270,7 +262,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                                <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Solicitar otra factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -280,7 +272,7 @@
                         </div>
                     </form>
                 </div>
-                
+
             </div>
         </div>
         <div class="modal-content" v-if='solicitud == 1'>
@@ -349,37 +341,38 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th >Crear Operación</th>
-                                            <th >Proveedor</th>
-                                            <th >Factura</th>
-                                            <th >Fecha Factura</th>
-                                            <th >Fecha Alta</th>
-                                            <th >Fecha Transacción</th>
-                                            <th >Estatus</th>
-                                            <th >Subtotal</th>
-                                            <th >IVA</th>
-                                            <th >Total</th>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
-                                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
+                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
                                             <td class="tabla-celda center-align">
-                                                <i v-if="factura.o_Activo == 1"  class="small material-icons" style="color: green;">check_circle</i>
-                                                <a v-if="factura.o_Activo == 0" class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>
-                                            </td>             
+                                                <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;"><input type="radio"></i>
+                                                <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
+                                            </td>
                                             <td><a href="#">Frontier</a></td>
-                                            <td>{{factura.o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                                            <td>{{facturas[0].o_NumOperacion}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaUpload)}}</td>
+                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
                                             <td>
-                                                <p v-if="factura.o_Activo == 1" >Pendiente</p>
-                                                <p v-if="factura.o_Activo == 0" >Cargada</p>
-                                            </td>   
-                                            <td >${{factura.o_SubTotal}}</td>
-                                            <td >${{factura.o_Impuesto}}</td>
-                                            <td >${{factura.o_Total}}</td>
+                                                <p v-if="facturas[0].o_Activo == 1">Pendiente</p>
+                                                <p v-if="facturas[0].o_Activo == 0">Cargada</p>
+                                            </td>
+                                            <td>${{facturas[0].o_SubTotal}}</td>
+                                            <td>${{facturas[0].o_Impuesto}}</td>
+                                            <td>${{facturas[0].o_Total}}</td>
                                         </tr>
+                                          
                                     </tbody>
                                 </table>
                             </div><br>
@@ -415,48 +408,48 @@
 
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="Frontier" disabled/>
+                                    <input type="text" placeholder="Frontier" disabled />
                                     <label for="invoiceDisabled">Provedor</label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="XYZ832HS" disabled/>
+                                    <input type="text" placeholder="XYZ832HS" disabled />
                                     <label for="invoiceDisabled">Factura</label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="XYZ832HS" disabled/>
+                                    <input type="text" placeholder="XYZ832HS" disabled />
                                     <label for="invoiceDisabled">Nota de debito</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="TRA10035904" disabled/>
+                                    <input type="text" placeholder="TRA10035904" disabled />
                                     <label for="invoiceDisabled">ID Transaccion</label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="$ 21,576.00" disabled/>
+                                    <input type="text" placeholder="$ 21,576.00" disabled />
                                     <label for="invoiceDisabled">Monto Factura</label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="$10,501.00" disabled/>
+                                    <input type="text" placeholder="$10,501.00" disabled />
                                     <label for="invoiceDisabled">Monto Nota de Débito (ingreso):</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
-                                <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-                                <label for="start">Inicio:</label>
+                                    <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
+                                    <label for="start">Inicio:</label>
                                 </div>
                                 <div class="col l4 input-border P-5">
-                                    <input type="text" placeholder="123456789098745612" disabled/>
+                                    <input type="text" placeholder="123456789098745612" disabled />
                                     <label for="invoiceDisabled">Cuenta CLABE del proveedor</label>
                                 </div>
                             </div>
                             <div class="col l12">
                                 <div class="col l8">
-                                    <a class="button-gray modal-close">Solicitar Factura</a>
+                                    <a class="button-gray modal-close">Cancelar</a>
                                 </div>
                                 <div class="col l4 center-align">
-                                    <a onclick="M.toast({html: 'Se ha cancelado'})" class="button-white modal-close">Cancelar</a>
+                                    <a onclick="M.toast({html: 'Se ha cancelado'})" class="button-white modal-close">Rechazar</a>
                                     &nbsp;
                                     <button onclick="M.toast({html: 'Se ha autorizado'})" class="button-blue modal-close">Siguiente</button>
                                 </div>
@@ -467,14 +460,21 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <style>
 
+
+    input:disabled::placeholder {
+        color: black !important;
+        /* Cambia el color según tus preferencias */
+        /* Otros estilos que desees aplicar al marcador de posición */
+    }
+
     /* Modal */
 
-    .text-modal{
+    .text-modal {
         font-size: 13px;
     }
 
@@ -485,13 +485,15 @@
 
     /* Fix show checkbox and radiobuttons*/
 
-    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
         opacity: 1;
         position: relative;
         pointer-events: auto;
     }
 
-    [type="radio"]:not(:checked), [type="radio"]:checked {
+    [type="radio"]:not(:checked),
+    [type="radio"]:checked {
         opacity: 1;
         position: relative;
         pointer-events: auto;
@@ -505,8 +507,7 @@
         height: 50px;
         border: 2px solid black !important;
         border-radius: 10px;
-    }  
-   
+    }
 </style>
 
 <script>
@@ -517,10 +518,10 @@
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
-            const operaciones = Vue.ref([]); 
-            const facturas = Vue.ref([]); 
+            const operaciones = Vue.ref([]);
+            const facturas = Vue.ref([]);
             const solicitud = Vue.ref(0);
-            
+
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
@@ -548,7 +549,7 @@
                     } else {
                         console.error('Error');
                     }
-                }else{
+                } else {
                     alert('Ingresa una factura y acepta los terminos');
                 }
             };
@@ -559,10 +560,13 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaOperaciones")?>", requestOptions)
-                .then(response => response.json())
-                .then(result => { operaciones.value = result.operaciones; console.log(operaciones.value);})
-                .catch(error => console.log('error', error));
+                fetch("<?= base_url("facturas/tablaOperaciones") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        operaciones.value = result.operaciones;
+                        console.log(operaciones.value);
+                    })
+                    .catch(error => console.log('error', error));
             };
 
             const getFacturas = () => {
@@ -571,16 +575,19 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturas")?>", requestOptions)
-                .then(response => response.json())
-                .then(result => { facturas.value = result.facturas; console.log(facturas.value);})
-                .catch(error => console.log('error', error));
+                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        facturas.value = result.facturas;
+                        console.log(facturas.value);
+                    })
+                    .catch(error => console.log('error', error));
             };
 
             const checkFormatOperation = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
-                    operationUploadName.value = fileInput.files[0].name; 
+                    operationUploadName.value = fileInput.files[0].name;
                     providerUploadName.value = 'Frontier';
                 } else {
                     operationUploadName.value = '';
@@ -606,18 +613,18 @@
                     } else {
                         console.error('Error');
                     }
-                }else{
+                } else {
                     alert('Ingresa una factura y acepta los terminos')
                 }
             };
 
-            const modificarFecha = (fecha) =>{
-                    fecha = fecha.split(' ');
+            const modificarFecha = (fecha) => {
+                fecha = fecha.split(' ');
 
-                    fecha[1] = '';
-                    fecha = fecha.join(' ');
-                    return fecha;
-                };
+                fecha[1] = '';
+                fecha = fecha.join(' ');
+                return fecha;
+            };
 
             const selectButton = (buttonName) => {
                 if (selectedButton.value == buttonName) {
@@ -626,7 +633,7 @@
                     selectedButton.value = buttonName;
                 }
             };
-            Vue.onMounted (
+            Vue.onMounted(
                 () => {
                     getOperations();
                     getFacturas();
@@ -649,10 +656,10 @@
                 modificarFecha,
                 selectButton,
                 operaciones,
-                facturas,            
+                facturas,
                 solicitud,
                 cambiarSolicitud
             };
         }
-    }); 
+    });
 </script>
