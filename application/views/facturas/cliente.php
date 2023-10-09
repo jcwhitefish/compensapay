@@ -210,7 +210,7 @@
                                         <tr v-for="factura in facturas" :key="factura.o_idPersona">
                                             <template v-if="factura.o_Activo == 1">
                                                 <td class="tabla-celda center-align">
-                                                    <input type="radio" id="1" name="1" value="1" require></i>
+                                                    <input type="radio" id="1" name="1" value="1" required></i>
                                                 </td>
                                                 <td><a href="#">Frontier</a></td>
                                                 <td>{{factura.o_NumOperacion}}</td>
@@ -235,7 +235,7 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button onclick="M.toast({html: 'Se ha subido la factura'})" class="button-blue modal-close" type="submit" name="action">Siguiente</button>
+                                <button class="button-blue" type="submit" name="action">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -546,6 +546,7 @@
                     .then(result => {
                         facturas.value = result.facturas;
                         facturas.value.reverse();
+                        checkboxChecked = Vue.ref(false);
                     })
                     .catch(error => console.log('error', error));
             };
