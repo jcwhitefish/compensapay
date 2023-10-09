@@ -211,10 +211,10 @@
 
 
     <div id="modal-operacion" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" v-if='solicitud == 0'>
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
-                <div class="card-content">
+                <div class="card-content" >
                     <h6 class="p-3">Carga tu factura y selecciona una factura del proveedor o busca un proveedor y selecciona una factura</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
@@ -270,7 +270,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
+                                <a @click="cambiarSolicitud(1)" class="button-blue" v-if="providerUploadName == 'Frontier'">Solicitar Factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -280,6 +280,44 @@
                         </div>
                     </form>
                 </div>
+                
+            </div>
+        </div>
+        <div class="modal-content" v-if='solicitud == 1'>
+            <h5>Solicitar Factura</h5>
+            <div class="card esquinasRedondas">
+                <form @submit.prevent='cambiarSolicitud(2)' action="" method="post">
+                    <div class="card-content ">
+                        <div class="row">
+                            <div class="col l12">
+                                <label style="top: 0!important;" for="descripcion">Mensaje para Solicitar</label>
+                                <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+
+                            </div>
+                            <div class="col l12 d-flex justify-content-flex-end">
+                                <a @click='cambiarSolicitud(0)' class="button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                &nbsp;
+                                <button class="button-blue" type="submit">Solicitar</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-content" v-if='solicitud == 2'>
+            <h5>&nbsp;</h5>
+            <div class="card esquinasRedondas   center-align">
+                <div class="row">
+                    <div class="col l12 ">
+
+                        <h5 style="margin: 120px auto;">Solicitud hecha correctamente</h5>
+
+                        <a @click='cambiarSolicitud(0)' class="modal-close button-gray" style="position:relative; top:-30px; color:#fff; color:hover:#">Salir</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -481,6 +519,7 @@
             const checkboxChecked = Vue.ref(false);
             const operaciones = Vue.ref([]); 
             const facturas = Vue.ref([]); 
+            const solicitud = Vue.ref(0);
             
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -593,7 +632,10 @@
                     getFacturas();
                 }
             )
-
+            const cambiarSolicitud = (valor) => {
+                solicitud.value = valor;
+                // console.log(solicitud);
+            };
 
             return {
                 invoiceUploadName,
@@ -607,7 +649,9 @@
                 modificarFecha,
                 selectButton,
                 operaciones,
-                facturas,
+                facturas,            
+                solicitud,
+                cambiarSolicitud
             };
         }
     }); 
