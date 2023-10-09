@@ -115,7 +115,7 @@ class Facturas extends MY_Loggedin {
 		
 		
 		$factura = array(
-			"Aprobacion" => "0",
+			"Aprobacion" => "1",
 			"ID_Persona" => "6",
 			"ID_Operacion" =>  str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"Proveedor" => "Frontier",
@@ -125,7 +125,7 @@ class Facturas extends MY_Loggedin {
 			"Nota_Debito_Factura_Proveedor" => "ND2331",
 			"Fecha_Nota_Debito_Fact_Proveedor" => "ND4341",
 			"Fecha_Transaccion" => "2023-10-09",
-			"Estatus" => "Pendiente",
+			"Estatus" => "Aprobada",
 			"Monto_Ingreso" => "10000.00",
 			"Monto_Egreso" => "10000.00",
 		);

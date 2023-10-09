@@ -191,7 +191,7 @@
         <div class="col l12 right-align p-5">
             <button class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
 
-            <button class="btn waves-effect waves-light guardar" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
+            <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
         </div>
     </div>
 

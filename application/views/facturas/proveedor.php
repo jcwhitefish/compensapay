@@ -12,13 +12,13 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l3 p-3">
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
+                    <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
                         Clientes
                     </button>
                     &nbsp;
                     <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
                         Provedores
-                    </button>
+                    </button> -->
                 </div>
         <div class="col l3 right-align p-5">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
