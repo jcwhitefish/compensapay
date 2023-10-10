@@ -67,7 +67,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="factura in facturas.reverse()" :key="facturas.o_idPersona">
+                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
 
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.o_Activo == 1"  class="small material-icons" style="color: green;">check_circle</i>
@@ -107,7 +107,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operaciones.reverse()" :key="operacion.ID_Operacion">
+                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
@@ -165,7 +165,7 @@
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" type="button" name="action" @click="uploadFile">Siguiente</button>
+                                <button class="button-blue modal-close" type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -510,10 +510,9 @@
                     });
 
                     if (response.ok) {
-                        getOperations();
-                    } else {
-                        console.error('Error');
-                    }
+                        getFacturas();
+                        M.toast({html: 'Se ha subido la factura'});
+                    } 
                 } else {
                     alert('Ingresa una factura y acepta los terminos');
                 }
@@ -564,6 +563,7 @@
                     .then(response => response.json())
                     .then(result => {
                         operaciones.value = result.operaciones;
+                        operaciones.value.reverse();
                         // console.log(operaciones.value);
                     })
                     .catch(error => {
@@ -579,7 +579,7 @@
 
                 fetch("<?= base_url("facturas/tablaFacturas")?>", requestOptions)
                 .then(response => response.json())
-                .then(result => { facturas.value = result.facturas; console.log(facturas.value);})
+                .then(result => { facturas.value = result.facturas; facturas.value.reverse();;})
                 .catch(error => console.log('error', error));
             };
 

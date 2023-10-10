@@ -12,14 +12,14 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l3">
-                    <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
+            <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
                         Clientes
                     </button>
                     &nbsp;
                     <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
                         Provedores
                     </button> -->
-                </div>
+        </div>
         <div class="col l3">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
                 Añadir Facturas
@@ -110,7 +110,7 @@
                         <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura">Autorizar</a>
+                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura" @click='() => {autorizar = operacion.ID;console.log(autorizar)}'>Autorizar</a>
                             </td>
                             <td>{{ operacion.ID_Operacion }}</td>
                             <td>{{ operacion.Proveedor }}</td>
@@ -167,7 +167,7 @@
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" :class="{ 'modal-close': checkboxChecked }"  type="button" name="action" @click="uploadFile">Siguiente</button>
+                                <button class="button-blue" :class="{ 'modal-close': checkboxChecked }" type="button" name="action" @click="uploadFile">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -271,7 +271,7 @@
                 </form>
             </div>
         </div>
-        <div class="modal-content" v-if='solicitud == 2 || solicitud == 4' >
+        <div class="modal-content" v-if='solicitud == 2 || solicitud == 4'>
             <h5>&nbsp;</h5>
             <div class="card esquinasRedondas   center-align">
                 <div class="row">
@@ -374,7 +374,12 @@
             <h5>Porfavor, autoriza la transacción</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
+<<<<<<< HEAD
                     <form method="post" action="<?php echo base_url('facturas/autorizar'); ?>" enctype="multipart/form-data">
+=======
+                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
+                    <form @submit.prevent="actualizacion()" id="uploadForm" enctype="multipart/form-data">
+>>>>>>> b8e12a2d19f6a9ae9d9fc8b51ff902d82404c389
                         <div class="row">
 
                             <div class="row">
@@ -422,7 +427,7 @@
                                 <div class="col l4 center-align">
                                     <a onclick="M.toast({html: 'Se rechazo'})" class="button-white modal-close">Rechazar</a>
                                     &nbsp;
-                                    <button onclick="alert('Se autorizo la operacion con exito')" class="button-blue modal-close">Autorizar</button>
+                                    <button class="button-blue modal-close" type="submit">Autorizar</button>
                                 </div>
                             </div>
                         </div>
@@ -435,8 +440,6 @@
 </div>
 
 <style>
-
-
     input:disabled::placeholder {
         color: black !important;
         /* Cambia el color según tus preferencias */
@@ -492,6 +495,7 @@
             const operaciones = Vue.ref([]);
             const facturas = Vue.ref([]);
             const solicitud = Vue.ref(0);
+            const autorizar = Vue.ref(0);
 
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -501,7 +505,18 @@
                     invoiceUploadName.value = '';
                 }
             };
+            const actualizacion = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
 
+                fetch("<?= base_url('facturas/actualizacion/')?>" + autorizar.value, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {console.log(result);alert('Se autorizo la operacion con exito'); window.location.replace('<?php echo base_url('facturas'); ?>');})
+                    .catch(error => console.log('error', error));
+
+            };
             const uploadFile = async () => {
                 if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
                     const fileInput = document.getElementById('invoiceUpload');
@@ -515,7 +530,9 @@
                         redirect: 'follow'
                     });
                     if (response.ok) {
-                        M.toast({html: 'Se ha subido la factura'});
+                        M.toast({
+                            html: 'Se ha subido la factura'
+                        });
                         getFacturas();
                     }
                 } else {
@@ -610,18 +627,17 @@
                 }
             )
             const cambiarSolicitud = (valor) => {
-                
-                if (valor == 'recarga' ) {
-                        solicitud.value = 0;
-                        window.location.replace('<?php echo base_url("facturas/carga"); ?>');
+
+                if (valor == 'recarga') {
+                    solicitud.value = 0;
+                    window.location.replace('<?php echo base_url("facturas/carga"); ?>');
 
 
-                }else if(valor == 'validador'){
+                } else if (valor == 'validador') {
                     if (operationUploadName.value != '') {
                         solicitud.value = 4;
                     }
-                }
-                else {
+                } else {
                     solicitud.value = valor;
                 }
                 // console.log(solicitud);
@@ -641,7 +657,9 @@
                 operaciones,
                 facturas,
                 solicitud,
-                cambiarSolicitud
+                cambiarSolicitud,
+                autorizar,
+                actualizacion
             };
         }
     });
