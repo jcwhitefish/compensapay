@@ -143,30 +143,10 @@ class Facturas extends MY_Loggedin
 	public function actualizacion($id)
 	{
 
-<<<<<<< HEAD
-	public function autorizar(){
-		
-		
-=======
->>>>>>> b8e12a2d19f6a9ae9d9fc8b51ff902d82404c389
 		$factura = array(
 			"Aprobacion" => "1",
 			"Estatus" => "Aprobada",
 		);
-<<<<<<< HEAD
-		
-		$ID_Operacion = 2; // Obtener el ID de operación
-		
-		// Construir la consulta de actualización
-		$this->db->where('ID', $ID_Operacion);
-		$this->db->update('tabla_ejemplo', $factura);
-		
-		redirect("facturas");
-			
-	}
-
-}
-=======
 
 		$ID_Operacion = $id; // Obtener el ID de operación
 
@@ -181,4 +161,3 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 }
->>>>>>> b8e12a2d19f6a9ae9d9fc8b51ff902d82404c389
