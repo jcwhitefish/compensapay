@@ -1,18 +1,20 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . 'models/enties/Factura.php';
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedin {
+class Facturas extends MY_Loggedin
+{
 
 	private $user;
 
-    public function __construct() {
-        parent::__construct();
+	public function __construct()
+	{
+		parent::__construct();
 		// Cambia por el usuario
-        $this->user = "6";
-    }
+		$this->user = "6";
+	}
 
 	/**
 	 * Index Page for this controller.
@@ -29,41 +31,43 @@ class Facturas extends MY_Loggedin {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
-	public function index(){
+	public function index()
+	{
 
 		$isClient = $this->session->userdata('vista');
 
 		// If is client
-		if($isClient == 1){
-			$data['main'] = $this->load->view('facturas/cliente', '' , true);
+		if ($isClient == 1) {
+			$data['main'] = $this->load->view('facturas/cliente', '', true);
 			$this->load->view('plantilla', $data);
-		}else{				
-			$data['main'] = $this->load->view('facturas/proveedor', '' , true);
+		} else {
+			$data['main'] = $this->load->view('facturas/proveedor', '', true);
 			$this->load->view('plantilla', $data);
 		}
+	}
 
-	}	
-
-	public function tablaFacturas(){
+	public function tablaFacturas()
+	{
 		$dato = array();
-		
+
 		$this->db->select('*');
 		$this->db->from('operacion');
 		$this->db->where('o_idPersona', $this->user);
 		$queryFacturas = $this->db->get();
 		$facturas = $queryFacturas->result();
-		$dato['facturas'] = $facturas;	
+		$dato['facturas'] = $facturas;
 
-		$dato['status'] = 'ok' ;
+		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($dato));		
+		$this->output->set_output(json_encode($dato));
 	}
-	
-	public function tablaOperaciones(){
+
+	public function tablaOperaciones()
+	{
 		$dato = array();
-	
+
 		$this->db->select('*');
 		$this->db->from('tabla_ejemplo');
 		$this->db->where('ID_Persona', $this->user);
@@ -71,14 +75,15 @@ class Facturas extends MY_Loggedin {
 		$operaciones = $queryOperacion->result();
 		$dato['operaciones'] = $operaciones;
 
-		$dato['status'] = 'ok' ;
+		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($dato));		
+		$this->output->set_output(json_encode($dato));
 	}
 
-	public function subida(){
+	public function subida()
+	{
 		$dato = array();
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
@@ -102,18 +107,19 @@ class Facturas extends MY_Loggedin {
 			);
 			$this->db->insert('operacion', $factura);
 		}
-		
 
-		$dato['status'] = 'ok' ;
+
+		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($dato));		
-	}	
-	
-	public function carga(){
-		
-		
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function carga()
+	{
+
+
 		$factura = array(
 			"Aprobacion" => "1",
 			"ID_Persona" => "6",
@@ -133,7 +139,25 @@ class Facturas extends MY_Loggedin {
 		$this->db->insert('tabla_ejemplo', $factura);
 
 		redirect("facturas");
-			
-	}	
+	}
+	public function actualizacion($id)
+	{
 
+		$factura = array(
+			"Aprobacion" => "1",
+			"Estatus" => "Aprobada",
+		);
+
+		$ID_Operacion = $id; // Obtener el ID de operación
+
+		// Construir la consulta de actualización
+		$this->db->where('ID', $ID_Operacion);
+		$this->db->update('tabla_ejemplo', $factura);
+
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
 }
