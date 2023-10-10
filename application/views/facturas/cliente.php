@@ -374,12 +374,9 @@
             <h5>Porfavor, autoriza la transacción</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-<<<<<<< HEAD
-                    <form method="post" action="<?php echo base_url('facturas/autorizar'); ?>" enctype="multipart/form-data">
-=======
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
                     <form @submit.prevent="actualizacion()" id="uploadForm" enctype="multipart/form-data">
->>>>>>> b8e12a2d19f6a9ae9d9fc8b51ff902d82404c389
+
                         <div class="row">
 
                             <div class="row">
