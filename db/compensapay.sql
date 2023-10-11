@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-10-2023 a las 21:51:50
+-- Tiempo de generación: 11-10-2023 a las 23:34:38
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 7.4.33
 
@@ -62,6 +62,7 @@ DELIMITER ;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `user` varchar(50) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `id_profile` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
