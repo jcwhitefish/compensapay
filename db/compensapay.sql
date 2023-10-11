@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-10-2023 a las 23:34:38
+-- Tiempo de generación: 11-10-2023 a las 23:50:24
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 7.4.33
 
@@ -53,37 +53,6 @@ CREATE TRIGGER `before_update_companies` BEFORE UPDATE ON `companies` FOR EACH R
 $$
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `user` varchar(50) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `id_profile` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `telephone` varchar(10) NOT NULL,
-  `id_question` int(11) NOT NULL,
-  `answer` varchar(255) NOT NULL,
-  `id_companie` int(11) NOT NULL,
-  `manager` tinyint(4) NOT NULL,
-  `created_at` int(11) NOT NULL DEFAULT unix_timestamp(),
-  `updated_at` int(11) NOT NULL DEFAULT unix_timestamp()
-) ;
-
---
--- Disparadores `users`
---
-DELIMITER $$
-CREATE TRIGGER `before_update_users` BEFORE UPDATE ON `users` FOR EACH ROW SET NEW.updated_at = UNIX_TIMESTAMP()
-$$
-DELIMITER ;
-
 --
 -- Índices para tablas volcadas
 --
@@ -96,14 +65,6 @@ ALTER TABLE `companies`
   ADD UNIQUE KEY `rfc` (`rfc`);
 
 --
--- Indices de la tabla `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user` (`user`),
-  ADD KEY `id_companie_values` (`id_companie`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -112,22 +73,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `companies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `id_companie_values` FOREIGN KEY (`id_companie`) REFERENCES `companies` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
