@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-require_once APPPATH . 'models/enties/Factura.php';
+
+//later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedin
+class Facturas extends MY_Loggedout
 {
 
 	private $user;
@@ -12,6 +13,7 @@ class Facturas extends MY_Loggedin
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('InvoiceModel');
 		// Cambia por el usuario
 		$this->user = "6";
 	}
@@ -50,12 +52,7 @@ class Facturas extends MY_Loggedin
 	{
 		$dato = array();
 
-		$this->db->select('*');
-		$this->db->from('operacion');
-		$this->db->where('o_idPersona', $this->user);
-		$queryFacturas = $this->db->get();
-		$facturas = $queryFacturas->result();
-		$dato['facturas'] = $facturas;
+		$dato['facturas'] = $this->InvoiceModel->get_invoices();
 
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
@@ -140,8 +137,7 @@ class Facturas extends MY_Loggedin
 
 		redirect("facturas");
 	}
-	public function actualizacion($id)
-	{
+	public function actualizacion($id){
 
 		$factura = array(
 			"Aprobacion" => "1",
