@@ -6,6 +6,9 @@ class Herramientas extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('type_model'); // Carga el modelo
+        $this->load->model('regimen_model'); // Carga el modelo
+        $this->load->model('postal_model'); // Carga el modelo
     }
 
     public function index()
@@ -84,11 +87,14 @@ class Herramientas extends CI_Controller
         // Envía los datos en formato JSON
         $this->output->set_output(json_encode($datos));
     }
-    public function listaRegimen($tipo)
+    public function listaRegimenes($tipo)
     {
         $datos = array();
-        if ($tipo == 1 || $tipo == 2) {
-            $datos =  $this->Interaccionbd->ConsutlaRegimenFiscal($tipo);
+
+        if ($tipo == 1) {
+            $datos =  $this->regimen_model->get_all_regimenes('Fisica');
+        }elseif ($tipo == 2) {
+            $datos =  $this->regimen_model->get_all_regimenes('Moral');
         }
 
         // Configura la respuesta para que sea en formato JSON
@@ -100,8 +106,20 @@ class Herramientas extends CI_Controller
     {
         $datos = array();
 
-        $datos =  $this->Interaccionbd->VerGiro();
+        $datos =  $this->type_model->get_all_types();
 
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($datos));
+    }
+    public function listaPostal($zip = '')
+    {
+        $datos = array();
+        //validamos que el codigo postal solo sea nummero y de 5 digitos con reg
+        if (preg_match('/^\d{5}$/', $zip)) {
+            $datos =  $this->postal_model->get_all_postal($zip);
+        }
 
         // Configura la respuesta para que sea en formato JSON
         $this->output->set_content_type('application/json');

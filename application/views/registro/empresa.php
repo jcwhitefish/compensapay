@@ -1,5 +1,5 @@
-<?php 
- //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
+<?php
+//TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 ?>
 <div class="p-5" id="app">
     <div class="card esquinasRedondas">
@@ -27,7 +27,7 @@
                             </div>
                             <div class="input-border col l6">
                                 <select name="giro" id="giro" v-model="data['giro']" required>
-                                    <option v-for="giro in listaGiros" :key="giro.id_Giro" :value="giro.id_Giro">{{ giro.Giro }}</option>
+                                    <option v-for="giro in listaGiros" :key="giro.gro_id" :value="giro.gro_id">{{ giro.gro_giro }}</option>
 
                                 </select>
                                 <label for="giro">Giro *</label>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="input-border col l6">
                                 <select name="regimen" id="regimen" v-model="data['regimen']" required>
-                                    <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{ regimen.Regimen }}</option>
+                                    <option v-for="(regimen,index) in listaRegimenes" :key="regimen.rg_id" :value="regimen.rg_id">{{ regimen.rg_regimen }}</option>
 
                                 </select>
                                 <label for="regimen">Regimen Fiscal *</label>
@@ -54,11 +54,8 @@
                                 <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <select name="estado" id="estado" v-model="data['estado']" required>
-                                    <option v-for="estado in listaEstados" :key="estado.id_estado" :value="estado.id_estado">{{ estado.Nombre }}</option>
-
-                                </select>
-                                <label for="estado">Estado *</label>
+                                <input type="text" name="estado" id="estado" disabled :placeholder="data['estado']['Alias']" required>
+                                <label for="estado">Banco emisor *</label>
                             </div>
                         </div>
                         <div class="row">
@@ -187,7 +184,7 @@
                 comprobanteDomicilioUpload: ref(''),
                 representanteLegalUpload: ref(''),
                 codigoPostal: ref(''),
-                estado: ref(null),
+                estado: ref(''),
                 regimen: ref(null),
                 direccion: ref(''),
                 telefono: ref(''),
@@ -211,10 +208,9 @@
             const representanteLegalUpload = ref(null);
             const representanteLegalUploadName = ref('');
             //partes de listar
-            const listaEstados = ref([]);
             const listaRegimenes = ref([]);
             const listaGiros = ref([]);
-
+            const codigoPostalID = ref([]);
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
                 if (!isRef(colorsBorder[nombreInput])) {
@@ -240,10 +236,33 @@
                     case 'codigoPostal':
                         var patron = /[^0-9]/;
                         if (data[nombreInput] != '' && data[nombreInput].length == 5 && !patron.test(data[nombreInput])) {
+                            var requestOptions = {
+                                method: 'GET',
+                                redirect: 'follow'
+                            };
 
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid #03BB85!important',
-                            }
+                            fetch("<?php echo base_url('herramientas/listaPostal/'); ?>" + data[nombreInput].toString(), requestOptions)
+                                .then(response => response.json())
+                                .then(result => {
+                                    console.log(typeof result);
+                                    if (Object.keys(result).length === 0) {
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid red!important',
+                                        }
+                                    // TODO: Nos quedamos aqui falta validar el estado la variable estado nombre y el data['estado'] lleva el id
+                                    } else {
+                                        codigoPostalID.value = result[0].zip_id;
+                                        console.log(codigoPostalID.value);
+                                        data['estado'] = result[0].zip_state;
+                                        console.log(data['estado']);
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid #03BB85!important',
+                                        }
+                                    }
+                                })
+                                .catch(error => console.log('error', error));
+
+
 
                         } else {
                             colorsBorder[nombreInput] = {
@@ -514,10 +533,10 @@
                     method: 'GET',
                     redirect: 'follow'
                 };
-                fetch("<?php echo base_url('herramientas/listaRegimen/2'); ?>", requestOptions)
+                fetch("<?php echo base_url('herramientas/listaRegimenes/2'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        listaRegimenes.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        listaRegimenes.value = result; // Almacenar los datos en la propiedad listaRegimenes
                         // console.log(listaRegimenes.value);
                         nextTick(() => {
                             M.FormSelect.init(document.getElementById('regimen'));
@@ -534,7 +553,7 @@
                 fetch("<?php echo base_url('herramientas/listaGiro'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        listaGiros.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        listaGiros.value = result; // Almacenar los datos en la propiedad listaRegimenes
                         //console.log(listaGiros.value);
                         nextTick(() => {
                             M.FormSelect.init(document.getElementById('giro'));
@@ -560,6 +579,7 @@
                 };
                 // console.log('dataObject');
                 // console.log(dataObject);
+                // TODO: Cambiar esta validacion porque hay datos que no solo tienen que ser diferentes de vacio si no que tambien tienen otras validaciones
                 const isEmpty = Object.values(dataObject).some(value => value === null || value === undefined || value === '');
                 // console.log('Estan vacios alguno?'+isEmpty);
                 if (!isEmpty) {
@@ -586,7 +606,6 @@
             onMounted(
                 () => {
                     idUnico();
-                    listarEstados();
                     listarRegimen();
                     listarGiro();
                 }
@@ -607,7 +626,6 @@
                 comprobanteDomicilioUploadName,
                 representanteLegalUpload,
                 representanteLegalUploadName,
-                listaEstados,
                 listaRegimenes,
                 listaGiros,
                 submitForm

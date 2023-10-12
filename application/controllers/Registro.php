@@ -3,7 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Registro extends MY_Loggedout
 {
-
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('user_model'); // Carga el modelo
+		$this->load->model('company_model'); // Carga el modelo
+    }
 	/**
 	 * Index Page for this controller.
 	 *
@@ -89,7 +93,7 @@ class Registro extends MY_Loggedout
 	}
 	public function registraEmpresa()
 	{
-		//faltaAgragar a la empresa provedora
+		$datos = array();
 		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required');
 		$this->form_validation->set_rules('nameComercial', 'NameComercial', 'required');
 		$this->form_validation->set_rules('type', 'Type', 'required');
@@ -103,21 +107,18 @@ class Registro extends MY_Loggedout
 		$this->form_validation->set_rules('bank', 'Bank', 'required');
 		$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
 		if ($this->form_validation->run() === FALSE) {
-			// Si la validación falla, puedes mostrar errores o redirigir al formulario
-			// redirect('controlador/metodo');
 			$validation_errors = validation_errors();
 			$registro['validation_errors'] = $validation_errors;
 		} else {
-			// Si la validación es exitosa, obtén los datos del formulario
 			$bussinesName = $this->input->post('bussinesName');
-			$codigoPostal = $this->input->post('codigoPostal');
-			$estado = $this->input->post('estado');
-			$direccion = $this->input->post('direccion');
-			$telefono = $this->input->post('telefono');
 			$nameComercial = $this->input->post('nameComercial');
 			$type = $this->input->post('type');
 			$rfc = $this->input->post('rfc');
 			$fiscal = $this->input->post('fiscal');
+			$codigoPostal = $this->input->post('codigoPostal');
+			$estado = $this->input->post('estado');
+			$direccion = $this->input->post('direccion');
+			$telefono = $this->input->post('telefono');			
 			$clabe = $this->input->post('clabe');
 			$bank = $this->input->post('bank');
 			$uniqueString = $this->input->post('uniqueString');
@@ -128,42 +129,27 @@ class Registro extends MY_Loggedout
 
 		$renombre = rename($sourcePath, $destinationPath);
 
-		$agregarpersona = $this->Interaccionbd->AgregaPersona('{"Nombre": "' . $bussinesName . '",
-			"Apellido": "",
-			"Alias": "' . $nameComercial . '",
-			"RFC": "' . $rfc . '",
-			"TipoPersona": 2,
-			"Rol": 1,
-			"ActivoFintec": 0,
-			"RegimenFical":' . $fiscal . ',
-			"idCtaBanco":1,
-			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-logo.jpeg"}');
-		//Rol indica si es proveedor o no
-		$registro['id'] = $agregarpersona;
+		$datos_compania = array(
+            'legal_name' => $bussinesName,
+            'short_name' => $nameComercial,
+            'id_type' => $type,
+            'rfc' => $rfc,
+            'id_fiscal' => $fiscal,
+            'id_postal_code' => $codigoPostal,
+            'id_country' => $estado,
+            'address' => $direccion,
+            'telephone' => $telefono,
+            'account_clabe' => $clabe,
+            'id_broadcast_bank' => $bank,
+            'unique_key' => $uniqueString
+        );
 
-		$AgregaCuentaBancaria = $this->Interaccionbd->AgregaCuentaBancaria('{"idPersona":' . $registro['id'] . ',
-			"idBanco":' . $bank . ',
-			"CLABE": "' . $clabe . '"}');
-
-		$update = $this->Interaccionbd->updatePersona('{
-			"idpersona":"' . $registro['id'] . '",   
-			"Nombre": "' . $bussinesName . '",
-			"Apellido": "",
-			"Alias": "' . $nameComercial . '",
-			"RFC": "' . $rfc . '",
-			"TipoPersona": "2",
-			"Rol": "1",
-			"ActivoFintec": "0",
-			"RegimenFical":' . $fiscal . ',
-			"idCtaBanco":2,
-			"Logo":"./boveda/' . $uniqueString . '/' . $uniqueString . '-logo.jpeg"
-			"Activo":"0"
-		}');
-
+        $id_insertado = $this->company_model->insert_company($datos_compania);
+		$datos['id_company'] = $id_insertado;
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($registro));
+		$this->output->set_output(json_encode($datos));
 	}
 	public function registraUsuario()
 	{

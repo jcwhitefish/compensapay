@@ -1,0 +1,21 @@
+<?php 
+class Company_model extends CI_Model {
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+    // Funcion para registrar las companias
+    public function insert_company($datos) {
+        // Asegurar que solo se insertan las columnas deseadas
+        $columnas_permitidas = ['legal_name', 'short_name', 'id_type', 'rfc', 'id_fiscal', 'id_postal_code', 'id_country', 'address', 'telephone', 'account_clabe', 'id_broadcast_bank', 'unique_key'];
+
+        // Filtrar solo las columnas permitidas
+        $datos_insertar = array_intersect_key($datos, array_flip($columnas_permitidas));
+
+        // Insertar datos en la base de datos
+        $this->db->insert('companies', $datos_insertar);
+
+        // Devolver el ID del último registro insertado
+        return $this->db->insert_id();
+    }
+}
