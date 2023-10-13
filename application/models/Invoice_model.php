@@ -12,11 +12,18 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
-    public function get_invoices() {
-        $query = $this->db->get('invoices');
+    public function get_my_invoices($user) {
+        $this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('id_user', $user);
+        $query = $this->db->get();
         return $query->result();
     }
     
+    public function post_my_invoice($xml) {
+        $this->db->insert('invoices', $xml);
+        return $this->db->insert_id();
+    }
   
 }
 ?>

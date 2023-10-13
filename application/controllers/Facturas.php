@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedout
+class Facturas extends MY_Loggedin
 {
 
 	private $user;
@@ -15,7 +15,7 @@ class Facturas extends MY_Loggedout
 		parent::__construct();
 		$this->load->model('Invoice_model');
 		// Cambia por el usuario
-		$this->user = "6";
+		$this->user = "1";
 	}
 
 	/**
@@ -51,9 +51,7 @@ class Facturas extends MY_Loggedout
 	public function tablaFacturas()
 	{
 		$dato = array();
-
-		$dato['facturas'] = $this->Invoice_model->get_all_invoices();
-
+		$dato['facturas'] = $this->Invoice_model->get_my_invoices($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -64,14 +62,7 @@ class Facturas extends MY_Loggedout
 	public function tablaOperaciones()
 	{
 		$dato = array();
-
-		$this->db->select('*');
-		$this->db->from('tabla_ejemplo');
-		$this->db->where('ID_Persona', $this->user);
-		$queryOperacion = $this->db->get();
-		$operaciones = $queryOperacion->result();
-		$dato['operaciones'] = $operaciones;
-
+		$dato['operaciones'] = $this->Invoice_model->get_my_invoices($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -79,7 +70,7 @@ class Facturas extends MY_Loggedout
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function subida()
+	public function subidaFactura()
 	{
 		$dato = array();
 
@@ -88,25 +79,11 @@ class Facturas extends MY_Loggedout
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
-			$factura = procesar_xml($xml);
-			$factura = array(
-				"o_NumOperacion" => $factura->o_NumOperacion,
-				"o_idPersona" =>  $this->user,
-				"o_FechaEmision" => $factura->o_FechaEmision,
-				"o_Total" => $factura->o_Total,
-				"o_ArchivoXML" => $factura->o_ArchivoXML,
-				"o_UUID" => $factura->o_UUID,
-				"o_idTipoDocumento" => $factura->o_idTipoDocumento,
-				"o_SubTotal" => $factura->o_SubTotal,
-				"o_Impuesto" => $factura->o_Impuesto,
-				"o_FechaUpload" => $factura->o_FechaUpload,
-				"o_Activo" => $factura->o_Activo
-			);
-			$this->db->insert('operacion', $factura);
+			$factura = procesar_xml($xml, $this->user);
+			$id_insertado = $this->Invoice_model->post_my_invoice($factura);
 		}
 
-
-		$dato['status'] = 'ok';
+		$dato['status'] = "ok";
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
@@ -115,7 +92,6 @@ class Facturas extends MY_Loggedout
 
 	public function carga()
 	{
-
 
 		$factura = array(
 			"Aprobacion" => "1",
@@ -137,6 +113,7 @@ class Facturas extends MY_Loggedout
 
 		redirect("facturas");
 	}
+
 	public function actualizacion($id){
 
 		$factura = array(

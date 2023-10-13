@@ -68,9 +68,12 @@
                     </thead>
                     <tbody>
                         <tr v-for="factura in facturas" :key="facturas.o_idPersona">
-                            <td class="center-align">{{factura.status}}</td>
+                        <td class="tabla-celda center-align">
+                                <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
+                            </td>
+                            <td>1</td>
                             <td>{{factura.sender_rfc}}</td>
-                            <td>{{factura.invoice_number}}</td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_date}}</td>
                             <td>{{factura.transaction_date}}</td>
@@ -105,17 +108,17 @@
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
                             </td>
-                            <td>{{ operacion.ID_Operacion }}</td>
-                            <td>{{ operacion.Proveedor }}</td>
-                            <td>{{ operacion.Fecha_Factura }}</td>
-                            <td>{{ operacion.Fecha_Alta }}</td>
-                            <td>{{ operacion.Factura }}</td>
-                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
-                            <td>{{ operacion.Nota_Debito_Factura_Proveedor !== null ? operacion.Nota_Debito_Factura_Proveedor : 'N/A' }}</td>
-                            <td>{{ operacion.Fecha_Transaccion }}</td>
-                            <td>{{ operacion.Estatus }}</td>
-                            <td>$ {{ operacion.Monto_Ingreso }}</td>
-                            <td>$ {{ operacion.Monto_Egreso }}</td>
+                            <td>{{ operaciones.id_invoice }}</td>
+                            <td>{{ operaciones.id_debit_note }}</td>
+                            <td>{{ operaciones.id_uploaded_by }}</td>
+                            <td>{{ operaciones.id_client }}</td>
+                            <td>{{ operaciones.id_provider }}</td>
+                            <td>{{ operaciones.operation_number }}</td>
+                            <td>{{ operaciones.creation_date }}</td>
+                            <td>{{ operaciones.payment_date }}</td>
+                            <td>{{ operaciones.entry_money }}</td>
+                            <td>{{ operaciones.exit_money }}</td>
+                            <td>{{ operaciones.status }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -206,23 +209,8 @@
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
-                                    <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
-                                            <!-- <td class="tabla-celda center-align">
-                                                <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                                <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
-                                            </td> -->
-                                            <!-- <td><a href="#">Frontier</a></td>
-                                            <td>{{facturas[0].o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>
-                                                <p v-if="facturas[0].o_Activo == 1">Pendiente</p>
-                                                <p v-if="facturas[0].o_Activo == 0">Cargada</p>
-                                            </td>
-                                            <td>${{facturas[0].o_SubTotal}}</td>
-                                            <td>${{facturas[0].o_Impuesto}}</td>
-                                            <td>${{facturas[0].o_Total}}</td> -->
+                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
+        
                                         </tr>
                                     </tbody>
                                 </table>
@@ -493,10 +481,10 @@
                 if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
                     const fileInput = document.getElementById('invoiceUpload');
                     const formData = new FormData();
-                    formData.append('user', 6);
+                    formData.append('user', 1);
                     formData.append('invoiceUpload', fileInput.files[0]);
 
-                    const response = await fetch("<?= base_url('facturas/subida') ?>", {
+                    const response = await fetch("<?= base_url('facturas/subidaFactura') ?>", {
                         method: 'POST',
                         body: formData,
                         redirect: 'follow'
