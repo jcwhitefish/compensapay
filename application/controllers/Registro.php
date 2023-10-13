@@ -30,6 +30,7 @@ class Registro extends MY_Loggedout
 	}
 	public function usuario(...$encodedParams)
 	{
+		// TODO: Aqui solo se deberia acceder por medio de empresa
 		$data = array();
 		if (!empty($encodedParams)) {
 
@@ -100,7 +101,7 @@ class Registro extends MY_Loggedout
 		$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|regex_match[/^[A-Z0-9]{12,13}$/]');
 		$this->form_validation->set_rules('fiscal', 'Fiscal', 'required');
 		$this->form_validation->set_rules('clabe', 'CLABE', 'trim|required|regex_match[/^[0-9]{18}$/]');
-		$this->form_validation->set_rules('codigoPostal', 'CodigoPostal', 'required|regex_match[/^[0-9]{5}$/]');
+		$this->form_validation->set_rules('codigoPostal', 'CodigoPostal', 'required');
 		$this->form_validation->set_rules('estado', 'Estado', 'required');
 		$this->form_validation->set_rules('direccion', 'Direccion', 'required');
 		$this->form_validation->set_rules('telefono', 'Telefono', 'required|regex_match[/^[0-9]+$/]');
@@ -184,28 +185,21 @@ class Registro extends MY_Loggedout
 			$idEmpresa = $this->input->post('idEmpresa');
 			$uniqueString = $this->input->post('uniqueString');
 		}
-		//Registramos usuario
+        $datos_usuario = array(
+            'user' => $user,
+			'name' => $name,
+            'password' => '',
+            'profile' => 1,
+            'last_name' => $lastname,
+            'email' => $email,
+            'telephone' => $number,
+            'id_question' => $question,
+            'answer' => $answer,
+            'id_companie' => $idEmpresa,
+            'unique_key' => $uniqueString
+        );
 
-		$agregausuario = $this->Interaccionbd->AgregaUsuario('{
-			"NombreUsuario": "' . $user . '",
-			"Nombre": "' . $name . '",
-			"Apellidos": "' . $lastname . '",
-			"idPersona": ' . $idEmpresa . ',
-			"idPerfil": 1,
-			"urlImagen":"./boveda/' . $uniqueString . '/' . $uniqueString . '-foto.jpeg"}');
-
-		$agregarepresentante = $this->Interaccionbd->AgregaRepresentante('{"NombreRepresentante": "' . $name . ' ' . $lastname . '",
-			"RFC":"",
-			"idPersona": "' . $idEmpresa . '"}');
-
-		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 2,
-			"idPersona":' . $idEmpresa . ',
-			"Contenido": "' . $number . '"}');
-		$agregacontacto = $this->Interaccionbd->AgregaContacto('{"idTipoContacto": 3,
-				"idPersona":' . $idEmpresa . ',
-				"Contenido": "' . $email . '"}');
-
-
+        $id_insertado = $this->user_model->insertar_usuario($datos_usuario);
 
 		$encodedParams = array();
 		$encodedParams['nombre'] = urlencode($name . ' ' . $lastname);

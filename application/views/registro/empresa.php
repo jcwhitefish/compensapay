@@ -54,8 +54,8 @@
                                 <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                             </div>
                             <div class="input-border col l6">
-                                <input type="text" name="estado" id="estado" disabled :placeholder="data['estado']['Alias']" required>
-                                <label for="estado">Banco emisor *</label>
+                                <input type="text" name="estado" id="estado" disabled :placeholder="data['estado']['name']" required>
+                                <label for="estado">Estado</label>
                             </div>
                         </div>
                         <div class="row">
@@ -86,7 +86,7 @@
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['Alias']" required>
+                                <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['bnk_alias']" required>
                                 <label for="bank">Banco emisor *</label>
                             </div>
                         </div>
@@ -177,14 +177,14 @@
                 nameComercial: ref(''),
                 rfc: ref(''),
                 clabe: ref(''),
-                bank: ref(''),
+                bank: ref([]),
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
                 comprobanteDomicilioUpload: ref(''),
                 representanteLegalUpload: ref(''),
                 codigoPostal: ref(''),
-                estado: ref(''),
+                estado: ref([]),
                 regimen: ref(null),
                 direccion: ref(''),
                 telefono: ref(''),
@@ -210,7 +210,7 @@
             //partes de listar
             const listaRegimenes = ref([]);
             const listaGiros = ref([]);
-            const codigoPostalID = ref([]);
+            const codigoPostalID = ref('');
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
                 if (!isRef(colorsBorder[nombreInput])) {
@@ -244,17 +244,24 @@
                             fetch("<?php echo base_url('herramientas/listaPostal/'); ?>" + data[nombreInput].toString(), requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
-                                    console.log(typeof result);
+                                    // console.log(typeof result);
                                     if (Object.keys(result).length === 0) {
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid red!important',
                                         }
-                                    // TODO: Nos quedamos aqui falta validar el estado la variable estado nombre y el data['estado'] lleva el id
                                     } else {
                                         codigoPostalID.value = result[0].zip_id;
-                                        console.log(codigoPostalID.value);
-                                        data['estado'] = result[0].zip_state;
-                                        console.log(data['estado']);
+                                        // console.log(codigoPostalID.value);
+                                        data['estado']['id'] = result[0].zip_state;
+
+                                        fetch("<?php echo base_url('herramientas/listaEstado/'); ?>" + String(data['estado']['id']), requestOptions)
+                                            .then(response => response.json())
+                                            .then(result => {
+                                                //console.log(result);
+                                                data['estado']['name'] = result[0]['stt_name'];
+                                                //console.log(data['estado']['name']);
+                                            })
+                                            .catch(error => console.log('error', error));
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid #03BB85!important',
                                         }
@@ -358,7 +365,7 @@
                             fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data[nombreInput].toString().substring(0, 3), requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
-                                    data['bank'] = JSON.parse(result)
+                                    data['bank'] = result[0];
                                     if (data['bank'] == 0) {
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid red!important',
@@ -566,17 +573,18 @@
                 const dataObject = {
                     bussinesName: data.bussinesName,
                     nameComercial: data.nameComercial,
-                    codigoPostal: data.codigoPostal,
-                    estado: data.estado,
+                    codigoPostal: codigoPostalID.value,
+                    estado: data.estado.id,
                     direccion: data.direccion,
                     telefono: data.telefono,
                     type: data.giro,
                     rfc: data.rfc,
                     fiscal: data.regimen,
                     clabe: data.clabe,
-                    bank: data.bank.idBanco,
+                    bank: data.bank.bnk_id,
                     documentos: data.uniqueString,
                 };
+
                 // console.log('dataObject');
                 // console.log(dataObject);
                 // TODO: Cambiar esta validacion porque hay datos que no solo tienen que ser diferentes de vacio si no que tambien tienen otras validaciones
@@ -597,6 +605,7 @@
                     window.location.replace("<?php echo base_url(); ?>" + finalURL);
                     // console.log(finalURL);
                 } else {
+                    console.log(dataObject);
                     // Al menos uno de los valores está vacío, no hacer nada
                 }
 
