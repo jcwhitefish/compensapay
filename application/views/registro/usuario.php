@@ -14,7 +14,7 @@
                                 <label for="user">Usuario *</label>
                             </div>
                             <div class="input-border col l6">
-                                <input v-model="data['profile']" type="text" name="profile" id="profile" disabled>
+                                <input v-model="profileText" type="text" name="profile" id="profile" disabled>
                                 <label for="profile">Perfil</label>
                             </div>
                         </div>
@@ -111,8 +111,8 @@
             }
             ?>
             const data = reactive({
-                user: ref('gato'),
-                profile: ref(''),
+                user: ref(''),
+                profile: ref(`${typeof dataEmpresa === 'undefined' ? 0 : 1}`),
                 name: ref(''),
                 lastname: ref(''),
                 email: ref(''),
@@ -123,7 +123,7 @@
                 answer: ref(''),
                 uniqueString: ref('')
             });
-
+            const profileText = ref(`${typeof dataEmpresa === 'undefined' ? 'Usuario' : 'Administrador'}`);
             const imageUpload = ref(null);
             const imageUploadURL = ref('https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg');
             const colorsBorder = reactive({});
@@ -269,9 +269,8 @@
 
             }
             const formUsuario = (empresa = []) => {
-
-                if (typeof empresa['id'] === 'undefined') {
-                    empresa['id'] = 0;
+                if (typeof empresa['id_company'] === 'undefined') {
+                    empresa['id_company'] = 0;
                 }
                 //Aqui iria un echo con una variable de php si el usuario fue invitado
                 // Esto solo sirve en POST
@@ -322,7 +321,7 @@
                             formData.append(key, dataEmpresa[key]);
                         }
                     }
-                    console.log(dataEmpresa);
+                    //console.log(dataEmpresa);
                     fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
                             method: 'POST',
                             body: formData,
@@ -332,12 +331,12 @@
                             if (!response.ok) {
                                 throw new Error('La solicitud no fue exitosa');
                             }
-                            return response.text();
+                            return response.json();
                         })
                         .then((responseData) => {
-                            console.log(responseData);
+                            //console.log(responseData);
                             // Hacer algo con los datos, por ejemplo, retornarlos
-                            //formUsuario(responseData)
+                            formUsuario(responseData)
 
 
                         })
@@ -409,7 +408,8 @@
                 imageUploadURL,
                 submitForm,
                 validateInput,
-                listaPreguntas
+                listaPreguntas,
+                profileText
             };
         },
     });
