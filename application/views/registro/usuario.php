@@ -111,7 +111,7 @@
             }
             ?>
             const data = reactive({
-                user: ref(''),
+                user: ref('gato'),
                 profile: ref(''),
                 name: ref(''),
                 lastname: ref(''),

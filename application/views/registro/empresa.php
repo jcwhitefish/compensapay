@@ -365,12 +365,12 @@
                             fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data[nombreInput].toString().substring(0, 3), requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
-                                    data['bank'] = result[0];
-                                    if (data['bank'] == 0) {
+                                    if (result.length == 0) {
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid red!important',
                                         }
                                     } else {
+                                        data['bank'] = result[0];
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid #03BB85!important',
                                         }
