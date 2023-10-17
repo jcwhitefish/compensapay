@@ -282,16 +282,14 @@
                             formData.append(key, data[key]);
                         }
                     }
-                    formData.append('idEmpresa', empresa['id']);
+                    formData.append('idEmpresa', empresa['id_company']);
                     fetch('<?php echo base_url('registro/registraUsuario') ?>', {
                             method: 'POST',
                             body: formData,
                             redirect: 'follow'
                         })
                         .then((response) => {
-                            if (!response.ok) {
-                                throw new Error('La solicitud no fue exitosa');
-                            }
+
                             return response.json();
                         })
                         .then((responseData) => {
