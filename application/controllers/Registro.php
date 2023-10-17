@@ -73,7 +73,6 @@ class Registro extends MY_Loggedout
 			$datos = array(
 				'nombre' => $decodedParams[0],
 				'correo' => $decodedParams[1],
-				'enlace' => $decodedParams[2],
 			);
 		}
 		//mostramos en pantalla welcome_message.php
@@ -210,16 +209,17 @@ class Registro extends MY_Loggedout
 		// // Enviamos el correo
 
 		// //asi es como
-		$dato['enlace'] = $this->enviarCorreo($idEmpresa);
+		$this->enviarCorreo($id_insertado);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
-	public function enviarCorreo($idEmpresa)
+	public function enviarCorreo($id)
 	{
-		echo cifrarAES($idEmpresa);
-		return cifrarAES($idEmpresa);
+
+		//echo cifrarAES($id);
+		//return cifrarAES($idEmpresa);
 	}
 	public function catalogoBancos()
 	{

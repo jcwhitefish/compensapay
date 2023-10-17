@@ -411,7 +411,7 @@
             };
         },
     });
-    // window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
+    window.history.pushState({}, "", "<?php echo base_url('registro/usuario') ?>");
 </script>
 
 

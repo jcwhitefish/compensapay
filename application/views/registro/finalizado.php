@@ -1,7 +1,6 @@
 <div class="p-5">
     <div class="card esquinasRedondas">
         <div class="card-content especial-p">
-            <a href="<?php echo base_url('login/validarCuenta/'.$enlace);?>">Esto no se va a ver pero es el link del correo</a>
             <p>Hola <?php echo $nombre;?>, bienvenido a <strong>Compensa</strong> pay, hemos enviado un correo a <?php echo $correo;?>, por favor activa tu cuenta para poder ingresar a nuestra plataforma.</p><br>
             <p>Si tienes dudas o comentarios puedes comunicarte al correo <strong>soporte@compensapay.mx</strong></p>
             <div class="center-align">

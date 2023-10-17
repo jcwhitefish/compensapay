@@ -88,7 +88,7 @@ class Herramientas extends CI_Controller
 
         if ($tipo == 1) {
             $datos =  $this->regimen_model->get_all_regimenes('Fisica');
-        }elseif ($tipo == 2) {
+        } elseif ($tipo == 2) {
             $datos =  $this->regimen_model->get_all_regimenes('Moral');
         }
 

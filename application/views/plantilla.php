@@ -15,7 +15,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
-    <?php if ($_SERVER['HTTP_HOST'] != 'localhost') { ?>
+    
+    <?php if ($_SERVER['HTTP_HOST'] != 'localhost' && $_SERVER['HTTP_HOST'] != 'localhost:8080') { ?>
         <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
     <?php } else { ?>
         <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.js"></script>
