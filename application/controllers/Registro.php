@@ -187,19 +187,19 @@ class Registro extends MY_Loggedout
 		}
         $datos_usuario = array(
             'user' => $user,
+			'password' => '',
+			'profile' => 1,
 			'name' => $name,
-            'password' => '',
-            'profile' => 1,
             'last_name' => $lastname,
             'email' => $email,
             'telephone' => $number,
             'id_question' => $question,
             'answer' => $answer,
-            'id_companie' => $idEmpresa,
+            'id_company' => $idEmpresa,
             'unique_key' => $uniqueString
         );
-
-        $id_insertado = $this->user_model->insertar_usuario($datos_usuario);
+		// echo json_encode($datos_usuario);
+        $id_insertado = $this->user_model->insert_user($datos_usuario);
 
 		$encodedParams = array();
 		$encodedParams['nombre'] = urlencode($name . ' ' . $lastname);
