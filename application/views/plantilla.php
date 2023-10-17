@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $isLog = false;
     }
     ?>
-    <nav>
+    <nav class="main-nav">
         <div class="nav nav-wrapper navegador">
             <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
             <!-- If the user is log show the $navbar complements -->
@@ -128,6 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         width: 60px;
         background-color: #333;
         color: #fff;
+        z-index: 2;
     }
 
     .sidebar ul {

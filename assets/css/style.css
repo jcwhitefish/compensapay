@@ -283,7 +283,11 @@ thead, thead tr,thead tr th{
 .small{
  font-size: 20px!important;
 }
-
+.main-nav{
+    position: sticky!important;
+    top: 0!important;
+    z-index: 1!important;
+}
 /* Indicador de provedores-clientes */
 .button-indicador {
     background-color: white;
