@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="col l3 center-align p-5">
                                     <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                    <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept="application/xml" maxFileSize="5242880" required />
+                                    <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
                                 </div>
                             </div>
                             <div class="row">
@@ -481,7 +481,6 @@
                 if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
                     const fileInput = document.getElementById('invoiceUpload');
                     const formData = new FormData();
-                    formData.append('user', 1);
                     formData.append('invoiceUpload', fileInput.files[0]);
 
                     const response = await fetch("<?= base_url('facturas/subidaFactura') ?>", {
@@ -524,10 +523,10 @@
                     });
 
                     if (response.ok) {
-                        // console.log('se subió');
+                        M.toast({html: 'Error al subir factura'});
                         getOperations();
                     } else {
-                        console.error('Error');
+                        M.toast({html: 'Error al subir factura'});
                     }
                 } else {
                     alert('Ingresa una factura y acepta los terminos')
@@ -545,7 +544,6 @@
                     .then(result => {
                         operaciones.value = result.operaciones;
                         operaciones.value.reverse();
-                        // console.log(operaciones.value);
                     })
                     .catch(error => {
                         //console.log('error', error)
@@ -573,9 +571,7 @@
             // };
 
             const selectButton = (buttonName) => {
-                if (selectedButton.value == buttonName) {
-                    selectedButton.value = null;
-                } else {
+                if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
                 }
             };
@@ -586,10 +582,11 @@
                     getFacturas();
                 }
             )
+
             const cambiarSolicitud = (valor) => {
                 solicitud.value = valor;
-                // console.log(solicitud);
             };
+
             return {
                 invoiceUploadName,
                 operationUploadName,
