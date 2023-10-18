@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedin
+class Facturas extends MY_Loggedout
 {
 
 	private $user;
@@ -75,14 +75,42 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
-			$xmlContent = file_get_contents($_FILES['invoiceUpload']['tmp_name']);
-			$xml = new DOMDocument();
-			$xml->loadXML($xmlContent);
-			$this->load->helper('factura_helper');
-			$factura = procesar_xml($xml, $this->user);
-			$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-		}
+			$uploadedFile = $_FILES['invoiceUpload'];
 
+			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
+				$zip = new ZipArchive;
+				if ($zip->open($uploadedFile['tmp_name']) === TRUE) {
+					$extractedDir = './xml/';
+					$zip->extractTo($extractedDir);
+					$zip->close();
+		
+					$xmlFiles = glob($extractedDir . '*.xml');
+					foreach ($xmlFiles as $xmlFile) {
+						$xmlContent = file_get_contents($xmlFile);
+						$xml = new DOMDocument();
+						$xml->loadXML($xmlContent);
+						$this->load->helper('factura_helper');
+						$factura = procesar_xml($xml, $this->user);
+						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+						print_r($id_insertado);
+						unlink($xmlFile);
+					};
+					rmdir($extractedDir);
+				} else {
+					echo "Error al abrir el archivo ZIP.";
+				}
+			} else {
+				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
+				$xml = new DOMDocument();
+				$xml->loadXML($xmlContent);
+				$this->load->helper('factura_helper');
+				$factura = procesar_xml($xml, $this->user);
+				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+			}
+		}		
+
+
+		
 		$dato['status'] = "ok";
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
