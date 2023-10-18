@@ -88,7 +88,7 @@ class Soporte_model extends CI_Model{
 			return mysql_error($this->conn, $query);
 		}
 	}
-	public function getTicketsFromCompanie($companie){
+	public function getTicketsFromCompanie(int $companie){
 		$tickets = [];
 		$query = "SELECT tck_folio, tck_issue, tck_status, tck_description, tck_created_at FROM compensapay.tck_ticket where id_companie = '{$companie}'";
 		if ($result = mysqli_query($this->conn, $query)) {
@@ -101,6 +101,26 @@ class Soporte_model extends CI_Model{
                         'description' => $row['tck_description'],
                         'date' => date( 'Y-m-d', $row['tck_created_at']),
                     ];
+					$tickets[] = $items;
+				}
+				return $tickets;
+			}
+		}
+		return false;
+	}
+
+	public function getTickettraking(int $idTicket){
+		$tickets = [];
+		$query = "SELECT tcs_status, tcs_message, tcs_flow FROM tck_tracking";
+		if ($result = mysqli_query($this->conn, $query)) {
+			$error = 0;
+			if (mysqli_num_rows($result) > 0) {
+				while ($row = mysqli_fetch_assoc($result)) {
+					$items = [
+						'status' => intval($row['tcs_status']),
+						'message' => $row['tcs_message'],
+						'flow' => $row['tcs_flow'],
+					];
 					$tickets[] = $items;
 				}
 				return $tickets;
