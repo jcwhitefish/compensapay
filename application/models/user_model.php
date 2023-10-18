@@ -27,4 +27,7 @@ class User_model extends CI_Model {
         $this->db->where($condiciones);
         $this->db->update('users', $nuevos_datos);
     }
+    public function imprimir()  {
+        echo 'Hola mundo';
+    }
 }

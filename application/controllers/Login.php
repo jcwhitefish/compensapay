@@ -104,7 +104,7 @@ class Login extends MY_Loggedout
 		if (!is_null($persona)) {
 			//TODO:Esto es para tener los datos del usuario que inicio sesion
 			$this->session->set_userdata('logged_in', true);
-			$this->session->set_userdata('idPersona', $persona['id']);
+			$this->session->set_userdata('id', $persona['id']);
 			$this->session->set_userdata('vista', 1);
 			$dato['status'] = 1;
 		} else {

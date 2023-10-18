@@ -18,4 +18,9 @@ class Company_model extends CI_Model {
         // Devolver el ID del último registro insertado
         return $this->db->insert_id();
     }
+    public function get_company($condiciones) { 
+        // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
+        $query = $this->db->get_where('companies', $condiciones);
+        return $query->row_array();
+    }
 }

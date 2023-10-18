@@ -218,7 +218,7 @@ class Registro extends MY_Loggedout
 	public function enviarCorreo($id)
 	{
 
-		//echo cifrarAES($id);
+		echo cifrarAES($id);
 		//return cifrarAES($idEmpresa);
 	}
 	public function catalogoBancos()
