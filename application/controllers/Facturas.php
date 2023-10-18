@@ -80,7 +80,7 @@ class Facturas extends MY_Loggedout
 			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
 				$zip = new ZipArchive;
 				if ($zip->open($uploadedFile['tmp_name']) === TRUE) {
-					$extractedDir = '/ruta/temporal/';
+					$extractedDir = './xml/';
 					$zip->extractTo($extractedDir);
 					$zip->close();
 		
@@ -93,22 +93,24 @@ class Facturas extends MY_Loggedout
 						$factura = procesar_xml($xml, $this->user);
 						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
 						print_r($id_insertado);
-					}
+						unlink($xmlFile);
+					};
+					rmdir($extractedDir);
 				} else {
 					echo "Error al abrir el archivo ZIP.";
 				}
 			} else {
-				// Procesar el archivo XML directamente
 				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
 				$xml = new DOMDocument();
 				$xml->loadXML($xmlContent);
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
 				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-				print_r($id_insertado);
 			}
 		}		
 
+
+		
 		$dato['status'] = "ok";
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
