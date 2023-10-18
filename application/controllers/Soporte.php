@@ -19,8 +19,51 @@ class Soporte extends MY_Loggedin{
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 	public function index(){
-		$data['main'] = $this->load->view('soporte','', true);
-		$this->load->view('plantilla', $data);
-	}				
+		$this->load->model('Soporte_model', 'datat');
+		$res = $this->datat->getModules();
+		$tck = $this->datat->getTicketsFromCompanie(1);
+		$dataTck['modules'] = $res;
+		$dataTck['tickets'] = $tck;
 
+		$data['main'] = $this->load->view('soporte',$dataTck, true);
+		$this->load->view('plantilla', $data);
+	}
+
+	public function getTopics(){
+		$this->load->model('Soporte_model', 'datat');
+		$id = $this->input->post('id', true);
+//        var_dump($id);
+		$res = $this->datat->getTopic($id);
+//        var_dump($res);
+		echo json_encode($res);
+		return true;
+	}
+
+	public function newTicket(){
+		$this->load->model('Soporte_model', 'datat');
+		$topic = $this->input->post('topic');
+		$issue = $this->input->post('issue');
+		$description = $this->input->post('description');
+		$status = 1;//$this->input->post('status');
+		$companie = $this->session->userdata('idPersona');
+
+		$args = [
+			'topic' => $topic,
+			'issue' => $issue,
+			'description' => $description,
+			'status' => $status,
+			'companie' => $companie,
+			'lastId' => null,
+		];
+		$res = $this->datat->newTicket($args);
+		echo json_encode($res);
+	}
+
+	public function getTickets(){
+		$this->load->model('Soporte_model', 'datat');
+		$id = $this->session->userdata('idPersona');
+        $tickets = $this->datat->getTicketsFromCompanie($id);
+		echo json_encode($tickets);
+		return true;
+	}
 }

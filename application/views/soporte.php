@@ -1,3 +1,7 @@
+<script type="text/javascript" src="/assets/js/jquery-git.js"></script>
+<script type="text/javascript" src="/assets/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery-ui.min.js"></script>
+
 <div class="p-5" id="app">
     <div class="row">
         <div class="col l12">
@@ -86,7 +90,29 @@
             <h5><i class="material-icons iconoSetting">chat</i> Levantar Ticket</h5>
         </div>
         <div class="col l12">
-            <div class="row">
+
+			<div class="row">
+				<div class="col l5 input-border" >
+					<select name="modulo" id="modulo" >
+						<option value="0" default>---------------</option>
+						<?php
+						if (!empty($modules)) {
+							foreach ($modules as $value => $key){
+								echo '<option value="'.$key.'">'.$value.'</option>';
+							}
+						}
+						?>
+					</select>
+					<label for="modulo">Modulo</label>
+				</div>
+				<div class="col l1"></div>
+				<div class="col l5 input-border" >
+					<select name="tema" id="tema">
+					</select>
+					<label for="tema">Tema</label>
+				</div>
+			</div>
+			<div class="row">
                 <div class="col l6 input-border">
                     <input type="text" name="asunto" id="asunto" required>
                     <label for="asunto">Asunto</label>
@@ -99,19 +125,58 @@
                     </select>
                     <label for="regimen">Regimen Fiscal *</label>
                 </div>
-
             </div>
             <div class="row">
                 <div class="col l12 input-border">
-                    <!-- TODO: Se tienen que corregir los labels de Abdi quitar el position relative -->
                     <label style="top: 0!important;" for="descripcion">Descripcion</label>
                     <textarea  id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
-                    
                 </div>
             </div>
+			<div class="row">
+				<div class="col l12 input-border">
+					<button class="btn waves-effect waves-light grey right" type="submit" id="btn-envio" name="btn-envio">Enviar
+						<i class="material-icons right">send</i>
+					</button>
+				</div>
+            </div>
         </div>
-    </div>
+		<div class="row" id="tck_dashboard">
+		</div>
 
+		<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+		<div id="modal1" class="modal">
+			<div class="modal-content">
+				<h4 id="tck_title_modal">Folio: 13000011697652569</h4>
+				<h5 id="tck_title_modal">Asunto: Prueba</h5>
+				<p>Esto es una prueba</p>
+				<div id="content_chat" class="content" style="padding-bottom: 25px">
+					<div class="row">
+						<div class="col red right " ><p>s12 m4</p></div>
+					</div>
+					<div class="row">
+						<div class="col blue left"><p>s12 m4dsadasdasd</p></div>
+					</div>
+					<div class="row">
+						<div class="col red right "><p>lorem ipdsadasd</p></div>
+					</div>
+					<div class="row">
+						<div class="col blue left"><p>s12 m4dsadasdasd</p></div>
+					</div>
+				</div>
+				<div class="row">
+					<textarea class="materialize-textarea" id="tckComentsChat" name="tckComentsChat"></textarea>
+					<button class="btn waves-effect waves-light right grey" type="submit" name="action" >Enviar
+						<i class="material-icons right">send</i>
+					</button>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+			</div>
+		</div>
+
+    </div>
 </div>
 <style>
     .iconoSetting {
@@ -140,3 +205,106 @@
         font-size: 18px;
     }
 </style>
+<script>
+	$(document).ready(function() {
+		getTickets();
+		$('#modulo').change();
+		$('#modulo').on('change', function() {
+			var idModule = $(this).val();
+			$.ajax({
+				url: 'Soporte/getTopics',
+				data: {
+					id: idModule
+				},
+				dataType: 'json',
+				method: 'post',
+				beforeSend: function () {
+				},
+				success: function (data) {
+					$('#tema').formSelect().empty();
+					$.each(data, function(index, value) {
+						// $('#tema').append('<option value="'+value.id+'" >'+value.topic+'</option>');
+						$('#tema').formSelect().append('<option value="'+value.id+'" >'+value.topic+'</option>');
+					});
+				},
+				complete: function () {
+				}
+			});
+		});
+		$('#btn-envio').on('click', function() {
+			var idModule = $(this).val();
+			$.ajax({
+				url: '/Soporte/newTicket',
+				data: {
+					topic: $('#tema').val(),
+					issue: $('#asunto').val(),
+					description: $('#descripcion').val(),
+					status: 1
+				},
+				dataType: 'json',
+				method: 'post',
+				beforeSend: function () {
+				},
+				success: function (data) {
+					alert('Su numero de folio es: #'+data.folio);
+				},
+				complete: function () {
+					alert('Ticket enviado con exito!');
+				}
+			});
+		}).change;
+	});
+
+	function getTickets(){
+		$.ajax({
+			url: '/Soporte/getTickets',
+			data: {
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+			},
+			success: function (data) {
+				console.log(data);
+				$.each(data, function(index, value)	{
+					var color='red';
+					var status='Cerrado';
+					switch (value.status) {
+						case 1:
+							color = 'green';
+							status = 'Abierto';
+							break;
+						case 2:
+							color = 'yellow';
+							status = 'En revisión';
+                            break;
+						default:
+							color = 'red';
+							status = 'Cerrado';
+							break;
+					}
+					var span = $('<a class="btn-floating pulse right white">'
+						+'<i class="material-icons right" style="rotate: 90deg; color: '+color+';">radio_button_checked</i></a>');
+					span.click(function (){
+
+					});
+					var div = '<div class="col s3">'
+					+'<div class="card grey lighten-3" style="border-radius: 15px;">'
+					+'<div class="card-content"><div id="spn'+value.folio+'"></div>'
+					+'<span class="card-title flow-text">'
+					+'<p class="flow-text"><strong >Folio: </strong>'+value.folio+'</p></span>'
+					+'<p class="flow-text" style="font-size: 18px"><strong>Asunto: </strong>'+value.issue+'</p>'
+					+'<p class="flow-text" style="font-size: 18px"><strong>Estatus: </strong>'+status+'</p>'
+					+'<p class="right flow-text" style="font-size: 12px">'+value.date+'</p>'
+					+'</div></div></div>';
+
+					$('#tck_dashboard').append(div);
+				});
+
+			},
+			complete: function () {
+			}
+		});
+
+	}
+</script>
