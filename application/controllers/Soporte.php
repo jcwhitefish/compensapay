@@ -45,7 +45,7 @@ class Soporte extends MY_Loggedin{
 		$issue = $this->input->post('issue');
 		$description = $this->input->post('description');
 		$status = 1;//$this->input->post('status');
-		$companie = $this->session->userdata('idPersona');
+		$companie = $this->session->userdata('id');
 
 		$args = [
 			'topic' => $topic,
@@ -61,9 +61,30 @@ class Soporte extends MY_Loggedin{
 
 	public function getTickets(){
 		$this->load->model('Soporte_model', 'datat');
-		$id = $this->session->userdata('idPersona');
+		$id = $this->session->userdata('id');
         $tickets = $this->datat->getTicketsFromCompanie($id);
 		echo json_encode($tickets);
+		return true;
+	}
+
+	public function getTrackingFolio(){
+		$this->load->model('Soporte_model', 'datat');
+		$folio = $this->input->post('folio');
+		$res = $this->datat->getTickettraking($folio);
+		echo json_encode($res);
+		return true;
+	}
+
+	public function newMssUser(){
+		$this->load->model('Soporte_model', 'datat');
+        $msg = $this->input->post('msg');
+        $folio = $this->input->post('folio');
+        $args = [
+            'msg' => $msg,
+            'folio' => $folio,
+        ];
+        $res = $this->datat->newMssUser($args);
+        echo json_encode($res);
 		return true;
 	}
 }

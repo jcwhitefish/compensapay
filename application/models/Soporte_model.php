@@ -83,19 +83,28 @@ class Soporte_model extends CI_Model{
                     '{$args['status']}')";
 //        var_dump($query);
 		if (mysqli_query($this->conn, $query)){
-			return ['folio'=>$folio];
+			$id = $this->conn->insert_id;
+			$query = "INSERT INTO compensapay.tck_tracking(id_ticket, tcs_status, tcs_message, tcs_flow) 
+				VALUES ('{$id}', 1, '{$args['description']}', 1)";
+			if (mysqli_query($this->conn, $query)){
+				return ['folio'=>$folio];
+			}else{
+				return ($this->conn->error);
+			}
 		}else{
-			return mysql_error($this->conn, $query);
+			return ($this->conn->error);
 		}
 	}
 	public function getTicketsFromCompanie(int $companie){
 		$tickets = [];
-		$query = "SELECT tck_folio, tck_issue, tck_status, tck_description, tck_created_at FROM compensapay.tck_ticket where id_companie = '{$companie}'";
+		$query = "SELECT tck_folio, tck_issue, tck_status, tck_description, tck_created_at 
+					FROM compensapay.tck_ticket 
+					where id_companie = '{$companie}'";
 		if ($result = mysqli_query($this->conn, $query)) {
-			$error = 0;
 			if (mysqli_num_rows($result) > 0) {
 				while ($row = mysqli_fetch_assoc($result)) {
-					$items = ['folio' => $row['tck_folio'],
+					$items = [
+						'folio' => $row['tck_folio'],
 						'issue' => $row['tck_issue'],
                         'status' => intval($row['tck_status']),
                         'description' => $row['tck_description'],
@@ -111,22 +120,54 @@ class Soporte_model extends CI_Model{
 
 	public function getTickettraking(int $idTicket){
 		$tickets = [];
-		$query = "SELECT tcs_status, tcs_message, tcs_flow FROM tck_tracking";
+		$query = "SELECT t1.tcs_status, t1.tcs_message, t1.tcs_flow FROM compensapay.tck_tracking t1 
+					inner JOIN compensapay.tck_ticket t2 ON t2.tck_id = t1.id_ticket 
+					WHERE t2.tck_folio = '{$idTicket}';";
+//		var_dump($query);
 		if ($result = mysqli_query($this->conn, $query)) {
-			$error = 0;
+//			var_dump('hola');
 			if (mysqli_num_rows($result) > 0) {
 				while ($row = mysqli_fetch_assoc($result)) {
+//					var_dump($result);
 					$items = [
 						'status' => intval($row['tcs_status']),
 						'message' => $row['tcs_message'],
 						'flow' => $row['tcs_flow'],
 					];
+//					var_dump($items);
 					$tickets[] = $items;
 				}
 				return $tickets;
+			}else{
+				return ($this->conn->error);
 			}
 		}
 		return false;
+	}
+
+	public function getIdTicketByFolio($folio) {
+		$query = "SELECT tck_id FROM compensapay.tck_ticket WHERE tck_folio = '{$folio}'";
+        if ($result = mysqli_query($this->conn, $query)) {
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $idTicket = $row['tck_id'];
+                }
+                return $idTicket;
+            }
+        }
+        return false;
+	}
+
+	public function newMssUser(array $args,?string $env = 'SANDBOX'){
+		$id = $this->getIdTicketByFolio($args['folio']);
+		$query = "INSERT INTO compensapay.tck_tracking(id_ticket, tcs_status, tcs_message, tcs_flow) 
+				VALUES ('{$id}', 2, '{$args['msg']}', 1)";
+		if (mysqli_query($this->conn, $query)){
+			$query = "UPDATE compensapay.tck_ticket SET tck_status = 2 WHERE tck_id = '{$id}'";
+			if (mysqli_query($this->conn, $query)){
+				return $this->getTickettraking($args['folio']);
+			}
+		}
 	}
 
 }
