@@ -20,6 +20,7 @@ class Operation_model extends CI_Model {
         $this->db->insert('operations', $xml);
         return $this->db->insert_id();
     }
+    
   
 }
 ?>

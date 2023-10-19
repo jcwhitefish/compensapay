@@ -1,7 +1,7 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-if (!function_exists('procesar_xml')) {
+if (!function_exists('factura_con_factura')) {
     function procesar_xml($xml, $user) {
         $comprobante = $xml->getElementsByTagName('Comprobante')->item(0);
         $timbreFiscalDigital = $xml->getElementsByTagName('TimbreFiscalDigital')->item(0);
@@ -34,7 +34,7 @@ if (!function_exists('procesar_xml')) {
     }
 }
 
-if (!function_exists('procesar_xml_relacional')) {
+if (!function_exists('factura_con_nota_debito')) {
     function procesar_xml_relacional($xml, $user) {
         $comprobante = $xml->getElementsByTagName('Comprobante')->item(0);
         $timbreFiscalDigital = $xml->getElementsByTagName('TimbreFiscalDigital')->item(0);
@@ -61,6 +61,13 @@ if (!function_exists('procesar_xml_relacional')) {
 			"total" => $comprobante->getAttribute('Total'),
             "xml_document" => $xml->saveXML(),
 		);
+
+        if (!function_exists('factura_con_nota_debito')) {
+            function factura_con_nota_debito($xml, $user) {
+                $factura = procesar_xml_relacional($xml, $user);
+                return $factura;
+            }
+        }
 
         return $factura;
     }

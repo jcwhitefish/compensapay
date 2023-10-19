@@ -29,29 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
             <!-- If the user is log show the $navbar complements -->
-            <?php if ($this->session->userdata('logged_in')) : ?>
-                <div class="d-flex justificarVertical">
-                    <!-- If the user has a photo show that if not show the name -->
-                    <div class="logoEmpresa d-flex justificarVertical" id="logoEmpresa"></div>
-                </div>
-                <div class="d-flex justificarVertical">
-                    <div class="hide-on-med-and-down">
-                        <label class="px-3">Balance</label>
-                        <p class="nav-price"><a href="">$200.000</a></p>
-                    </div>
-                    <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
-                        <p style="padding-left: 10px;">Noe Salgado</p>
-                        <select onchange="cambiarVista(this.value)" name="type" id="type" class="browser-default input-nav">
-                            <!-- cliente 1 provedor 2 -->
-                            <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
-                            <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
-                        </select>
-                    </div>
-                    <div class="d-flex justificarVertical alinearVertical">
-                        <img src="<?= base_url('assets/images/mark-zuckerberg-bio.png'); ?>" alt="Logo" class="custom-logo hide-on-med-and-down logoUsuario">
-                    </div>
-                </div>
-            <?php endif; ?>
+           
 
 
 
