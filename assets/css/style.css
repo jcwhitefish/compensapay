@@ -277,7 +277,7 @@ thead, thead tr,thead tr th{
 .main-nav{
     position: sticky!important;
     top: 0!important;
-    z-index: 1!important;
+    z-index: 2!important;
 }
 /* Indicador de provedores-clientes */
 .button-indicador {
