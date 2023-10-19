@@ -12,14 +12,14 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l3 p-3">
-                    <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
-                        Clientes
-                    </button>
-                    &nbsp;
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
-                        Provedores
-                    </button> -->
-                </div>
+            <button class=" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
+                Clientes
+            </button>
+            &nbsp;
+            <button class=" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
+                Provedores
+            </button>
+        </div>
         <div class="col l3 right-align p-5">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
                 Añadir Facturas
@@ -108,17 +108,17 @@
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
                             </td>
-                            <td>{{ operaciones.id_invoice }}</td>
-                            <td>{{ operaciones.id_debit_note }}</td>
-                            <td>{{ operaciones.id_uploaded_by }}</td>
-                            <td>{{ operaciones.id_client }}</td>
-                            <td>{{ operaciones.id_provider }}</td>
-                            <td>{{ operaciones.operation_number }}</td>
-                            <td>{{ operaciones.creation_date }}</td>
-                            <td>{{ operaciones.payment_date }}</td>
-                            <td>{{ operaciones.entry_money }}</td>
-                            <td>{{ operaciones.exit_money }}</td>
-                            <td>{{ operaciones.status }}</td>
+                            <td>{{ operacion.id_invoice }}</td>
+                            <td>{{ operacion.id_debit_note }}</td>
+                            <td>{{ operacion.id_uploaded_by }}</td>
+                            <td>{{ operacion.id_client }}</td>
+                            <td>{{ operacion.id_provider }}</td>
+                            <td>{{ operacion.operation_number }}</td>
+                            <td>{{ operacion.creation_date }}</td>
+                            <td>{{ operacion.payment_date }}</td>
+                            <td>{{ operacion.entry_money }}</td>
+                            <td>{{ operacion.exit_money }}</td>
+                            <td>{{ operacion.status }}</td>
                         </tr>
                     </tbody>
                 </table>

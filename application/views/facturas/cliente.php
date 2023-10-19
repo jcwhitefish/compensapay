@@ -12,13 +12,13 @@
             <label for="fin">Fin:</label>
         </div>
         <div class="col l3">
-            <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
-                        Clientes
-                    </button>
-                    &nbsp;
-                    <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
-                        Provedores
-                    </button>
+            <!-- <button class="button-indicador <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>" >
+                Clientes
+            </button>
+            &nbsp;
+            <button class="button-indicador <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>" >
+                Provedores
+            </button> -->
         </div>
         <div class="col l3">
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
@@ -68,23 +68,19 @@
                     </thead>
                     <tbody>
                         <tr v-for="factura in facturas" :key="facturas.o_idPersona">
-
-                            <td class="tabla-celda center-align">
-                                <i v-if="factura.o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.o_Activo == 0" class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>
+                        <td class="tabla-celda center-align">
+                                <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
                             </td>
-                            <td><a href="#">Frontier</a></td>
-                            <td>{{factura.o_NumOperacion}}</td>
-                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
-                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                            <td>
-                                <p v-if="factura.o_Activo == 1">Pendiente</p>
-                                <p v-if="factura.o_Activo == 0">Cargada</p>
-                            </td>
-                            <td>${{factura.o_SubTotal}}</td>
-                            <td>${{factura.o_Impuesto}}</td>
-                            <td>${{factura.o_Total}}</td>
+                            <td>1</td>
+                            <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.invoice_date}}</td>
+                            <td>{{factura.created_date}}</td>
+                            <td>{{factura.transaction_date}}</td>
+                            <td>{{factura.status}}</td>
+                            <td>${{factura.subtotal}}</td>
+                            <td>${{factura.iva}}</td>
+                            <td>${{factura.total}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -137,7 +133,7 @@
             <h5>Carga tus facturas</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
+                    <h6 class="p-3">Carga tu factura en formato .xml</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
 
@@ -156,7 +152,7 @@
                                 <div class="row">
                                     <div class="col l12 d-flex">
                                         <div class="p-3">
-                                            <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
+                                            <input class="p-2" type="checkbox" v-model="checkboxChecked" required>
                                         </div>
                                         <p class="text-modal">
                                             Al momento en dar click en “Aceptar” el Cliente acuerda que la factura en cuestión será utilizada para efectos de las operaciones en la Plataforma conforme a los <a href="terminosycondiciones">Términos y Condiciones</a>.
@@ -502,6 +498,7 @@
                     invoiceUploadName.value = '';
                 }
             };
+
             const actualizacion = () => {
                 var requestOptions = {
                     method: 'GET',
@@ -518,7 +515,6 @@
                 if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
                     const fileInput = document.getElementById('invoiceUpload');
                     const formData = new FormData();
-                    formData.append('user', 6);
                     formData.append('invoiceUpload', fileInput.files[0]);
 
                     const response = await fetch("<?= base_url('facturas/subida') ?>", {
@@ -611,12 +607,11 @@
             };
 
             const selectButton = (buttonName) => {
-                if (selectedButton.value == buttonName) {
-                    selectedButton.value = null;
-                } else {
+                if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
                 }
             };
+
             Vue.onMounted(
                 () => {
                     getOperations();

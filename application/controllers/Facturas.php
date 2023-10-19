@@ -14,6 +14,7 @@ class Facturas extends MY_Loggedout
 	{
 		parent::__construct();
 		$this->load->model('Invoice_model');
+		$this->load->model('Operation_model');
 		// Cambia por el usuario
 		$this->user = "1";
 	}
@@ -62,7 +63,7 @@ class Facturas extends MY_Loggedout
 	public function tablaOperaciones()
 	{
 		$dato = array();
-		$dato['operaciones'] = $this->Invoice_model->get_my_invoices($this->user);
+		$dato['operaciones'] = $this->Operation_model->get_my_operation($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
