@@ -61,7 +61,7 @@ class Soporte extends MY_Loggedin{
 
 	public function getTickets(){
 		$this->load->model('Soporte_model', 'datat');
-		$id = $this->session->userdata('idPersona');
+		$id = $this->session->userdata('id');
         $tickets = $this->datat->getTicketsFromCompanie($id);
 		echo json_encode($tickets);
 		return true;
