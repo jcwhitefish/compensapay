@@ -82,7 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             img.src = url;
         }
 
-        var urlImagen = "boveda/652edccec7511-19/652edccec7511-19-foto.jpeg";
+        var urlImagen = "";
 
         verificarExistenciaImagen(urlImagen, function(existe) {
             let logoEmpresaDiv = document.getElementById("logoEmpresa");
