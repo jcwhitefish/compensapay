@@ -89,7 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             if (existe) {
                 logoEmpresaDiv.innerHTML = "<img class='logoEmpresa image-center hide-on-med-and-down' src='" + urlImagen + "' alt='Imagen'> ";
             } else {
-                logoEmpresaDiv.innerHTML = ' < h4 class = "image-center p-3 hide-on-med-and-down" > <?php echo 'hola' ?> < /h4>';
+                logoEmpresaDiv.innerHTML = '<h4 class="image-center p-3 hide-on-med-and-down"> <?php echo "hola" ?>  </h4>';
             }
         });
     </script>
@@ -214,6 +214,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         .justificarVertical {
             justify-content: center;
         }
+
         .alinearVertical {
             align-items: center;
         }
