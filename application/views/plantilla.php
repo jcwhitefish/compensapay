@@ -1,7 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$urlEmpresa = base_url('boveda/' . $this->session->userdata('datosEmpresa')['unique_key'] . '/' . $this->session->userdata('datosEmpresa')['unique_key'] . '-');
-$urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['unique_key'] . '/' . $this->session->userdata('datosUsuario')['unique_key'] . '-');
+if ($this->session->userdata('logged_in')) {
+    $urlEmpresa = base_url('boveda/' . $this->session->userdata('datosEmpresa')['unique_key'] . '/' . $this->session->userdata('datosEmpresa')['unique_key'] . '-');
+    $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['unique_key'] . '/' . $this->session->userdata('datosUsuario')['unique_key'] . '-');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -54,8 +56,9 @@ $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['uni
                         </select>
                     </div>
                     <div class="d-flex justificarVertical alinearVertical">
-
-                        <img src="<?= $urlUsuario . 'foto.jpeg' ?>" alt="Logo" class="custom-logo hide-on-med-and-down logoUsuario">
+                        <a class="d-flex justificarVertical alinearVertical" href="<?= base_url('perfil/usuario') ?>" target="_self" rel="noopener noreferrer">
+                            <img src="<?= $urlUsuario . 'foto.jpeg' ?>" alt="Logo" class="custom-logo hide-on-med-and-down logoUsuario">
+                        </a>
                     </div>
                 </div>
             <?php endif; ?>
@@ -78,7 +81,7 @@ $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['uni
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'modelofiscal')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('clientesproveedores'), (strpos(current_url(), 'clientesproveedores')) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil'), (strpos(current_url(), 'perfil')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil/empresa'), (strpos(current_url(), 'perfil/empresa')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">headset_mic</i></a></li>', base_url('soporte'), (strpos(current_url(), 'soporte')) ? ' icon-list-hover' : ''); ?>
                     <li><a href="<?= base_url('logout'); ?>"><i class="material-icons">exit_to_app</i></a></li>
                 </ul>
@@ -118,25 +121,27 @@ $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['uni
 
         }
 
-        let miImagen = document.getElementById('logoValidar');
-        miImagen.onload = function() {
-            console.log('La imagen se ha cargado correctamente.');
-            // Aquí puedes realizar acciones adicionales después de que la imagen se ha cargado.
-        };
+        <?php if ($this->session->userdata('logged_in')) : ?>
+            let miImagen = document.getElementById('logoValidar');
+            miImagen.onload = function() {
+                //console.log('La imagen se ha cargado correctamente.');
+                // Aquí puedes realizar acciones adicionales después de que la imagen se ha cargado.
+            };
 
-        miImagen.onerror = function() {
-            // console.log('Error al cargar la imagen.');
-             // Crea un nuevo elemento 'h4'
-            var nuevoH4 = document.createElement('h6');
-            nuevoH4.className = 'nombreEmpresa hide-on-med-and-down'; // Agrega las clases necesarias
+            miImagen.onerror = function() {
+                // console.log('Error al cargar la imagen.');
+                // Crea un nuevo elemento 'h4'
+                var nuevoH4 = document.createElement('h6');
+                nuevoH4.className = 'nombreEmpresa hide-on-med-and-down'; // Agrega las clases necesarias
 
-            // Agrega el texto que deseas dentro del h4
-            nuevoH4.textContent = '<?= $this->session->userdata('datosEmpresa')['short_name'] ?>';
+                // Agrega el texto que deseas dentro del h4
+                nuevoH4.textContent = '<?= $this->session->userdata('datosEmpresa')['short_name'] ?>';
 
-            // Reemplaza la imagen con el nuevo h4
-            miImagen.parentNode.replaceChild(nuevoH4, miImagen);
-            console.log(miImagen);
-        };
+                // Reemplaza la imagen con el nuevo h4
+                miImagen.parentNode.replaceChild(nuevoH4, miImagen);
+                console.log(miImagen);
+            };
+        <?php endif; ?>
     </script>
     <style>
         .nav-max {
@@ -203,12 +208,15 @@ $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['uni
             justify-content: space-between;
             margin-bottom: 0px !important;
         }
-        .nombreEmpresa{
+
+        .nombreEmpresa {
             min-width: 200px;
             text-align: center;
             font-weight: bold;
         }
-        .nav h4, .nav h6 {
+
+        .nav h4,
+        .nav h6 {
             color: #444;
         }
 

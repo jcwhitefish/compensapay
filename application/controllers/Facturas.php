@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedout
+class Facturas extends MY_Loggedin
 {
 
 	private $user;
@@ -113,13 +113,34 @@ class Facturas extends MY_Loggedout
 
 		
 		$dato['status'] = "ok";
-		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function carga()
+	public function cargaFacturasPorCliente()
+	{
+
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$emisor = $xml->getElementsByTagName('Emisor')->item(0);
+			$this->load->helper('factura_helper');
+
+			$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($emisor->getAttribute('Rfc'));
+
+	}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+		
+	}
+
+	public function cargaOperacion()
 	{
 
 		$factura = array(
@@ -141,6 +162,9 @@ class Facturas extends MY_Loggedout
 		$this->db->insert('tabla_ejemplo', $factura);
 
 		redirect("facturas");
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
 	}
 
 	public function actualizacion($id){

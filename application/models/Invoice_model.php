@@ -19,7 +19,15 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-    
+
+    public function get_invoices_by_client($emisor) {
+        $this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('sender_rfc', $emisor);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function post_my_invoice($xml) {
         $this->db->insert('invoices', $xml);
         return $this->db->insert_id();

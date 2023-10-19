@@ -307,24 +307,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
-                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
-                                            <!-- <td class="tabla-celda center-align">
-                                                <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                                <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
-                                            </td>
-                                            <td><a href="#">Frontier</a></td>
-                                            <td>{{facturas[0].o_NumOperacion}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaUpload)}}</td>
-                                            <td>{{modificarFecha(facturas[0].o_FechaEmision)}}</td>
-                                            <td>
-                                                <p v-if="facturas[0].o_Activo == 1">Pendiente</p>
-                                                <p v-if="facturas[0].o_Activo == 0">Cargada</p>
-                                            </td>
-                                            <td>${{facturas[0].o_SubTotal}}</td>
-                                            <td>${{facturas[0].o_Impuesto}}</td>
-                                            <td>${{facturas[0].o_Total}}</td> -->
-                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div><br>
@@ -562,14 +545,6 @@
                 .catch(error => console.log('error', error));
             };
 
-            // const modificarFecha = (fecha) => {
-            //     fecha = fecha.split(' ');
-
-            //     fecha[1] = '';
-            //     fecha = fecha.join(' ');
-            //     return fecha;
-            // };
-
             const selectButton = (buttonName) => {
                 if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
@@ -596,7 +571,6 @@
                 checkFormatOperation,
                 checkboxChecked,
                 uploadFile,
-                // modificarFecha,
                 selectButton,
                 operaciones,
                 solicitud,

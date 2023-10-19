@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class FacturaCliente extends MY_Loggedout
+class FacturaCliente extends MY_Loggedin
 {
 
 	/**
@@ -22,7 +22,7 @@ class FacturaCliente extends MY_Loggedout
 	public function index()
 	{
 
-		$data['main'] = $this->load->view('facturas/cliente', '', true);
+		$data['main'] = $this->load->view('facturas/proveedor', '', true);
 	    $this->load->view('plantilla', $data);
 
 	}
