@@ -73,7 +73,7 @@
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
                             </td>
-                            <td>1 (id_user)</td>
+                            <td>1(id_user)</td>
                             <td>{{factura.sender_rfc}}</td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
@@ -82,8 +82,8 @@
                                 <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
                             </td>
                             <td>
-                                <p v-if="factura.status == '0' " >Pendiente</p>
-                                <p v-if="factura.status == '1' " >Aprobada</p>
+                                <p v-if="factura.status == '0' " >Por Aprobar</p>
+                                <p v-if="factura.status == '1' " >Pagado</p>
                                 <p v-if="factura.status == '2' " >Recahazada</p>
                             </td>
                             <td>${{factura.subtotal}}</td>
@@ -101,8 +101,6 @@
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Factura</th>
-                            <th>Nota de Débito</th>
-                            <th>Fecha Nota de Débito</th>
                             <th>Fecha Transacción</th>
                             <th>Estatus</th>
                             <th>Monto Ingreso</th>
@@ -113,20 +111,21 @@
                     <tbody>
                         <tr v-for="operacion in operaciones">
                             <td class="tabla-celda center-align">
-                                <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
+                                <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura"></a>
                             </td>
-                            <td>{{ operacion.id_invoice }}</td>
-                            <td>{{ operacion.id_debit_note }}</td>
-                            <td>{{ operacion.id_uploaded_by }}</td>
-                            <td>{{ operacion.id_client }}</td>
-                            <td>{{ operacion.id_provider }}</td>
                             <td>{{ operacion.operation_number }}</td>
-                            <td>{{ operacion.created_at }}</td>
+                            <td>1(id_user)</td>
                             <td>{{ operacion.payment_date }}</td>
+                            <td>0000-00-00</td>
+                            <td>1(id_factura)</td>
+                            <td>0000-00-00</td>
+                            <td class="tabla-celda center-align">
+                                <p v-if="operacion.status == '0'">pendiente</p>
+                                <p v-if="operacion.status == '1'">aprobada</p>
+                            </td>
                             <td>{{ operacion.entry_money }}</td>
                             <td>{{ operacion.exit_money }}</td>
-                            <td>{{ operacion.status }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -190,7 +189,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
-                    <form @submit.prevent="cambiarSolicitud('validador')" method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
+                    <form @submit.prevent="cambiarSolicitud('validador')" method="post" action="<?php echo base_url('facturas/cargaOperacion'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -223,9 +222,9 @@
                                     <tbody>
                                         <tr v-for="facturaClient in facturasClient">
                                             <td class="tabla-celda center-align">
-                                                <input type="radio" v-model="facturaClient.id" required></i>
+                                                <input type="radio" name="grupoRadio"  :value="facturaClient.id"  required></i>
                                             </td>
-                                            <td>1 (id_user)</td>
+                                            <td><?php $this->session->userdata('id'); ?> (id_user)</td>
                                             <td>{{facturaClient.sender_rfc}}</td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
@@ -279,20 +278,6 @@
                 </form>
             </div>
         </div>
-        <div class="modal-content" v-if='solicitud == 2 || solicitud == 4'>
-            <h5>&nbsp;</h5>
-            <div class="card esquinasRedondas   center-align">
-                <div class="row">
-                    <div class="col l12 ">
-
-                        <h5 style="margin: 120px auto;">{{ `${solicitud == 2 ? 'Solicitud hecha correctamente' : solicitud == 4 ? 'Operacion hecha correctamente' : ''} `}}</h5>
-
-                        <a @click="cambiarSolicitud('recarga')" class="modal-close button-gray" style="position:relative; top:-30px; color:#fff; color:hover:#">Salir</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
     </div>
 
 
@@ -338,7 +323,7 @@
                                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
                                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
                                             </td>
-                                            <td>1</td>
+                                            <td><?php $this->session->userdata('id'); ?> (id_user)</td>
                                             <td>{{factura.sender_rfc}}</td>
                                             <td>{{factura.invoice_date}}</td>
                                             <td>{{factura.created_date}}</td>
@@ -615,7 +600,7 @@
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
                     operationUploadName.value = fileInput.files[0].name;
-                    providerUploadName.value = 'ola';
+                    providerUploadName.value = '';
                     getFacturasByClient();
                 } else {
                     operationUploadName.value = '';
@@ -646,7 +631,7 @@
 
                 if (valor == 'recarga') {
                     solicitud.value = 0;
-                    window.location.replace('<?php echo base_url("facturas/carga"); ?>');
+                    window.location.replace('<?php echo base_url("facturas/cargaOperacion"); ?>');
 
 
                 } else if (valor == 'validador') {

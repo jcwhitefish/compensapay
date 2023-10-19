@@ -16,7 +16,7 @@ class Facturas extends MY_Loggedin
 		$this->load->model('Invoice_model');
 		$this->load->model('Operation_model');
 		// Cambia por el usuario
-		$this->user = "1";
+		$this->user = $this->session->userdata('id');
 	}
 
 	/**
@@ -142,6 +142,17 @@ class Facturas extends MY_Loggedin
 
 	public function cargaOperacion()
 	{
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+				$operationUpload = $_FILES['operationUpload'];
+				$xmlContent = file_get_contents($operationUpload['tmp_name']);
+				$xml = new DOMDocument();
+				$xml = $xml->loadXML($xmlContent);
+				$uuid = $this->db->where('ID', 'uuid');
+		}
+
+		$dato['status'] = "ok";
 
 		$factura = array(
 			"Aprobacion" => "1",
@@ -159,9 +170,7 @@ class Facturas extends MY_Loggedin
 			"Monto_Egreso" => "10000.00",
 		);
 
-		$this->db->insert('tabla_ejemplo', $factura);
-
-		redirect("facturas");
+		$this->db->insert('operation', $factura);
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
