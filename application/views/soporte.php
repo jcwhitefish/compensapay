@@ -1,6 +1,7 @@
 <script type="text/javascript" src="/assets/js/jquery-git.js"></script>
 <script type="text/javascript" src="/assets/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/assets/js/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 <div class="p-5" id="app">
     <div class="row">
@@ -142,13 +143,11 @@
         </div>
 		<div class="row" id="tck_dashboard">
 		</div>
-
-		<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
 		<div id="modal1" class="modal">
 			<div class="modal-content">
-				<h4 id="tck_title_modal">Folio: 13000011697652569</h4>
-				<h5 id="tck_title_modal">Asunto: Prueba</h5>
-				<p>Esto es una prueba</p>
+				<h4 id="folio_modal">Folio: 123213123123122</h4>
+				<h5 id="issue_modal">Asunto: Prueba</h5>
+				<p id="description_modal">Esto es una prueba</p>
 				<div id="content_chat" class="content" style="padding-bottom: 25px">
 					<div class="row">
 						<div class="col red right " ><p>s12 m4</p></div>
@@ -164,8 +163,9 @@
 					</div>
 				</div>
 				<div class="row">
+					<input type="hidden" id="inputFolio_modal" name="inputFolio_modal" value="">
 					<textarea class="materialize-textarea" id="tckComentsChat" name="tckComentsChat"></textarea>
-					<button class="btn waves-effect waves-light right grey" type="submit" name="action" >Enviar
+					<button class="btn waves-effect waves-light right grey" type="submit" name="action" id="sendChat" >Enviar
 						<i class="material-icons right">send</i>
 					</button>
 
@@ -249,12 +249,41 @@
 					alert('Su numero de folio es: #'+data.folio);
 				},
 				complete: function () {
-					alert('Ticket enviado con exito!');
+					getTickets();
 				}
 			});
-		}).change;
-	});
+		});
+		$('#sendChat').on('click', function() {
+            $.ajax({
+                url: '/Soporte/newMssUser',
+                data: {
+                    msg: $('#tckComentsChat').val(),
+                    folio: $('#inputFolio_modal').val(),
+                },
+                dataType: 'json',
+                method: 'post',
+                beforeSend: function () {
+                },
+                success: function (data) {
+					$('#content_chat').empty();
+					$.each(data, function(index, item){
+						var side = '';
+						if (item.flow == 1) {
+							side = 'red right';
+						}else {
+							side = 'blue left';
+						}
+						var mssge = '<div class="row"><div class="col '+side+'" style="max-width: 70%;"><p>'+item.message+'</p></div></div>';
+						$('#content_chat').append(mssge);
+					});
 
+                },
+                complete: function () {
+					getTickets();
+				}
+            });
+		})
+	});
 	function getTickets(){
 		$.ajax({
 			url: '/Soporte/getTickets',
@@ -265,13 +294,13 @@
 			beforeSend: function () {
 			},
 			success: function (data) {
-				console.log(data);
+				$('#tck_dashboard').empty();
 				$.each(data, function(index, value)	{
-					var color='red';
-					var status='Cerrado';
+					var color='';
+					var status='';
 					switch (value.status) {
 						case 1:
-							color = 'green';
+							color = 'red';
 							status = 'Abierto';
 							break;
 						case 2:
@@ -279,14 +308,49 @@
 							status = 'En revisión';
                             break;
 						default:
-							color = 'red';
+							color = 'green';
 							status = 'Cerrado';
 							break;
 					}
 					var span = $('<a class="btn-floating pulse right white">'
 						+'<i class="material-icons right" style="rotate: 90deg; color: '+color+';">radio_button_checked</i></a>');
 					span.click(function (){
+						$('#folio_modal').empty();
+						$('#issue_modal').empty();
+						$('#description_modal').empty();
+						$('#content_chat').empty();
+						$('#inputFolio_modal').empty();
 
+						$.ajax({
+							url: 'Soporte/getTrackingFolio',
+							data: {
+								folio: value.folio
+							},
+							dataType: 'json',
+							method: 'post',
+							beforeSend: function () {
+							},
+							success: function (data) {
+								$('#folio_modal').append('Folio: '+value.folio);
+                                $('#inputFolio_modal').val(value.folio);
+                                $('#issue_modal').append('Asunto: '+value.issue);
+                                $('#description_modal').append(value.description);
+
+								$.each(data, function(index, item){
+									var side = '';
+									if (item.flow == 1) {
+										side = 'red right';
+									}else {
+										side = 'blue left';
+									}
+									var mssge = '<div class="row"><div class="col '+side+'" style="max-width: 70%;"><p>'+item.message+'</p></div></div>';
+									$('#content_chat').append(mssge);
+								});
+							},
+							complete: function () {
+							}
+						});
+						$('#modal1').modal('open');
 					});
 					var div = '<div class="col s3">'
 					+'<div class="card grey lighten-3" style="border-radius: 15px;">'
@@ -299,11 +363,10 @@
 					+'</div></div></div>';
 
 					$('#tck_dashboard').append(div);
+					$('#spn'+value.folio).append(span);
 				});
-
 			},
-			complete: function () {
-			}
+			complete: function () {}
 		});
 
 	}
