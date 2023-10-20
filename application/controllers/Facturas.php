@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedout
+class Facturas extends MY_Loggedin
 {
 
 	private $user;

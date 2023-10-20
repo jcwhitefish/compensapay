@@ -461,20 +461,7 @@
             };
 
             const uploadFile = async () => {
-                if (selectedButton.value === 'Facturas' && checkboxChecked.value) {
-                    const fileInput = document.getElementById('invoiceUpload');
-                    const formData = new FormData();
-                    formData.append('invoiceUpload', fileInput.files[0]);
-
-                    const response = await fetch("<?= base_url('facturas/subidaFactura') ?>", {
-                        method: 'POST',
-                        body: formData,
-                        redirect: 'follow'
-                    });
-
-                    if (response.ok) {
-                        getFacturas();
-                        M.toast({html: 'Se ha subido la factura'});
+                     'Se ha subido la factura'});
                     } 
                 } else {
                     alert('Ingresa una factura y acepta los terminos');
