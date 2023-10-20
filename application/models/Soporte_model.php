@@ -123,7 +123,6 @@ class Soporte_model extends CI_Model{
 		$query = "SELECT t1.tcs_status, t1.tcs_message, t1.tcs_flow FROM compensapay.tck_tracking t1 
 					inner JOIN compensapay.tck_ticket t2 ON t2.tck_id = t1.id_ticket 
 					WHERE t2.tck_folio = '{$idTicket}';";
-//		var_dump($query);
 		if ($result = mysqli_query($this->conn, $query)) {
 //			var_dump('hola');
 			if (mysqli_num_rows($result) > 0) {

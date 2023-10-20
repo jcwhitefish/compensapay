@@ -18,7 +18,7 @@
                 <li>
                     <!-- este es el modelo para el for de vue o php -->
                     <div class="collapsible-header d-flex space-between bold">Cuantas facturas puedo cargar <i class="material-icons">expand_more</i></div>
-                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet .</span></div>
                 </li>
                 <li>
                     <div class="collapsible-header d-flex space-between bold">Cuantas operaciones puedo hacer al mes <i class="material-icons">expand_more</i></div>
