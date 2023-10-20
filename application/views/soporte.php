@@ -144,21 +144,21 @@
 		</div>
 		<div id="modal1" class="modal">
 			<div class="modal-content">
-				<h4 id="folio_modal">Folio: 123213123123122</h4>
-				<h5 id="issue_modal">Asunto: Prueba</h5>
-				<p id="description_modal">Esto es una prueba</p>
+				<h4 id="folio_modal">No</h4>
+				<h5 id="issue_modal">Estes</h5>
+				<p id="description_modal">Viendo</p>
 				<div id="content_chat" class="content" style="padding-bottom: 25px">
 					<div class="row">
-						<div class="col red right " ><p>s12 m4</p></div>
+						<div class="col red right " ><p>Este</p></div>
 					</div>
 					<div class="row">
-						<div class="col blue left"><p>s12 m4dsadasdasd</p></div>
+						<div class="col blue left"><p>Codigo</p></div>
 					</div>
 					<div class="row">
-						<div class="col red right "><p>lorem ipdsadasd</p></div>
+						<div class="col red right "><p>n.n</p></div>
 					</div>
 					<div class="row">
-						<div class="col blue left"><p>s12 m4dsadasdasd</p></div>
+						<div class="col blue left"><p>Gracias!</p></div>
 					</div>
 				</div>
 				<div class="row">
