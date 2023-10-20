@@ -144,7 +144,6 @@
                     <h6 class="p-3">Carga tu factura en formato .xml</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-
                             <div class="row">
                                 <div class="col l9 input-border">
                                     <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
@@ -189,7 +188,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
-                    <form @submit.prevent="cambiarSolicitud('validador')" method="post" action="<?php echo base_url('facturas/cargaOperacion'); ?>" enctype="multipart/form-data">
+                    <form id="uploadForm" enctype="multipart/form-data">                        
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -525,13 +524,16 @@
                     const formData = new FormData();
                     formData.append('operationUpload', fileInput.files[0]);
 
-                    const response = await fetch("<?= base_url('facturas/subidaOperacion') ?>", {
+                    const response = await fetch("<?= base_url('facturas/cargaOperacion') ?>", {
                         method: 'POST',
                         body: formData,
                         redirect: 'follow'
                     });
 
                     if (response.ok) {
+                        M.toast({
+                            html: 'Se ha subido la operacion'
+                        });
                         getOperations();
                     } else {
                         console.error('Error');
@@ -589,18 +591,18 @@
                 fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
+                        providerUploadName.value = result.emisor;
                         facturasClient.value = result.facturasClient;
                         facturasClient.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
 
-
+            //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
             const checkFormatOperation = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
                     operationUploadName.value = fileInput.files[0].name;
-                    providerUploadName.value = '';
                     getFacturasByClient();
                 } else {
                     operationUploadName.value = '';
@@ -608,6 +610,7 @@
                 }
             };
 
+            //cambiar de nombre el input para subir una factura
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
@@ -617,14 +620,12 @@
                 }
             };
 
-
-            //Ver que tabla vamos a ver
+            //Ver que tabla vamos a ver segun el boton seleccionado
             const selectButton = (buttonName) => {
                 if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
                 }
             };
-
 
             //Solicitud para lo de hacer operacion
             const cambiarSolicitud = (valor) => {
@@ -643,7 +644,6 @@
                 }
                 // console.log(solicitud);
             };
-
 
             //mandar a llamar las funciones 
             Vue.onMounted(
