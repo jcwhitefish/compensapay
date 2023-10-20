@@ -100,7 +100,7 @@
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
-                            <th>Factura</th>
+                            <th>Factura / Nota de credito</th>
                             <th>Fecha Transacción</th>
                             <th>Estatus</th>
                             <th>Monto Ingreso</th>
@@ -112,12 +112,12 @@
                         <tr v-for="operacion in operaciones">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura"></a>
+                                <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
                             <td>1(id_user)</td>
                             <td>{{ operacion.payment_date }}</td>
-                            <td>0000-00-00</td>
+                            <td>{{ operacion.created_at}}</td>
                             <td>1(id_factura)</td>
                             <td>0000-00-00</td>
                             <td class="tabla-celda center-align">
@@ -170,7 +170,7 @@
                             <div class="col l12 center-align">
                                 <a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" :class="{ 'modal-close': checkboxChecked }" type="button" name="action" @click="uploadFile">Siguiente</button>
+                                <button class="button-blue" :class="{ 'modal-close': checkboxChecked }" type="reset" name="action" @click="uploadFile">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -188,7 +188,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
-                    <form id="uploadForm" enctype="multipart/form-data">                        
+                    <form method="post" id="operationForm" enctype="multipart/form-data">                        
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -249,108 +249,38 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button>
+                                <button class="button-blue" type="submit" name="action" @click="uploadOperation">Siguiente</button>                           
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="modal-content" v-if='solicitud == 1'>
-            <h5>Solicitar Factura</h5>
-            <div class="card esquinasRedondas">
-                <form @submit.prevent='cambiarSolicitud(2)' action="" method="post">
-                    <div class="card-content ">
-                        <div class="row">
-                            <div class="col l12">
-                                <label style="top: 0!important;" for="descripcion">Mensaje para Solicitar</label>
-                                <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+    </div>
 
-                            </div>
-                            <div class="col l12 d-flex justify-content-flex-end">
-                                <a @click='cambiarSolicitud(0)' class="button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                &nbsp;
-                                <button class="button-blue" type="submit">Solicitar</button>
-                            </div>
+
+    <!-- solicitar factura -->
+    <div class="modal-content" v-if='solicitud == 1'>
+        <h5>Solicitar Factura</h5>
+        <div class="card esquinasRedondas">
+            <form @submit.prevent='cambiarSolicitud(2)' action="" method="post">
+                <div class="card-content ">
+                    <div class="row">
+                        <div class="col l12">
+                            <label style="top: 0!important;" for="descripcion">Mensaje para Solicitar</label>
+                            <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+
+                        </div>
+                        <div class="col l12 d-flex justify-content-flex-end">
+                            <a @click='cambiarSolicitud(0)' class="button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                            &nbsp;
+                            <button class="button-blue" type="submit">Solicitar</button>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Una operacion unica al dar crear operacion -->
-    <div id="modal-operacion-unico" class="modal">
-        <div class="modal-content">
-            <h5>Crear Operación</h5>
-            <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h6 class="p-3">Carga tu xml y selecciona una factura</h6>
-                    <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col l3 input-border">
-                                <input type="text" placeholder="92387278.xml" disabled>
-                                <label for="invoiceDisabled">Tu factura XML</label>
-                            </div>
-                            <div class="col l4 left-align p-5">
-                            </div>
-                            <div class="col l5 input-border select-white">
-                                <input type="text" placeholder="Frontier" disabled>
-                                <label for="providerDisabled">Proveedor</label>
-                            </div>
-                            <div >
-                                <table class="striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Crear Operación</th>
-                                            <th>Proveedor</th>
-                                            <th>Factura</th>
-                                            <th>Fecha Factura</th>
-                                            <th>Fecha Alta</th>
-                                            <th>Fecha Transacción</th>
-                                            <th>Estatus</th>
-                                            <th>Subtotal</th>
-                                            <th>IVA</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
-                                            <td class="tabla-celda center-align">
-                                                <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
-                                            </td>
-                                            <td><?php $this->session->userdata('id'); ?> (id_user)</td>
-                                            <td>{{factura.sender_rfc}}</td>
-                                            <td>{{factura.invoice_date}}</td>
-                                            <td>{{factura.created_date}}</td>
-                                            <td>{{factura.transaction_date}}</td>
-                                            <td>{{factura.status}}</td>
-                                            <td>${{factura.subtotal}}</td>
-                                            <td>${{factura.iva}}</td>
-                                            <td>${{factura.total}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div><br>
-                            <div class="col l8">
-                                <a onclick="M.toast({html: 'Se ha solicitado la factura'})" class="button-blue modal-close" v-if="providerUploadName != ''">Solicitar otra Factura</a>
-                            </div>
-                            <div class="col l4 center-align">
-                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-                                &nbsp;
-                                <button class="button-blue" type="submit" name="action">Siguiente</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-
-
 
     <!-- darle aceptar a una factura (el feo) -->
     <div id="modal-cargar-factura" class="modal">
@@ -513,31 +443,41 @@
                         getFacturas();
                     }
                 } else {
-                    alert('Ingresa una factura y acepta los terminos');
+                    alert('Ingresa una factura y acepta los terminos 1');
                 }
             };
 
             //Subir una operacion
             const uploadOperation = async () => {
-                if (selectedButton.value === 'operation') {
+
+                if (selectedButton.value == 'Operaciones') {
                     const fileInput = document.getElementById('operationUpload');
                     const formData = new FormData();
                     formData.append('operationUpload', fileInput.files[0]);
 
-                    const response = await fetch("<?= base_url('facturas/cargaOperacion') ?>", {
+                    var requestOptions = {
                         method: 'POST',
                         body: formData,
                         redirect: 'follow'
-                    });
+                    };
 
-                    if (response.ok) {
-                        M.toast({
-                            html: 'Se ha subido la operacion'
-                        });
-                        getOperations();
-                    } else {
-                        console.error('Error');
-                    }
+                    fetch("<?= base_url("facturas/cargaOperacionFactura") ?>", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                            if(result.status == 'ok'){
+                                getOperations();
+                                M.toast({
+                                    html: 'Se ha subido la operacion'
+                                });
+                            }else{
+                                M.toast({
+                                    html: 'Error con la operacion, verifique su factura'
+                                });
+                            }
+                            
+                        })
+                        .catch(error => console.log('error', error));
+
                 } else {
                     alert('Ingresa una factura y acepta los terminos')
                 }
@@ -571,7 +511,6 @@
                     .then(result => {
                         facturas.value = result.facturas;
                         facturas.value.reverse();
-                        checkboxChecked = Vue.ref(false);
                     })
                     .catch(error => console.log('error', error));
             };
@@ -632,7 +571,6 @@
 
                 if (valor == 'recarga') {
                     solicitud.value = 0;
-                    window.location.replace('<?php echo base_url("facturas/cargaOperacion"); ?>');
 
 
                 } else if (valor == 'validador') {
@@ -668,6 +606,7 @@
                 operaciones,
                 facturas,
                 facturasClient,
+                uploadOperation,
                 solicitud,
                 cambiarSolicitud,
                 autorizar,

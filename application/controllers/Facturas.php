@@ -14,6 +14,7 @@ class Facturas extends MY_Loggedin
 		parent::__construct();
 		$this->load->model('Invoice_model');
 		$this->load->model('Operation_model');
+		$this->load->model('Debitnote_model');
 		// Cambia por el usuario
 		$this->user = 1;
 	}
@@ -111,7 +112,6 @@ class Facturas extends MY_Loggedin
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
 						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-						print_r($id_insertado);
 						unlink($xmlFile);
 					};
 					rmdir($extractedDir);
@@ -135,10 +135,12 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function cargaOperacion(){
+	public function cargaOperacionFactura(){
 		$dato = array();
+		$dato['status'] = "ok";
 
 		$selectedFacturaId = $this->input->post('grupoRadio');
+		$dato['facturaid'] = $selectedFacturaId;
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
 			$operationUpload = $_FILES['operationUpload'];
@@ -171,16 +173,60 @@ class Facturas extends MY_Loggedin
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
-			} 
+			} else{
+				$dato['status'] = "error";
+			}
 		}
 
-		
-		$dato['status'] = "ok";
-		$dato['facturaid'] = $selectedFacturaId;;
-
-		// $this->db->insert('operation', $factura);
 		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function cargaOperacionNota(){
+		$dato = array();
+		$dato['status'] = "ok";
+
+		$selectedFacturaId = 4;
+		$dato['facturaid'] = $selectedFacturaId;
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$this->load->helper('factura_helper');
+			$nota = procesar_nota_relacional($xml, $selectedFacturaId);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
+
+			$uuid1 = $factura1[0]->uuid;
+			$uuid2 = $nota["uuid"];
+			
+
+			if ($uuid1 === $uuid2) {
+
+				$operacion = array(
+					"id_debit_note" => "1",
+					"id_uploaded_by" =>  "1",
+					"id_client" => "1",
+					"id_provider" => "1",
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $nota["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "0",
+					"created_at" => date('Y-m-d'),
+				);
+
+				unset($nota["uuid"]);
+				$dato['debitnote'] = $this->Debitnote_model->post_my_debit_note($nota);
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+
+			} else{
+				$dato['status'] = "error";
+			}
+		}
+
+		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
 
