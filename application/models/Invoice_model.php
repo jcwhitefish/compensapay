@@ -20,6 +20,14 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
+    public function get_invoices_by_id($id) {
+        $this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_invoices_by_client($emisor) {
         $this->db->select('*');
 		$this->db->from('invoices');
@@ -32,6 +40,8 @@ class Invoice_model extends CI_Model {
         $this->db->insert('invoices', $xml);
         return $this->db->insert_id();
     }
+
+    
   
 }
 ?>

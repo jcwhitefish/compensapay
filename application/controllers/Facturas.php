@@ -5,18 +5,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedin
+class Facturas extends MY_Loggedout
 {
 
 	private $user;
 
-	public function __construct()
-	{
+	public function __construct(){
 		parent::__construct();
 		$this->load->model('Invoice_model');
 		$this->load->model('Operation_model');
 		// Cambia por el usuario
-		$this->user = $this->session->userdata('id');
+		$this->user = 1;
 	}
 
 	/**
@@ -34,8 +33,7 @@ class Facturas extends MY_Loggedin
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
-	public function index()
-	{
+	public function index(){
 
 		$isClient = $this->session->userdata('vista');
 
@@ -49,8 +47,7 @@ class Facturas extends MY_Loggedin
 		}
 	}
 
-	public function tablaFacturas()
-	{
+	public function tablaFacturas(){
 		$dato = array();
 		$dato['facturas'] = $this->Invoice_model->get_my_invoices($this->user);
 		$dato['status'] = 'ok';
@@ -60,8 +57,7 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function tablaOperaciones()
-	{
+	public function tablaOperaciones(){
 		$dato = array();
 		$dato['operaciones'] = $this->Operation_model->get_my_operation($this->user);
 		$dato['status'] = 'ok';
@@ -71,8 +67,30 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function subidaFactura()
-	{
+	public function cargaFacturasPorCliente(){
+
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$emisor = $xml->getElementsByTagName('Emisor')->item(0);
+			$this->load->helper('factura_helper');
+
+			$dato['emisor'] = $emisor->getAttribute('Rfc');
+			$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($emisor->getAttribute('Rfc'));
+
+		}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+		
+	}
+
+	public function subidaFactura(){
 		$dato = array();
 
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
@@ -117,60 +135,50 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function cargaFacturasPorCliente()
-	{
-
+	public function cargaOperacion(){
 		$dato = array();
+
+		$selectedFacturaId = $this->input->post('grupoRadio');
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
 			$operationUpload = $_FILES['operationUpload'];
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
-			$emisor = $xml->getElementsByTagName('Emisor')->item(0);
 			$this->load->helper('factura_helper');
+			$factura2 = procesar_factura_relacional($xml);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
 
-			$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($emisor->getAttribute('Rfc'));
+			$uuid1 = $factura1[0]->uuid;
+			$uuid2 = $factura2["uuid"];
+			
 
-	}
+			if ($uuid1 === $uuid2) {
 
-		$dato['status'] = "ok";
-		$this->output->set_content_type('application/json');
-		$this->output->set_output(json_encode($dato));
-		
-	}
+				$operacion = array(
+					"id_invoice" => $selectedFacturaId,
+					"id_invoice_relational" => "1",
+					"id_uploaded_by" =>  "1",
+					"id_client" => "1",
+					"id_provider" => "1",
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $factura2["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "0",
+					"created_at" => date('Y-m-d'),
+				);
 
-	public function cargaOperacion()
-	{
-		$dato = array();
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
-		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
-				$operationUpload = $_FILES['operationUpload'];
-				$xmlContent = file_get_contents($operationUpload['tmp_name']);
-				$xml = new DOMDocument();
-				$xml = $xml->loadXML($xmlContent);
-				$uuid = $this->db->where('ID', 'uuid');
+			} 
 		}
 
+		
 		$dato['status'] = "ok";
+		$dato['facturaid'] = $selectedFacturaId;;
 
-		$factura = array(
-			"Aprobacion" => "1",
-			"ID_Persona" => "6",
-			"ID_Operacion" =>  str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
-			"Proveedor" => "Frontier",
-			"Fecha_Factura" => "2023-05-15",
-			"Fecha_Alta" => "2023-10-05",
-			"Factura" => "FAC002",
-			"Nota_Debito_Factura_Proveedor" => "ND2331",
-			"Fecha_Nota_Debito_Fact_Proveedor" => "ND4341",
-			"Fecha_Transaccion" => "2023-10-09",
-			"Estatus" => "Aprobada",
-			"Monto_Ingreso" => "10000.00",
-			"Monto_Egreso" => "10000.00",
-		);
-
-		$this->db->insert('operation', $factura);
+		// $this->db->insert('operation', $factura);
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
