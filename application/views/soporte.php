@@ -91,7 +91,6 @@
             <h5><i class="material-icons iconoSetting">chat</i> Levantar Ticket</h5>
         </div>
         <div class="col l12">
-
 			<div class="row">
 				<div class="col l5 input-border" >
 					<select name="modulo" id="modulo" >
@@ -135,7 +134,7 @@
             </div>
 			<div class="row">
 				<div class="col l12 input-border">
-					<button class="btn waves-effect waves-light grey right" type="submit" id="btn-envio" name="btn-envio">Enviar
+					<button class="btn waves-effect waves-light grey right" type="submit" id="btn-envio" name="btn-envio" disabled>Enviar
 						<i class="material-icons right">send</i>
 					</button>
 				</div>
@@ -165,7 +164,7 @@
 				<div class="row">
 					<input type="hidden" id="inputFolio_modal" name="inputFolio_modal" value="">
 					<textarea class="materialize-textarea" id="tckComentsChat" name="tckComentsChat"></textarea>
-					<button class="btn waves-effect waves-light right grey" type="submit" name="action" id="sendChat" >Enviar
+					<button class="btn waves-effect waves-light right grey" type="submit" name="sendChat" id="sendChat" disabled>Enviar
 						<i class="material-icons right">send</i>
 					</button>
 
@@ -209,8 +208,13 @@
 	$(document).ready(function() {
 		getTickets();
 		$('#modulo').change();
+		$('#tema').on('change', function() {verifyForm();});
+		$('#asunto').on('input', function() {verifyForm();});
+		$('#descripcion').on('input', function() {verifyForm();});
+		$('#tckComentsChat').on('input', function() {verifyChat();});
 		$('#modulo').on('change', function() {
 			var idModule = $(this).val();
+			verifyForm();
 			$.ajax({
 				url: 'Soporte/getTopics',
 				data: {
@@ -246,9 +250,12 @@
 				beforeSend: function () {
 				},
 				success: function (data) {
-					alert('Su numero de folio es: #'+data.folio);
+					var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
+					M.toast({html: toastHTML});
 				},
 				complete: function () {
+					$('#descripcion').val('');
+					$('#asunto').val('');
 					getTickets();
 				}
 			});
@@ -279,6 +286,10 @@
 
                 },
                 complete: function () {
+					// $('#tckComentsChat').empty();
+					$('#tckComentsChat').val('');
+					$('#tckComentsChat').focus();
+					$('#tckComentsChat').select();
 					getTickets();
 				}
             });
@@ -369,5 +380,23 @@
 			complete: function () {}
 		});
 
+	}
+	function verifyForm(){
+		var modulo = $('#modulo').val();
+		var asunto = $('#asunto').val();
+		var descripcion = $('#descripcion').val();
+		if (modulo !== 0 && asunto !== '' && descripcion !== '') {
+            $('#btn-envio').prop('disabled', false)
+        }else{
+			$('#btn-envio').prop('disabled', true)
+		}
+	}
+	function verifyChat(){
+		var chatmsg = $('#tckComentsChat').val();
+		if (modulo !== 0 && asunto !== '' && descripcion !== '') {
+			$('#sendChat').prop('disabled', false)
+		}else{
+			$('#sendChat').prop('disabled', true)
+		}
 	}
 </script>
