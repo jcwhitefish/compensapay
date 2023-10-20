@@ -139,7 +139,7 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 		$dato['status'] = "ok";
 
-		$selectedFacturaId = $this->input->post('grupoRadio');
+		$selectedFacturaId = 8;
 		$dato['facturaid'] = $selectedFacturaId;
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
