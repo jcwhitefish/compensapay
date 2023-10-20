@@ -2,8 +2,6 @@
 
 class Soporte_model extends CI_Model{
 
-	private $link = NULL;
-	private ?string $environment;
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
