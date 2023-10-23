@@ -16,7 +16,7 @@ class Facturas extends MY_Loggedin
 		$this->load->model('Operation_model');
 		$this->load->model('Debitnote_model');
 		// Cambia por el usuario
-		$this->user = 1;
+		$this->user = $this->user = $this->session->userdata('id');
 	}
 
 	/**
