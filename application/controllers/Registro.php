@@ -248,4 +248,10 @@ class Registro extends MY_Loggedout
 	{
 		echo 'hola desde verVariable';
 	}
+	public function registraOpenpay(){
+		$this->load->model('Openpay_model', 'dataOp');
+		$id = $this->session->userdata('id');
+		return $this->dataOp->NewClient(1);
+	}
 }
+

@@ -14,6 +14,31 @@ class Openpay_model extends CI_Model
 		parent::__construct();
 		$this->load->database();
 	}
+
+	public function NewClient($id){
+		$data = [];
+		$nextPay = date( 'Y-m-d', strtotime( '+1 month' ));
+		$prevPay = date( 'Y-m-d');
+		$query = "SELECT name, last_name, email FROM compensapay.users WHERE id = '{$id}'";
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0) {
+				foreach ($result->result_array() as $row){
+					$data = [
+						'name'        => $row['name'].' '.$row['last_name'],
+						'email'     => $row['email'],
+					];
+				}
+			}
+		}
+		$res=$this->SendNewClient($data);
+		var_dump($res = json_decode($res, true));
+		$query = "INSERT INTO compensapay.subscription (company_id, custumer_id, prevPay, nextPay, dealings, statusSupplier)
+			VALUES ('{$id}','{$res['id']}', '{$prevPay}','{$nextPay}',300,1)";
+//		die(var_dump($query));
+		if ($this->db->query($query)){
+			return $res;
+		}
+	}
 	public function SendNewClient(array $args){
 		$request = [
 			'name' => $args['name'],
