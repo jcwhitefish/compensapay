@@ -1,24 +1,26 @@
 <?php
 class Openpay_model extends CI_Model
 {
-	private string $environment = 'SANDBOX';
 	private string $openPaySandbox = 'https://sandbox-api.openpay.mx/v1';
 	private string $openPayLive = '';
-	private string $customerID = 'mhcmkrgyxbjfw9vb9cqc';
+	private string $customerIDSandBox = 'mhcmkrgyxbjfw9vb9cqc';
+	private string $customerIDProd = '';
+	private string $planIdSandbox = 'pvnhncnq55gwfjulrbiq';
+	private string $planIdProd = '';
 	private string $usernameSandbox = 'sk_10a295f448a043a9ab582aa200552647';
-	private string $passwordSandbox = '';
 	private string $usernameProd = '';
+	private string $passwordSandbox = '';
 	private string $passwordProd = '';
 	private array $headers = [];
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
 	}
-
-	public function NewClient($id){
+	public function NewClient($id, string $env = 'SANDBOX'){
 		$data = [];
-		$nextPay = date( 'Y-m-d', strtotime( '+1 month' ));
-		$prevPay = date( 'Y-m-d');
+		$prevPay = strtotime("now");
+		$nextPay = strtotime('+1 month' );
 		$query = "SELECT name, last_name, email FROM compensapay.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
@@ -28,27 +30,43 @@ class Openpay_model extends CI_Model
 						'email'     => $row['email'],
 					];
 				}
+				$res = json_decode($this->SendNewClient($data, $env), true);
+				$query = "INSERT INTO compensapay.subscription (company_id, custumer_id, prevPay, nextPay, dealings, statusSupplier)
+							VALUES ('{$id}','{$res['id']}', '{$prevPay}', '{$nextPay}',300,1)";
+				if ($this->db->query($query)){
+					$id = $this->db->insert_id();
+					return ['custumerId' =>$res['id'], 'recordId' => $id];
+				}
 			}
 		}
-		$res=$this->SendNewClient($data);
-		var_dump($res = json_decode($res, true));
-		$query = "INSERT INTO compensapay.subscription (company_id, custumer_id, prevPay, nextPay, dealings, statusSupplier)
-			VALUES ('{$id}','{$res['id']}', '{$prevPay}','{$nextPay}',300,1)";
-//		die(var_dump($query));
-		if ($this->db->query($query)){
-			return $res;
-		}
+		return false;
 	}
-	public function SendNewClient(array $args){
+	public function SendNewClient(array $args,  string $env){
 		$request = [
 			'name' => $args['name'],
 			'email' => $args['email'],
 			'requires_account' => FALSE,
 		];
-		$endpoint = $this->customerID.'/customers';
+		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
+		$endpoint = $custommer.'/customers/';
+		$this->headers=[];
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
-	public function SendNewSubscription(array $args){
+	public function NewSubscription(array $args, string $env = 'SANDBOX'){
+		$args['plan_id'] = (strtoupper($env) == 'SANDBOX') ? $this->planIdSandbox : $this->planIdProd;
+		$res = json_decode($this->SendNewSubscription($args, $env), true);
+		if ($res['id']){
+			$query = "UPDATE compensapay.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+			if ($this->db->query($query)){
+				$query = "INSERT INTO compensapay.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
+				if ($this->db->query($query)){
+					return 1;
+				}
+			}
+		}
+		return -1;
+	}
+	public function SendNewSubscription(array $args, string $env){
 		$request = [
 			'card' => [
 				'card_number' => $args['card_number'],
@@ -60,10 +78,33 @@ class Openpay_model extends CI_Model
 			],
 			'plan_id' => $args['plan_id'],
 		];
-		$endpoint = $this->customerID.'/customers/'.$args['customer_id'].'/subscriptions';
+		$this->headers=[];
+		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
+		$endpoint = $custommer.'/customers/'.$args['customer_id'].'/subscriptions';
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
-	public function SendnewCard(array $args){
+	public function NewCard(array $args, string $env = 'SANDBOX'){
+		$res = json_decode($this->SendNewCard($args, $env), true);
+		if($res['id']){
+			$endCard = substr($args['card_number'], -4);
+			$query = "INSERT INTO compensapay.cards (cardType_id, openpay_id, year, month, endCard, active) 
+					VALUES ((SELECT id FROM compensapay.cat_cardtype WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['expiration_year']}', '{$args['expiration_month']}', '{$endCard}', 1)";
+			if ($this->db->query($query)){
+				$id = $this->db->insert_id();
+				$query = "UPDATE compensapay.subscription set card_id = '{$id}' 
+					WHERE id = '{$args['recordId']}'";
+				if ($this->db->query($query)){
+					return $id;
+				}else{
+					return -2;
+				}
+			}else{
+				return -1;
+			}
+		}
+		return $res;
+	}
+	public function SendNewCard(array $args, string $env){
 		$request = [
 			'card_number' => $args['card_number'],
 			'holder_name' => $args['holder_name'],
@@ -72,7 +113,9 @@ class Openpay_model extends CI_Model
 			'cvv2' => $args['cvv'],
 			'device_session_id' => $args['session_id']
 		];
-		$endpoint = $this->customerID.'/customers/'.$args['customer_id'].'/cards';
+		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
+		$endpoint = $custommer.'/customers/'.$args['customer_id'].'/cards';
+		$this->headers=[];
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
 	public function SenddeleteCard(array $args){
@@ -112,7 +155,6 @@ class Openpay_model extends CI_Model
 
 			$response = curl_exec($ch);
 			$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$error = ($code == 200) ? 0 : $code;
 			if ($response === false) {
 				$error = 500;
 				curl_close($ch);
