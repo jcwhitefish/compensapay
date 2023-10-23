@@ -111,7 +111,10 @@ class Facturas extends MY_Loggedin
 						$xml->loadXML($xmlContent);
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
-						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+						$uuid = $factura["uuid"];
+						if (!$this->is_uuid_exists($uuid)) {
+							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+						} 
 						unlink($xmlFile);
 					};
 					rmdir($extractedDir);
@@ -124,7 +127,10 @@ class Facturas extends MY_Loggedin
 				$xml->loadXML($xmlContent);
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
-				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				$uuid = $factura["uuid"];
+				if (!$this->is_uuid_exists($uuid)) {
+					$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				}
 			}
 		}		
 
@@ -139,7 +145,7 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 		$dato['status'] = "ok";
 
-		$selectedFacturaId = 8;
+		$selectedFacturaId = $this->input->post('grupoRadio');
 		$dato['facturaid'] = $selectedFacturaId;
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
@@ -186,7 +192,7 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 		$dato['status'] = "ok";
 
-		$selectedFacturaId = 4;
+		$selectedFacturaId = 5;
 		$dato['facturaid'] = $selectedFacturaId;
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
@@ -205,7 +211,7 @@ class Facturas extends MY_Loggedin
 			if ($uuid1 === $uuid2) {
 
 				$operacion = array(
-					"id_debit_note" => "1",
+					"id_debit_note" => $factura1[0]->id,
 					"id_uploaded_by" =>  "1",
 					"id_client" => "1",
 					"id_provider" => "1",

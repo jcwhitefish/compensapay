@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 if (!function_exists('procesar_xml')) {
@@ -75,3 +76,4 @@ if (!function_exists('procesar_nota_relacional')) {
         return $nota;
     }
 }
+

@@ -180,7 +180,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu nota xml relacionada a una factura</h6>
-                    <form id="operationForm" enctype="multipart/form-data">                        
+                    <form method="post" id="operationForm" enctype="multipart/form-data">                        
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -435,7 +435,7 @@
                         getFacturas();
                     }
                 } else {
-                    alert('Ingresa una factura y acepta los terminos 1');
+                    alert('Ingresa una factura y acepta los terminos');
                 }
             };
 
