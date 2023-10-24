@@ -224,6 +224,21 @@ input[type="number"] {
     border-radius: 10px;
 }
 
+.button-orange {
+    transition-duration: 0.4s;
+    background-color: #ff6624 !important;
+    color: white !important;
+    padding: 8px 30px;
+    border: 2px solid #af3a11 !important;
+    border-radius: 10px !important;
+}
+
+.button-orange:hover {
+    transition-duration: 0.4s;
+    background-color: #af3a11 !important; 
+    color: white !important;
+}
+
 /* images */
 
 .custom-image{

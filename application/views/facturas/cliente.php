@@ -64,7 +64,7 @@
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factur">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
                             </td>
                             <td>1(id_user)</td>
                             <td>{{factura.sender_rfc}}</td>
@@ -104,8 +104,9 @@
                     <tbody>
                         <tr v-for="operacion in operaciones">
                             <td class="tabla-celda center-align">
+                                <i v-if="operacion.status == '2'" class="small material-icons" style="color: red;">cancel</i>
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <i v-if="operacion.status == '0'"><a class="modal-trigger " href="#modal-cargar-factur">Aprobada Operacion</a></i>
+                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura" @click="guardarSeleccion(operacion.id)">Aprobar Operacion</a>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
                             <td>1(id_user)</td>
@@ -181,7 +182,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
-                    <form id="uploadForm" enctype="multipart/form-data">                        
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -242,7 +243,7 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>                           
+                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -251,7 +252,9 @@
         </div>
     </div>
 
-    <div id="modal-cargar-factur" class="modal"><div>
+
+
+    <div id="modal-cargar-factur" class="modal">
     </div>
 
 
@@ -277,42 +280,40 @@
         </div>
     </div>
 
+
     <!-- darle aceptar a una factura (el feo) -->
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
             <h5>Porfavor, autoriza la transacción</h5>
             <div class="card esquinasRedondas">
-                <div class="card-content">
-                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-                    <form @submit.prevent="actualizacion()" id="uploadForm" enctype="multipart/form-data">
-
+                <div class="card-content" v-for="operationClient in operationsClient">
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="Frontier" disabled />
-                                    <label for="invoiceDisabled">Provedor</label>
+                                    <input type="text" :placeholder="operationClient.id_uploaded_by" disabled />
+                                    <label for="invoiceDisabled">Provedor: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="XYZ832HS" disabled />
-                                    <label for="invoiceDisabled">Factura</label>
+                                    <input type="text" :placeholder="operationClient.id_invoice" disabled />
+                                    <label for="invoiceDisabled">Factura: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="XYZ832HS" disabled />
-                                    <label for="invoiceDisabled">Nota de debito</label>
+                                    <input type="text" :placeholder="operationClient.id_debit_note" disabled />
+                                    <label for="invoiceDisabled">Nota de debito: </label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="TRA10035904" disabled />
-                                    <label for="invoiceDisabled">ID Transaccion</label>
+                                    <input type="text" :placeholder="operationClient.operation_number" disabled />
+                                    <label for="invoiceDisabled">ID Transaccion: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="$ 21,576.00" disabled />
-                                    <label for="invoiceDisabled">Monto Factura</label>
+                                    <input type="text" :placeholder="operationClient.entry_money" disabled />
+                                    <label for="invoiceDisabled">Monto Factura: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" placeholder="$10,501.00" disabled />
+                                    <input type="text" :placeholder="operationClient.exit_money" disabled />
                                     <label for="invoiceDisabled">Monto Nota de Débito (ingreso):</label>
                                 </div>
                             </div>
@@ -321,9 +322,10 @@
                                     <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
                                     <label for="start">Inicio:</label>
                                 </div>
-                                <div class="col l4 input-border p-1">
-                                    <input type="text" placeholder="123456789098745612" disabled />
-                                    <label for="invoiceDisabled">Cuenta CLABE del proveedor</label>
+                                <div class="col l1"></div>
+                                <div class="col l4 input-border px-3">
+                                    <input type="text" placeholder="1(cuenta_clave)" disabled />
+                                    <label for="invoiceDisabled">Cuenta CLABE del proveedor:</label>
                                 </div>
                             </div>
                             <div class="col l12">
@@ -331,7 +333,7 @@
                                     <a class="button-gray modal-close">Cancelar</a>
                                 </div>
                                 <div class="col l4 center-align">
-                                    <a onclick="M.toast({html: 'Se rechazo'})" class="button-white modal-close">Rechazar</a>
+                                    <a onclick="M.toast({html: 'Se rechazo'})" class="button-orange modal-close">Rechazar</a>
                                     &nbsp;
                                     <button class="button-blue modal-close" type="submit">Autorizar</button>
                                 </div>
@@ -389,6 +391,13 @@
         border: 2px solid black !important;
         border-radius: 10px;
     }
+
+    .input-border input[type=text] {
+        border-color: #fff !important;
+        border-bottom: 1px solid #fff !important;
+        box-shadow: 0 1px 0 0 #fff !important;
+    }
+
 </style>
 
 <script>
@@ -401,9 +410,11 @@
             const checkboxChecked = Vue.ref(false);
             const radioChecked = Vue.ref(false);
             const operaciones = Vue.ref([]);
+            const operationsClient = Vue.ref([]);
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
             const autorizar = Vue.ref(0);
+            const selectedoperationId = Vue.ref(null);
 
             //darle aceptar a una factura (el feo)
             const actualizacion = () => {
@@ -446,7 +457,7 @@
                                 M.toast({html: 'Ya habia facturas subidas'});
                             } else if(result.error == 'zip'){
                                 M.toast({html: 'Error con el ZIP'});
-                            }                    
+                            }
                         })
                         .catch(error => console.log('error', error));
                 } else {
@@ -485,7 +496,7 @@
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su factura' });
                             }
-                            
+
                         })
                         .catch(error => console.log('error', error));
 
@@ -509,7 +520,7 @@
                     })
                     .catch(error => console.log('error', error));
             };
-        
+
             //tabla de get facturas
             const getFacturas = () => {
                 var requestOptions = {
@@ -528,7 +539,7 @@
 
             //tabla de get facturas por cliente
             const getFacturasByClient = async () => {
-                
+
                 const fileInput = document.getElementById('operationUpload');
                 const formData = new FormData();
                 formData.append('operationUpload', fileInput.files[0]);
@@ -546,6 +557,27 @@
                         facturasClient.value.reverse();
                     })
                     .catch(error => console.log('error', error));
+            };
+
+            //tabla get operacion por id y obtencion del id
+            const guardarSeleccion = async (selectedoperationId) => {getOperationById(selectedoperationId);};
+            const getOperationById = async (selectedoperationId) => {
+
+                const formData = new FormData();
+                console.log(selectedoperationId);
+                formData.append('selectedoperationId', selectedoperationId);
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+                fetch("<?= base_url("facturas/cargaOperacionPorId") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        operationsClient.value = result.operationsClient;
+                        operationsClient.value.reverse();                    
+                    }).catch(error => console.log('error', error));
             };
 
             //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
@@ -577,7 +609,7 @@
                 }
             };
 
-            //mandar a llamar las funciones 
+            //mandar a llamar las funciones
             Vue.onMounted(
                 () => {
                     getOperations();
@@ -599,11 +631,14 @@
                 uploadOperation,
                 selectButton,
                 getFacturasByClient,
+                getOperationById,
                 operaciones,
                 facturas,
+                operationsClient,
                 facturasClient,
                 autorizar,
-                actualizacion
+                actualizacion,
+                guardarSeleccion
             };
         }
     });

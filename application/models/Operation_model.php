@@ -15,6 +15,14 @@ class Operation_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_operation_by_id($id) {
+        $this->db->select('*');
+		$this->db->from('operations');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
     
     public function post_my_invoice($xml) {
         $this->db->insert('operations', $xml);

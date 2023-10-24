@@ -237,6 +237,41 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function cargaOperacionPorId(){
+
+		$selectedoperationId = $_POST['selectedoperationId'];
+
+		$dato = array();
+
+		$dato['operationsClient'] = $this->Operation_model->get_operation_by_id($selectedoperationId);
+
+		$dato['status'] = "ok";
+
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+
+	}
+
+	public function statusOperacion(){
+
+		$factura = array(
+			"Aprobacion" => "1",
+			"Estatus" => "Aprobada",
+		);
+
+		$ID_Operacion = $id; // Obtener el ID de operación
+
+		// Construir la consulta de actualización
+		$this->db->where('id', $ID_Operacion);
+		$this->db->update('operation', $factura);
+
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function actualizacion($id){
 
 		$factura = array(
