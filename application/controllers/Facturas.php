@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedout
+class Facturas extends MY_Loggedin
 {
 
 	private $user;
@@ -14,8 +14,9 @@ class Facturas extends MY_Loggedout
 		parent::__construct();
 		$this->load->model('Invoice_model');
 		$this->load->model('Operation_model');
+		$this->load->model('Debitnote_model');
 		// Cambia por el usuario
-		$this->user = 1;
+		$this->user = $this->user = $this->session->userdata('id');
 	}
 
 	/**
@@ -110,13 +111,18 @@ class Facturas extends MY_Loggedout
 						$xml->loadXML($xmlContent);
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
-						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-						print_r($id_insertado);
+						$uuid = $factura["uuid"];
+						$dato['error'] = "facturas";
+						if (!$this->Invoice_model->uuid_exists($uuid)) {
+							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+						} else{
+							$dato['error'] = "uuids";
+						}
 						unlink($xmlFile);
 					};
 					rmdir($extractedDir);
 				} else {
-					echo "Error al abrir el archivo ZIP.";
+					$dato['error'] = "zip";
 				}
 			} else {
 				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
@@ -124,25 +130,30 @@ class Facturas extends MY_Loggedout
 				$xml->loadXML($xmlContent);
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
-				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				$uuid = $factura["uuid"];
+				if (!$this->Invoice_model->uuid_exists($uuid)) {
+					$dato['error'] = "factura";
+					$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				} else{
+					$dato['error'] = "uuid";
+				}
 			}
 		}		
-
-
 		
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
 
-	public function cargaOperacion(){
+	public function cargaOperacionFactura(){
 		$dato = array();
-
-		$selectedFacturaId = $this->input->post('grupoRadio');
-
+		$dato['status'] = "ok";
+		 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
 			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$dato['facturaid'] = $selectedFacturaId;
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
@@ -171,16 +182,58 @@ class Facturas extends MY_Loggedout
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
-			} 
+			} else{
+				$dato['status'] = "error";
+			}
 		}
 
-		
-		$dato['status'] = "ok";
-		$dato['facturaid'] = $selectedFacturaId;;
-
-		// $this->db->insert('operation', $factura);
 		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function cargaOperacionNota(){
+		$dato = array();
+		$dato['status'] = "ok";
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$dato['facturaid'] = $selectedFacturaId;
+			$xml->loadXML($xmlContent);
+			$this->load->helper('factura_helper');
+			$nota = procesar_nota_relacional($xml, $selectedFacturaId);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
+
+			$uuid1 = $factura1[0]->uuid;
+			$uuid2 = $nota["uuid"];
+			
+
+			if ($uuid1 === $uuid2) {
+
+				$operacion = array(
+					"id_debit_note" => $factura1[0]->id,
+					"id_uploaded_by" =>  "1",
+					"id_client" => "1",
+					"id_provider" => "1",
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $nota["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "0",
+					"created_at" => date('Y-m-d'),
+				);
+
+				unset($nota["uuid"]);
+				$dato['debitnote'] = $this->Debitnote_model->post_my_debit_note($nota);
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+
+			} else{
+				$dato['status'] = "error";
+			}
+		}
+
+		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
 
@@ -194,8 +247,8 @@ class Facturas extends MY_Loggedout
 		$ID_Operacion = $id; // Obtener el ID de operación
 
 		// Construir la consulta de actualización
-		$this->db->where('ID', $ID_Operacion);
-		$this->db->update('tabla_ejemplo', $factura);
+		$this->db->where('id', $ID_Operacion);
+		$this->db->update('operation', $factura);
 
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON

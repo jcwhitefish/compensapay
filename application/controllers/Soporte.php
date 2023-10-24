@@ -32,9 +32,7 @@ class Soporte extends MY_Loggedin{
 	public function getTopics(){
 		$this->load->model('Soporte_model', 'datat');
 		$id = $this->input->post('id', true);
-//        var_dump($id);
 		$res = $this->datat->getTopic($id);
-//        var_dump($res);
 		echo json_encode($res);
 		return true;
 	}

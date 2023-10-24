@@ -243,6 +243,7 @@ class Registro extends MY_Loggedout
 			echo 'Error al enviar el correo: ' . $this->email->print_debugger();
 		}
 		// echo cifrarAES($id);
+
 		//return cifrarAES($idEmpresa);
 	}
 	public function catalogoBancos()
@@ -272,4 +273,40 @@ class Registro extends MY_Loggedout
 	{
 		echo descifrarAES($variable);
 	}
+	public function registraOpenpay(){
+		$this->load->model('Openpay_model', 'dataOp');
+
+		$id = $this->session->userdata('id');
+		$custumerDAta = $this->dataOp->NewClient(1, 'SANDBOX');
+
+		$customerId = $custumerDAta['custumerId'];
+		$recordId = $custumerDAta['recordId'];
+		$cardNumber = $this->input->post('cardNumber');
+		$holderName = $this->input->post('holderName');
+		$expirationMonth = $this->input->post('expirationMonth');
+		$expirationYear = $this->input->post('expirationYear');
+		$cvv = $this->input->post('cvv');
+		$sessionId = $this->input->post('sessionID');
+		$cardType = 'Mastercard';//$this->input->post('cardType');
+		$args = [
+			'card_number' => '5555555555554444',
+			'holder_name' => 'Uriel Magallon',
+			'expiration_year' => '24',
+			'expiration_month' => '12',
+			'cvv' => '123',
+			'session_id' => 'kR1MiQhz2otdIuUlQkbEyitIqVMiI16f',
+			'customer_id' => $customerId,
+			'recordId' => $recordId,
+			'cardType' => $cardType,
+		];
+		$cardData = $this->dataOp->NewCard($args, 'SANDBOX');
+		if ($cardData > 0){
+			$args['cardRecordID'] =  $cardData;
+			$subcription = $this->dataOp->NewSubscription($args, 'SANDBOX');
+			var_dump($subcription);
+			return $subcription;
+		}
+		return -4;
+	}
 }
+
