@@ -112,14 +112,17 @@ class Facturas extends MY_Loggedin
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
 						$uuid = $factura["uuid"];
-						if (!$this->is_uuid_exists($uuid)) {
+						$dato['error'] = "facturas";
+						if (!$this->Invoice_model->uuid_exists($uuid)) {
 							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-						} 
+						} else{
+							$dato['error'] = "uuids";
+						}
 						unlink($xmlFile);
 					};
 					rmdir($extractedDir);
 				} else {
-					echo "Error al abrir el archivo ZIP.";
+					$dato['error'] = "zip";
 				}
 			} else {
 				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
@@ -128,13 +131,14 @@ class Facturas extends MY_Loggedin
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
 				$uuid = $factura["uuid"];
-				if (!$this->is_uuid_exists($uuid)) {
+				if (!$this->Invoice_model->uuid_exists($uuid)) {
+					$dato['error'] = "factura";
 					$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				} else{
+					$dato['error'] = "uuid";
 				}
 			}
 		}		
-
-
 		
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
@@ -144,13 +148,12 @@ class Facturas extends MY_Loggedin
 	public function cargaOperacionFactura(){
 		$dato = array();
 		$dato['status'] = "ok";
-
-		$selectedFacturaId = $this->input->post('grupoRadio');
-		$dato['facturaid'] = $selectedFacturaId;
-
+		 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
 			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$dato['facturaid'] = $selectedFacturaId;
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
@@ -192,13 +195,11 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 		$dato['status'] = "ok";
 
-		$selectedFacturaId = 5;
-		$dato['facturaid'] = $selectedFacturaId;
-
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
 			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
-			$xml = new DOMDocument();
+			$dato['facturaid'] = $selectedFacturaId;
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
 			$nota = procesar_nota_relacional($xml, $selectedFacturaId);
@@ -246,8 +247,8 @@ class Facturas extends MY_Loggedin
 		$ID_Operacion = $id; // Obtener el ID de operación
 
 		// Construir la consulta de actualización
-		$this->db->where('ID', $ID_Operacion);
-		$this->db->update('tabla_ejemplo', $factura);
+		$this->db->where('id', $ID_Operacion);
+		$this->db->update('operation', $factura);
 
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON

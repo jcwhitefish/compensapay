@@ -41,12 +41,11 @@ class Invoice_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function is_uuid_exists($uuid) {
-        $this->db->select('uuid');
+    public function uuid_exists($uuid) {
+        $this->db->select('*');
         $this->db->from('invoices');
         $this->db->where('uuid', $uuid);
         $query = $this->db->get();
-    
         return $query->num_rows() > 0; 
     }
   
