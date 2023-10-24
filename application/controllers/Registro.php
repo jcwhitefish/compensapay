@@ -3,11 +3,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Registro extends MY_Loggedout
 {
-    public function __construct() {
-        parent::__construct();
-        $this->load->model('user_model'); // Carga el modelo
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('user_model'); // Carga el modelo
 		$this->load->model('company_model'); // Carga el modelo
-    }
+		$this->load->library('email');
+
+	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -118,7 +121,7 @@ class Registro extends MY_Loggedout
 			$codigoPostal = $this->input->post('codigoPostal');
 			$estado = $this->input->post('estado');
 			$direccion = $this->input->post('direccion');
-			$telefono = $this->input->post('telefono');			
+			$telefono = $this->input->post('telefono');
 			$clabe = $this->input->post('clabe');
 			$bank = $this->input->post('bank');
 			$uniqueString = $this->input->post('uniqueString');
@@ -130,21 +133,21 @@ class Registro extends MY_Loggedout
 		$renombre = rename($sourcePath, $destinationPath);
 
 		$datos_compania = array(
-            'legal_name' => $bussinesName,
-            'short_name' => $nameComercial,
-            'id_type' => $type,
-            'rfc' => $rfc,
-            'id_fiscal' => $fiscal,
-            'id_postal_code' => $codigoPostal,
-            'id_country' => $estado,
-            'address' => $direccion,
-            'telephone' => $telefono,
-            'account_clabe' => $clabe,
-            'id_broadcast_bank' => $bank,
-            'unique_key' => $uniqueString
-        );
+			'legal_name' => $bussinesName,
+			'short_name' => $nameComercial,
+			'id_type' => $type,
+			'rfc' => $rfc,
+			'id_fiscal' => $fiscal,
+			'id_postal_code' => $codigoPostal,
+			'id_country' => $estado,
+			'address' => $direccion,
+			'telephone' => $telefono,
+			'account_clabe' => $clabe,
+			'id_broadcast_bank' => $bank,
+			'unique_key' => $uniqueString
+		);
 
-        $id_insertado = $this->company_model->insert_company($datos_compania);
+		$id_insertado = $this->company_model->insert_company($datos_compania);
 		$datos['id_company'] = $id_insertado;
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -184,21 +187,21 @@ class Registro extends MY_Loggedout
 			$idEmpresa = $this->input->post('idEmpresa');
 			$uniqueString = $this->input->post('uniqueString');
 		}
-        $datos_usuario = array(
-            'user' => $user,
+		$datos_usuario = array(
+			'user' => $user,
 			'password' => '',
 			'profile' => 1,
 			'name' => $name,
-            'last_name' => $lastname,
-            'email' => $email,
-            'telephone' => $number,
-            'id_question' => $question,
-            'answer' => $answer,
-            'id_company' => $idEmpresa,
-            'unique_key' => $uniqueString
-        );
+			'last_name' => $lastname,
+			'email' => $email,
+			'telephone' => $number,
+			'id_question' => $question,
+			'answer' => $answer,
+			'id_company' => $idEmpresa,
+			'unique_key' => $uniqueString
+		);
 		// echo json_encode($datos_usuario);
-        $id_insertado = $this->user_model->insert_user($datos_usuario);
+		$id_insertado = $this->user_model->insert_user($datos_usuario);
 
 		$encodedParams = array();
 		$encodedParams['nombre'] = urlencode($name . ' ' . $lastname);
@@ -209,16 +212,37 @@ class Registro extends MY_Loggedout
 		// // Enviamos el correo
 
 		// //asi es como
-		$this->enviarCorreo($id_insertado);
+		$this->enviarCorreo($id_insertado,$email);
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
-	public function enviarCorreo($id)
+	public function enviarCorreo($id,$email)
 	{
+		$config = array(
+			'protocol' => 'smtp',  // Puedes cambiar a 'mail' si prefieres el protocolo de correo PHP por defecto
+			'smtp_host' => 'smtp-mail.outlook.com',
+			'smtp_port' => 465,  // El puerto del servidor SMTP
+			'smtp_user' => 'hola@compensapay.mx',
+			'smtp_pass' => 'hola@compensapay.mx',
+			'mailtype' => 'html',  // Puedes cambiar a 'text' si prefieres texto sin formato
+			'charset' => 'utf-8',
+			'wordwrap' => TRUE
+		 );
+		$this->email->initialize($config);
 
-		echo cifrarAES($id);
+		$this->email->from('hola@compensapay.mx', 'compensapay');
+		$this->email->to($email);
+		$this->email->subject('Creacion de cuenta');
+		$this->email->message(base_url('validarCuenta/'.cifrarAES($id)));
+
+		if ($this->email->send()) {
+			echo 'Correo enviado con éxito';
+		} else {
+			echo 'Error al enviar el correo: ' . $this->email->print_debugger();
+		}
+		// echo cifrarAES($id);
 		//return cifrarAES($idEmpresa);
 	}
 	public function catalogoBancos()
@@ -244,8 +268,8 @@ class Registro extends MY_Loggedout
 		$this->output->set_output(json_encode($dato));
 	}
 	//Nos permite ver las variables que queramos
-	public function verVariables()
+	public function verVariables($variable)
 	{
-		echo 'hola desde verVariable';
+		echo descifrarAES($variable);
 	}
 }

@@ -137,7 +137,3 @@
         position: relative;
     }
 </style>
-
-<!-- cadena_validar = '{"Usuario":"DemoUser","Llave":"Pasrd"}';
-$validar_acceso=$this->Interaccionbd->ValidarAcceso($cadena_validar);
-echo $validar_acceso; -->
