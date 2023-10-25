@@ -35,6 +35,25 @@ class Perfil extends MY_Loggedin
 		$this->load->view('plantilla', $data);
 
 	}
+	public function empresa()
+	{
+		//Obtenermos los datos de datosEmpresa y los enviamos al front
+
+		$data['main'] = $this->load->view('perfil/empresa', '', true);
+
+		$this->load->view('plantilla', $data);
+
+	}
+	public function usuario()
+	{
+		//Obtenermos los datos de datosEmpresa y los enviamos al front
+
+		$data['main'] = $this->load->view('perfil/usuario', '', true);
+
+		$this->load->view('plantilla', $data);
+
+	}
+
 	public function datosEmpresa()
 	{
 		//Esta funciona ya no se puede usar tal cual pero aqui es donde se tenian que llamar los datos
