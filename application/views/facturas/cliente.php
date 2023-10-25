@@ -117,7 +117,7 @@
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0'">pendiente</p>
                                 <p v-if="operacion.status == '1'">aprobada</p>
-                                <p v-if="operacion.status == '1'">rechazada</p>
+                                <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
                             <td>{{ operacion.entry_money }}</td>
                             <td>{{ operacion.exit_money }}</td>
@@ -344,13 +344,13 @@
     </div>
 
     <div id="modal-rechazo" class="modal p-5">
-        <h5>Factura rechazada</h5>
+        <h5>Operacion rechazada</h5>
         <div class="card esquinasRedondas">
             <form>
                 <div class="card-content ">
                     <div class="row">
                         <div class="col l12">
-                            <label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de su factura.</label>
+                            <label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operacion.</label>
                             <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
                         </div>
                         <div class="col l12 d-flex justify-content-flex-end">
@@ -583,7 +583,7 @@
             const guardarSeleccion = async (id) => {
                 selectedoperationId.value = id;
                 getOperationById(id);
-            };
+            }; 
             
             const getOperationById = async (selectedoperationId) => {
 
@@ -614,7 +614,7 @@
 
                 var requestOptions = {
                     method: 'POST',
-                    body: formData,
+                    body: formDat>a,
                     redirect: 'follow'
                 };
 
