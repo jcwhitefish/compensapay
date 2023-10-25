@@ -11,7 +11,7 @@
 ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<div class="p-5" id="app">
+<div class="p-5">
     <div class="row">
         <div class="col l12">
             <p>Te sugerimos consultar las guias que hemos desarrollado y/o videos de procesos, aqui podras encontrar respuesta a las dudas y procesos mas frecuentes.</p>

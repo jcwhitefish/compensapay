@@ -85,6 +85,7 @@ class Openpay_model extends CI_Model
 	}
 	public function NewCard(array $args, string $env = 'SANDBOX'){
 		$res = json_decode($this->SendNewCard($args, $env), true);
+		var_dump($res);
 		if($res['id']){
 			$endCard = substr($args['card_number'], -4);
 			$query = "INSERT INTO compensapay.cards (cardType_id, openpay_id, year, month, endCard, active) 
@@ -118,9 +119,35 @@ class Openpay_model extends CI_Model
 		$this->headers=[];
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
-	public function SenddeleteCard(array $args){
+	public function SendDeleteCard(array $args){
 		$endpoint = $this->customerID.'/customers/'.$args['customer_id'].'/cards/'.$args['card_id'];
 		return $this->sendRequest($endpoint, null, 'SANDBOX', 'DELETE', NULL);
+	}
+	public function getActiveCard(int $id){
+		$card = [];
+		$query = "SELECT t2.endCard, t2.month, t2.year, t3.type, t3.img_url
+			FROM compensapay.subscription t1
+			    INNER JOIN compensapay.cards t2 ON t1.card_id = t2.id
+			    INNER JOIN compensapay.cat_cardtype t3 ON t2.cardType_id = t3.id
+			    WHERE t1.company_id = '{$id}'";
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0) {
+				foreach ($result->result_array() as $row){
+					setlocale(LC_ALL, 'es_MX');
+					$monthNum  = intval($row['month']);
+					$dateObj   = DateTime::createFromFormat('!m', $monthNum);
+					$monthName = strftime('%B', $dateObj->getTimestamp());
+					$card = [
+						'endCard' => $row['endCard'],
+						'month' => $monthName,
+						'year' => $row['year'],
+						'type' => $row['type'],
+						];
+				}
+				return $card;
+			}
+		}
+		return false;
 	}
 	private function SendRequest(string $endpoint, $data, ?string $env, ?string $method, ?string $dataType) {
 		$env = strtoupper($env) ?? 'SANDBOX';
