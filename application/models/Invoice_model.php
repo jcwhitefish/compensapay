@@ -49,10 +49,11 @@ class Invoice_model extends CI_Model {
         return $query->num_rows() > 0; 
     }
 
-    public function update_status($id) {
+    public function update_status($id, $status) {
 
         $factura = array(
-			"status" => "1",
+			"status" => $status,
+            "updated_at" => "2023-25-10"
 		);
 
         $this->db->where('id', $id);

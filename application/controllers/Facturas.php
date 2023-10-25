@@ -256,11 +256,13 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 
 		$selectedoperationId = $_POST['selectedoperationId'];
-		$this->Invoice_model->update_status($selectedoperationId);
+		$status = $_POST['acceptDecline'];
+		$this->Invoice_model->update_status($selectedoperationId, $status);
 
 		$dato['status'] = 'ok';
 
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
+
 }

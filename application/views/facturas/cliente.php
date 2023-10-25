@@ -64,7 +64,7 @@
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-solicitar-factur">Crear Operacion</a>
                             </td>
                             <td>1(id_user)</td>
                             <td>{{factura.sender_rfc}}</td>
@@ -117,6 +117,7 @@
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0'">pendiente</p>
                                 <p v-if="operacion.status == '1'">aprobada</p>
+                                <p v-if="operacion.status == '1'">rechazada</p>
                             </td>
                             <td>{{ operacion.entry_money }}</td>
                             <td>{{ operacion.exit_money }}</td>
@@ -238,7 +239,7 @@
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a class="modal-trigger modal-close button-blue" href="#modal-solicitar-factur" v-if="providerUploadName != ''">Solicitar otra factura</a>
+                                <a class="modal-trigger modal-close button-blue" href="#modal-solicitar-factura" v-if="providerUploadName != ''">Solicitar otra factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -252,11 +253,7 @@
         </div>
     </div>
 
-
-
-    <div id="modal-cargar-factur" class="modal">
-    </div>
-
+    <div id="modal-solicitar-factur" class="modal"></div>
 
     <!-- solicitar factura -->
     <div id="modal-solicitar-factura" class="modal p-5">
@@ -281,6 +278,7 @@
     </div>
 
 
+
     <!-- darle aceptar a una factura (el feo) -->
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
@@ -300,7 +298,7 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" :placeholder="operationClient.id_debit_note !== null ? operationClient.id_debit_note : (operationClient.id_invoice_relational !== null ? operationClient.id_invoice_relational : '')" disabled />
-                                    <label for="invoiceDisabled">Nota de debito: </label>
+                                    <label for="invoiceDisabled">Nota de debito / Factura: </label>
                                 </div>
                             </div>
                             <div class="row">
@@ -333,15 +331,36 @@
                                     <a class="button-gray modal-close">Cancelar</a>
                                 </div>
                                 <div class="col l4 center-align">
-                                    <a onclick="M.toast({html: 'Se rechazo'})" class="button-orange modal-close">Rechazar</a>
+                                    <a class="modal-trigger button-orange modal-close" href="#modal-rechazo">Rechazar</a>
                                     &nbsp;
-                                    <button class="button-blue modal-close" type="submit">Autorizar</button>
+                                    <button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('1')">Autorizar</button>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="modal-rechazo" class="modal p-5">
+        <h5>Factura rechazada</h5>
+        <div class="card esquinasRedondas">
+            <form>
+                <div class="card-content ">
+                    <div class="row">
+                        <div class="col l12">
+                            <label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de su factura.</label>
+                            <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+                        </div>
+                        <div class="col l12 d-flex justify-content-flex-end">
+                            <a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
+                            &nbsp;
+                            <button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('2')">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -414,7 +433,8 @@
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
             const autorizar = Vue.ref(0);
-            const selectedoperationId = Vue.ref(null);
+            const selectedoperationId = Vue.ref('');
+            const acceptDecline = Vue.ref('');
 
             //darle aceptar a una factura (el feo)
             const actualizacion = () => {
@@ -560,8 +580,12 @@
             };
 
             //tabla get operacion por id y obtencion del id
-            const guardarSeleccion = async (selectedoperationId) => {getOperationById(selectedoperationId);};
-                const getOperationById = async (selectedoperationId) => {
+            const guardarSeleccion = async (id) => {
+                selectedoperationId.value = id;
+                getOperationById(id);
+            };
+            
+            const getOperationById = async (selectedoperationId) => {
 
                 const formData = new FormData();
                 console.log(selectedoperationId);
@@ -578,6 +602,29 @@
                         operationsClient.value = result.operationsClient;
                         operationsClient.value.reverse();                    
                     }).catch(error => console.log('error', error));
+            };
+
+            //aprobar operacion
+            const changeStatus =  async (acceptOrDecline)  => {
+
+                const formData = new FormData();
+                acceptDecline.value = acceptOrDecline;
+                formData.append('selectedoperationId', selectedoperationId.value);
+                formData.append('acceptDecline', acceptDecline.value);
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/statusOperacion") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        getOperations();
+                        M.toast({ html: 'Se ha aprobo la operacion' });
+                    })
+                    .catch(error => console.log('error', error));
             };
 
             //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
@@ -638,7 +685,8 @@
                 facturasClient,
                 autorizar,
                 actualizacion,
-                guardarSeleccion
+                guardarSeleccion,
+                changeStatus
              };
         }
     });
