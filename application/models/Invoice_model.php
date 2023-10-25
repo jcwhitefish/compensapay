@@ -48,6 +48,18 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows() > 0; 
     }
+
+    public function update_status($id) {
+
+        $factura = array(
+			"status" => "1",
+		);
+
+        $this->db->where('id', $id);
+		$this->db->update('operations', $factura);
+
+        return; 
+    }
   
 }
 ?>

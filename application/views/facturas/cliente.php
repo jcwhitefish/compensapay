@@ -299,21 +299,21 @@
                                     <label for="invoiceDisabled">Factura: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.id_debit_note" disabled />
+                                    <input type="text" :placeholder="operationClient.id_debit_note !== null ? operationClient.id_debit_note : (operationClient.id_invoice_relational !== null ? operationClient.id_invoice_relational : '')" disabled />
                                     <label for="invoiceDisabled">Nota de debito: </label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.operation_number" disabled />
+                                    <input class="input-border-null" type="text" :placeholder="operationClient.operation_number" disabled />
                                     <label for="invoiceDisabled">ID Transaccion: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.entry_money" disabled />
+                                    <input class="input-border-null" type="text" :placeholder="operationClient.entry_money" disabled />
                                     <label for="invoiceDisabled">Monto Factura: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.exit_money" disabled />
+                                    <input class="input-border-null" type="text" :placeholder="operationClient.exit_money" disabled />
                                     <label for="invoiceDisabled">Monto Nota de Débito (ingreso):</label>
                                 </div>
                             </div>
@@ -324,7 +324,7 @@
                                 </div>
                                 <div class="col l1"></div>
                                 <div class="col l4 input-border px-3">
-                                    <input type="text" placeholder="1(cuenta_clave)" disabled />
+                                    <input class="input-border-null" type="text" placeholder="1(cuenta_clave)" disabled />
                                     <label for="invoiceDisabled">Cuenta CLABE del proveedor:</label>
                                 </div>
                             </div>
@@ -392,7 +392,7 @@
         border-radius: 10px;
     }
 
-    .input-border input[type=text] {
+    .input-border-null input[type=text] {
         border-color: #fff !important;
         border-bottom: 1px solid #fff !important;
         box-shadow: 0 1px 0 0 #fff !important;
@@ -561,7 +561,7 @@
 
             //tabla get operacion por id y obtencion del id
             const guardarSeleccion = async (selectedoperationId) => {getOperationById(selectedoperationId);};
-            const getOperationById = async (selectedoperationId) => {
+                const getOperationById = async (selectedoperationId) => {
 
                 const formData = new FormData();
                 console.log(selectedoperationId);
@@ -639,7 +639,7 @@
                 autorizar,
                 actualizacion,
                 guardarSeleccion
-            };
+             };
         }
     });
 </script>
