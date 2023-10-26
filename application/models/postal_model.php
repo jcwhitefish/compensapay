@@ -10,5 +10,9 @@ class Postal_model extends CI_Model {
         $query = $this->db->get('cat_zipcode');
         return $query->result(); 
     }
-    
+    public function get_postal($condiciones) { 
+        // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
+        $query = $this->db->get_where('cat_zipcode', $condiciones);
+        return $query->row_array();
+    }
 }

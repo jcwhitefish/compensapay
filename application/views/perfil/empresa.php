@@ -1,3 +1,11 @@
+<?php
+//TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
+$unique = $this->session->userdata('datosEmpresa')['unique_key'];
+
+$urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
+?>
+
+
 <div class="p-5" id="app">
     <div class="row">
         <div class="col l12 d-flex space-between">
@@ -10,10 +18,8 @@
                 </i></a>
         </div>
     </div>
-
-    <div class="row">
-        <form @submit.prevent="submitForm" method="post" action="<?php echo base_url(''); ?>" class="col l12" enctype="multipart/form-data">
-
+    <form @submit.prevent="submitForm" method="post" action="<?php echo base_url(''); ?>" class="col l12" enctype="multipart/form-data">
+        <div class="row">
             <div class="col l5 especial-p">
                 <div class="row">
                     <div class="col l12" style="margin-bottom: 30px;">
@@ -34,7 +40,7 @@
                     </div>
                     <div class="input-border col l6">
                         <select name="giro" id="giro" v-model="data['giro']" required>
-                            <option v-for="giro in listaGiros" :key="giro.id_Giro" :value="giro.id_Giro">{{ giro.Giro }}</option>
+                            <option v-for="giro in listaGiros" :key="giro.gro_id" :value="giro.gro_id">{{ giro.gro_giro }}</option>
 
                         </select>
                         <label for="giro">Giro *</label>
@@ -48,7 +54,7 @@
                     </div>
                     <div class="input-border col l6">
                         <select name="regimen" id="regimen" v-model="data['regimen']" required>
-                            <option v-for="(regimen,index) in listaRegimenes" :key="regimen.id_regimen" :value="regimen.id_regimen">{{ regimen.Regimen }}</option>
+                            <option v-for="(regimen,index) in listaRegimenes" :key="regimen.rg_id" :value="regimen.rg_id">{{ regimen.rg_regimen }}</option>
 
                         </select>
                         <label for="regimen">Regimen Fiscal *</label>
@@ -61,11 +67,8 @@
                         <p v-if="colorsBorder['codigoPostal'] && colorsBorder['codigoPostal'].border === '1px solid red!important'" class="error-message">¡Código Postal inválido!</p>
                     </div>
                     <div class="input-border col l6">
-                        <select name="estado" id="estado" v-model="data['estado']" required>
-                            <option v-for="estado in listaEstados" :key="estado.id_estado" :value="estado.id_estado">{{ estado.Nombre }}</option>
-
-                        </select>
-                        <label for="estado">Estado *</label>
+                        <input type="text" name="estado" id="estado" disabled :placeholder="data['estado']['name']" required>
+                        <label for="estado">Estado</label>
                     </div>
                 </div>
                 <div class="row">
@@ -96,11 +99,9 @@
                 </div>
                 <div class="row">
                     <div class="input-border col l12">
-                        <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['Alias']" required>
+                        <input type="text" name="bank" id="bank" disabled :placeholder="data['bank']['bnk_alias']" required>
                         <label for="bank">Banco emisor *</label>
-                        <p>Esta es la cuenta a la cual te enviaremos los fondos de las transferencias</p>
                     </div>
-                    
                 </div>
                 <div v-if="false" class="row">
 
@@ -124,81 +125,78 @@
                     <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
                 </div>
             </div>
-    </div>
-    <div class="row">
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        <p>Documento</p>
-                    </th>
-                    <th>
-                        <p>Archivo</p>
-                    </th>
-                    <th>
-                        <p>Actualizar</p>
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>
-                        <p>Acta Constitutiva</p>
-                    </td>
-                    <td><a href="">actaConstitutiva</a></td>
-                    <td>
-                        <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
-                        <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Constancia de Situacion Fiscal</p>
-                    </td>
-                    <td><a href="">constanciaSituacionFiscal</a></td>
-                    <td>
-                        <label for="csfUpload" class="custom-file-upload">Agregar </label>
-                        <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Comprobante de Domicilio</p>
-                    </td>
-                    <td><a href="">comprobanteDomicilio</a></td>
-                    <td>
-                        <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
-                        <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Identificacion de Representante Legal</p>
-                    </td>
-                    <td><a href="">representanteLegal</a></td>
-                    <td>
-                        <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
-                        <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-    </div>
-    <div class="row">
-        <div class="col l12 right-align p-5">
-            <button class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
-
-            <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
         </div>
-    </div>
+
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <p>Documento</p>
+                        </th>
+                        <th>
+                            <p>Archivo</p>
+                        </th>
+                        <th>
+                            <p>Actualizar</p>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>Acta Constitutiva</p>
+                        </td>
+                        <td><a :href="actaConstitutivaUploadURL" target="_blank">{{actaConstitutivaUploadName}}</a></td>
+                        <td>
+                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Constancia de Situacion Fiscal</p>
+                        </td>
+                        <td><a :href="csfUploadURL" target="_blank">{{csfUploadName}}</a></td>
+                        <td>
+                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Comprobante de Domicilio</p>
+                        </td>
+                        <td><a :href="comprobanteDomicilioUploadURL" target="_blank">{{comprobanteDomicilioUploadName}}</a></td>
+                        <td>
+                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Identificacion de Representante Legal</p>
+                        </td>
+                        <td><a :href="representanteLegalUploadURL" target="_blank">{{representanteLegalUploadName}}</a></td>
+                        <td>
+                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
 
+        </div>
+        <div class="row">
+            <div class="col l12 right-align p-5">
+                <button @click="redireccion" class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
 
+                <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
+            </div>
+        </div>
     </form>
-
 </div>
 <script>
     const {
@@ -214,45 +212,59 @@
     const app = createApp({
         setup() {
             const data = reactive({
-                bussinesName: ref('whiteFish'),
-                nameComercial: ref('whiteFish'),
-                rfc: ref('RORA004223WA'),
-                clabe: ref('012345678908765434'),
-                bank: ref('<?php  ?>'), //Este dato se teiene que sacar el Id
+                bussinesName: ref('<?= $this->session->userdata('datosEmpresa')['legal_name'] ?>'),
+                nameComercial: ref('<?= $this->session->userdata('datosEmpresa')['short_name'] ?>'),
+                giro: ref(<?= $this->session->userdata('datosEmpresa')['id_type'] ?>),
+                rfc: ref('<?= $this->session->userdata('datosEmpresa')['rfc'] ?>'),
+                regimen: ref(<?= $this->session->userdata('datosEmpresa')['id_fiscal'] ?>),
+
+                codigoPostal: ref(<?= $postal ?>),
+                estado: ref({
+                    id: ref(<?= $this->session->userdata('datosEmpresa')['id_country'] ?>),
+                    name: ref('<?= $state ?>')
+                }),
+                direccion: ref('<?= $this->session->userdata('datosEmpresa')['address'] ?>'),
+                telefono: ref('<?= $this->session->userdata('datosEmpresa')['telephone'] ?>'),
+                clabe: ref('<?= $this->session->userdata('datosEmpresa')['account_clabe'] ?>'),
+                bank: ref({
+                    bnk_id: ref(<?= $this->session->userdata('datosEmpresa')['id_broadcast_bank'] ?>),
+                    bnk_alias: ref('<?= $bank ?>')
+                }),
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
                 comprobanteDomicilioUpload: ref(''),
                 representanteLegalUpload: ref(''),
-                codigoPostal: ref('05120'),
-                estado: ref(9),
-                regimen: ref(1),
-                direccion: ref('Bosque de Radiatas 26-piso 7'),
-                telefono: ref('5527720256'),
-                uniqueString: ref(''),
-                giro: ref(2)
+
+
+
+                uniqueString: ref('')
+
             });
             // partes del image
             const imageUpload = ref(null);
-            const imageUploadURL = ref("<?= base_url('assets/images/trafiguraoLogo.png'); ?>");
+            const imageUploadURL = ref('<?= $urlArchivos ?>logo.jpeg');
             const colorsBorder = reactive({});
             //partes del pdf
             const csfUpload = ref(null);
-            const csfUploadName = ref('');
+            const csfUploadName = ref('constanciaSituacionFiscal.pdf');
+            const csfUploadURL = ref('<?= $urlArchivos ?>constanciaSituacionFiscal.pdf');
             //partes del pdf
             const actaConstitutivaUpload = ref(null);
-            const actaConstitutivaUploadName = ref('');
+            const actaConstitutivaUploadName = ref('actaConstitutiva.pdf');
+            const actaConstitutivaUploadURL = ref('<?= $urlArchivos ?>actaConstitutiva.pdf');
             //partes del pdf
             const comprobanteDomicilioUpload = ref(null);
-            const comprobanteDomicilioUploadName = ref('');
+            const comprobanteDomicilioUploadName = ref('comprobanteDomicilio.pdf');
+            const comprobanteDomicilioUploadURL = ref('<?= $urlArchivos ?>comprobanteDomicilio.pdf');
             //partes del pdf
             const representanteLegalUpload = ref(null);
-            const representanteLegalUploadName = ref('');
+            const representanteLegalUploadName = ref('representanteLegal.pdf');
+            const representanteLegalUploadURL = ref('<?= $urlArchivos ?>representanteLegal.pdf');
             //partes de listar
-            const listaEstados = ref([]);
             const listaRegimenes = ref([]);
             const listaGiros = ref([]);
-
+            const codigoPostalID = ref('<?= $this->session->userdata('datosEmpresa')['id_postal_code'] ?>');
             // Se pudo haber hecho con evet 
             const checkFormat = (nombreInput) => {
                 if (!isRef(colorsBorder[nombreInput])) {
@@ -278,10 +290,40 @@
                     case 'codigoPostal':
                         var patron = /[^0-9]/;
                         if (data[nombreInput] != '' && data[nombreInput].length == 5 && !patron.test(data[nombreInput])) {
+                            var requestOptions = {
+                                method: 'GET',
+                                redirect: 'follow'
+                            };
 
-                            colorsBorder[nombreInput] = {
-                                border: '1px solid #03BB85!important',
-                            }
+                            fetch("<?php echo base_url('herramientas/listaPostal/'); ?>" + data[nombreInput].toString(), requestOptions)
+                                .then(response => response.json())
+                                .then(result => {
+                                    // console.log(typeof result);
+                                    if (Object.keys(result).length === 0) {
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid red!important',
+                                        }
+                                    } else {
+                                        codigoPostalID.value = result[0].zip_id;
+                                        // console.log(codigoPostalID.value);
+                                        data['estado']['id'] = result[0].zip_state;
+
+                                        fetch("<?php echo base_url('herramientas/listaEstado/'); ?>" + String(data['estado']['id']), requestOptions)
+                                            .then(response => response.json())
+                                            .then(result => {
+                                                //console.log(result);
+                                                data['estado']['name'] = result[0]['stt_name'];
+                                                //console.log(data['estado']['name']);
+                                            })
+                                            .catch(error => console.log('error', error));
+                                        colorsBorder[nombreInput] = {
+                                            border: '1px solid #03BB85!important',
+                                        }
+                                    }
+                                })
+                                .catch(error => console.log('error', error));
+
+
 
                         } else {
                             colorsBorder[nombreInput] = {
@@ -377,12 +419,12 @@
                             fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data[nombreInput].toString().substring(0, 3), requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
-                                    data['bank'] = JSON.parse(result)
-                                    if (data['bank'] == 0) {
+                                    if (result.length == 0) {
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid red!important',
                                         }
                                     } else {
+                                        data['bank'] = result[0];
                                         colorsBorder[nombreInput] = {
                                             border: '1px solid #03BB85!important',
                                         }
@@ -422,7 +464,7 @@
                                 subirArchivo(data[nombreInput], 'logo')
 
                             } else {
-                                imageUploadURL.value = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+                                imageUploadURL.value = '';
 
                             }
 
@@ -433,13 +475,12 @@
 
                         break;
                     case 'csfUpload':
-                        //TODO: falta el caso en el que se tiene que vaciar la variable porque no aceptamos su archivo creo va en el else
+                        //falta el caso en el que se tiene que vaciar la variable porque no aceptamos su archivo creo va en el else
                         if (csfUpload.value.files.length == 1) {
 
                             if (csfUpload.value.files[0].size <= 1024 * 1024 * 30) {
                                 csfUploadName.value = csfUpload.value.files[0].name;
                                 data[nombreInput] = csfUpload.value;
-
                                 subirArchivo(data[nombreInput], 'constanciaSituacionFiscal')
 
                             } else {
@@ -453,6 +494,8 @@
                         if (actaConstitutivaUpload.value.files.length == 1) {
 
                             if (actaConstitutivaUpload.value.files[0].size <= 1024 * 1024 * 30) {
+                                
+                                actaConstitutivaUploadURL.value = URL.createObjectURL(actaConstitutivaUpload.value.files[0])
                                 actaConstitutivaUploadName.value = actaConstitutivaUpload.value.files[0].name;
                                 data[nombreInput] = actaConstitutivaUpload.value;
                                 subirArchivo(data[nombreInput], 'actaConstitutiva')
@@ -519,20 +562,18 @@
                     })
                     .catch(error => console.log('error', error));
             }
-            const buscarBanco = () => {
+            const idUnico = () => {
                 var requestOptions = {
                     method: 'GET',
                     redirect: 'follow'
                 };
+                fetch("<?php echo base_url('herramientas/idUnico'); ?>", requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                        data['uniqueString'] = result.idUnico; // Almacenar los datos en la propiedad listaEstados
+                        // console.log(data['uniqueString']);
 
-                fetch("<?php echo base_url('herramientas/listaBanco/'); ?>" + data['clabe'].toString().substring(0, 3), requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        data['bank'] = JSON.parse(result)
-                    })
-                    .catch(error => console.log('error', error));
-
-
+                    });
             }
             const listarEstados = () => {
                 var requestOptions = {
@@ -555,10 +596,10 @@
                     method: 'GET',
                     redirect: 'follow'
                 };
-                fetch("<?php echo base_url('herramientas/listaRegimen/2'); ?>", requestOptions)
+                fetch("<?php echo base_url('herramientas/listaRegimenes/2'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        listaRegimenes.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        listaRegimenes.value = result; // Almacenar los datos en la propiedad listaRegimenes
                         // console.log(listaRegimenes.value);
                         nextTick(() => {
                             M.FormSelect.init(document.getElementById('regimen'));
@@ -575,7 +616,7 @@
                 fetch("<?php echo base_url('herramientas/listaGiro'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        listaGiros.value = JSON.parse(result); // Almacenar los datos en la propiedad listaRegimenes
+                        listaGiros.value = result; // Almacenar los datos en la propiedad listaRegimenes
                         //console.log(listaGiros.value);
                         nextTick(() => {
                             M.FormSelect.init(document.getElementById('giro'));
@@ -588,37 +629,31 @@
                 const dataObject = {
                     bussinesName: data.bussinesName,
                     nameComercial: data.nameComercial,
-                    codigoPostal: data.codigoPostal,
-                    estado: data.estado,
+                    codigoPostal: codigoPostalID.value,
+                    estado: data.estado.id,
                     direccion: data.direccion,
                     telefono: data.telefono,
                     type: data.giro,
                     rfc: data.rfc,
                     fiscal: data.regimen,
                     clabe: data.clabe,
-                    bank: data.bank.idBanco,
+                    bank: data.bank.bnk_id,
                     documentos: data.uniqueString,
                 };
-                // console.log('dataObject');
-                // console.log(dataObject);
-                const isEmpty = Object.values(dataObject).some(value => value === null || value === undefined || value === '');
-                // console.log('Estan vacios alguno?'+isEmpty);
-                if (!isEmpty) {
 
-                    // console.log(finalURL);
-                } else {
-                    // Al menos uno de los valores está vacío, no hacer nada
-                }
+                console.log(dataObject);
 
+            }
+            const redireccion = () => {
+                window.location.replace("<?php echo base_url(''); ?>");
             }
 
 
             onMounted(
                 () => {
-                    listarEstados();
+                    idUnico();
                     listarRegimen();
                     listarGiro();
-                    buscarBanco();
                 }
             )
 
@@ -631,16 +666,22 @@
                 imageUploadURL,
                 csfUpload,
                 csfUploadName,
+                csfUploadURL,
                 actaConstitutivaUpload,
                 actaConstitutivaUploadName,
+                actaConstitutivaUploadURL,
                 comprobanteDomicilioUpload,
                 comprobanteDomicilioUploadName,
+                comprobanteDomicilioUploadURL,
                 representanteLegalUpload,
                 representanteLegalUploadName,
-                listaEstados,
+                representanteLegalUploadURL,
                 listaRegimenes,
                 listaGiros,
-                submitForm
+                submitForm,
+                redireccion,
+                actaConstitutivaUploadURL
+
 
             }
         }
