@@ -100,7 +100,7 @@ class Facturas extends MY_Loggedin
 			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
 				$zip = new ZipArchive;
 				if ($zip->open($uploadedFile['tmp_name']) === TRUE) {
-					$extractedDir = './xml/';
+					$extractedDir = './temporales/xml/';
 					$zip->extractTo($extractedDir);
 					$zip->close();
 		
@@ -111,9 +111,9 @@ class Facturas extends MY_Loggedin
 						$xml->loadXML($xmlContent);
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
-						$uuid = $factura["uuid"];
+						$xml = $factura["xml_document"];
 						$dato['error'] = "facturas";
-						if (!$this->Invoice_model->uuid_exists($uuid)) {
+						if (!$this->Invoice_model->xml_exists($xml)) {
 							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
 						} else{
 							$dato['error'] = "uuids";
@@ -130,10 +130,14 @@ class Facturas extends MY_Loggedin
 				$xml->loadXML($xmlContent);
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
-				$uuid = $factura["uuid"];
-				if (!$this->Invoice_model->uuid_exists($uuid)) {
-					$dato['error'] = "factura";
-					$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				$rfc = $factura["receiver_rfc"];
+				$xml = $factura["xml_document"];
+				if (!$this->Invoice_model->xml_exists($xml)) {
+					$dato['error'] = "rfc";
+					if ($this->Invoice_model->is_your_rfc($this->user, $rfc)) {
+						$dato['error'] = "factura";
+						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+					}
 				} else{
 					$dato['error'] = "uuid";
 				}
@@ -169,7 +173,7 @@ class Facturas extends MY_Loggedin
 				$operacion = array(
 					"id_invoice" => $selectedFacturaId,
 					"id_invoice_relational" => "1",
-					"id_uploaded_by" =>  "1",
+					"id_uploaded_by" =>  $this->user,
 					"id_client" => "1",
 					"id_provider" => "1",
 					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
@@ -213,7 +217,7 @@ class Facturas extends MY_Loggedin
 
 				$operacion = array(
 					"id_debit_note" => $factura1[0]->id,
-					"id_uploaded_by" =>  "1",
+					"id_uploaded_by" =>  $this->user,
 					"id_client" => "1",
 					"id_provider" => "1",
 					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),

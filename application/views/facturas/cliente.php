@@ -14,7 +14,7 @@
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
+            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Facturas'">
                 Añadir Facturas
             </a>
             <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
@@ -64,10 +64,10 @@
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-solicitar-factur">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica">Crear Operacion</a>
                             </td>
-                            <td>1(id_user)</td>
                             <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.invoice_number}}</td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -109,7 +109,7 @@
                                 <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura" @click="guardarSeleccion(operacion.id)">Aprobar Operacion</a>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
-                            <td>1(id_user)</td>
+                            <td>{{ operacion.id_provider }}</td>
                             <td>{{ operacion.payment_date }}</td>
                             <td>{{ operacion.created_at}}</td>
                             <td>1(id_factura)</td>
@@ -218,8 +218,8 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td><?php $this->session->userdata('id'); ?> (id_user)</td>
-                                            <td>{{facturaClient.sender_rfc}}</td>
+                                            <td>{{facturaClient.receiver_rfc}}</td>
+                                            <td>{{facturaClient.invoice_number}}</td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
                                             <td>
@@ -253,7 +253,60 @@
         </div>
     </div>
 
-    <div id="modal-solicitar-factur" class="modal"></div>
+    
+    <div id="modal-operacion-unica" class="modal">
+        <div class="modal-content">
+            <h5>Crear Operación</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col l3 input-border">
+                                <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
+                                <label for="operationDisabledUnique">Tu factura XML</label>
+                            </div>
+                            <div class="col l4 left-align p-5">
+                            </div>
+                            <div class="col l5 input-border select-white">
+                                <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
+                                <label for="providerDisabledUnique">Proveedor</label>
+                            </div>
+                            <div>
+                                <table class="striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="facturaClientUnique in facturasClientUnique">
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><br>
+                            <div class="col l8"></div>
+                            <div class="col l4 center-align">
+                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                &nbsp;
+                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- solicitar factura -->
     <div id="modal-solicitar-factura" class="modal p-5">
@@ -477,6 +530,8 @@
                                 M.toast({html: 'Ya habia facturas subidas'});
                             } else if(result.error == 'zip'){
                                 M.toast({html: 'Error con el ZIP'});
+                            } else if(result.error == 'rfc'){
+                                M.toast({html: 'el rfc no corresponde a el de la factura '});
                             }
                         })
                         .catch(error => console.log('error', error));
@@ -614,7 +669,7 @@
 
                 var requestOptions = {
                     method: 'POST',
-                    body: formDat>a,
+                    body: formData,
                     redirect: 'follow'
                 };
 

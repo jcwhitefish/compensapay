@@ -66,8 +66,8 @@
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
                             </td>
-                            <td>1(id_user)</td>
                             <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.invoice_number}}</td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -108,7 +108,7 @@
                                 <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
-                            <td>1(id_user)</td>
+                            <td>{{ operacion.id_provider }}</td>
                             <td>{{ operacion.payment_date }}</td>
                             <td>{{ operacion.created_at}}</td>
                             <td>1</td>
@@ -215,8 +215,8 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td><?php $this->session->userdata('id'); ?> (id_user)</td>
-                                            <td>{{facturaClient.sender_rfc}}</td>
+                                            <td>{{facturaClient.receiver_rfc}}</td>
+                                            <td>{{facturaClient.invoice_number}}</td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
                                             <td>
@@ -432,6 +432,7 @@
                         .then(response => response.json())
                         .then(result => {
                             getFacturas();
+                            console.log('aqui peticion xxd');
                             if(result.error == 'factura'){
                                 M.toast({html: 'Se ha subido la factura'});
                             } else if(result.error == 'facturas'){
@@ -442,9 +443,10 @@
                                 M.toast({html: 'Ya habia facturas subidas'});
                             } else if(result.error == 'zip'){
                                 M.toast({html: 'Error con el ZIP'});
-                            }                    
-                        })
-                        .catch(error => console.log('error', error));
+                            } else if(result.error == 'rfc'){
+                                M.toast({html: 'el rfc no corresponde a el de la factura '});
+                            }                  
+                        }).catch(error => console.log('error', error));
                 } else {
                     alert('Ingresa una factura y acepta los terminos');
                 }

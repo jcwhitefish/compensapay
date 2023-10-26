@@ -18,7 +18,7 @@ if (!function_exists('procesar_xml')) {
 			"id_user " => $user,
 			"sender_rfc" =>  $emisor->getAttribute('Rfc'),
 			"receiver_rfc" => $receptor->getAttribute('Rfc'),
-			"invoice_number" => $comprobante->getAttribute('TipoDeComprobante'),
+			"invoice_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"uuid" => $timbreFiscalDigital->getAttribute('UUID'),
 			"invoice_date" => $comprobante->getAttribute('Fecha'),
 			"transaction_date" => "0000-00-00",

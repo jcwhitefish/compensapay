@@ -14,8 +14,18 @@ class Invoice_model extends CI_Model {
 
     public function get_my_invoices($user) {
         $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id_company', $user);
+        $query = $this->db->get();
+        $company = ($query->result())[0]->id_company;
+		$this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('id', $company);
+        $query = $this->db->get();
+        $rfc = $query->result()[0]->rfc;
+        $this->db->select('*');
 		$this->db->from('invoices');
-		$this->db->where('id_user', $user);
+		$this->db->where('sender_rfc', $rfc);
         $query = $this->db->get();
         return $query->result();
     }
@@ -41,12 +51,27 @@ class Invoice_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function uuid_exists($uuid) {
+    public function xml_exists($xml) {
         $this->db->select('*');
         $this->db->from('invoices');
-        $this->db->where('uuid', $uuid);
+        $this->db->where('xml_document', $xml);
         $query = $this->db->get();
         return $query->num_rows() > 0; 
+    }
+
+    public function is_your_rfc($id, $rfc) {
+
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id_company', $id);
+        $query = $this->db->get();
+        $company = ($query->result())[0]->id_company;
+        $this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('id', $company);
+        $query = $this->db->get();
+        return ((($query->result())[0]->rfc) === $rfc);
+
     }
 
     public function update_status($id, $status) {
