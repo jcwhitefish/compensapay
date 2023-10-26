@@ -3,7 +3,7 @@
         <div class="col l12 d-flex space-between">
             <h5 class="card-title">Registro de Empresa</h5>
 
-            <a class="linkConfiguracion" href="<?= base_url(''); ?>">
+            <a class="linkConfiguracion" href="<?= base_url('Configuracion'); ?>">
                 Configuración
                 <i class="material-icons iconoSetting">
                     settings
