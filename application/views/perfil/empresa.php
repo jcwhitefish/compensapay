@@ -479,6 +479,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         if (csfUpload.value.files.length == 1) {
 
                             if (csfUpload.value.files[0].size <= 1024 * 1024 * 30) {
+
+                                csfUploadURL.value = URL.createObjectURL(csfUpload.value.files[0])
                                 csfUploadName.value = csfUpload.value.files[0].name;
                                 data[nombreInput] = csfUpload.value;
                                 subirArchivo(data[nombreInput], 'constanciaSituacionFiscal')
@@ -511,6 +513,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         if (comprobanteDomicilioUpload.value.files.length == 1) {
 
                             if (comprobanteDomicilioUpload.value.files[0].size <= 1024 * 1024 * 30) {
+
+                                comprobanteDomicilioUploadURL.value = URL.createObjectURL(comprobanteDomicilioUpload.value.files[0])
                                 comprobanteDomicilioUploadName.value = comprobanteDomicilioUpload.value.files[0].name;
                                 data[nombreInput] = comprobanteDomicilioUpload.value;
                                 subirArchivo(data[nombreInput], 'comprobanteDomicilio')
@@ -526,6 +530,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         if (representanteLegalUpload.value.files.length == 1) {
 
                             if (representanteLegalUpload.value.files[0].size <= 1024 * 1024 * 30) {
+
+                                representanteLegalUploadURL.value = URL.createObjectURL(representanteLegalUpload.value.files[0])
                                 representanteLegalUploadName.value = representanteLegalUpload.value.files[0].name;
                                 data[nombreInput] = representanteLegalUpload.value;
                                 subirArchivo(data[nombreInput], 'representanteLegal')
