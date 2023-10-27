@@ -169,7 +169,8 @@ class Openpay_model extends CI_Model
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row){
 					setlocale(LC_ALL, 'es_MX');
-					$monthName = $this->monthTranslate($row['month']);;
+					$monthName = $this->monthTranslate($row['month']);
+
 					$card = [
 						'record_id'=> $row['id'],
 						'endCard' => $row['endCard'],
