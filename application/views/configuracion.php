@@ -58,15 +58,27 @@
 				<h6>Método de pago</h6>
 				<div class="divider"></div>
 				<div class="row align-content-lg-center" style="margin-top: 15px; margin-bottom: 1px">
-					<div class="col l2 white">
-						<img src="/assets/images/cardtype/Mastercard.svg" alt="branch" width="100px" >
+					<div class="col l2 white" id="cardInfoImg">
+						<?php
+						if (!empty($card)){
+							echo '<img src="/assets/images/cardtype/'.$card['type'].'.svg" alt="'.$card['type'].'" width="100px" >';
+						}
+						?>
 					</div>
 					<div class="col l5" id="cardInfoText">
-						<p id="cardInfo"><strong><?=$card['type']?>:</strong> ****<?=$card['endCard']?></p>
-						<p id="cardExp">Vence en <?=$card['month']?> del 20<?=$card['year']?></p>
+						<?php
+						if (!empty($card) ){
+							echo '<p id="cardInfo"><strong>'.$card['type'].':</strong> ****'.$card['endCard'].'</p>
+<p id="cardExp">Vence en '.$card['month'].' del 20'.$card['year'].'</p>';
+						}else{
+							echo '<p id="cardInfo"><strong>Por favor registra una nueva tarjeta</strong></p>';
+						}
+						?>
+
 					</div>
 					<div class="col l4">
-						<input type="button" id="changeCard" name="changeCard" value="Cambiar" class="waves-effect blue waves-light btn-large l12" style="width: 100%">
+						<?php $btnVal= empty($card)?'Agregar':'Cambiar';?>
+						<a id="changeCard" class="waves-effect blue waves-light btn-large l12" style="width: 100%"><?=$btnVal?></a>
 					</div>
 				</div>
 				<h6 style="margin-top: 1px">Historial de facturación</h6>
@@ -186,7 +198,7 @@
 			<div class="">
 				<div class="row" style="margin-bottom: 1px;">
 					<div class="col l7">
-						<label >
+						<label>
 							<span>Número de tarjeta</span>
 							<input type="text" id="cardNumber" name="cardNumber" class="validate" required  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
 						</label>
@@ -195,9 +207,9 @@
 
 					</div>
 				</div>
-				<label >
+				<label>
 					<span>Nombre en la tarjeta</span>
-					<input type="text" id="nameHolder" name="nameHolder" class="validate" required oninput="this.value = this.value.replace(/[^a-z.A-Z]/g, '').replace(/(\..*?)\..*/g, '$1');">
+					<input type="text" id="nameHolder" name="nameHolder" class="validate" required oninput="this.value = this.value.replace(/[^a-z. A-Z]/g, '').replace(/(\..*?)\..*/g, '$1');">
 				</label>
 				<div class="row" style="margin-bottom: 1px;">
 					<div class="col l6">
@@ -234,6 +246,7 @@
 				</div>
 				<input type="hidden" name="deviceID" id="deviceID" value=""/>
 				<input type="hidden" name="cardType" id="cardType" value=""/>
+				<input type="hidden" name="cardFlag" id="cardFlag" value="<?=$flag= empty($card) ? 1 : 2;?>"/>
 				<div class="row" style="margin-bottom: 1px;margin-top: 4px;">
 					<div class="col l3">
 						<img src="/assets/images/openpay.png" alt="taretas" height="30px">
@@ -246,7 +259,6 @@
 							<i class="material-icons right">send</i>
 						</button></div>
 				</div>
-
 			</div>
 		</div>
 		<div class="modal-footer">
@@ -254,7 +266,6 @@
 		</div>
 	</div>
 </div>
-
 <style>
 	div.section{
 		padding-bottom: 1px;
@@ -265,13 +276,10 @@
 		margin-bottom: 4px;
 	}
 </style>
-
 <script type="text/javascript" src="https://resources.openpay.mx/lib/openpay-js/1.2.38/openpay.v1.min.js"></script>
 <script type="text/javascript" src="https://resources.openpay.mx/lib/openpay-data-js/1.2.38/openpay-data.v1.min.js"></script>
-
 <script>
 	$(document).ready(function() {
-		$('#addCardM').modal('open');
 		var sandbox = true;
 		var deviceDataId = '';
 		OpenPay.setId('mhcmkrgyxbjfw9vb9cqc');
@@ -292,14 +300,12 @@
 		$('#cvv').on('input', function() {verifyForm();});
 		$('#sendCard').on('click', function() {
 			var cardNumber = $('#cardNumber').val();
-			var cardtype = OpenPay.card.cardType(cardNumber);
+			var cardType = OpenPay.card.cardType(cardNumber);
 			var device = $('#deviceID').val();
 			var cvv = $('#cvv').val();
 			var month = $('#expMonth').val();
 			var year = $('#expYear').val();
 			var name = $('#nameHolder').val();
-
-			console.log(cardNumber+cardtype+device+cvv+month+year+name);
 			var newSubscription = '';
 			$.ajax({
 				url: 'Configuracion/newSubscription',
@@ -310,7 +316,7 @@
 					expirationYear:year,
 					cvv:cvv,
 					sessionID:device,
-					cardType:cardtype,
+					cardType:cardType,
 				},
 				dataType: 'json',
 				method: 'post',
@@ -318,11 +324,36 @@
 				},
 				success: function (data) {
 					console.log(data);
+					if(data.type != null){
+						$('#cardInfoImg').empty();
+						$('#cardInfoText').empty();
+						const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';
+						const info = '<p id="cardInfo"><strong>'+data.type+':</strong> ****'+data.endCard+'</p> <p id="cardExp">Vence en '+data.month+' del 20'+data.year+'</p>';
+						$('#cardInfoImg').append(img);
+						$('#cardInfoText').append(info);
+						$('#changeCard').empty();
+						$('#changeCard').append('Cambiar');
+						$('#addCardM').modal('close');
+						var toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
+						M.toast({html: toastHTML});
+					}else{
+						$('#addCardM').modal('close');
+						if (data.error_code === 3002){
+							var toastHTML = '<span><strong>Error</strong></span>';
+							M.toast({html: toastHTML});
+							var toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
+							M.toast({html: toastHTML});
+						}
+					}
+
 				},
 				complete: function () {
 				}
 			});
 
+		});
+		$('#changeCard').on('click', function(){
+			$('#addCardM').modal('open');
 		});
 	});
 	function verifyForm(){
