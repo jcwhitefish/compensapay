@@ -160,17 +160,15 @@ class Openpay_model extends CI_Model
 	}
 	public function getActiveCard(int $id){
 		$card = [];
-		$query = "SELECT t1.id, t1.created_at, t1.customer_id, t2.endCard, t2.month, t2.year, t2.openpay_id, t3.type, t3.img_url
+		$query = "SELECT t1.id, t1.customer_id, t2.endCard, t2.month, t2.year, t2.openpay_id, t3.type, t3.img_url
 			FROM compensapay.subscription t1
 			    INNER JOIN compensapay.cards t2 ON t1.card_id = t2.id
-			    INNER JOIN compensapay.cat_cardtype t3 ON t2.cardType_id = t3.id";
-//			    WHERE t1.company_id = '{$id}' AND t1.active = 1 AND t2.active = 1";
+			    INNER JOIN compensapay.cat_cardtype t3 ON t2.cardType_id = t3.id
+			    WHERE t1.company_id = '{$id}' AND t1.active = 1 AND t2.active = 1";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row){
-					setlocale(LC_ALL, 'es_MX');
 					$monthName = $this->monthTranslate($row['month']);
-
 					$card = [
 						'record_id'=> $row['id'],
 						'endCard' => $row['endCard'],
@@ -179,9 +177,7 @@ class Openpay_model extends CI_Model
 						'type' => $row['type'],
 						'openpay_id' => $row['openpay_id'],
 						'customer_id' => $row['customer_id'],
-						'date' => gmdate("Y-m-d\TH:i:s\Z", strtotime($row['created_at'])),
 						];
-//					var_dump($card);
 				}
 				return $card;
 			}

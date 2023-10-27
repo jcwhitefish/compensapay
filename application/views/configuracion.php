@@ -299,58 +299,12 @@
 		$('#nameHolder').on('input', function() {verifyForm();});
 		$('#cvv').on('input', function() {verifyForm();});
 		$('#sendCard').on('click', function() {
-			var cardNumber = $('#cardNumber').val();
-			var cardType = OpenPay.card.cardType(cardNumber);
-			var device = $('#deviceID').val();
-			var cvv = $('#cvv').val();
-			var month = $('#expMonth').val();
-			var year = $('#expYear').val();
-			var name = $('#nameHolder').val();
-			var newSubscription = '';
-			$.ajax({
-				url: 'Configuracion/newSubscription',
-				data: {
-					cardNumber:cardNumber,
-					holderName:name,
-					expirationMonth:month,
-					expirationYear:year,
-					cvv:cvv,
-					sessionID:device,
-					cardType:cardType,
-				},
-				dataType: 'json',
-				method: 'post',
-				beforeSend: function () {
-				},
-				success: function (data) {
-					console.log(data);
-					if(data.type != null){
-						$('#cardInfoImg').empty();
-						$('#cardInfoText').empty();
-						const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';
-						const info = '<p id="cardInfo"><strong>'+data.type+':</strong> ****'+data.endCard+'</p> <p id="cardExp">Vence en '+data.month+' del 20'+data.year+'</p>';
-						$('#cardInfoImg').append(img);
-						$('#cardInfoText').append(info);
-						$('#changeCard').empty();
-						$('#changeCard').append('Cambiar');
-						$('#addCardM').modal('close');
-						var toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
-						M.toast({html: toastHTML});
-					}else{
-						$('#addCardM').modal('close');
-						if (data.error_code === 3002){
-							var toastHTML = '<span><strong>Error</strong></span>';
-							M.toast({html: toastHTML});
-							var toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
-							M.toast({html: toastHTML});
-						}
-					}
-
-				},
-				complete: function () {
-				}
-			});
-
+			const flag = $('#cardFlag').val();
+			if (flag === 1){
+				newCard();
+			}else{
+				shiftCard();
+			}
 		});
 		$('#changeCard').on('click', function(){
 			$('#addCardM').modal('open');
@@ -365,5 +319,110 @@
 		}else{
 			$('#sendCard').prop('disabled', true)
 		}
+	}
+	function newCard(){
+		var cardNumber = $('#cardNumber').val();
+		var cardType = OpenPay.card.cardType(cardNumber);
+		var device = $('#deviceID').val();
+		var cvv = $('#cvv').val();
+		var month = $('#expMonth').val();
+		var year = $('#expYear').val();
+		var name = $('#nameHolder').val();
+		var newSubscription = '';
+		$.ajax({
+			url: 'Configuracion/newSubscription',
+			data: {
+				cardNumber:cardNumber,
+				holderName:name,
+				expirationMonth:month,
+				expirationYear:year,
+				cvv:cvv,
+				sessionID:device,
+				cardType:cardType,
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+			},
+			success: function (data) {
+				console.log(data);
+				if(data.type != null){
+					$('#cardInfoImg').empty();
+					$('#cardInfoText').empty();
+					const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';
+					const info = '<p id="cardInfo"><strong>'+data.type+':</strong> ****'+data.endCard+'</p> <p id="cardExp">Vence en '+data.month+' del 20'+data.year+'</p>';
+					$('#cardInfoImg').append(img);
+					$('#cardInfoText').append(info);
+					$('#changeCard').empty();
+					$('#changeCard').append('Cambiar');
+					$('#addCardM').modal('close');
+					var toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#addCardM').modal('close');
+					if (data.error_code === 3002){
+						var toastHTML = '<span><strong>Error</strong></span>';
+						M.toast({html: toastHTML});
+						var toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
+						M.toast({html: toastHTML});
+					}
+				}
+
+			},
+			complete: function () {
+			}
+		});
+	}
+	function shiftCard(){
+		var cardNumber = $('#cardNumber').val();
+		var cardType = OpenPay.card.cardType(cardNumber);
+		var device = $('#deviceID').val();
+		var cvv = $('#cvv').val();
+		var month = $('#expMonth').val();
+		var year = $('#expYear').val();
+		var name = $('#nameHolder').val();
+		var newSubscription = '';
+		$.ajax({
+			url: 'Configuracion/changeCard',
+			data: {
+				cardNumber:cardNumber,
+				holderName:name,
+				expirationMonth:month,
+				expirationYear:year,
+				cvv:cvv,
+				sessionID:device,
+				cardType:cardType,
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+			},
+			success: function (data) {
+				console.log(data);
+				if(data.type != null){
+					$('#cardInfoImg').empty();
+					$('#cardInfoText').empty();
+					const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';
+					const info = '<p id="cardInfo"><strong>'+data.type+':</strong> ****'+data.endCard+'</p> <p id="cardExp">Vence en '+data.month+' del 20'+data.year+'</p>';
+					$('#cardInfoImg').append(img);
+					$('#cardInfoText').append(info);
+					$('#changeCard').empty();
+					$('#changeCard').append('Cambiar');
+					$('#addCardM').modal('close');
+					var toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#addCardM').modal('close');
+					if (data.error_code === 3002){
+						var toastHTML = '<span><strong>Error</strong></span>';
+						M.toast({html: toastHTML});
+						var toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
+						M.toast({html: toastHTML});
+					}
+				}
+			},
+			complete: function () {
+			}
+		});
 	}
 </script>
