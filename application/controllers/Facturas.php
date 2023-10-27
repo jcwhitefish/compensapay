@@ -130,7 +130,7 @@ class Facturas extends MY_Loggedin
 				$xml->loadXML($xmlContent);
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
-				$rfc = $factura["receiver_rfc"];
+				$rfc = $factura["sender_rfc"];
 				$xml = $factura["xml_document"];
 				if (!$this->Invoice_model->xml_exists($xml)) {
 					$dato['error'] = "rfc";
@@ -180,7 +180,7 @@ class Facturas extends MY_Loggedin
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $factura2["total"],
 					"exit_money" => $factura1[0]->total,
-					"status" => "0",
+					"status" => "1",
 					"created_at" => date('Y-m-d'),
 				);
 

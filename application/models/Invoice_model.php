@@ -25,7 +25,7 @@ class Invoice_model extends CI_Model {
         $rfc = $query->result()[0]->rfc;
         $this->db->select('*');
 		$this->db->from('invoices');
-		$this->db->where('sender_rfc', $rfc);
+		$this->db->where('receiver_rfc', $rfc);
         $query = $this->db->get();
         return $query->result();
     }

@@ -202,7 +202,7 @@
                                     <thead>
                                         <tr>
                                             <th>Crear Operación</th>
-                                            <th>Proveedor</th>
+                                            <th>Cliente</th>
                                             <th>Factura</th>
                                             <th>Fecha Factura</th>
                                             <th>Fecha Alta</th>

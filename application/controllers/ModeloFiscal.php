@@ -1,9 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once APPPATH . 'models/enties/Factura.php';
-require_once APPPATH . 'helpers/factura_helper.php';
-
 class ModeloFiscal extends MY_Loggedin {
 
 	/**
@@ -23,47 +20,19 @@ class ModeloFiscal extends MY_Loggedin {
 	 */
 	public function index(){
 
-		//Se verifica si esta en la pantalla de cliente
 		$isClient = $this->session->userdata('vista');
-		$user = 6;
 
-		if($isClient == 1){
-			//Accede a la db 
-			$this->db->select('*');
-			$this->db->from('operacion');
-			$this->db->where('o_idPersona', $user);
-			$queryFacturas = $this->db->get();
-			$facturas = $queryFacturas->result();
-			$data['facturas'] = $facturas;	
-
-			$this->db->select('*');
-			$this->db->from('tabla_ejemplo');
-			$queryOperacion = $this->db->get();
-			$operaciones = $queryOperacion->result();
-			$data['operaciones'] = $operaciones;
-
-
-			$data['main'] = $this->load->view('modelofiscal/cliente', $data , true);
+		// If is client
+		if ($isClient == 1) {
+			$data['main'] = $this->load->view('modelofiscal/cliente', '', true);
 			$this->load->view('plantilla', $data);
-		}else{
-			$this->db->select('*');
-			$this->db->from('operacion');
-			$this->db->where('o_idPersona', $user);
-			$queryFacturas = $this->db->get();
-			$facturas = $queryFacturas->result();
-			$data['facturas'] = $facturas;	
-
-			$this->db->select('*');
-			$this->db->from('tabla_ejemplo');
-			$queryOperacion = $this->db->get();
-			$operaciones = $queryOperacion->result();
-			$data['operaciones'] = $operaciones;
-				
-			$data['main'] = $this->load->view('modelofiscal/proveedor', $data , true);
+		} else {
+			$data['main'] = $this->load->view('modelofiscal/proveedor', '', true);
 			$this->load->view('plantilla', $data);
 		}
 
 	}	
+
 	
 
 }
