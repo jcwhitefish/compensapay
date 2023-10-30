@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     ?>
     <nav>
         <div class="nav nav-wrapper navegador">
-            <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
+            <img src="<?= base_url('assets/images/logo_solve_2.jpg'); ?>" alt="Logo" class="nav-image">
             <!-- If the user is log show the $navbar complements -->
             <?php if ($isLog) : ?>
                 <!-- If the user has a photo show that if not show the name -->
@@ -61,7 +61,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php
     if ($sidebar) { ?>
         <div class="sidebar center-align">
-            <a href="#"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
+            <a href="#"><img src="<?= base_url('assets/images/logo_blanco_s.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <hr class="line-side">
             <ul>
                 <ul class="icon-list">
@@ -144,18 +144,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     .line-side {
-        border: 1px solid #e0e51d;
+        border: 1px solid #8127ff;
     }
 
     .image-side {
-        max-width: 50px;
-        max-height: 50px;
+        max-width: 40px;
+        max-height: 40px;
         width: auto;
         height: auto;
+        margin-top: 10px;
     }
 
     .icon-list li a:hover i {
-        color: #e0e51d;
+        color: #8127ff;
     }
 
     .icon-list-hover {
@@ -196,7 +197,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     .nav-image {
         max-width: 125%;
-        max-height: 125%;
+        max-height: 40px;
         width: auto;
         height: auto;
     }

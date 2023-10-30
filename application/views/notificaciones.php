@@ -1,6 +1,6 @@
 <div class="p-5" id="app">
     <!-- TODO: Tenemos que poner todo este molde en div.row y en div.col  tmabien se tiene que usar flex para separar la fecha del texto de la notificacion-->
-    <h5><i class="material-icons iconoSetting">filter_drama</i> Notificaciones y eventos</h5>
+    <h5><i class="material-icons iconoSetting" style="color: #8127ff">filter_drama</i> Notificaciones y eventos</h5>
     <ul class="collapsible">
         <li>
             <div class="collapsible-header"><i class="material-icons">email</i>Tu factura del mes de septiembre ha sido procesada con éxito. <span style="position:absolute;right:30px;">23 / 09 / 2023</span></div>
@@ -31,7 +31,7 @@
             <!-- <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div> -->
         </li>
     </ul>
-    <h5><i class="material-icons iconoSetting">import_contacts</i> Bitacora de Usuario</h5>
+    <h5><i class="material-icons iconoSetting" style="color: #8127ff">import_contacts</i> Bitacora de Usuario</h5>
     <ul class="collapsible">
         <li>
             <div class="collapsible-header"><i class="material-icons">manage_accounts</i>Actualización de estado: Jose a cambiado su estado.<span style="position:absolute;right:30px;">23 / 09 / 2023</span></div>

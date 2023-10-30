@@ -5,7 +5,7 @@ input[type="file"] {
 
 .custom-file-upload {
     color: white;
-    background: #444;
+    background: #8127ff;
     display: inline-block;
     padding: 10px 50px;
     cursor: pointer;
@@ -13,8 +13,9 @@ input[type="file"] {
 }
 
 .custom-file-upload:hover {
-    background: #e0e51d;
-    border: 2px solid #e0e51d;
+    background: #ffffff;
+    border: 2px solid #8127ff !important;
+    color: #8127ff;
 }
 
 .custom-file-upload:focus {
@@ -166,17 +167,17 @@ input[type="number"] {
 /* buttons */
 .button-gray {
     transition-duration: 0.4s;
-    background-color: #444 !important;
+    background-color: #8127ff !important;
     color: white !important;
     padding: 8px 30px;
-    border: 2px solid #444;
+    border: 2px solid #8127ff;
     border-radius: 10px !important;
   }
   
 .button-gray:hover {
     transition-duration: 0.4s;
     background-color: white !important; 
-    color: #444 !important;
+    color: #8127ff !important;
 }
 
 .button-white {
@@ -196,16 +197,16 @@ input[type="number"] {
 
 .button-blue {
     transition-duration: 0.4s;
-    background-color: #1565c0 !important;
+    background-color: #8127ff !important;
     color: white !important;
     padding: 8px 30px;
-    border: 2px solid #0d47a1 !important;
+    border: 2px solid #8127ff !important;
     border-radius: 10px !important;
 }
 
 .button-blue:hover {
     transition-duration: 0.4s;
-    background-color: #0d47a1 !important; 
+    background-color: #8127ff !important; 
     color: white !important;
 }
 
@@ -228,7 +229,7 @@ input[type="number"] {
 
 .custom-image{
     max-width: 100%; 
-    max-height: 100%; 
+    max-height: 25%; 
     width: auto; 
     height: auto;
 }
@@ -269,7 +270,7 @@ tbody tr:hover{
 }
 
 thead, thead tr,thead tr th{
-    background-color:#17a2b8 ;
+    background-color:#8127ff ;
     border-collapse: collapse;
     border-radius: 0!important;
     color: white;

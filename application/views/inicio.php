@@ -44,7 +44,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg;">import_export</i></span>
+                    <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg; color: #8127ff">import_export</i></span>
                     <p>19</p>
                     <h6 style="font-size: 12px; color: #bdbdbd;">-1.22%</h6>
                 </div>
@@ -53,7 +53,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Ingresos</strong><i class="material-icons right">arrow_downward</i></span>
+                    <span class="card-title"><strong>Ingresos</strong><i class="material-icons right" style="color: #8127ff">arrow_downward</i></span>
                     <p>$ 51,493.10</p>
                     <h6 style="font-size: 12px; color: #bdbdbd;">+2.031</h6>
                 </div>
@@ -62,7 +62,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Egresos</strong><i class="material-icons right">arrow_upward</i></span>
+                    <span class="card-title"><strong>Egresos</strong><i class="material-icons right" style="color: #8127ff">arrow_upward</i></span>
                     <p>$ 221,324.52</p>
                     <h6 style="font-size: 12px; color: #bdbdbd;">+$2.201</h6>
                 </div>
@@ -71,7 +71,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Diferencia</strong><i class="material-icons right">attach_money</i></span>
+                    <span class="card-title"><strong>Diferencia</strong><i class="material-icons right" style="color: #8127ff">attach_money</i></span>
                     <p>$-169,831.42</p>
                     <h6 style="font-size: 12px; color: #bdbdbd;">+3.392</h6>
                 </div>

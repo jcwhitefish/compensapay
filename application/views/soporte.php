@@ -6,31 +6,31 @@
 
         </div>
         <div class="col l12">
-            <h5><i class="material-icons iconoSetting">help_outline</i> Preguntas Frecuentes</h5>
+            <h5><i class="material-icons iconoSetting" style="color: #8127ff;">help_outline</i> Preguntas Frecuentes</h5>
         </div>
         <div class="col l12">
             <ul class="collapsible">
                 <li>
                     <!-- este es el modelo para el for de vue o php -->
-                    <div class="collapsible-header d-flex space-between bold">Cuantas facturas puedo cargar <i class="material-icons">expand_more</i></div>
+                    <div class="collapsible-header d-flex space-between bold">Cuantas facturas puedo cargar <i class="material-icons" style="color: #8127ff;">expand_more</i></div>
                     <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                 </li>
                 <li>
-                    <div class="collapsible-header d-flex space-between bold">Cuantas operaciones puedo hacer al mes <i class="material-icons">expand_more</i></div>
+                    <div class="collapsible-header d-flex space-between bold">Cuantas operaciones puedo hacer al mes <i class="material-icons" style="color: #8127ff;">expand_more</i></div>
                     <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                 </li>
                 <li>
-                    <div class="collapsible-header d-flex space-between bold">Cual es el monto máximo por factura<i class="material-icons">expand_more</i></div>
+                    <div class="collapsible-header d-flex space-between bold">Cual es el monto máximo por factura<i class="material-icons" style="color: #8127ff;">expand_more</i></div>
                     <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                 </li>
                 <li>
-                    <div class="collapsible-header d-flex space-between bold">Puedo sustituir facturas<i class="material-icons">expand_more</i></div>
+                    <div class="collapsible-header d-flex space-between bold">Puedo sustituir facturas<i class="material-icons" style="color: #8127ff;">expand_more</i></div>
                     <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                 </li>
             </ul>
         </div>
         <div class="col l12">
-            <h5><i class="material-icons iconoSetting">ondemand_video</i> Tutoriales</h5>
+            <h5><i class="material-icons iconoSetting" style="color: #8127ff;">ondemand_video</i> Tutoriales</h5>
         </div>
         <div class="col l12 ">
 
@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="col l12">
-            <h5><i class="material-icons iconoSetting">chat</i> Levantar Ticket</h5>
+            <h5><i class="material-icons iconoSetting" style="color: #8127ff;">chat</i> Levantar Ticket</h5>
         </div>
         <div class="col l12">
             <div class="row">
