@@ -135,7 +135,7 @@ class Openpay_model extends CI_Model
 			'card_id' => $card['openpay_id']
 		];
 		$res = $this->SendDeleteCard($args,$env);
-		var_dump($res);
+//		var_dump($res);
 		if($res===''){
 			$query = "UPDATE compensapay.cards SET active = 0 WHERE openpay_id ='{$args['openpay_id']}'";
 			if ($this->db->query($query)){
@@ -147,7 +147,6 @@ class Openpay_model extends CI_Model
 		}
 		return 0;
 	}
-
 	/**
 	 * @param array $args customer_id & card_id
 	 * @param string $env Environment
@@ -199,8 +198,25 @@ class Openpay_model extends CI_Model
 							$args['email'] = $row['email'];
 						}
 						$args['orderId'] = 'SB-'.str_pad($id, 5, "0", STR_PAD_LEFT).strtotime("now");
-						$res = $this->SendCharges($args, $env);
-						var_dump($res);
+						$res = json_decode($this->SendCharges($args, $env), true);
+						if (!empty($res['id'])){
+							$query = "UPDATE compensapay.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+							var_dump($query);
+							if ($this->db->query($query)){
+								$query = "INSERT INTO compensapay.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
+								if ($this->db->query($query)){
+									$endCard = substr($args['card_number'], -4);
+									$monthText = $this->monthTranslate($args['expiration_month']);
+									return [
+										'endCard' => $endCard,
+										'month' =>  $monthText,
+										'year' => $args['expiration_year'],
+										'type' => $args['cardType'],
+									];
+								}
+							}
+						}
+//						var_dump($res);
 						return $res;
 					}
 				}
@@ -213,19 +229,15 @@ class Openpay_model extends CI_Model
 			'source_id' => $args['openCardId'],
 			'method' => 'card',
 			'amount' => $args['amount'],
-			'currency' => 'USD',
+			'currency' => 'mxn',
 			'description'=> 'Cargo de suscripcion',
 			'order_id' => $args['orderId'],
 			'device_session_id' => $args['session_id'],
-			'customer'=>[
-				'name' => $args['clientName'],
-				'email' => $args['email']
-			],
 		];
-		var_dump($data);
+//		var_dump($data);
 		$this->headers=[];
 		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
-		$endpoint = $custommer.'/charges';
+		$endpoint = $custommer.'/customers/'.$args['customer_id'].'/charges';
 		return $this->sendRequest($endpoint, $data, 'SANDBOX', 'POST', 'JSON');
 	}
 	private function monthTranslate(int $month){
@@ -245,8 +257,8 @@ class Openpay_model extends CI_Model
 		$secret=base64_encode(($env == 'SANDBOX') ? $this->usernameSandbox.':'.$this->passwordSandbox :
 			$this->usernameProd.':'.$this->passwordProd);
 		$this->headers[] = 'Authorization: Basic '.$secret;
-		var_dump("$url/$endpoint/");
-		var_dump($data);
+//		var_dump("$url/$endpoint/");
+//		var_dump($data);
 
 		if (($ch = curl_init())) {
 			curl_setopt($ch, CURLOPT_URL, "$url/$endpoint/");

@@ -3,20 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Soporte extends MY_Loggedin{
 
+
 	/**
-	 * Index Page for this controller.
+	 * Función index de para soporte
 	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
+	 * Carga la pantalla de soporte y obtiene los datos de los tickets que ya tenga asignado el usuario
+	 * con anterioridad para mostrarlos al cargar la pantalla.
 	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/userguide3/general/urls.html
+	 * @return void regresa la pantalla de soporte y el historial de tickets
+	 * @author Uriel Magallon <skdkuriel@hotmail.com>.
+	 * @version 1.0.0
 	 */
 	public function index(){
 		$this->load->model('Soporte_model', 'datat');
@@ -29,6 +25,16 @@ class Soporte extends MY_Loggedin{
 		$this->load->view('plantilla', $data);
 	}
 
+	/**
+	 * Obtener los subtemas para el <select> de subtemas de tickets
+	 *
+	 *Obtiene de desde la base de datos la lista de subtemas que puede elegir
+	 * el usuario para la generación de tickets, los datos dependen del ID del módulo
+	 * que se le envía por ajax y post
+	 * @return true
+	 * @author  Uriel Magallon <skdkuriel@hotmail.com>.
+	 * @version 1.0.0
+	 */
 	public function getTopics(){
 		$this->load->model('Soporte_model', 'datat');
 		$id = $this->input->post('id', true);
@@ -37,6 +43,14 @@ class Soporte extends MY_Loggedin{
 		return true;
 	}
 
+	/**
+	 * Genera un nuevo ticket
+	 *
+	 *
+	 * @return void
+	 * @author  Uriel Magallon <skdkuriel@hotmail.com>.
+	 * @version 1.0.0
+	 */
 	public function newTicket(){
 		$this->load->model('Soporte_model', 'datat');
 		$topic = $this->input->post('topic');
@@ -57,6 +71,9 @@ class Soporte extends MY_Loggedin{
 		echo json_encode($res);
 	}
 
+	/**
+	 * @return true
+	 */
 	public function getTickets(){
 		$this->load->model('Soporte_model', 'datat');
 		$id = $this->session->userdata('id');
@@ -65,6 +82,9 @@ class Soporte extends MY_Loggedin{
 		return true;
 	}
 
+	/**
+	 * @return true
+	 */
 	public function getTrackingFolio(){
 		$this->load->model('Soporte_model', 'datat');
 		$folio = $this->input->post('folio');
@@ -73,6 +93,9 @@ class Soporte extends MY_Loggedin{
 		return true;
 	}
 
+	/**
+	 * @return true
+	 */
 	public function newMssUser(){
 		$this->load->model('Soporte_model', 'datat');
         $msg = $this->input->post('msg');

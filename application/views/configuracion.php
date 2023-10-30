@@ -300,7 +300,8 @@
 		$('#cvv').on('input', function() {verifyForm();});
 		$('#sendCard').on('click', function() {
 			const flag = $('#cardFlag').val();
-			if (flag === 1){
+			console.log(flag);
+			if (flag === 1 || flag === '1'){
 				newCard();
 			}else{
 				shiftCard();
@@ -321,14 +322,13 @@
 		}
 	}
 	function newCard(){
-		var cardNumber = $('#cardNumber').val();
-		var cardType = OpenPay.card.cardType(cardNumber);
-		var device = $('#deviceID').val();
-		var cvv = $('#cvv').val();
-		var month = $('#expMonth').val();
-		var year = $('#expYear').val();
-		var name = $('#nameHolder').val();
-		var newSubscription = '';
+		let cardNumber = $('#cardNumber').val();
+		let cardType = OpenPay.card.cardType(cardNumber);
+		let device = $('#deviceID').val();
+		let cvv = $('#cvv').val();
+		let month = $('#expMonth').val();
+		let year = $('#expYear').val();
+		let name = $('#nameHolder').val();
 		$.ajax({
 			url: 'Configuracion/newSubscription',
 			data: {
