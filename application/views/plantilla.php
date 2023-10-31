@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <head>
     <meta charset="utf-8">
-    <title>Compensapay</title>
+    <title>Solve</title>
     <!-- importamos materialize usando base_url() -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/materialize.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
@@ -37,11 +37,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <!-- If the user is log show the $navbar complements -->
             <?php if ($isLog) : ?>
                 <!-- If the user has a photo show that if not show the name -->
-                <?php if (true) : ?>
-                    <img src="<?= base_url('assets/images/trafiguraoLogo.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">
-                <?php else : ?>
-                    <h4 class="image-center p-3 hide-on-med-and-down">Name</h4>
-                <?php endif; ?>
+                <?php //if (true) : ?>
+                    <!--<img src="<?= base_url('assets/images/trafiguraoLogo.png'); ?>" alt="Logo" class="custom-image image-center hide-on-med-and-down">-->
+                <?php //else : ?>
+                    <h4 class="image-center p-3 hide-on-med-and-down">&nbsp;</h4>
+                <?php //endif; ?>
                 <div class="right hide-on-med-and-down px-3">
                     <label class="px-3">Balance</label>
                     <p class="nav-price"><a href="">$200.000</a></p>
@@ -62,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     if ($sidebar) { ?>
         <div class="sidebar center-align">
             <a href="#"><img src="<?= base_url('assets/images/logo_blanco_s.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
-            <hr class="line-side">
+            <!--<hr class="line-side">-->
             <ul>
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
@@ -196,10 +196,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     .nav-image {
-        max-width: 125%;
-        max-height: 40px;
-        width: auto;
-        height: auto;
+        height: 40px;
     }
 
     .image-center {

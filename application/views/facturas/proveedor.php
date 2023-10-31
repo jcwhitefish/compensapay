@@ -157,7 +157,7 @@
                                         <input class="p-5" type="checkbox" v-model="checkboxChecked" required>
                                     </div>
                                     <p class="text-modal">
-                                        El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
+                                        El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Solve descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
                                         Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
                                     </p><br>
                                 </div>
@@ -181,12 +181,12 @@
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga la nota de débito relacionada a una factura</h6>
+                    <h6 class="p-3">Carga la nota relacionada a una factura</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-                                <label for="operationDisabled">Tu Nota de debito XML</label>
+                                <label for="operationDisabled">Tu Nota, archivo XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                                 <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -296,12 +296,12 @@
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu nota de debito y selecciona una factura del proveedor</h6>
+                    <h6 class="p-3">Carga tu nota y selecciona una factura del proveedor</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" placeholder="92387278.xml">
-                                <label for="invoiceDisabled">Tu Nota de debito XML</label>
+                                <label for="invoiceDisabled">Tu Nota XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                             </div>
