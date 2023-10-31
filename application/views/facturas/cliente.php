@@ -351,7 +351,7 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" :placeholder="operationClient.id_debit_note !== null ? operationClient.id_debit_note : (operationClient.id_invoice_relational !== null ? operationClient.id_invoice_relational : '')" disabled />
-                                    <label for="invoiceDisabled">Nota de debito / Factura: </label>
+                                    <label for="invoiceDisabled">Nota de Credito/ Factura: </label>
                                 </div>
                             </div>
                             <div class="row">

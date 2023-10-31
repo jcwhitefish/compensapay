@@ -104,18 +104,20 @@
                     <tbody>
                         <tr v-for="operacion in operaciones">
                             <td class="tabla-celda center-align">
+                                <i v-if="operacion.status == '2'" class="small material-icons" style="color: red;">cancel</i>
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
+                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura" @click="guardarSeleccion(operacion.id)">Aprobar Operacion</a>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
                             <td>{{ operacion.id_provider }}</td>
                             <td>{{ operacion.payment_date }}</td>
                             <td>{{ operacion.created_at}}</td>
-                            <td>1</td>
+                            <td>1(id_factura)</td>
                             <td>0000-00-00</td>
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0'">pendiente</p>
                                 <p v-if="operacion.status == '1'">aprobada</p>
+                                <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
                             <td>{{ operacion.entry_money }}</td>
                             <td>{{ operacion.exit_money }}</td>
@@ -184,7 +186,7 @@
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-                                <label for="operationDisabled">Tu Nota de debito XML</label>
+                                <label for="operationDisabled">Tu Nota de Credito XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                                 <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -295,7 +297,7 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="XYZ832HS" disabled />
-                                    <label for="invoiceDisabled">Nota de debito</label>
+                                    <label for="invoiceDisabled">Nota de Credito</label>
                                 </div>
                             </div>
                             <div class="row">
