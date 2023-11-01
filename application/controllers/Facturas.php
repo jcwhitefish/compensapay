@@ -12,6 +12,7 @@ class Facturas extends MY_Loggedin
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->database();
 		// Cambia por el usuario
 		$this->user = "6";
 	}

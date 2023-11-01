@@ -1,3 +1,8 @@
+<?php
+$conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
+mysqli_select_db($conn,"compensapay");
+
+?>
 <div class="p-5" id="app">
 
 
@@ -54,20 +59,66 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th>Crear Operación</th>
+                            <th>Operación</th>
+                            <th>Estatus Factura</th>
                             <th>Proveedor</th>
                             <th>Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
-                            <th>Subtotal</th>
-                            <th>IVA</th>
-                            <th>Total</th>
+                            <th style="text-align: right">Subtotal</th>
+                            <th style="text-align: right">IVA</th>
+                            <th style="text-align: right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
+                        <?php
+                            $query = "SELECT * FROM operacion ORDER BY o_idoperacion DESC";
+
+                            $ResFacturas=mysqli_query($conn, $query);
+
+                            while($RResF=mysqli_fetch_array($ResFacturas))
+                            {
+                                echo '<tr>
+                                        <td class="tabla-celda center-align">';
+                                        if($RResF["o_Activo"]==1)
+                                        {
+                                            echo '<i class="small material-icons" style="color: green;">check_circle</i>';
+                                        }
+                                        else if($RResF["o_Activo"]==0)
+                                        {
+                                            echo '<a class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>';
+                                        }
+                                echo '  </td>';
+                                        if($RResF["o_Activo"]==1)
+                                        {
+                                            echo '<td>Pagada</td>';
+                                        }
+                                        else if($RResF["o_Activo"]==0)
+                                        {
+                                            echo '<td>Pendiente</td>';
+                                        }
+                                echo '  <td><a href="#">Frontier</a></td>
+                                        <td>'.$RResF["o_NumOperacion"].'</td>
+                                        <td>'.$RResF["o_FechaEmision"].'</td>
+                                        <td>'.$RResF["o_FechaUpload"].'</td>';
+                                        if($RResF["o_Activo"]==1)
+                                        {
+                                            echo '<td>Pagada</td>';
+                                        }
+                                        else if($RResF["o_Activo"]==0)
+                                        {
+                                            echo '<td>Por Definir</td>';
+                                        }
+                                echo '  <td style="text-align: right">$ '.number_format($RResF["o_SubTotal"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Impuesto"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Total"], 2).'</td>
+                                    </tr>';
+                            }
+
+                            
+                        ?>
+                        <!--<tr v-for="factura in facturas" :key="facturas.o_idPersona">
 
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.o_Activo == 1"  class="small material-icons" style="color: green;">check_circle</i>
@@ -85,29 +136,70 @@
                             <td >${{factura.o_SubTotal}}</td>
                             <td >${{factura.o_Impuesto}}</td>
                             <td >${{factura.o_Total}}</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th>Aprobacion</th>
+                            <th>Estatus</th>
                             <th>ID Operacion</th>
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Factura</th>
-                            <th>Nota de Débito</th>
-                            <th>Fecha Nota de Débito</th>
+                            <th>Nota</th>
+                            <th>Fecha Nota</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
-                            <th>Monto Ingreso</th>
-                            <th>Monto Egreso</th>
+                            <th style="text-align: right">Monto Ingreso</th>
+                            <th style="text-align: right">Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
+                        <?php
+                            $query = "SELECT * FROM tabla_ejemplo ORDER BY ID DESC";
+
+                            $ResOperaciones=mysqli_query($conn, $query);
+
+                            while($RResO=mysqli_fetch_array($ResOperaciones))
+                            {
+                                echo '<tr>
+                                        <td class="tabla-celda center-align">';
+                                        if($RResO["Aprobacion"]==1)
+                                        {
+                                            echo '<i class="small material-icons" style="color: green;">check_circle</i>';
+                                        }
+                                        else if($RResO["Aprobacion"]==0)
+                                        {
+                                            echo '<i class="small material-icons" style="color: black;">radio_button_unchecked</i>';
+                                        }
+                                echo '  </td>';
+                                        if($RResO["Aprobacion"]==1)
+                                        {
+                                            echo '<td>Aprobada</td>';
+                                        }
+                                        else if($RResO["Aprobacion"]==0)
+                                        {
+                                            echo '<td>Pendiente</td>';
+                                        }
+                                echo '  <td>'.$RResO["ID_Operacion"].'</td>
+                                        <td><a href="#">Frontier</a></td>
+                                        <td>'.$RResO["Fecha_Factura"].'</td>
+                                        <td>'.$RResO["Fecha_Alta"].'</td>
+                                        <td>'.$RResO["Factura"].'</td>
+                                        <td>';if($RResO["Nota_Debito_Factura_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Nota_Debito_Factura_Proveedor"];} echo '</td>
+                                        <td>';if($RResO["Fecha_Nota_Debito_Fact_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Fecha_Nota_Debito_Fact_Proveedor"];} echo '</td>
+                                        <td>'.$RResO["Fecha_Transaccion"].'</td>
+                                        <td style="text-align: right">$ '.number_format($RResO["Monto_Ingreso"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResO["Monto_Egreso"], 2).'</td>
+                                    </tr>';
+                            }
+
+                            
+                        ?>
+                        <!--<tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura"></a>
@@ -123,7 +215,7 @@
                             <td>{{ operacion.Estatus }}</td>
                             <td>$ {{ operacion.Monto_Ingreso }}</td>
                             <td>$ {{ operacion.Monto_Egreso }}</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -137,14 +229,14 @@
             <h5>Carga tus facturas</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
+                    <h6 class="p-3">Carga tu CFDI (factura) en formato .xml o un archivo .zip con multiples CFDI's</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
 
                             <div class="row">
                                 <div class="col l9 input-border">
                                     <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
-                                    <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
+                                    <label for="invoiceDisabled">Un archivo en xml o múltiples en .zip</label>
                                 </div>
                                 <div class="col l3 center-align p-5">
                                     <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -181,12 +273,12 @@
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga la nota relacionada a una factura</h6>
+                    <h6 class="p-3">Carga tu CFDI (Nota)</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-                                <label for="operationDisabled">Tu Nota, archivo XML</label>
+                                <label for="operationDisabled">Tu CFDI (Nota), archivo XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                                 <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -213,7 +305,7 @@
                                         </tr>
                                     </thead>
                                     <tbody v-if="providerUploadName == 'Frontier'" class="visible-table striped">
-                                    <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
+                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
                                             <!-- <td class="tabla-celda center-align">
                                                 <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
                                                 <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
@@ -296,12 +388,12 @@
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu nota y selecciona una factura del proveedor</h6>
+                    <h6 class="p-3">Carga tu CFDI (Nota) y selecciona una factura del cliente</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" placeholder="92387278.xml">
-                                <label for="invoiceDisabled">Tu Nota XML</label>
+                                <label for="invoiceDisabled">Tu archivo (Nota) .xml</label>
                             </div>
                             <div class="col l4 left-align p-5">
                             </div>
@@ -326,7 +418,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="striped">
-                                        <tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
+                                        <!--<tr v-if="facturas.length > 0" :key="facturas[0].o_idPersona">
                                             <td class="tabla-celda center-align">
                                                 <i v-if="facturas[0].o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
                                                 <a v-if="facturas[0].o_Activo == 0" class="modal-trigger" href="#modal-operacion-unico">Crear Operación</a>
@@ -343,7 +435,7 @@
                                             <td>${{facturas[0].o_SubTotal}}</td>
                                             <td>${{facturas[0].o_Impuesto}}</td>
                                             <td>${{facturas[0].o_Total}}</td>
-                                        </tr>
+                                        </tr>-->
                                     </tbody>
                                 </table>
                             </div><br>

@@ -167,17 +167,17 @@ input[type="number"] {
 /* buttons */
 .button-gray {
     transition-duration: 0.4s;
-    background-color: #8127ff !important;
+    background-color: #dd340a !important;
     color: white !important;
     padding: 8px 30px;
-    border: 2px solid #8127ff;
+    border: 2px solid #dd340a;
     border-radius: 10px !important;
   }
   
 .button-gray:hover {
     transition-duration: 0.4s;
     background-color: white !important; 
-    color: #8127ff !important;
+    color: #dd340a !important;
 }
 
 .button-white {
@@ -266,11 +266,11 @@ input[type="number"] {
 
 /* Estilos para las tablas */
 tbody tr:hover{
-    background-color: #fffeb1 !important;
+    background-color: #27f3ff !important;
 }
 
 thead, thead tr,thead tr th{
-    background-color:#8127ff ;
+    background-color:#17a2b8 ;
     border-collapse: collapse;
     border-radius: 0!important;
     color: white;

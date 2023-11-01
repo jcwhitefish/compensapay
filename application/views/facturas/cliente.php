@@ -54,38 +54,66 @@
                 <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th>Crear Operación</th>
+                            <th>Operación</th>
+                            <th>Estatus Factura</th>
                             <th>Proveedor</th>
                             <th>Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
-                            <th>Subtotal</th>
-                            <th>IVA</th>
-                            <th>Total</th>
+                            <th style="text-align: right">Subtotal</th>
+                            <th style="text-align: right">IVA</th>
+                            <th style="text-align: right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="factura in facturas" :key="facturas.o_idPersona">
+                        <?php
+                            $conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
+                            mysqli_select_db($conn,"compensapay");
+
+                            $query = "SELECT * FROM operacion ORDER BY o_idoperacion DESC";
+
+                            $ResFacturas=mysqli_query($conn, $query);
+
+                            while($RResF=mysqli_fetch_array($ResFacturas))
+                            {
+                                echo '<tr>
+                                        <td class="tabla-celda center-align">
+                                            <i class="small material-icons" style="color: green;">check_circle</i>
+                                        </td>
+                                        <td>Pendiente</td>
+                                        <td><a href="#">Frontier</a></td>
+                                        <td>'.$RResF["o_NumOperacion"].'</td>
+                                        <td>'.$RResF["o_FechaEmision"].'</td>
+                                        <td>'.$RResF["o_FechaUpload"].'</td>
+                                        <td>Por Definir</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_SubTotal"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Impuesto"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Total"], 2).'</td>
+                                    </tr>';
+                            }
+
+                            
+                        ?>
+                        <!--<tr v-for="factura in facturas" :key="facturas.o_idPersona">
 
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.o_Activo == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.o_Activo == 0" class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>
                             </td>
-                            <td><a href="#">Frontier</a></td>
-                            <td>{{factura.o_NumOperacion}}</td>
-                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
-                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
-                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
                             <td>
                                 <p v-if="factura.o_Activo == 1">Pendiente</p>
                                 <p v-if="factura.o_Activo == 0">Cargada</p>
                             </td>
-                            <td>${{factura.o_SubTotal}}</td>
-                            <td>${{factura.o_Impuesto}}</td>
-                            <td>${{factura.o_Total}}</td>
-                        </tr>
+                            <td><a href="#">Frontier</a></td>
+                            <td>{{factura.o_NumOperacion}}</td>
+                            <td>{{modificarFecha(factura.o_FechaEmision)}}</td>
+                            <td>{{modificarFecha(factura.o_FechaUpload)}}</td>
+                            <td>Por Definir</td>
+                            <td style="text-align: right">$ {{factura.o_SubTotal}}</td>
+                            <td style="text-align: right">$ {{factura.o_Impuesto}}</td>
+                            <td style="text-align: right">$ {{factura.o_Total}}</td>-
+                        </tr> -->
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
@@ -107,7 +135,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
+                        <?php
+                            $conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
+                            mysqli_select_db($conn,"compensapay");
+
+                            $query = "SELECT * FROM operacion ORDER BY o_idoperacion DESC";
+
+                            $ResFacturas=mysqli_query($conn, $query);
+
+                            while($RResF=mysqli_fetch_array($ResFacturas))
+                            {
+                                echo '<tr>
+                                        <td class="tabla-celda center-align">
+                                            <i class="small material-icons" style="color: green;">check_circle</i>
+                                        </td>
+                                        <td>Pendiente</td>
+                                        <td><a href="#">Frontier</a></td>
+                                        <td>'.$RResF["o_NumOperacion"].'</td>
+                                        <td>'.$RResF["o_FechaEmision"].'</td>
+                                        <td>'.$RResF["o_FechaUpload"].'</td>
+                                        <td>Por Definir</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_SubTotal"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Impuesto"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResF["o_Total"], 2).'</td>
+                                    </tr>';
+                            }
+
+                            
+                        ?>
+                        <!--tr v-for="operacion in operaciones" :key="operacion.ID_Operacion">
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.Aprobacion == 1" class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="operacion.Aprobacion == 0" class="modal-trigger " href="#modal-cargar-factura" @click='() => {autorizar = operacion.ID;console.log(autorizar)}'>Autorizar</a>
@@ -123,7 +179,7 @@
                             <td>{{ operacion.Estatus }}</td>
                             <td>${{operacion.Monto_Ingreso}}</td>
                             <td>${{operacion.Monto_Egreso}}</td>
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
