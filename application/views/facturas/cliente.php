@@ -78,15 +78,31 @@
                             while($RResF=mysqli_fetch_array($ResFacturas))
                             {
                                 echo '<tr>
-                                        <td class="tabla-celda center-align">
-                                            <i class="small material-icons" style="color: green;">check_circle</i>
-                                        </td>
+                                        <td class="tabla-celda center-align">';
+                                if($RResF["o_Activo"]==1)
+                                {
+                                    echo '<i class="small material-icons" style="color: green;">check_circle</i>';
+                                }
+                                elseif($RResF["o_Activo"]==0)
+                                {
+                                    echo '<a class="modal-trigger " href="#modal-operacion-unico">Crear Operación</a>';
+                                }
+                                echo '  </td>
                                         <td>Pendiente</td>
                                         <td><a href="#">Frontier</a></td>
                                         <td>'.$RResF["o_NumOperacion"].'</td>
                                         <td>'.$RResF["o_FechaEmision"].'</td>
                                         <td>'.$RResF["o_FechaUpload"].'</td>
-                                        <td>Por Definir</td>
+                                        <td>';
+                                        if($RResF["o_Activo"]==1)
+                                        {
+                                            echo $RResF["o_FechaUpload"];
+                                        }
+                                        elseif($RResF["o_Activo"]==0)
+                                        {
+                                            echo 'Por Definir';
+                                        }
+                                echo '  </td>
                                         <td style="text-align: right">$ '.number_format($RResF["o_SubTotal"], 2).'</td>
                                         <td style="text-align: right">$ '.number_format($RResF["o_Impuesto"], 2).'</td>
                                         <td style="text-align: right">$ '.number_format($RResF["o_Total"], 2).'</td>
@@ -120,6 +136,7 @@
                     <thead>
                         <tr>
                             <th>Aprobacion</th>
+                            <th>Estatus</th>
                             <th>ID Operacion</th>
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
@@ -128,7 +145,6 @@
                             <th>Nota de Débito</th>
                             <th>Fecha Nota de Débito</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
                             <th>Monto Ingreso</th>
                             <th>Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
@@ -139,25 +155,34 @@
                             $conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
                             mysqli_select_db($conn,"compensapay");
 
-                            $query = "SELECT * FROM operacion ORDER BY o_idoperacion DESC";
+                            $query = "SELECT * FROM tabla_ejemplo ORDER BY ID DESC";
 
-                            $ResFacturas=mysqli_query($conn, $query);
+                            $ResOperaciones=mysqli_query($conn, $query);
 
-                            while($RResF=mysqli_fetch_array($ResFacturas))
+                            while($RResO=mysqli_fetch_array($ResOperaciones))
                             {
                                 echo '<tr>
-                                        <td class="tabla-celda center-align">
-                                            <i class="small material-icons" style="color: green;">check_circle</i>
-                                        </td>
-                                        <td>Pendiente</td>
+                                        <td class="tabla-celda center-align">';
+                                if($RResO["Aprobacion"]==1)
+                                {
+                                    echo '<i class="small material-icons" style="color: green;">check_circle</i>';
+                                }
+                                elseif($RResO["Aprobacion"]==0)
+                                {
+                                    echo '<a class="modal-trigger " href="#modal-cargar-factura" @click=\'() => {autorizar = operacion.ID;console.log(autorizar)}\'>Autorizar</a>';
+                                }    
+                                echo '  </td>
+                                        <td>'.$RResO["Estatus"].'</td>
+                                        <td>'.$RResO["ID_Operacion"].'</td>
                                         <td><a href="#">Frontier</a></td>
-                                        <td>'.$RResF["o_NumOperacion"].'</td>
-                                        <td>'.$RResF["o_FechaEmision"].'</td>
-                                        <td>'.$RResF["o_FechaUpload"].'</td>
-                                        <td>Por Definir</td>
-                                        <td style="text-align: right">$ '.number_format($RResF["o_SubTotal"], 2).'</td>
-                                        <td style="text-align: right">$ '.number_format($RResF["o_Impuesto"], 2).'</td>
-                                        <td style="text-align: right">$ '.number_format($RResF["o_Total"], 2).'</td>
+                                        <td>'.$RResO["Fecha_Factura"].'</td>
+                                        <td>'.$RResO["Fecha_Alta"].'</td>
+                                        <td>'.$RResO["Factura"].'</td>
+                                        <td>';if($RResO["Nota_Debito_Factura_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Nota_Debito_Factura_Proveedor"];} echo '</td>
+                                        <td>';if($RResO["Fecha_Nota_Debito_Fact_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Fecha_Nota_Debito_Fact_Proveedor"];} echo '</td>
+                                        <td>'.$RResO["Fecha_Transaccion"].'</td>
+                                        <td style="text-align: right">$ '.number_format($RResO["Monto_Ingreso"], 2).'</td>
+                                        <td style="text-align: right">$ '.number_format($RResO["Monto_Egreso"], 2).'</td>
                                     </tr>';
                             }
 
@@ -427,10 +452,10 @@
 
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
-            <h5>Porfavor, autoriza la transacción</h5>
+            <h5>Por favor, autoriza la operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
+                    <h6 class="p-3"><strong>ID Operación:</strong> 89023923</h6>
                     <form @submit.prevent="actualizacion()" id="uploadForm" enctype="multipart/form-data">
 
                         <div class="row">

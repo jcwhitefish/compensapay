@@ -273,7 +273,7 @@ mysqli_select_db($conn,"compensapay");
             <h5>Crear Operación</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h6 class="p-3">Carga tu CFDI (Nota)</h6>
+                    <h6 class="p-3">Carga tu CFDI (Nota) relacionada a una factura o selecciona una factura</h6>
                     <form method="post" action="<?php echo base_url('facturas/carga'); ?>" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
