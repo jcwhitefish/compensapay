@@ -142,8 +142,8 @@
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Factura</th>
-                            <th>Nota de Débito</th>
-                            <th>Fecha Nota de Débito</th>
+                            <th>Nota</th>
+                            <!--<th>Fecha Nota de Débito</th>-->
                             <th>Fecha Transacción</th>
                             <th>Monto Ingreso</th>
                             <th>Monto Egreso</th>
@@ -179,7 +179,7 @@
                                         <td>'.$RResO["Fecha_Alta"].'</td>
                                         <td>'.$RResO["Factura"].'</td>
                                         <td>';if($RResO["Nota_Debito_Factura_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Nota_Debito_Factura_Proveedor"];} echo '</td>
-                                        <td>';if($RResO["Fecha_Nota_Debito_Fact_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Fecha_Nota_Debito_Fact_Proveedor"];} echo '</td>
+                                        <!--<td>';if($RResO["Fecha_Nota_Debito_Fact_Proveedor"] == NULL){echo 'N/A';}else{echo $RResO["Fecha_Nota_Debito_Fact_Proveedor"];} echo '</td>-->
                                         <td>'.$RResO["Fecha_Transaccion"].'</td>
                                         <td style="text-align: right">$ '.number_format($RResO["Monto_Ingreso"], 2).'</td>
                                         <td style="text-align: right">$ '.number_format($RResO["Monto_Egreso"], 2).'</td>
@@ -471,7 +471,7 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="XYZ832HS" disabled />
-                                    <label for="invoiceDisabled">Nota de debito</label>
+                                    <label for="invoiceDisabled">Nota</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -485,7 +485,7 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="$10,501.00" disabled />
-                                    <label for="invoiceDisabled">Monto Nota de Débito (ingreso):</label>
+                                    <label for="invoiceDisabled">Monto Nota (ingreso):</label>
                                 </div>
                             </div>
                             <div class="row">
