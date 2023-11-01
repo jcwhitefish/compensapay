@@ -17,10 +17,24 @@ class Fintec extends MY_Loggedout
 		$error = 0;
 		$resp = ["response" => 'ok'];
 		if (Request::getStaticMethod() == 'POST' && ($body = Request::getBody())) {
+			$this->load->model('Arteria_model','dataArt');
 			$data = $body ?? NULL;
-			if ($data['object_type'] === 'transaction' && $data['data']['type']  === 'deposit'){
-				$args=[];
-				var_dump($data['data']['reference_number']);
+			if ($data['object_type'] === 'transaction' && $data['data']['type']  === 'deposit') {
+				$args = [
+					'trakingKey' => $data['data']['tracking_key'],
+					'arteriaId' => $data['_id'],
+					'amount' => $data['data']['amount'],
+					'descriptor' => $data['data']['descriptor'],
+					'sourceBank' => $data['data']['source']['bank_code'],
+					'receiverBank' => $data['data']['destination']['bank_code'],
+					'sourceRfc' => $data['data']['source']['rfc'],
+					'receiverRfc' => $data['data']['destination']['rfc'],
+					'sourceClabe' => $data['data']['source']['account_number'],
+					'receiverClabe' => $data['data']['destination']['account_number'],
+					'transactionDate' => $data['data']['created_at'],
+				];
+				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
+				var_dump($res);
 			}
 		}
 		return $this->response->sendResponse($resp, $error);

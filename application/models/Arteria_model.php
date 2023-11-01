@@ -1,6 +1,6 @@
 <?php
 
-class Arteria extends CI_Model{
+class Arteria_model extends CI_Model{
 	private $ArteriaSandbox = 'https://sandbox-api.arteria.xyz';
 	private $ArteriaLive = '';
 	private $usernameSandbox = 'AKsbIRh8GhQA--avQliNyzGQ';
@@ -8,6 +8,10 @@ class Arteria extends CI_Model{
 	private $usernameProd = '';
 	private $passwordProd = '';
 	private $headers = [];
+	public function __construct(){
+		parent::__construct();
+		$this->load->database();
+	}
 	public function CreateClabe(array $args, string $env){
 		$data = [
 			'names' => $args['name'],
@@ -26,6 +30,33 @@ class Arteria extends CI_Model{
 		];
 		$endpoint = 'transfers';
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
+	}
+	public function AddMovement(array $args, string $env){
+		$query = "INSERT INTO compensapay.balance (trakig_key, arteriaD_id, amount, descriptor, 
+                                 source_bank, receiver_bank, source_rfc, receiver_rfc, 
+                                 source_clabe, receiver_clabe, transaction_date) 
+					VALUES ('{$args['trakingKey']}', '{$args['arteriaId']}', '{$args['amount']}', '{$args['descriptor']}', 
+					        '{$args['sourceBank']}', '{$args['receiverBank']}', '{$args['sourceRfc']}', '{$args['receiverRfc']}', 
+					        '{$args['sourceClabe']}', '{$args['receiverClabe']}', '{$args['transactionDate']}')";
+		if($result = $this->db->query($query)){
+			return $this->db->insert_id();
+		}
+		return false;
+	}
+	public function SearchOperations(array $args, string $env){
+		$query = "";
+	}
+	function MakeTrackingKey(array $ids): string{
+		$trash = 'GHIJKLMNOPQRSTUVWXYZ';
+		$hash = '';
+		for ($i = 0; $i < 3; $i++) {
+			if($i <= 1){
+				$hash .= str_pad(dechex($ids[$i]), 4, substr(str_shuffle($trash), 0, 4), STR_PAD_LEFT);
+			}else{
+				$hash .= str_pad(dechex($ids[$i]), 7, substr(str_shuffle($trash), 0, 7), STR_PAD_LEFT);
+			}
+		}
+		return $hash;
 	}
 	private function SendRequest(string $endpoint, $data, ?string $env, ?string $method, ?string $dataType) {
 		$env = strtoupper($env) ?? 'SANDBOX';

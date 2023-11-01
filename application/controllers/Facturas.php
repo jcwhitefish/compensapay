@@ -204,6 +204,7 @@ class Facturas extends MY_Loggedin
 			$selectedFacturaId = $_POST['grupoRadio'];
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
 			$dato['facturaid'] = $selectedFacturaId;
+			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
 			$nota = procesar_nota_relacional($xml, $selectedFacturaId);
