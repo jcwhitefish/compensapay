@@ -201,7 +201,7 @@ class Openpay_model extends CI_Model
 						$res = json_decode($this->SendCharges($args, $env), true);
 						if (!empty($res['id'])){
 							$query = "UPDATE compensapay.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
-							var_dump($query);
+//							var_dump($query);
 							if ($this->db->query($query)){
 								$query = "INSERT INTO compensapay.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
 								if ($this->db->query($query)){
