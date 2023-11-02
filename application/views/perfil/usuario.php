@@ -1,5 +1,5 @@
 <?php
-var_dump($usuario);
+//var_dump($usuario);
 ?>
 <div class="p-5" id="app">
     <div class="card esquinasRedondas">
@@ -13,7 +13,7 @@ var_dump($usuario);
                                 <p class="bold">Datos generales</p>
                             </div>
                             <div class="input-border col l6">
-                                <input v-model="data['user']" @blur="checkFormat('user')" :style="colorsBorder['user'] || {}" type="text" name="user" id="user" required>
+                                <input type="text" name="user" id="user" value="<?php echo $usuario[0]["user"];?>" required>
                                 <label for="user">Usuario *</label>
                             </div>
                             <div class="input-border col l6">
@@ -23,35 +23,35 @@ var_dump($usuario);
                         </div>
                         <div class="row">
                             <div class="input-border col l6">
-                                <input v-model="data['name']" @blur="checkFormat('name')" :style="colorsBorder['name'] || {}" type="text" name="name" id="name" required>
+                                <input type="text" name="name" id="name" value="<?php echo $usuario[0]["name"];?>" required>
                                 <label for="name">Nombre *</label>
                             </div>
                             <div class="input-border col l6">
-                                <input v-model="data['lastname']" @blur="checkFormat('lastname')" :style="colorsBorder['lastname'] || {}" type="text" name="lastname" id="lastname" required>
+                                <input type="text" name="lastname" id="lastname" value="<?php echo $usuario[0]["last_name"];?>" required>
                                 <label for="lastname">Apellidos *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['email']" @blur="checkFormat('email')" :style="colorsBorder['email'] || {}" type="email" name="email" id="email" required>
+                                <input type="email" name="email" id="email" value="<?php echo $usuario[0]["email"];?>" required>
                                 <label for="email">Correo *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['validateEmail']" @blur="checkFormat('validateEmail')" :style="colorsBorder['validateEmail'] || {}" type="email" name="validate-email" id="validate-email" required>
+                                <input type="email" name="validate-email" id="validate-email" value="<?php echo $usuario[0]["email"];?>" required>
                                 <label for="validate-email">Confirmar Correo *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['number']" @blur="checkFormat('number')" :style="colorsBorder['number'] || {}" type="text" name="phone-number" id="phone-number" pattern="[0-9]{10}" minlength="10" maxlength="10" required>
+                                <input type="text" name="phone-number" id="phone-number" pattern="[0-9]{10}" minlength="10" maxlength="10" value="<?php echo $usuario[0]["telephone"];?>" required>
                                 <label for="phone-number">Teléfono Movil *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['validateNumber']" @blur="checkFormat('validateNumber')" :style="colorsBorder['validateNumber'] || {}" type="text" name="validate-phone-number" pattern="[0-9]{10}" minlength="10" maxlength="10" id="validate-phone-number" required>
+                                <input type="text" name="validate-phone-number" pattern="[0-9]{10}" minlength="10" maxlength="10" id="validate-phone-number" value="<?php echo $usuario[0]["telephone"];?>" required>
                                 <label for="validate-phone-number">Confirmar Teléfono Movil *</label>
                             </div>
                         </div>
@@ -62,15 +62,20 @@ var_dump($usuario);
                                 <p class="bold">Pregunta secreta para recuperar la contraseña</p>
                             </div>
                             <div class="input-border col l12">
-                                <select v-model="data['question']" name="question" id="question" required>
-                                    <option v-for="question in listaPreguntas" :key="question.pg_id" :value="question.pg_id">{{ question.pg_pregunta }}</option>
+                                <select name="question" id="question" required>
+                                    <?php
+                                    foreach($usuario[1] AS $quest)
+                                    {
+                                        echo '<option value="'.$quest["pg_id"].'"'; if($quest["pg_id"]==$usuario[0]["id_question"]){echo ' selected';} echo '>'.$quest["pg_pregunta"].'</option>';
+                                    }
+                                    ?>
                                 </select>
                                 <label for="question">Pregunta *</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input v-model="data['answer']" @blur="checkFormat('answer')" :style="colorsBorder['answer'] || {}" type="text" name="answer" id="answer" required>
+                                <input type="text" name="answer" id="answer" value="<?php echo $usuario[0]["answer"];?>" required>
                                 <label for="answer">Respuesta *</label>
                             </div>
                         </div>
@@ -78,7 +83,7 @@ var_dump($usuario);
                     <div class="col l3 center-align">
                         <div class="container">
                             <h2 class="card-title">Imagen de Perfil</h2>
-                            <img :src="imageUploadURL" alt="" style="max-width: 140px; height: 140px;"><br>
+                            <img src="http://localhost/boveda/<?php echo $usuario[0]["unique_key"].'/'.$usuario[0]["unique_key"];?>-foto.jpg" alt="" style="max-width: 140px; height: 140px;"><br>
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>

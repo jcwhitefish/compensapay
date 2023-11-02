@@ -23,13 +23,26 @@ class User_model extends CI_Model {
         return $query->row_array();
     }
 	public function get_userById(int $id) {
-		// TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
+		
+        $usuario = array();
+
 		$query = "SELECT * FROM compensapay.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
-				return $result->result_array();
+				$usuario = $result->result_array();
 			}
 		}
+
+        $query2 = "SELECT * FROM cat_preguntas ORDER BY pg_id ASC";
+        if ($result2 = $this->db->query($query2)) {
+			if ($result2->num_rows() > 0) {
+				$preguntas = $result2->result_array();
+			}
+		}
+
+        array_push($usuario, $preguntas);
+        
+        return $usuario;
 	}
     public function update_user($id, $nuevos_datos)  {
         $condiciones = array('id' => $id);
