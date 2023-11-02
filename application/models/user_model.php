@@ -17,11 +17,20 @@ class User_model extends CI_Model {
         // Devolver el ID del último registro insertado
         return $this->db->insert_id();
     }
-    public function get_user($condiciones) { 
+    public function get_user($condiciones) {
         // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
         $query = $this->db->get_where('users', $condiciones);
         return $query->row_array();
     }
+	public function get_userById(int $id) {
+		// TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
+		$query = "SELECT * FROM compensapay.users WHERE id = '{$id}'";
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0) {
+				return $result->result_array();
+			}
+		}
+	}
     public function update_user($id, $nuevos_datos)  {
         $condiciones = array('id' => $id);
         $this->db->where($condiciones);

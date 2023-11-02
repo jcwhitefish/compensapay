@@ -66,8 +66,11 @@ class Perfil extends MY_Loggedin
 	public function usuario()
 	{
 		//Obtenermos los datos de datosEmpresa y los enviamos al front
-
-		$data['main'] = $this->load->view('perfil/usuario', '', true);
+		$this->load->model('user_model', 'dataUsr');
+		$id = $this->session->userdata('id');
+		$usr['usuario'] = $this->dataUsr->get_userById($id);
+		$data['usuario'] = $this->dataUsr->get_userById($id);
+		$data['main'] = $this->load->view('perfil/usuario', $usr, true);
 
 		$this->load->view('plantilla', $data);
 

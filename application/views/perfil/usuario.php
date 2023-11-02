@@ -1,3 +1,6 @@
+<?php
+var_dump($usuario);
+?>
 <div class="p-5" id="app">
     <div class="card esquinasRedondas">
         <div class="card-content">
