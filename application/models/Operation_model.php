@@ -11,7 +11,7 @@ class Operation_model extends CI_Model {
     public function get_my_operation($user) {
         $this->db->select('*');
 		$this->db->from('operations');
-		$this->db->where('id_uploaded_by', $user);
+		//$this->db->where('id_uploaded_by', $user);
         $query = $this->db->get();
         return $query->result();
     }

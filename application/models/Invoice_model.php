@@ -104,6 +104,16 @@ class Invoice_model extends CI_Model {
 
         return; 
     }
+
+    public function company($rfc) {
+
+        $this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('rfc', $rfc);
+        $query = $this->db->get();
+        return $query->result();
+
+    }
   
 }
 ?>

@@ -105,7 +105,7 @@
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.status == '2'" class="small material-icons" style="color: red;">cancel</i>
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura" @click="guardarSeleccion(operacion.id)">Aprobar Operacion</a>
+                                <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td>{{ operacion.operation_number }}</td>
                             <td>{{ operacion.id_provider }}</td>
