@@ -50,7 +50,17 @@ class Facturas extends MY_Loggedin
 
 	public function tablaFacturas(){
 		$dato = array();
-		$dato['facturas'] = $this->Invoice_model->get_my_invoices($this->user);
+		$dato['facturas'] = $this->Invoice_model->get_provider_invoices($this->user);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function tablaFacturasCliente(){
+		$dato = array();
+		$dato['facturas'] = $this->Invoice_model->get_client_invoices($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -111,9 +121,9 @@ class Facturas extends MY_Loggedin
 						$xml->loadXML($xmlContent);
 						$this->load->helper('factura_helper');
 						$factura = procesar_xml($xml, $this->user);
-						$xml = $factura["xml_document"];
+						$xml = $factura["uuid"];
 						$dato['error'] = "facturas";
-						if (!$this->Invoice_model->xml_exists($xml)) {
+						if (!$this->Invoice_model->uuid_exists($xml)) {
 							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
 						} else{
 							$dato['error'] = "uuids";
@@ -131,8 +141,8 @@ class Facturas extends MY_Loggedin
 				$this->load->helper('factura_helper');
 				$factura = procesar_xml($xml, $this->user);
 				$rfc = $factura["sender_rfc"];
-				$xml = $factura["xml_document"];
-				if (!$this->Invoice_model->xml_exists($xml)) {
+				$xml = $factura["uuid"];
+				if (!$this->Invoice_model->uuid_exists($xml)) {
 					$dato['error'] = "rfc";
 					if ($this->Invoice_model->is_your_rfc($this->user, $rfc)) {
 						$dato['error'] = "factura";
@@ -144,6 +154,35 @@ class Facturas extends MY_Loggedin
 			}
 		}		
 		
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function subidaFacturaCliente(){
+		$dato = array();
+
+		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
+			$uploadedFile = $_FILES['invoiceUpload'];
+			$xmlContent = file_get_contents($uploadedFile['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$this->load->helper('factura_helper');
+			$factura = procesar_xml($xml, $this->user);
+			$rfc = $factura["receiver_rfc"];
+			$xml = $factura["uuid"];
+			if (!$this->Invoice_model->uuid_exists($xml)) {
+				$dato['error'] = "rfc";
+				if ($this->Invoice_model->is_your_rfc($this->user, $rfc)) {
+					$dato['error'] = "factura";
+					$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+				}
+			} else{
+				$dato['error'] = "uuid";
+			}
+
+		}
+
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));

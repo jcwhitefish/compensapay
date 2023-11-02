@@ -12,7 +12,25 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
-    public function get_my_invoices($user) {
+    public function get_provider_invoices($user) {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id_company', $user);
+        $query = $this->db->get();
+        $company = ($query->result())[0]->id_company;
+		$this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('id', $company);
+        $query = $this->db->get();
+        $rfc = $query->result()[0]->rfc;
+        $this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('sender_rfc', $rfc);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_client_invoices($user) {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->where('id_company', $user);
@@ -51,10 +69,10 @@ class Invoice_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function xml_exists($xml) {
+    public function uuid_exists($xml) {
         $this->db->select('*');
         $this->db->from('invoices');
-        $this->db->where('xml_document', $xml);
+        $this->db->where('uuid', $xml);
         $query = $this->db->get();
         return $query->num_rows() > 0; 
     }

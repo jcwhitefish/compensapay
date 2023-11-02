@@ -24,7 +24,6 @@
     </div>
 
 
-
     <!-- Las tablas principales que se muestran -->
     <div class="card esquinasRedondas">
         <div class="card-content">
@@ -129,7 +128,6 @@
     </div>
 
 
-
     <!-- Subir una factura -->
     <div id="modal-factura" class="modal">
         <div class="modal-content">
@@ -172,7 +170,6 @@
             </div>
         </div>
     </div>
-
 
 
     <!-- Crear una operacion -->
@@ -244,6 +241,61 @@
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
                                 <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>                           
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Desde cliente crera operacion especifica a factura -->
+    <div id="modal-operacion-unica" class="modal">
+        <div class="modal-content">
+            <h5>Crear Operación</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col l3 input-border">
+                                <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
+                                <label for="operationDisabledUnique">Tu factura XML</label>
+                            </div>
+                            <div class="col l4 left-align p-5">
+                            </div>
+                            <div class="col l5 input-border select-white">
+                                <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
+                                <label for="providerDisabledUnique">Proveedor</label>
+                            </div>
+                            <div>
+                                <table class="striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Crear Operación</th>
+                                            <th>Proveedor</th>
+                                            <th>Factura</th>
+                                            <th>Fecha Factura</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Fecha Transacción</th>
+                                            <th>Estatus</th>
+                                            <th>Subtotal</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="facturaClientUnique in facturasClientUnique">
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><br>
+                            <div class="col l8"></div>
+                            <div class="col l4 center-align">
+                                <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                                &nbsp;
+                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -338,6 +390,29 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+
+    <!-- darle rechazar una factura -->
+    <div id="modal-rechazo" class="modal p-5">
+        <h5>Operacion rechazada</h5>
+        <div class="card esquinasRedondas">
+            <form>
+                <div class="card-content ">
+                    <div class="row">
+                        <div class="col l12">
+                            <label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operacion.</label>
+                            <textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+                        </div>
+                        <div class="col l12 d-flex justify-content-flex-end">
+                            <a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
+                            &nbsp;
+                            <button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('2')">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -446,7 +521,7 @@
                             } else if(result.error == 'zip'){
                                 M.toast({html: 'Error con el ZIP'});
                             } else if(result.error == 'rfc'){
-                                M.toast({html: 'el rfc no corresponde a el de la factura '});
+                                M.toast({html: 'el rfc no corresponde a el de su factura '});
                             }                  
                         }).catch(error => console.log('error', error));
                 } else {

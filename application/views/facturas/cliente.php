@@ -14,7 +14,7 @@
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Facturas'">
+            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
                 Añadir Facturas
             </a>
             <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
@@ -22,7 +22,6 @@
             </a>
         </div>
     </div>
-
 
 
     <!-- Las tablas principales que se muestran -->
@@ -129,7 +128,6 @@
     </div>
 
 
-
     <!-- Subir una factura -->
     <div id="modal-factura" class="modal">
         <div class="modal-content">
@@ -142,7 +140,7 @@
                             <div class="row">
                                 <div class="col l9 input-border">
                                     <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
-                                    <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
+                                    <label for="invoiceDisabled">Una factura en xml</label>
                                 </div>
                                 <div class="col l3 center-align p-5">
                                     <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -173,7 +171,6 @@
             </div>
         </div>
     </div>
-
 
 
     <!-- Crear una operacion -->
@@ -253,7 +250,8 @@
         </div>
     </div>
 
-    
+
+    <!-- Desde cliente crera operacion especifica a factura -->
     <div id="modal-operacion-unica" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
@@ -331,8 +329,7 @@
     </div>
 
 
-
-    <!-- darle aceptar a una factura (el feo) -->
+    <!-- darle aceptar a una factura -->
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
             <h5>Porfavor, autoriza la transacción</h5>
@@ -396,6 +393,8 @@
         </div>
     </div>
 
+
+    <!-- darle rechazar una factura -->
     <div id="modal-rechazo" class="modal p-5">
         <h5>Operacion rechazada</h5>
         <div class="card esquinasRedondas">
@@ -489,7 +488,7 @@
             const selectedoperationId = Vue.ref('');
             const acceptDecline = Vue.ref('');
 
-            //darle aceptar a una factura (el feo)
+            //darle aceptar a una factura 
             const actualizacion = () => {
                 var requestOptions = {
                     method: 'GET',
@@ -516,22 +515,16 @@
                         redirect: 'follow'
                     };
 
-                    fetch("<?= base_url("facturas/subidaFactura") ?>", requestOptions)
+                    fetch("<?= base_url("facturas/subidaFacturaCliente") ?>", requestOptions)
                         .then(response => response.json())
                         .then(result => {
                             getFacturas();
                             if(result.error == 'factura'){
                                 M.toast({html: 'Se ha subido la factura'});
-                            } else if(result.error == 'facturas'){
-                                M.toast({html: 'Se han subido las facturas'});
                             } else if(result.error == 'uuid'){
                                 M.toast({html: 'Ya se ha subido la factura'});
-                            } else if(result.error == 'uuids'){
-                                M.toast({html: 'Ya habia facturas subidas'});
-                            } else if(result.error == 'zip'){
-                                M.toast({html: 'Error con el ZIP'});
                             } else if(result.error == 'rfc'){
-                                M.toast({html: 'el rfc no corresponde a el de la factura '});
+                                M.toast({html: 'el rfc no corresponde a el de su factura '});
                             }
                         })
                         .catch(error => console.log('error', error));
@@ -603,7 +596,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaFacturasCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;
@@ -611,6 +604,7 @@
                     })
                     .catch(error => console.log('error', error));
             };
+
 
             //tabla de get facturas por cliente
             const getFacturasByClient = async () => {
