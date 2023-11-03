@@ -29,7 +29,7 @@ if ($this->session->userdata('logged_in')) {
         <div class="nav nav-wrapper navegador d-flex">
             <div class="d-flex justificarVertical">
 
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="nav-image">
+                <img src="<?= base_url('assets/images/logo_solve_2.jpg'); ?>" alt="Logo" class="nav-image">
             </div>
 
 
@@ -70,7 +70,7 @@ if ($this->session->userdata('logged_in')) {
     </nav>
     <?php if ($this->session->userdata('logged_in')) : ?>
         <div class="sidebar center-align">
-            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/CompensaPay_Logos-04.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
+            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <hr class="line-side">
             <ul>
                 <ul class="icon-list">
