@@ -1,4 +1,8 @@
 <?php
+defined('BASEPATH') or exit('No direct script access allowed');
+if ($this->session->userdata('logged_in')) {
+    $urlUsuario = base_url('boveda/' . $this->session->userdata('datosUsuario')['unique_key'] . '/' . $this->session->userdata('datosUsuario')['unique_key'] . '-');
+}
 //var_dump($usuario);
 ?>
 <div class="p-5" id="app">
@@ -83,7 +87,7 @@
                     <div class="col l3 center-align">
                         <div class="container">
                             <h2 class="card-title">Imagen de Perfil</h2>
-                            <img src="http://localhost/boveda/<?php echo $usuario[0]["unique_key"].'/'.$usuario[0]["unique_key"];?>-foto.jpg" alt="" style="max-width: 140px; height: 140px;"><br>
+                            <img src="<?= $urlUsuario . 'foto.jpg' ?>" alt="" style="max-width: 140px; height: 140px;"><br>
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>

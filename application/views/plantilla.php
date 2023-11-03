@@ -57,7 +57,7 @@ if ($this->session->userdata('logged_in')) {
                     </div>
                     <div class="d-flex justificarVertical alinearVertical">
                         <a class="d-flex justificarVertical alinearVertical" href="<?= base_url('perfil/usuario') ?>" target="_self" rel="noopener noreferrer">
-                            <img src="<?= $urlUsuario . 'foto.jpeg' ?>" alt="Logo" class="custom-logo hide-on-med-and-down logoUsuario">
+                            <img src="<?= $urlUsuario . 'foto.jpg' ?>" alt="Logo" class="custom-logo hide-on-med-and-down logoUsuario">
                         </a>
                     </div>
                 </div>
@@ -70,8 +70,8 @@ if ($this->session->userdata('logged_in')) {
     </nav>
     <?php if ($this->session->userdata('logged_in')) : ?>
         <div class="sidebar center-align">
-            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
-            <hr class="line-side">
+            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/logo_blanco_s.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
+            <!--<hr class="line-side">-->
             <ul>
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
@@ -180,6 +180,7 @@ if ($this->session->userdata('logged_in')) {
         }
 
         .image-side {
+            padding-top: 10px;
             max-width: 50px;
             max-height: 50px;
             width: auto;
