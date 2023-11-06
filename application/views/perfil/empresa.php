@@ -4,7 +4,42 @@ $unique = $this->session->userdata('datosEmpresa')['unique_key'];
 
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('#btn-fase-1').on('click', function() {
+            console.log('Btn-fase-1');
+            $("#div-fase-1").hide();
+            $("#div-fase-2").show();
+            $("#btn-fase-1").hide();
+            $("#btn-fase-2").show();
+            
+        });
+    function verifyForm(){
+        var modulo = $('#modulo').val();
+        var asunto = $('#asunto').val();
+        var descripcion = $('#descripcion').val();
+        if (modulo !== 0 && asunto !== '' && descripcion !== '') {
+            $('#btn-envio').prop('disabled', false)
+        }else{
+            $('#btn-envio').prop('disabled', true)
+        }
+    }
+    function verifyChat(){
+        var chatmsg = $('#tckComentsChat').val();
+        if (modulo !== 0 && asunto !== '' && descripcion !== '') {
+            $('#sendChat').prop('disabled', false)
+        }else{
+            $('#sendChat').prop('disabled', true)
+        }
+    }
+</script>
 
 <div class="p-5" id="app">
     <div class="row">
@@ -103,6 +138,12 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         <label for="bank">Banco emisor *</label>
                     </div>
                 </div>
+                <div class="row" style="text-align: center;">
+                    <a class="modal-trigger button-blue" href="#modal-proveedor" >
+                        Registro Proveedor
+                    </a>
+                </div>
+                
                 <div v-if="false" class="row">
 
                     <p class="bold p-3">
@@ -126,6 +167,275 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 </div>
             </div>
         </div>
+
+    <!-- Modal Registrarse como Proveedor -->
+    <div id="modal-proveedor" class="modal">
+        <div class="modal-content">
+            <h5>Registro de Proveedor</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <h5 class="p-3 h5-modular">A. Informacion General</h5>
+                    <div class="row" name="div-fase-1" id="div-fase-1">
+                        <div class="col l6 especial-p">
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="bussinesName">Denominaci&oacute; o raz&oacute;n social *</label>
+                                    <input v-model="data['bussinesName']" type="text" name="bussinesName" id="bussinesName">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="nationality">Nacionalidad *</label>
+                                    <input type="text" name="nationality" id="nationality">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="folio">Número de Folio en el Registro Público de Comercio o su equivalente *</label>
+                                    <input type="text" name="folio" id="folio">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="cert">Número de certificado de firma electrónica (e firma) o su equivalente *</label>
+                                    <input type="text" name="cert" id="cert">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col l6 cover">
+                                    <label style="top:auto" for="telefono">Número de teléfono *</label>
+                                    <input v-model="data['telefono']" type="text" name="telefono" id="telefono" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa exactamente 10 dígitos numéricos.">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="web">Sitio web *</label>
+                                    <input type="text" name="web" id="web">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="bank">Banco Emisor *</label>
+                                    <input v-model="data['bank']['bnk_alias']" type="text" name="bank" id="bank">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col l6 especial-p">
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="nameComercial">Nombre Comercial *</label>
+                                    <input  v-model="data['nameComercial']" type="text" name="nameComercial" id="nameComercial">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="date_const">Fecha de constituci&oacute;n *</label>
+                                    <input v-model="data['createdat']" type="text" name="date_const" id="date_const">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="rfc">"RFC o equivalente" *</label>
+                                    <input v-model="data['rfc']" type="text" name="rfc" id="rfc">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="dom">"Domicilio fiscal" *</label>
+                                    <input type="text" name="dom" id="dom">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="email">"Correo Electrónico" *</label>
+                                    <input type="text" name="email" id="email">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-border col cover">
+                                    <label style="top:auto" for="clabe">"Número de cuenta, CLABE" *</label>
+                                    <input v-model="data['clabe']" type="text" name="clabe" id="clabe">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div hidden name="div-fase-2" id="div-fase-2">
+                        <h5 class="p-3 h5-modular">B. Modelo de negocio</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="socialobj">Objeto social *</label>
+                                        <input type="text" name="socialobj" id="socialobj">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="descOperation">Describa cómo utilizara la cuenta de fondos de pago electónico para su operación *</label>
+                                        <input type="text" name="descOperation" id="descOperation" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="p-3 h5-modular">C. Perfil transaccional</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="transactMonth">Número estimado de transacciones por mes *</label>
+                                        <input type="text" name="transactMonth" id="transactMonth">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="amount">Monto promedio de transacción (MXN o USD) *</label>
+                                        <input type="text" name="amount" id="amount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="p-3 h5-modular">D. Administración y representación legal</h5>
+                        <label>Porfavor, provea la información relativa a los representantes legales, administración y principales funcionarios de la sociedad</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="charge">Cargo *</label>
+                                        <input type="text" name="charge" id="charge">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="curp">CURP *</label>
+                                        <input type="text" name="curp" id="curp">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="idNumber">Tipo y número de identificación oficial *</label>
+                                        <input type="text" name="idNumber" id="idNumber">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="email">Correo electrónico *</label>
+                                        <input type="text" name="email" id="email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="name">Nombre completo *</label>
+                                        <input type="text" name="name" id="name">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="rfc">RFC *</label>
+                                        <input type="text" name="rfc" id="rfc">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dom">Domicilio *</label>
+                                        <input type="text" name="dom" id="dom">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="phoneNumber">Numero de teléfono *</label>
+                                        <input type="text" name="phoneNumber" id="phoneNumber">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div hidden class="div-fase-3">
+                        <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
+                        <label>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
+                        <input type="radio" name="fisica" id="1" value="1"><label>Si</label>
+                        <input type="radio" name="fisica" id="0" value="0"><label>No</label><br>
+                        <label>¿Existe alguna persona moral que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
+
+                        <h5 class="p-3 h5-modular">F. Estatus regulatorio y mejores prácticas</h5>
+                        <label>¿La empresa requiere licencia, permiso o registro para la prestación de sus servicios?</label>
+
+                        <label>En caso afirmativo, indicar la información siguiente:</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="supervisor">Nombre de la autoridad supervisora *</label>
+                                        <input type="text" name="supervisor" id="supervisor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dateAward">Fecha en que fue otorgado *</label>
+                                        <input type="text" name="dateAward" id="dateAward">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="typeLicense">Tipo de permiso, licencia o registro *</label>
+                                        <input type="text" name="typeLicense" id="typeLicense" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label>¿La empresa ha sido auditada o sujeta a un proceso de inspección por la autoridad supervisora? En caso afirmativo, proveer detalles</label>
+                        <label>¿La empresa cuenta con manuales o políticas en materia de anticorrupción?</label>
+                        <label>¿La empresa cuenta con manuales o políticas en materia de protección de datos y seguridad de la información?</label>
+                    </div>
+                    <div hidden class="div-fase-4">
+                        <h5 class="p-3 h5-modular">G. Actividades vulnerables</h5>
+                        <label>¿El giro o actividad de la empresa está regulado como actividad vulnerable?</label>
+                        <label>En caso afirmativo, proporcionar la información siguiente:</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="servTrib">¿Se encuentra registrada la actividad ante el Servicio de Administración Tributaria? *</label>
+                                        <input type="text" name="servTrib" id="servTrib">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="obligations">¿Se encuentra a corriente en el cumplimiento de sus obligaciones en esta materia? *</label>
+                                        <input type="text" name="obligations" id="obligations" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col center-align cover">
+                            <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                            &nbsp;
+                            <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente 1</button>
+                            <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente 2</button>
+                            <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente 3</button>
+                            <button hidden class="button-blue" name="btn-fase-4" id="btn-fase-4" type="">Siguiente 4</button>
+                            <button hidden class="button-blue" :class="{ 'modal-close': modal-proveedor }" name="btn-fase-5" id="btn-fase-5" type="">Siguiente 5</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="row">
             <table>
@@ -226,10 +536,12 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 direccion: ref('<?= $this->session->userdata('datosEmpresa')['address'] ?>'),
                 telefono: ref('<?= $this->session->userdata('datosEmpresa')['telephone'] ?>'),
                 clabe: ref('<?= $this->session->userdata('datosEmpresa')['account_clabe'] ?>'),
+                createdat: ref('<?= $this->session->userdata('datosEmpresa')['created_at'] ?>'),
                 bank: ref({
                     bnk_id: ref(<?= $this->session->userdata('datosEmpresa')['id_broadcast_bank'] ?>),
                     bnk_alias: ref('<?= $bank ?>')
                 }),
+
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
@@ -241,6 +553,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 uniqueString: ref('')
 
             });
+
             // partes del image
             const imageUpload = ref(null);
             const imageUploadURL = ref('<?= $urlArchivos ?>logo.jpeg');
@@ -699,6 +1012,15 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
         font-weight: bold !important;
     }
 
+    .modal {
+        max-height: 83% !important;
+        width: 80% !important;
+    }
+
+    .h5-modular{
+        line-height: 0%;
+    }
+
     .btn {
         background: #444444;
     }
@@ -709,6 +1031,9 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 
     .especial-p {
         padding-right: 4% !important;
+    }
+    .cover{
+        width: 99%;
     }
 
     input[type="file"] {
@@ -752,5 +1077,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     .guardar,
     .cancelar:focus {
         background-color: #e0e51d !important;
-    }
+    }]
+
+
 </style>
