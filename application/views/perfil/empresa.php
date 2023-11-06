@@ -1,10 +1,145 @@
 <?php
 //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
-
+//var_dump($this->session->userdata('datosEmpresa'));
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('#btn-fase-1').on('click', function() {
+            var bandera = false;
+            var msg = '';
+            var emailField = document.getElementById('emailForm');
+            var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 
+            $(".form-1").each(function(){
+                if ($(this).val() == '' ||  $(this).val() == null){
+                 bandera = true;
+                }
+            });
+
+            if (bandera){
+               msg = "Debe llenar todos los campos para continuar."
+            }
+
+            
+            if( validEmail.test(emailField.value) ){
+                
+            }else{
+                msg += "\nEl Email no tiene un formato valido.";
+            }
+
+            if ($("#phoneForm").val().length != 10) {
+                msg += "\nEl teléfono debe ser de 10 carácteres.";
+            }else if(isNaN($("#phoneForm").val())){
+                msg += "\nEl teléfono solo debe contener números.";
+            }
+
+            if(msg == ''){
+                hideForms();
+                $("#div-fase-2").show();
+                $("#btn-fase-2").show();
+                $("#back-fase-1").show();
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
+        });
+
+        $('#btn-fase-2').on('click', function() {
+            var bandera = false;
+            var msg = '';
+            var emailField = document.getElementById('emailForm2');
+            var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
+            $(".form-2").each(function(){
+                if ($(this).val() == '' ||  $(this).val() == null){
+                 bandera = true;
+                }
+            });
+
+            if (bandera){
+               msg = "Debe llenar todos los campos para continuar."
+            }
+
+            
+            if( validEmail.test(emailField.value) ){
+                
+            }else{
+                msg += "\nEl Email no tiene un formato valido.";
+            }
+
+            if ($("#phoneForm2").val().length != 10) {
+                msg += "\nEl teléfono debe ser de 10 carácteres.";
+            }else if(isNaN($("#phoneForm").val())){
+                msg += "\nEl teléfono solo debe contener números.";
+            }
+
+            if(msg == ''){
+                hideForms();
+                $("#div-fase-3").show();
+                $("#btn-fase-3").show();
+                $("#back-fase-2").show();
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
+        });
+
+        $('#back-fase-1').on('click', function() {
+            hideForms();
+            $("#div-fase-1").show();
+            $("#btn-fase-1").show();
+        });
+
+        $('#back-fase-2').on('click', function() {
+            hideForms();
+            $("#div-fase-2").show();
+            $("#btn-fase-2").show();
+            $("#back-fase-1").show();
+        });
+
+        $('#back-fase-3').on('click', function() {
+            hideForms();
+            $("#div-fase-3").show();
+            $("#btn-fase-3").show();
+            $("#back-fase-2").show();
+
+        });
+
+        $('#cancelForm').on('click', function() {
+            hideForms();
+            $("#div-fase-1").show();
+            $("#btn-fase-1").show();
+        });
+
+
+    });
+    function hideForms(){
+        $("#div-fase-1").hide();
+        $("#div-fase-2").hide();
+        $("#div-fase-3").hide();
+        $("#div-fase-4").hide();
+        $("#back-fase-1").hide();
+        $("#back-fase-2").hide();
+        $("#back-fase-3").hide();
+        $("#btn-fase-1").hide();
+        $("#btn-fase-2").hide();
+        $("#btn-fase-3").hide();
+        $("#btn-fase-4").hide();
+    }
+</script>
 
 <div class="p-5" id="app">
     <div class="row">
@@ -103,6 +238,12 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         <label for="bank">Banco emisor *</label>
                     </div>
                 </div>
+                <div class="row" style="text-align: center;">
+                    <a class="modal-trigger button-blue" href="#modal-proveedor" >
+                        Registro Proveedor
+                    </a>
+                </div>
+                
                 <div v-if="false" class="row">
 
                     <p class="bold p-3">
@@ -126,6 +267,285 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 </div>
             </div>
         </div>
+
+    <!-- Modal Registrarse como Proveedor -->
+    <div id="modal-proveedor" class="modal">
+        <div class="modal-content">
+            <h5>Registro de Proveedor</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <div name="div-fase-1" id="div-fase-1">
+                        <h5 class="p-3 h5-modular">A. Informacion General</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="bussinesName">Denominaci&oacute; o raz&oacute;n social *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['legal_name']  ?>" type="text" name="bussinesName" id="bussinesName">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="nationality">Nacionalidad *</label>
+                                        <input class="form-1" type="text" name="nationality" id="nationality" value="Mexicana">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="folio">Número de Folio en el Registro Público de Comercio o su equivalente *</label>
+                                        <input class="form-1" type="text" name="folio" id="folio" value="1457894">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="efirma">Número de certificado de firma electrónica (e firma) o su equivalente *</label>
+                                        <input class="form-1" type="text" name="efirma" id="efirma" value="1457894">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col l6 cover">
+                                        <label style="top:auto" for="phoneForm">Número de teléfono *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['telephone']  ?>" type="text" name="phoneForm" id="phoneForm">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="web">Sitio web *</label>
+                                        <input class="form-1" type="text" name="web" id="web" value="http://www.drakoz.com">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="bank">Banco Emisor *</label>
+                                        <input class="form-1" value="<?php echo $bank ?>" type="text" name="bank" id="bank">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div style="margin-top: 14px;" class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="nameComercial">Nombre Comercial *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['short_name']  ?>" type="text" name="nameComercial" id="nameComercial">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dateConst">Fecha de constituci&oacute;n *</label>
+                                        <input class="form-1" value="2023-11-06" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="rfc">"RFC o equivalente" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['rfc']  ?>" type="text" name="rfc" id="rfc">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dom">"Domicilio fiscal" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['address']  ?>" type="text" name="dom" id="dom">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="emailForm">"Correo Electrónico" *</label>
+                                        <input class="form-1" type="text" name="emailForm" id="emailForm" value="drakoz@hotmail.com">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="clabe">"Número de cuenta, CLABE" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['account_clabe']  ?>" type="text" name="clabe" id="clabe">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden name="div-fase-2" id="div-fase-2">
+                        <h5 class="p-3 h5-modular">B. Modelo de negocio</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="socialobj">Objeto social *</label>
+                                        <textarea class="form-2" name="socialobj" id="socialobj" rows="10" cols="50" value="Lorem ipsum"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="descOperation">Describa cómo utilizara la cuenta de fondos de pago electónico para su operación *</label>
+                                        <textarea class="form-2" name="descOperation" id="descOperation" rows="10" value="Lorem ipsum"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="p-3 h5-modular">C. Perfil transaccional</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="transactMonth">Número estimado de transacciones por mes *</label>
+                                        <input class="form-2" type="text" name="transactMonth" id="transactMonth" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="amount">Monto promedio de transacción (MXN o USD) *</label>
+                                        <input class="form-2" type="text" name="amount" id="amount" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="p-3 h5-modular">D. Administración y representación legal</h5>
+                        <label>Porfavor, provea la información relativa a los representantes legales, administración y principales funcionarios de la sociedad</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="charge">Cargo *</label>
+                                        <input class="form-2" type="text" name="charge" id="charge" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="curp">CURP *</label>
+                                        <input class="form-2" type="text" name="curp" id="curp" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="idNumber">Tipo y número de identificación oficial *</label>
+                                        <input class="form-2" type="text" name="idNumber" id="idNumber" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="emailForm2">Correo electrónico *</label>
+                                        <input class="form-2" type="text" name="emailForm2" id="emailForm2" value="drakoz@hormail.com">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="name">Nombre completo *</label>
+                                        <input class="form-2" type="text" name="name" id="name" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="rfc">RFC *</label>
+                                        <input class="form-2" type="text" name="rfc" id="rfc" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dom">Domicilio *</label>
+                                        <input class="form-2" type="text" name="dom" id="dom" value="Lorem ipsum">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="phoneForm2">Numero de teléfono *</label>
+                                        <input class="form-2" type="text" name="phoneForm2" id="phoneForm2" value="7754678469">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div hidden name="div-fase-3" id="div-fase-3">
+                        <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
+						<p>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
+                        <label>
+                        	<input type="radio" name="fisica" id="1" value="1" checked>
+							<span>Si</span>
+						</label>
+						<br>
+						<label>
+							<input name="fisica" type="radio" />
+							<span>No</span>
+						</label>
+                        <label>¿Existe alguna persona moral que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
+
+                        <h5 class="p-3 h5-modular">F. Estatus regulatorio y mejores prácticas</h5>
+                        <label>¿La empresa requiere licencia, permiso o registro para la prestación de sus servicios?</label>
+
+                        <label>En caso afirmativo, indicar la información siguiente:</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="supervisor">Nombre de la autoridad supervisora *</label>
+                                        <input type="text" name="supervisor" id="supervisor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dateAward">Fecha en que fue otorgado *</label>
+                                        <input type="date" name="dateAward" id="dateAward">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="typeLicense">Tipo de permiso, licencia o registro *</label>
+                                        <input type="text" name="typeLicense" id="typeLicense">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label>¿La empresa ha sido auditada o sujeta a un proceso de inspección por la autoridad supervisora? En caso afirmativo, proveer detalles</label>
+                        <label>¿La empresa cuenta con manuales o políticas en materia de anticorrupción?</label>
+                        <label>¿La empresa cuenta con manuales o políticas en materia de protección de datos y seguridad de la información?</label>
+                    </div>
+                    <div hidden name="div-fase-4" id="div-fase-4">
+                        <h5 class="p-3 h5-modular">G. Actividades vulnerables</h5>
+                        <label>¿El giro o actividad de la empresa está regulado como actividad vulnerable?</label>
+                        <label>En caso afirmativo, proporcionar la información siguiente:</label>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="servTrib">¿Se encuentra registrada la actividad ante el Servicio de Administración Tributaria? *</label>
+                                        <input type="text" name="servTrib" id="servTrib">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="obligations">¿Se encuentra a corriente en el cumplimiento de sus obligaciones en esta materia? *</label>
+                                        <input type="text" name="obligations" id="obligations">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col center-align cover">
+                            <a class="modal-close button-gray" name="cancelForm" id="cancelForm" style="color:#fff; color:hover:#">Cancelar</a>
+                            &nbsp;
+                            <button hidden class="button-blue" name="back-fase-1" id="back-fase-1" type="submit">Atrás</button>
+                            <button hidden class="button-blue" name="back-fase-2" id="back-fase-2" type="submit">Atrás 2</button>
+                            <button hidden class="button-blue" name="back-fase-3" id="back-fase-3" type="submit">Atrás 3</button>
+                            &nbsp;
+                            <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
+                            <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
+                            <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente 3</button>
+                            <button hidden class="button-blue" name="btn-fase-4" id="btn-fase-4" type="">Siguiente 4</button>
+                            <button hidden class="button-blue" :class="{ 'modal-close': modal-proveedor }" name="btn-fase-5" id="btn-fase-5" type="">Siguiente 5</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="row">
             <table>
@@ -226,10 +646,12 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 direccion: ref('<?= $this->session->userdata('datosEmpresa')['address'] ?>'),
                 telefono: ref('<?= $this->session->userdata('datosEmpresa')['telephone'] ?>'),
                 clabe: ref('<?= $this->session->userdata('datosEmpresa')['account_clabe'] ?>'),
+                createdat: ref('<?= $this->session->userdata('datosEmpresa')['created_at'] ?>'),
                 bank: ref({
                     bnk_id: ref(<?= $this->session->userdata('datosEmpresa')['id_broadcast_bank'] ?>),
                     bnk_alias: ref('<?= $bank ?>')
                 }),
+
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
@@ -241,6 +663,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 uniqueString: ref('')
 
             });
+
             // partes del image
             const imageUpload = ref(null);
             const imageUploadURL = ref('<?= $urlArchivos ?>logo.jpeg');
@@ -699,6 +1122,15 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
         font-weight: bold !important;
     }
 
+    .modal {
+        max-height: 83% !important;
+        width: 80% !important;
+    }
+
+    .h5-modular{
+        line-height: 0%;
+    }
+
     .btn {
         background: #444444;
     }
@@ -709,6 +1141,9 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 
     .especial-p {
         padding-right: 4% !important;
+    }
+    .cover{
+        width: 99%;
     }
 
     input[type="file"] {
@@ -752,5 +1187,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     .guardar,
     .cancelar:focus {
         background-color: #e0e51d !important;
-    }
+    }]
+
+
 </style>

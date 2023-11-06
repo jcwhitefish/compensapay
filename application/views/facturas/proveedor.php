@@ -1,3 +1,8 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+$factura = base_url('assets/factura/factura.php?idfactura=');
+?>
 <div class="p-5" id="app">
 
     <!-- head con el calendario -->
@@ -66,7 +71,7 @@
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion">Crear Operacion</a>
                             </td>
                             <td>{{factura.sender_rfc}}</td>
-                            <td>{{factura.invoice_number}}</td>
+                            <td><a href="<?= $factura; ?>1" target="_blank">{{factura.invoice_number}}</a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
