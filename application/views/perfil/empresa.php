@@ -459,6 +459,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     </div>
                     <div hidden name="div-fase-3" id="div-fase-3">
                         <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
+
 						<p>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
                         <label>
                         	<input type="radio" name="fisica" id="1" value="1" checked>
@@ -469,6 +470,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 							<input name="fisica" type="radio" />
 							<span>No</span>
 						</label>
+
                         <label>¿Existe alguna persona moral que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
 
                         <h5 class="p-3 h5-modular">F. Estatus regulatorio y mejores prácticas</h5>

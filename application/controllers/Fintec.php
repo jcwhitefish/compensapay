@@ -34,7 +34,39 @@ class Fintec extends MY_Loggedout
 					'transactionDate' => $data['data']['created_at'],
 				];
 				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
-				var_dump($res);
+				if ($res){
+					$op = $this->dataArt->SearchOperations($args, 'SANDBOX');
+					if ($op){
+						if ($op['operationNumber'] != $args['trakingKey']){
+							$rollback = [
+								'clabe' => $args['sourceClabe'],
+								'amount' => $args['amount'],
+								'descriptor' => 'Devolucion por referencia no encontrada',
+								'name' => $data['data']['source']['name'],
+								'idempotency_key' => $args['trakingKey'],
+							];
+							var_dump($this->dataArt->CreateTransfer($rollback, 'SANDBOX'));
+						}else if ((floatval($op['entry']) - floatval($op['exit']))*100 != $args['amount']){
+							$rollback = [
+								'clabe' => $args['sourceClabe'],
+								'amount' => $args['amount'],
+								'descriptor' => 'Devolucion por monto incorrecto',
+								'name' => $data['data']['source']['name'],
+								'idempotency_key' => $args['trakingKey'],
+							];
+							var_dump($this->dataArt->CreateTransfer($rollback, 'SANDBOX'));
+						}else{
+							$provedor = [
+								'clabe' => $op['companyClabe'],
+								'amount' => $args['amount'],
+								'descriptor' => 'OSolve '.$args['trakingKey'],
+								'name' => $op['companyName'],
+								'idempotency_key' => $args['trakingKey'].'01',
+							];
+							var_dump($this->dataArt->CreateTransfer($provedor, 'SANDBOX'));
+						}
+					}
+				}
 			}
 		}
 		return $this->response->sendResponse($resp, $error);
