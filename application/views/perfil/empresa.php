@@ -1,7 +1,7 @@
 <?php
 //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
-
+//var_dump($this->session->userdata('datosEmpresa'));
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -14,30 +14,130 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 <script>
     $(document).ready(function() {
         $('#btn-fase-1').on('click', function() {
-            console.log('Btn-fase-1');
-            $("#div-fase-1").hide();
-            $("#div-fase-2").show();
-            $("#btn-fase-1").hide();
-            $("#btn-fase-2").show();
+            var bandera = false;
+            var msg = '';
+            var emailField = document.getElementById('emailForm');
+            var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
+            $(".form-1").each(function(){
+                if ($(this).val() == '' ||  $(this).val() == null){
+                 bandera = true;
+                }
+            });
+
+            if (bandera){
+               msg = "Debe llenar todos los campos para continuar."
+            }
+
             
+            if( validEmail.test(emailField.value) ){
+                
+            }else{
+                msg += "\nEl Email no tiene un formato valido.";
+            }
+
+            if ($("#phoneForm").val().length != 10) {
+                msg += "\nEl teléfono debe ser de 10 carácteres.";
+            }else if(isNaN($("#phoneForm").val())){
+                msg += "\nEl teléfono solo debe contener números.";
+            }
+
+            if(msg == ''){
+                hideForms();
+                $("#div-fase-2").show();
+                $("#btn-fase-2").show();
+                $("#back-fase-1").show();
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
         });
-    function verifyForm(){
-        var modulo = $('#modulo').val();
-        var asunto = $('#asunto').val();
-        var descripcion = $('#descripcion').val();
-        if (modulo !== 0 && asunto !== '' && descripcion !== '') {
-            $('#btn-envio').prop('disabled', false)
-        }else{
-            $('#btn-envio').prop('disabled', true)
-        }
-    }
-    function verifyChat(){
-        var chatmsg = $('#tckComentsChat').val();
-        if (modulo !== 0 && asunto !== '' && descripcion !== '') {
-            $('#sendChat').prop('disabled', false)
-        }else{
-            $('#sendChat').prop('disabled', true)
-        }
+
+        $('#btn-fase-2').on('click', function() {
+            var bandera = false;
+            var msg = '';
+            var emailField = document.getElementById('emailForm2');
+            var validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
+            $(".form-2").each(function(){
+                if ($(this).val() == '' ||  $(this).val() == null){
+                 bandera = true;
+                }
+            });
+
+            if (bandera){
+               msg = "Debe llenar todos los campos para continuar."
+            }
+
+            
+            if( validEmail.test(emailField.value) ){
+                
+            }else{
+                msg += "\nEl Email no tiene un formato valido.";
+            }
+
+            if ($("#phoneForm2").val().length != 10) {
+                msg += "\nEl teléfono debe ser de 10 carácteres.";
+            }else if(isNaN($("#phoneForm").val())){
+                msg += "\nEl teléfono solo debe contener números.";
+            }
+
+            if(msg == ''){
+                hideForms();
+                $("#div-fase-3").show();
+                $("#btn-fase-3").show();
+                $("#back-fase-2").show();
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
+        });
+
+        $('#back-fase-1').on('click', function() {
+            hideForms();
+            $("#div-fase-1").show();
+            $("#btn-fase-1").show();
+        });
+
+        $('#back-fase-2').on('click', function() {
+            hideForms();
+            $("#div-fase-2").show();
+            $("#btn-fase-2").show();
+            $("#back-fase-1").show();
+        });
+
+        $('#back-fase-3').on('click', function() {
+            hideForms();
+            $("#div-fase-3").show();
+            $("#btn-fase-3").show();
+            $("#back-fase-2").show();
+
+        });
+
+        $('#cancelForm').on('click', function() {
+            hideForms();
+            $("#div-fase-1").show();
+            $("#btn-fase-1").show();
+        });
+
+
+    });
+    function hideForms(){
+        $("#div-fase-1").hide();
+        $("#div-fase-2").hide();
+        $("#div-fase-3").hide();
+        $("#div-fase-4").hide();
+        $("#back-fase-1").hide();
+        $("#back-fase-2").hide();
+        $("#back-fase-3").hide();
+        $("#btn-fase-1").hide();
+        $("#btn-fase-2").hide();
+        $("#btn-fase-3").hide();
+        $("#btn-fase-4").hide();
     }
 </script>
 
@@ -174,93 +274,93 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             <h5>Registro de Proveedor</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <h5 class="p-3 h5-modular">A. Informacion General</h5>
-                    <div class="row" name="div-fase-1" id="div-fase-1">
-                        <div class="col l6 especial-p">
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="bussinesName">Denominaci&oacute; o raz&oacute;n social *</label>
-                                    <input v-model="data['bussinesName']" type="text" name="bussinesName" id="bussinesName">
+                    <div name="div-fase-1" id="div-fase-1">
+                        <h5 class="p-3 h5-modular">A. Informacion General</h5>
+                        <div class="row">
+                            <div class="col l6 especial-p">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="bussinesName">Denominaci&oacute; o raz&oacute;n social *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['legal_name']  ?>" type="text" name="bussinesName" id="bussinesName">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="nationality">Nacionalidad *</label>
+                                        <input class="form-1" type="text" name="nationality" id="nationality">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="folio">Número de Folio en el Registro Público de Comercio o su equivalente *</label>
+                                        <input class="form-1" type="text" name="folio" id="folio">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="efirma">Número de certificado de firma electrónica (e firma) o su equivalente *</label>
+                                        <input class="form-1" type="text" name="efirma" id="efirma">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col l6 cover">
+                                        <label style="top:auto" for="phoneForm">Número de teléfono *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['telephone']  ?>" type="text" name="phoneForm" id="phoneForm">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="web">Sitio web *</label>
+                                        <input class="form-1" type="text" name="web" id="web">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="bank">Banco Emisor *</label>
+                                        <input class="form-1" value="<?php echo $bank ?>" type="text" name="bank" id="bank">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="nationality">Nacionalidad *</label>
-                                    <input type="text" name="nationality" id="nationality">
+                            <div class="col l6 especial-p">
+                                <div style="margin-top: 14px;" class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="nameComercial">Nombre Comercial *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['short_name']  ?>" type="text" name="nameComercial" id="nameComercial">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="folio">Número de Folio en el Registro Público de Comercio o su equivalente *</label>
-                                    <input type="text" name="folio" id="folio">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dateConst">Fecha de constituci&oacute;n *</label>
+                                        <input class="form-1" value="" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="cert">Número de certificado de firma electrónica (e firma) o su equivalente *</label>
-                                    <input type="text" name="cert" id="cert">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="rfc">"RFC o equivalente" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['rfc']  ?>" type="text" name="rfc" id="rfc">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col l6 cover">
-                                    <label style="top:auto" for="telefono">Número de teléfono *</label>
-                                    <input v-model="data['telefono']" type="text" name="telefono" id="telefono" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa exactamente 10 dígitos numéricos.">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="dom">"Domicilio fiscal" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['address']  ?>" type="text" name="dom" id="dom">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="web">Sitio web *</label>
-                                    <input type="text" name="web" id="web">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="emailForm">"Correo Electrónico" *</label>
+                                        <input class="form-1" type="text" name="emailForm" id="emailForm">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="bank">Banco Emisor *</label>
-                                    <input v-model="data['bank']['bnk_alias']" type="text" name="bank" id="bank">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col l6 especial-p">
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="nameComercial">Nombre Comercial *</label>
-                                    <input  v-model="data['nameComercial']" type="text" name="nameComercial" id="nameComercial">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="date_const">Fecha de constituci&oacute;n *</label>
-                                    <input v-model="data['createdat']" type="text" name="date_const" id="date_const">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="rfc">"RFC o equivalente" *</label>
-                                    <input v-model="data['rfc']" type="text" name="rfc" id="rfc">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="dom">"Domicilio fiscal" *</label>
-                                    <input type="text" name="dom" id="dom">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="email">"Correo Electrónico" *</label>
-                                    <input type="text" name="email" id="email">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-border col cover">
-                                    <label style="top:auto" for="clabe">"Número de cuenta, CLABE" *</label>
-                                    <input v-model="data['clabe']" type="text" name="clabe" id="clabe">
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <label style="top:auto" for="clabe">"Número de cuenta, CLABE" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['account_clabe']  ?>" type="text" name="clabe" id="clabe">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    
                     <div hidden name="div-fase-2" id="div-fase-2">
                         <h5 class="p-3 h5-modular">B. Modelo de negocio</h5>
                         <div class="row">
@@ -268,7 +368,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="socialobj">Objeto social *</label>
-                                        <input type="text" name="socialobj" id="socialobj">
+                                        <textarea class="form-2" name="socialobj" id="socialobj" rows="10" cols="50"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +376,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="descOperation">Describa cómo utilizara la cuenta de fondos de pago electónico para su operación *</label>
-                                        <input type="text" name="descOperation" id="descOperation" >
+                                        <textarea class="form-2" name="descOperation" id="descOperation" rows="10"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -287,7 +387,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="transactMonth">Número estimado de transacciones por mes *</label>
-                                        <input type="text" name="transactMonth" id="transactMonth">
+                                        <input class="form-2" type="text" name="transactMonth" id="transactMonth">
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +395,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="amount">Monto promedio de transacción (MXN o USD) *</label>
-                                        <input type="text" name="amount" id="amount">
+                                        <input class="form-2" type="text" name="amount" id="amount">
                                     </div>
                                 </div>
                             </div>
@@ -307,25 +407,25 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="charge">Cargo *</label>
-                                        <input type="text" name="charge" id="charge">
+                                        <input class="form-2" type="text" name="charge" id="charge">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="curp">CURP *</label>
-                                        <input type="text" name="curp" id="curp">
+                                        <input class="form-2" type="text" name="curp" id="curp">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="idNumber">Tipo y número de identificación oficial *</label>
-                                        <input type="text" name="idNumber" id="idNumber">
+                                        <input class="form-2" type="text" name="idNumber" id="idNumber">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="email">Correo electrónico *</label>
-                                        <input type="text" name="email" id="email">
+                                        <label style="top:auto" for="emailForm2">Correo electrónico *</label>
+                                        <input class="form-2" type="text" name="emailForm2" id="emailForm2">
                                     </div>
                                 </div>
                             </div>
@@ -333,36 +433,37 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="name">Nombre completo *</label>
-                                        <input type="text" name="name" id="name">
+                                        <input class="form-2" type="text" name="name" id="name">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="rfc">RFC *</label>
-                                        <input type="text" name="rfc" id="rfc">
+                                        <input class="form-2" type="text" name="rfc" id="rfc">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="dom">Domicilio *</label>
-                                        <input type="text" name="dom" id="dom">
+                                        <input class="form-2" type="text" name="dom" id="dom">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="phoneNumber">Numero de teléfono *</label>
-                                        <input type="text" name="phoneNumber" id="phoneNumber">
+                                        <label style="top:auto" for="phoneForm2">Numero de teléfono *</label>
+                                        <input class="form-2" type="text" name="phoneForm2" id="phoneForm2">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div hidden class="div-fase-3">
+                    <div hidden name="div-fase-3" id="div-fase-3">
                         <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
                         <label>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
-                        <input type="radio" name="fisica" id="1" value="1"><label>Si</label>
-                        <input type="radio" name="fisica" id="0" value="0"><label>No</label><br>
+                        <input type="radio" name="fisica" id="1" value="1" checked>
+                        <label>Si</label>
+                        <input type="radio" name="fisica" id="0" value="0">
+                        <label>No</label><br>
                         <label>¿Existe alguna persona moral que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
 
                         <h5 class="p-3 h5-modular">F. Estatus regulatorio y mejores prácticas</h5>
@@ -380,7 +481,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="dateAward">Fecha en que fue otorgado *</label>
-                                        <input type="text" name="dateAward" id="dateAward">
+                                        <input type="date" name="dateAward" id="dateAward">
                                     </div>
                                 </div>
                             </div>
@@ -388,7 +489,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="typeLicense">Tipo de permiso, licencia o registro *</label>
-                                        <input type="text" name="typeLicense" id="typeLicense" required>
+                                        <input type="text" name="typeLicense" id="typeLicense">
                                     </div>
                                 </div>
                             </div>
@@ -397,7 +498,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         <label>¿La empresa cuenta con manuales o políticas en materia de anticorrupción?</label>
                         <label>¿La empresa cuenta con manuales o políticas en materia de protección de datos y seguridad de la información?</label>
                     </div>
-                    <div hidden class="div-fase-4">
+                    <div hidden name="div-fase-4" id="div-fase-4">
                         <h5 class="p-3 h5-modular">G. Actividades vulnerables</h5>
                         <label>¿El giro o actividad de la empresa está regulado como actividad vulnerable?</label>
                         <label>En caso afirmativo, proporcionar la información siguiente:</label>
@@ -415,7 +516,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="obligations">¿Se encuentra a corriente en el cumplimiento de sus obligaciones en esta materia? *</label>
-                                        <input type="text" name="obligations" id="obligations" required>
+                                        <input type="text" name="obligations" id="obligations">
                                     </div>
                                 </div>
                             </div>
@@ -423,10 +524,14 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     </div>
                     <div class="row">
                         <div class="col center-align cover">
-                            <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
+                            <a class="modal-close button-gray" name="cancelForm" id="cancelForm" style="color:#fff; color:hover:#">Cancelar</a>
                             &nbsp;
-                            <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente 1</button>
-                            <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente 2</button>
+                            <button hidden class="button-blue" name="back-fase-1" id="back-fase-1" type="submit">Atrás</button>
+                            <button hidden class="button-blue" name="back-fase-2" id="back-fase-2" type="submit">Atrás 2</button>
+                            <button hidden class="button-blue" name="back-fase-3" id="back-fase-3" type="submit">Atrás 3</button>
+                            &nbsp;
+                            <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
+                            <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
                             <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente 3</button>
                             <button hidden class="button-blue" name="btn-fase-4" id="btn-fase-4" type="">Siguiente 4</button>
                             <button hidden class="button-blue" :class="{ 'modal-close': modal-proveedor }" name="btn-fase-5" id="btn-fase-5" type="">Siguiente 5</button>
