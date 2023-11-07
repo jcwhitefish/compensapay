@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Registro extends MY_Loggedout
+class Registro extends MY_Loggedin
 {
 	public function __construct()
 	{
