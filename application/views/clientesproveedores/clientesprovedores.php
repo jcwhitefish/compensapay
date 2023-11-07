@@ -1,6 +1,5 @@
 <?php
-include(base_url('assets/conexion.php'));
-
+var_dump($clipro);
 ?>
 
 <div class="p-5" id="app">
