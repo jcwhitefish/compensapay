@@ -1,7 +1,7 @@
 <?php
 //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
-//var_dump($this->session->userdata('datosEmpresa'));
+//var_dump($this->session->userdata('vista'));
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -161,7 +161,65 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 
             if(msg == ''){
                 hideForms();
-                
+                $.ajax({
+                    url: '/Registro/registrarProveedor',
+                    data: {
+                        bussinesName: $('#bussinesName').val(),
+                        nationality: $('#nationality').val(),
+                        folio: $('#folio').val(),
+                        efirma: $('#efirma').val(),
+                        phoneForm: $('#phoneForm').val(),
+                        web: $('#web').val(),
+                        bank: $('#bank').val(),
+                        nameComercial: $('#namecomercial').val(),
+                        dateConst: $('#dateConst').val(),
+
+                        rfc: $('#rfc').val(),
+                        dom: $('#dom').val(),
+                        emailForm: $('#emailForm').val(),
+                        clabe: $('#clabe').val(),
+                        socialobj: $('#socialobj').val(),
+                        descOperation: $('#descOperation').val(),
+                        transactMonth: $('#transactMonth').val(),
+                        amount: $('#amount').val(),
+                        charge: $('#charge').val(),
+                        curp: $('#curp').val(),
+
+                        idNumber: $('#idNumber').val(),
+                        emailForm2: $('#emailForm2').val(),
+                        nameForm2: $('#nameForm2').val(),
+                        rfcForm2: $('#rfcForm2').val(),
+                        domForm2: $('#domForm2').val(),
+                        phoneForm2: $('#phoneForm2').val(),
+                        fisica: $('#fisica').val(),
+                        moral: $('#moral').val(),
+                        license: $('#license').val(),
+                        supervisor: $('#supervisor').val(),
+
+                        dateAward: $('#dateAward').val(),
+                        typeLicense: $('#typeLicense').val(),
+                        audited: $('#audited').val(),
+                        anticorruption: $('#anticorruption').val(),
+                        dataProtection: $('#dataProtection').val(),
+                        vulnerable: $('#vulnerable').val(),
+                        servTrib: $('#servTrib').val(),
+                        obligations: $('#obligations').val(),
+                    },
+                    dataType: 'json',
+                    method: 'post',
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        alert(data);
+                        //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
+                        //M.toast({html: toastHTML});
+                    },
+                    complete: function () {
+                        //$('#descripcion').val('');
+                        //$('#asunto').val('');
+                        //getTickets();
+                    }
+                });
 
             }else{
                 alert (msg);
@@ -313,7 +371,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 </div>
                 <div class="row" style="text-align: center;">
                     <a class="modal-trigger button-blue" href="#modal-proveedor" >
-                        Registro Proveedor
+                        Regístrate Proveedor
                     </a>
                 </div>
                 
@@ -465,16 +523,16 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 </div>
                             </div>
                             <div class="col l6 especial-p">
-                                <div style="margin-top: 14px;" class="row">
+                                <div  class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="nameComercial">Nombre Comercial *</label>
                                         <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['short_name']  ?>" type="text" name="nameComercial" id="nameComercial">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div  class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="dateConst">Fecha de constituci&oacute;n *</label>
-                                        <input class="form-1" value="2023-11-06" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
+                                        <input style="height: 4rem !important;"class="form-1" value="2023-11-06" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -575,20 +633,20 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                             <div class="col l6 especial-p">
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="name">Nombre completo *</label>
-                                        <input class="form-2" type="text" name="name" id="name" value="Lorem ipsum">
+                                        <label style="top:auto" for="nameForm2">Nombre completo *</label>
+                                        <input class="form-2" type="text" name="nameForm2" id="nameForm2" value="Lorem ipsum">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="rfc">RFC *</label>
-                                        <input class="form-2" type="text" name="rfc" id="rfc" value="Lorem ipsum">
+                                        <label style="top:auto" for="rfcForm2">RFC *</label>
+                                        <input class="form-2" type="text" name="rfcForm2" id="rfcForm2" value="Lorem ipsum">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="dom">Domicilio *</label>
-                                        <input class="form-2" type="text" name="dom" id="dom" value="Lorem ipsum">
+                                        <label style="top:auto" for="domForm2">Domicilio *</label>
+                                        <input class="form-2" type="text" name="domForm2" id="domForm2" value="Lorem ipsum">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -604,7 +662,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
                         <p>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
                         <label>
-                            <input class="form-3" type="radio" name="fisica" id="fisica" value="1">
+                            <input type="radio" name="fisica" id="fisica" value="1">
                             <span>Si</span>
                         </label>
                         <br>
@@ -750,11 +808,11 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             <h5>Fin del registro</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
-                    <p class="p-3 h5-modular">Te has registrado como proveedor, nuestro equipo revisara tu información y documentación y te haremos saber en cuanto puedas tener acceso a las funciuones de proveedor.</p>
+                    <p class="p-3 h5-modular">Te has registrado como proveedor, nuestro equipo revisara tu información y documentación y te haremos saber en cuanto puedas tener acceso a las funciones de proveedor.</p>
                     <br>
                     <p style="margin-left:10px">Gracias por usar compensa pay</p>
                     <br>
-                    <a class="modal-close button-gray" style="color:#fff; color:hover:#">Finalizar</a>
+                    <a class="modal-close button-gray" style="color:#fff; color:hover:#" href="<?= base_url('perfil/empresa') ?>">Finalizar</a>
                 </div>
             </div>
         </div>
