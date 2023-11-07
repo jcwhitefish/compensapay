@@ -65,7 +65,7 @@
                                 <i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
-                            <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.short_name}}</td>
                             <td>{{factura.invoice_number}}</td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>

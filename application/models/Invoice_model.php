@@ -23,8 +23,9 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('*');
+        $this->db->select('invoices.*, companies.short_name');
 		$this->db->from('invoices');
+        $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
 		$this->db->where('sender_rfc', $rfc);
         $query = $this->db->get();
         return $query->result();
@@ -41,9 +42,10 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('*');
+        $this->db->select('invoices.*, companies.short_name');
 		$this->db->from('invoices');
-		$this->db->where('receiver_rfc', $rfc);
+        $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
+		$this->db->where('invoices.receiver_rfc', $rfc);
         $query = $this->db->get();
         return $query->result();
     }

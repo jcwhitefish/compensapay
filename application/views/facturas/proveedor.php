@@ -70,7 +70,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion">Crear Operacion</a>
                             </td>
-                            <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.short_name}}</td>
                             <td><a href="<?= $factura; ?>1" target="_blank">{{factura.invoice_number}}</a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
