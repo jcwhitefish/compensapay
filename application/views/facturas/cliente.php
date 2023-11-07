@@ -63,7 +63,7 @@
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
                             <td>{{factura.sender_rfc}}</td>
                             <td>{{factura.invoice_number}}</td>
@@ -85,18 +85,21 @@
                     </tbody>
                 </table>
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
-                    <thead>
+                <thead>
                         <tr>
-                            <th>Aprobacion</th>
-                            <th>ID Operacion</th>
+                            <th>Aprobación<br>Operación</th>
+                            <th>Estatus <br>Factura</th>
+                            <th>ID Operación</th>
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
-                            <th>Factura / Nota de credito</th>
+                            <th>UUID<br>Factura Proveedor</th>
+                            <th>Monto<br>Factura Proveedor</th>
+                            <th>UUID<br>Mi Factura</th>
+                            <th>Monto<br>Mi Factura</th>
+                            <th>UUID Nota</th>
+                            <th>Monto Nota</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
-                            <th>Monto Ingreso</th>
-                            <th>Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
@@ -105,21 +108,39 @@
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.status == '2'" class="small material-icons" style="color: red;">cancel</i>
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="operacion.status == '0'" class="modal-trigger " href="#modal-cargar-factura" @click="guardarSeleccion(operacion.id)">Aprobar Operacion</a>
+                                <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
-                            <td>{{ operacion.operation_number }}</td>
-                            <td>{{ operacion.id_provider }}</td>
-                            <td>{{ operacion.payment_date }}</td>
-                            <td>{{ operacion.created_at}}</td>
-                            <td>1(id_factura)</td>
-                            <td>0000-00-00</td>
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0'">pendiente</p>
                                 <p v-if="operacion.status == '1'">aprobada</p>
                                 <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
-                            <td>{{ operacion.entry_money }}</td>
-                            <td>{{ operacion.exit_money }}</td>
+                            <td>{{ operacion.operation_number }}</td>
+                            <td>
+                                <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
+                                <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
+                            </td>
+                            <td>{{ operacion.payment_date }}</td>
+                            <td>{{ operacion.created_at}}</td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_prov != null">${{ operacion.money_prov }}</p>
+                            </td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid_relation }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_clie != null">${{ operacion.money_clie }}</p>
+                            </td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid_nota }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
+                            </td>
+                            <td>{{ operacion.date_invoice }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -264,7 +285,9 @@
                                 <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
                                 <label for="operationDisabledUnique">Tu factura XML</label>
                             </div>
-                            <div class="col l4 left-align p-5">
+                            <div class="col l0 left-align p-5">
+                                <label for="uniqueOperationUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input @change="checkFormatOperationUnique" name="uniqueOperationUpload" ref="uniqueOperationUpload" id="uniqueOperationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
@@ -274,7 +297,6 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th>Crear Operación</th>
                                             <th>Proveedor</th>
                                             <th>Factura</th>
                                             <th>Fecha Factura</th>
@@ -287,7 +309,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="facturaClientUnique in facturasClientUnique">
+                                        <tr v-for="factura in facturasClientUnique">
+                                            <td>{{factura.sender_rfc}}</td>
+                                            <td>{{factura.invoice_number}}</td>
+                                            <td>{{factura.invoice_date}}</td>
+                                            <td>{{factura.created_at}}</td>
+                                            <td>
+                                                <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
+                                                <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
+                                            </td>
+                                            <td>
+                                                <p v-if="factura.status == '0' " >Por Aprobar</p>
+                                                <p v-if="factura.status == '1' " >Pagado</p>
+                                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                            </td>
+                                            <td>${{factura.subtotal}}</td>
+                                            <td>${{factura.iva}}</td>
+                                            <td>${{factura.total}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -469,6 +507,14 @@
         box-shadow: 0 1px 0 0 #fff !important;
     }
 
+    /* Puntos suspensivos a fila donde se muestrael UUID */
+    .uuid-text{
+        width: 130px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
 </style>
 
 <script>
@@ -476,7 +522,9 @@
         setup() {
             const invoiceUploadName = Vue.ref('');
             const operationUploadName = Vue.ref('');
+            const operationUploadNameUnique = Vue.ref('');
             const providerUploadName = Vue.ref('');
+            const providerUploadNameUnique = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
             const radioChecked = Vue.ref(false);
@@ -484,6 +532,7 @@
             const operationsClient = Vue.ref([]);
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
+            const facturasClientUnique = Vue.ref([]);
             const autorizar = Vue.ref(0);
             const selectedoperationId = Vue.ref('');
             const acceptDecline = Vue.ref('');
@@ -688,6 +737,18 @@
                 }
             };
 
+            //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
+            const checkFormatOperationUnique = (event) => {
+                const fileInput = event.target;
+                if (fileInput.files.length > 0) {
+                    operationUploadNameUnique.value = fileInput.files[0].name;
+                    getFacturasByClient();
+                } else {
+                    operationUploadNameUnique.value = '';
+                    providerUploadNameUnique.value = '';
+                }
+            };
+
             //cambiar de nombre el input para subir una factura
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -704,6 +765,11 @@
                     selectedButton.value = buttonName;
                 }
             };
+
+            //Llenar tabla de operación unica con factura seleccionada
+            const operacionUnicaCliente = (factura) => {
+                facturasClientUnique.value[0] = factura;
+            }
 
             //mandar a llamar las funciones
             Vue.onMounted(
@@ -735,8 +801,13 @@
                 autorizar,
                 actualizacion,
                 guardarSeleccion,
-                changeStatus
-             };
+                changeStatus,
+                operacionUnicaCliente,
+                facturasClientUnique,
+                checkFormatOperationUnique,
+                operationUploadNameUnique,
+                providerUploadNameUnique
+            };
         }
     });
 </script>

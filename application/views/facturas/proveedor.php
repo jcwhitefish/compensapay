@@ -1,3 +1,8 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+$factura = base_url('assets/factura/factura.php?idfactura=');
+?>
 <div class="p-5" id="app">
 
     <!-- head con el calendario -->
@@ -63,10 +68,10 @@
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-cargar-factura">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion">Crear Operacion</a>
                             </td>
                             <td>{{factura.sender_rfc}}</td>
-                            <td>{{factura.invoice_number}}</td>
+                            <td><a href="<?= $factura; ?>1" target="_blank">{{factura.invoice_number}}</a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -87,16 +92,19 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th>Aprobacion</th>
-                            <th>ID Operacion</th>
+                            <th>Aprobación<br>Operación</th>
+                            <th>Estatus <br>Factura</th>
+                            <th>ID Operación</th>
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
-                            <th>Factura / Nota de credito</th>
+                            <th>UUID<br>Mi Factura</th>
+                            <th>Monto<br>Mi Factura</th>
+                            <th>UUID<br>Factura Cliente</th>
+                            <th>Monto<br>Factura Cliente</th>
+                            <th>UUID Nota</th>
+                            <th>Monto Nota</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
-                            <th>Monto Ingreso</th>
-                            <th>Monto Egreso</th>
                             <!-- <th >Adelanta tu pago</th> -->
                         </tr>
                     </thead>
@@ -107,19 +115,37 @@
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
                                 <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
-                            <td>{{ operacion.operation_number }}</td>
-                            <td>{{ operacion.id_provider }}</td>
-                            <td>{{ operacion.payment_date }}</td>
-                            <td>{{ operacion.created_at}}</td>
-                            <td>1(id_factura)</td>
-                            <td>0000-00-00</td>
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0'">pendiente</p>
                                 <p v-if="operacion.status == '1'">aprobada</p>
                                 <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
-                            <td>{{ operacion.entry_money }}</td>
-                            <td>{{ operacion.exit_money }}</td>
+                            <td>{{ operacion.operation_number }}</td>
+                            <td>
+                                <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
+                                <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
+                            </td>
+                            <td>{{ operacion.payment_date }}</td>
+                            <td>{{ operacion.created_at}}</td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_prov != null">${{ operacion.money_prov }}</p>
+                            </td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid_relation }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_clie != null">${{ operacion.money_clie }}</p>
+                            </td>
+                            <td>
+                                <p class="uuid-text">{{ operacion.uuid_nota }}</p>
+                            </td>
+                            <td>
+                                <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
+                            </td>
+                            <td>{{ operacion.date_invoice }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -179,7 +205,7 @@
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu nota xml relacionada a una factura</h6>
-                    <form id="uploadForm" enctype="multipart/form-data">                       
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
@@ -453,6 +479,14 @@
         pointer-events: auto;
     }
 
+    /* Puntos suspensivos a fila donde se muestrael UUID */
+    .uuid-text{
+        width: 105px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
     /* Fix button selected but all class selected afect */
 
     .selected {
@@ -581,10 +615,10 @@
                     .then(result => {
                         operaciones.value = result.operaciones;
                         operaciones.value.reverse();
-                    })
+                                            })
                     .catch(error => console.log('error', error));
             };
-        
+
             //tabla de get facturas
             const getFacturas = () => {
                 var requestOptions = {

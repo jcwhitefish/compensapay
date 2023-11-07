@@ -22,10 +22,10 @@ class Arteria_model extends CI_Model{
 	}
 	public function CreateTransfer(array $args, string $env){
 		$data = [
-			'account_number' => $args['name'],
-			'amount' => $args['lastname'],
+			'account_number' => $args['clabe'],
+			'amount' => $args['amount'],
 			'descriptor' => $args['descriptor'],
-			'recipient_name' => $args[''],
+			'recipient_name' => $args['name'],
 			'idempotency_key' => $args['idempotency_key'],
 		];
 		$endpoint = 'transfers';
@@ -44,7 +44,41 @@ class Arteria_model extends CI_Model{
 		return false;
 	}
 	public function SearchOperations(array $args, string $env){
-		$query = "";
+		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
+					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe',
+					t4.arteria_clabe, t1.entry_money, t1.exit_money,
+					t3.account_clabe as 'companyClabe', t3.legal_name
+					FROM compensapay.operations t1
+					LEFT JOIN compensapay.companies t2
+					ON t1.id_client = t2.id
+					LEFT JOIN compensapay.companies t3
+					ON t1.id_provider = t3.id
+					INNER JOIN compensapay.fintech t4
+					ON t4.companie_id = t1.id_provider
+					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1";
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0){
+				foreach ($result->result_array() as $row){
+					$opData=[];
+					$opData = [
+						'companyName' => $row['legal_name'],
+						'companyClabe' => $row['companyClabe'],
+						'operationNumber' => $row['operation_number'],
+						'client' => $row['id_client'],
+						'clientName' => $row['cname'],
+						'clientRfc' => $row['crfc'],
+						'clientClabe' => $row['cclabe'],
+						'provider' => $row['id_provider'],
+						'providerName' => $row['pname'],
+						'providerRfc' => $row['prfc'],
+						'providerClabe' => $row['pclabe'],
+						'entry' => $row['entry_money'],
+						'exit' => $row['exit_money'],
+					];
+				}
+				return $opData;
+			}
+		}
 	}
 	function MakeTrackingKey(array $ids): string{
 		$trash = 'GHIJKLMNOPQRSTUVWXYZ';
