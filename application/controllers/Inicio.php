@@ -21,7 +21,6 @@ class Inicio extends MY_Loggedin
 	 */
 	public function index()
 	{
-
 		//mostramos en pantalla welcome_message.php
 		$data['main'] = $this->load->view('inicio', '', true);
 		$this->load->view('plantilla', $data);

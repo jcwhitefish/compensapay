@@ -29,7 +29,7 @@ if ($this->session->userdata('logged_in')) {
         <div class="nav nav-wrapper navegador d-flex">
             <div class="d-flex justificarVertical">
 
-                <img src="<?= base_url('assets/images/logo_solve_2.jpg'); ?>" alt="Logo" class="nav-image">
+                <img src="<?= base_url('assets/images/logo_solve_2.png'); ?>" alt="Logo" class="nav-image">
             </div>
 
 
@@ -49,11 +49,21 @@ if ($this->session->userdata('logged_in')) {
                     </div>
                     <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
                         <p class="nav-max" style="padding-left: 10px;top:-15px"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
+
+                        <?php 
+                        $vista=$this->uri->segment(1);
+
+                        if($vista=='facturas' OR $vista=='modelofiscal' OR $vista=='clientesproveedores')
+                        {
+                        ?>   
                         <select onchange="cambiarVista(this.value)" name="type" id="type" class="nav-max browser-default input-nav" style="top: -2px;">
                             <!-- cliente 1 provedor 2 -->
                             <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
                             <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
                         </select>
+                        <?php
+                        }
+                        ?>
                     </div>
                     <div class="d-flex justificarVertical alinearVertical">
                         <a class="d-flex justificarVertical alinearVertical" href="<?= base_url('perfil/usuario') ?>" target="_self" rel="noopener noreferrer">
@@ -70,7 +80,7 @@ if ($this->session->userdata('logged_in')) {
     </nav>
     <?php if ($this->session->userdata('logged_in')) : ?>
         <div class="sidebar center-align">
-            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/logo_blanco_s.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
+            <a href="<?= base_url('') ?>"><img src="<?= base_url('assets/images/logo_purple_s.png'); ?>" alt="Logo" class="image-side hide-on-med-and-down"></a>
             <!--<hr class="line-side">-->
             <ul>
                 <ul class="icon-list">
@@ -188,7 +198,7 @@ if ($this->session->userdata('logged_in')) {
         }
 
         .icon-list li a:hover i {
-            color: #e0e51d;
+            color: #8520ef;
         }
 
         .icon-list-hover {
