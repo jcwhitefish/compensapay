@@ -120,7 +120,9 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="operacion.status == '1'">aprobada</p>
                                 <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
-                            <td>{{ operacion.operation_number }}</td>
+                            <td>
+                                <a class="modal-trigger " href="#modal-vista-operacion" @click="vistaOperacion(operacion)">{{ operacion.operation_number }}</a>
+                            </td>
                             <td>
                                 <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
                                 <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
@@ -135,17 +137,21 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             </td>
                             <td>
                                 <p class="uuid-text">{{ operacion.uuid_relation }}</p>
+                                <p v-if="operacion.uuid_relation == null">N.A.</p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_clie != null">${{ operacion.money_clie }}</p>
+                                <p v-if="operacion.money_clie == null">N.A.</p>
                             </td>
                             <td>
                                 <p class="uuid-text">{{ operacion.uuid_nota }}</p>
+                                <p v-if="operacion.uuid_nota == null">N.A.</p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
+                                <p v-if="operacion.money_nota == null">N.A.</p>
                             </td>
-                            <td>{{ operacion.date_invoice }}</td>
+                            <td>{{ operacion.transaction_date }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -153,6 +159,82 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
         </div>
     </div>
 
+    <!-- Visualizar informacion de operación -->
+    <div id="modal-vista-operacion" class="modal">
+        <div class="modal-content">
+            <div class="card esquinasRedondas">
+                <div class="card-content" v-for="operationClient in operationsView">
+                    <h5>ID Operacion: {{operationClient.operation_number}}</h5>
+                    <div class="row">
+                        <div class="row">
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Estatus Factura: </p>
+                                <h6 v-if="operationClient.status == '0'">Pendiente</h6>
+                                <h6 v-if="operationClient.status == '1'">Aprobada</h6>
+                                <h6 v-if="operationClient.status == '2'">Rechazada</h6>
+                            </div>
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Proveedor: </p>
+                                <h6 v-if="operationClient.short_name != null && operationClient.short_name != ''">{{operationClient.short_name}}</h6>
+                                <h6 v-if="operationClient.short_name == null || operationClient.short_name == ''">{{operationClient.legal_name}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha factura: </p>
+                                <h6>{{operationClient.payment_date}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Alta: </p>
+                                <h6>{{operationClient.created_at}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Transacción: </p>
+                                <h6>{{operationClient.transaction_date}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Mi Factura: </p>
+                                <h6>{{operationClient.uuid}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Factura Cliente: </p>
+                                <h6 v-if="operationClient.uuid_relation != null">{{operationClient.uuid_relation}}</h6>
+                                <h6 v-if="operationClient.uuid_relation == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Nota: </p>
+                                <h6 v-if="operationClient.uuid_nota != null">{{operationClient.uuid_nota}}</h6>
+                                <h6 v-if="operationClient.uuid_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Mi Factura: </p>
+                                <h6>${{operationClient.money_prov}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Factura Cliente: </p>
+                                <h6 v-if="operationClient.money_clie != null">${{operationClient.money_clie}}</h6>
+                                <h6 v-if="operationClient.money_clie == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Nota: </p>
+                                <h6 v-if="operationClient.money_nota != null">${{operationClient.money_nota}}</h6>
+                                <h6 v-if="operationClient.money_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="col l12">
+                            <div class="col l8">
+                                <a class="button-gray modal-close">Cerrar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Subir una factura -->
     <div id="modal-factura" class="modal">
@@ -487,8 +569,13 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
         overflow: hidden;
     }
 
-    /* Fix button selected but all class selected afect */
+    /* Estilo vista de operacion */
+    .font_head_op_info{
+        font-weight: bold;
+        font-size: 20px;
+    }
 
+    /* Fix button selected but all class selected afect */
     .selected {
         background-color: black !important;
         color: white !important;
@@ -511,6 +598,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
             const autorizar = Vue.ref(0);
+            const operationsView = Vue.ref([]);
 
             //darle aceptar a una factura (el feo)
             const actualizacion = () => {
@@ -686,7 +774,12 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 }
             };
 
-            //mandar a llamar las funciones 
+            //Llenar vista de operación seleccionada
+            const vistaOperacion = (operacion) => {
+                operationsView.value[0] = operacion;
+            }
+
+            //mandar a llamar las funciones
             Vue.onMounted(
                 () => {
                     getOperations();
@@ -712,7 +805,9 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 facturas,
                 facturasClient,
                 autorizar,
-                actualizacion
+                actualizacion,
+                vistaOperacion,
+                operationsView
             };
         }
     });

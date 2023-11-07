@@ -62,8 +62,8 @@
                     <tbody>
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
-                                <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
+                                <i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>
+                                <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
                             <td>{{factura.sender_rfc}}</td>
                             <td>{{factura.invoice_number}}</td>
@@ -115,7 +115,9 @@
                                 <p v-if="operacion.status == '1'">aprobada</p>
                                 <p v-if="operacion.status == '2'">rechazada</p>
                             </td>
-                            <td>{{ operacion.operation_number }}</td>
+                            <td>
+                                <a class="modal-trigger " href="#modal-vista-operacion" @click="vistaOperacion(operacion)">{{ operacion.operation_number }}</a>
+                            </td>
                             <td>
                                 <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
                                 <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
@@ -129,18 +131,22 @@
                                 <p v-if="operacion.money_prov != null">${{ operacion.money_prov }}</p>
                             </td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid_relation }}</p>
+                                <p v-if="operacion.uuid_relation != null" class="uuid-text">{{ operacion.uuid_relation }}</p>
+                                <p v-if="operacion.uuid_relation == null" class="uuid-text">N.A.</p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_clie != null">${{ operacion.money_clie }}</p>
+                                <p v-if="operacion.money_clie == null">N.A.</p>
                             </td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid_nota }}</p>
+                                <p v-if="operacion.uuid_nota != null" class="uuid-text">{{ operacion.uuid_nota }}</p>
+                                <p v-if="operacion.uuid_nota == null" class="uuid-text">N.A.</p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
+                                <p v-if="operacion.money_nota == null">N.A.</p>
                             </td>
-                            <td>{{ operacion.date_invoice }}</td>
+                            <td>{{ operacion.transaction_date }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -334,7 +340,7 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
+                                <button class="button-blue modal-close" type="reset" name="action" @click="uploadOperationUnica">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -431,6 +437,82 @@
         </div>
     </div>
 
+    <!-- Visualizar información de operación -->
+    <div id="modal-vista-operacion" class="modal">
+        <div class="modal-content" v-for="operationClient in operationsView">
+            <h5>ID Operacion: {{operationClient.operation_number}}</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Estatus Factura: </p>
+                                <h6 v-if="operationClient.status == '0'">Pendiente</h6>
+                                <h6 v-if="operationClient.status == '1'">Aprobada</h6>
+                                <h6 v-if="operationClient.status == '2'">Rechazada</h6>
+                            </div>
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Proveedor: </p>
+                                <h6 v-if="operationClient.short_name != null && operationClient.short_name != ''">{{operationClient.short_name}}</h6>
+                                <h6 v-if="operationClient.short_name == null || operationClient.short_name == ''">{{operationClient.legal_name}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha factura: </p>
+                                <h6>{{operationClient.payment_date}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Alta: </p>
+                                <h6>{{operationClient.created_at}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Transacción: </p>
+                                <h6>{{operationClient.transaction_date}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Factura Proveedor: </p>
+                                <h6>{{operationClient.uuid}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Mi Factura: </p>
+                                <h6 v-if="operationClient.uuid_relation != null">{{operationClient.uuid_relation}}</h6>
+                                <h6 v-if="operationClient.uuid_relation == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Nota: </p>
+                                <h6 v-if="operationClient.uuid_nota != null">{{operationClient.uuid_nota}}</h6>
+                                <h6 v-if="operationClient.uuid_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Factura Proveedor: </p>
+                                <h6>${{operationClient.money_prov}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Mi Factura: </p>
+                                <h6 v-if="operationClient.money_clie != null">${{operationClient.money_clie}}</h6>
+                                <h6 v-if="operationClient.money_clie == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Nota: </p>
+                                <h6 v-if="operationClient.money_nota != null">${{operationClient.money_nota}}</h6>
+                                <h6 v-if="operationClient.money_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="col l12">
+                            <div class="col l8">
+                                <a class="button-gray modal-close">Cerrar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- darle rechazar una factura -->
     <div id="modal-rechazo" class="modal p-5">
@@ -515,6 +597,12 @@
         overflow: hidden;
     }
 
+    /* Estilo vista de operacion */
+    .font_head_op_info{
+        font-weight: bold;
+        font-size: 20px;
+    }
+
 </style>
 
 <script>
@@ -530,6 +618,7 @@
             const radioChecked = Vue.ref(false);
             const operaciones = Vue.ref([]);
             const operationsClient = Vue.ref([]);
+            const operationsView = Vue.ref([]);
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
             const facturasClientUnique = Vue.ref([]);
@@ -622,6 +711,40 @@
                 }
             };
 
+            //Subir una operacion unica
+            const uploadOperationUnica = async () => {
+                if (selectedButton.value == 'Operaciones') {
+                    const fileInput = document.getElementById('uniqueOperationUpload');
+                    let selectedValue = facturasClientUnique.value[0]['id'];
+                    
+                    const formData = new FormData();
+                    formData.append('operationUpload', fileInput.files[0]);
+                    formData.append('grupoRadio', selectedValue);
+
+                    var requestOptions = {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    };
+
+                    fetch("<?= base_url("facturas/cargaOperacionFacturaUnica") ?>", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                            if(result.status == 'ok'){
+                                getOperations();
+                                M.toast({ html: 'Se ha subido la operacion' });
+                            }else{
+                                M.toast({ html: 'Error con la operacion, verifique su factura' });
+                            }
+
+                        })
+                        .catch(error => console.log('error', error));
+
+                } else {
+                    alert('Ingresa una factura')
+                }
+            };
+
             //tabla de get operaciones
             const getOperations = () => {
                 var requestOptions = {
@@ -673,6 +796,27 @@
                         providerUploadName.value = result.emisor;
                         facturasClient.value = result.facturasClient;
                         facturasClient.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
+            //tabla de get facturas por cliente
+            const getFacturasByClientUnica = async () => {
+                const fileInput = document.getElementById('uniqueOperationUpload');
+                const formData = new FormData();
+                formData.append('operationUpload', fileInput.files[0]);
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+                fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        providerUploadNameUnique.value = result.emisor;
+                        //facturasClient.value = result.facturasClient;
+                        //acturasClient.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
@@ -742,7 +886,7 @@
                 const fileInput = event.target;
                 if (fileInput.files.length > 0) {
                     operationUploadNameUnique.value = fileInput.files[0].name;
-                    getFacturasByClient();
+                    getFacturasByClientUnica();
                 } else {
                     operationUploadNameUnique.value = '';
                     providerUploadNameUnique.value = '';
@@ -769,6 +913,14 @@
             //Llenar tabla de operación unica con factura seleccionada
             const operacionUnicaCliente = (factura) => {
                 facturasClientUnique.value[0] = factura;
+                if (selectedButton.value != 'Operaciones') {
+                    selectedButton.value = 'Operaciones';
+                }
+            }
+
+            //Llenar vista de operación seleccionada
+            const vistaOperacion = (operacion) => {
+                operationsView.value[0] = operacion;
             }
 
             //mandar a llamar las funciones
@@ -806,7 +958,11 @@
                 facturasClientUnique,
                 checkFormatOperationUnique,
                 operationUploadNameUnique,
-                providerUploadNameUnique
+                providerUploadNameUnique,
+                getFacturasByClientUnica,
+                uploadOperationUnica,
+                vistaOperacion,
+                operationsView
             };
         }
     });

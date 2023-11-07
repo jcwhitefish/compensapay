@@ -9,7 +9,7 @@ class Operation_model extends CI_Model {
 
 
     public function get_my_operation($user) {
-        $this->db->select('operations.*, ip.uuid, ip.created_at as date_invoice, ic.uuid as uuid_relation,
+        $this->db->select('operations.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation,
         companies.short_name, companies.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
         LEFT(SUBSTRING_INDEX(debit_notes.xml_document, \'"1.1" UUID="\', -1), 36) AS uuid_nota, debit_notes.total as money_nota ');
 		$this->db->from('operations');
