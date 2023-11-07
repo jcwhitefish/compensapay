@@ -170,7 +170,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         efirma: $('#efirma').val(),
                         phoneForm: $('#phoneForm').val(),
                         web: $('#web').val(),
-                        bank: $('#bank').val(),
+                        bank: $('#bankForm1').val(),
                         nameComercial: $('#namecomercial').val(),
                         dateConst: $('#dateConst').val(),
 
@@ -517,8 +517,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="bank">Banco Emisor *</label>
-                                        <input class="form-1" value="<?php echo $bank ?>" type="text" name="bank" id="bank">
+                                        <label style="top:auto" for="bankForm1">Banco Emisor *</label>
+                                        <input class="form-1" value="<?php echo $bank ?>" type="text" name="bankForm1" id="bankForm1">
                                     </div>
                                 </div>
                             </div>

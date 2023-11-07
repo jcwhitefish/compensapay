@@ -322,7 +322,7 @@ class Registro extends MY_Loggedout
 		$companie = $this->session->userdata('datosEmpresa')['legal_name'];
 
 		$args = [
-			//'bussinesName' => $bussinesName,
+			'bussinesName' => $bussinesName,
 			'nationality' => $nationality,
 			'folio' => $folio,
 			'efirma' => $efirma,
