@@ -25,13 +25,16 @@ class ClientesProveedores extends MY_Loggedin {
 		$user = 6;
 
 		//1 si es cliente o  si es proveedor
-		if($isClient == 1){
-			$data['main'] = $this->load->view('clientesproveedores/cliente', '' , true);
-			$this->load->view('plantilla', $data);
-		}else{
-			$data['main'] = $this->load->view('clientesproveedores/proveedor', '' , true);
-			$this->load->view('plantilla', $data);
-		}
+		//if($isClient == 1){
+		//	$data['main'] = $this->load->view('clientesproveedores/cliente', '' , true);
+		//	$this->load->view('plantilla', $data);
+		//}else{
+		//	$data['main'] = $this->load->view('clientesproveedores/proveedor', '' , true);
+		//	$this->load->view('plantilla', $data);
+		//}
+
+		$data['main'] = $this->load->view('clientesproveedores/clientesprovedores', '' , true);
+		$this->load->view('plantilla', $data);
 
 	}					
 
