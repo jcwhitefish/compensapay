@@ -278,48 +278,50 @@ class Registro extends MY_Loggedin
 	{
 		$this->load->model('Proveedor_model', 'prov');
 
+		//var_dump($this->input->post('bussinesName'));
+
 		$bussinesName = $this->input->post('bussinesName');
-        $nationality= $this->input->post('#nationality');
-        $folio= $this->input->post('#folio');
-        $efirma= $this->input->post('#efirma');
-        $phoneForm= $this->input->post('#phoneForm');
-       	$web= $this->input->post('#web');
-        $bank= $this->input->post('#bank');
-        $nameComercial= $this->input->post('#namecomercial');
-        $dateConst= $this->input->post('#dateConst');
+        $nationality= $this->input->post('nationality');
+        $folio= $this->input->post('folio');
+        $efirma= $this->input->post('efirma');
+        $phoneForm= $this->input->post('phoneForm');
+       	$web= $this->input->post('web');
+        $bank= $this->input->post('bank');
+        $nameComercial= $this->input->post('namecomercial');
+        $dateConst= $this->input->post('dateConst');
 
-        $rfc= $this->input->post('#rfc');
-        $dom= $this->input->post('#dom');
-        $emailForm= $this->input->post('#emailForm');
-        $clabe= $this->input->post('#clabe');
-        $socialobj= $this->input->post('#socialobj');
-        $descOperation= $this->input->post('#descOperation');
-        $transactMonth= $this->input->post('#transactMonth');
-        $amount= $this->input->post('#amount');
-        $charge= $this->input->post('#charge');
-        $curp= $this->input->post('#curp');
+        $rfc= $this->input->post('rfc');
+        $dom= $this->input->post('dom');
+        $emailForm= $this->input->post('emailForm');
+        $clabe= $this->input->post('clabe');
+        $socialobj= $this->input->post('socialobj');
+        $descOperation= $this->input->post('descOperation');
+        $transactMonth= $this->input->post('transactMonth');
+        $amount= $this->input->post('amount');
+        $charge= $this->input->post('charge');
+        $curp= $this->input->post('curp');
 
-        $idNumber= $this->input->post('#idNumber');
-        $emailForm2= $this->input->post('#emailForm2');
-        $nameForm2= $this->input->post('#nameForm2');
-        $rfcForm2= $this->input->post('#rfcForm2');
-        $domForm2= $this->input->post('#domForm2');
-        $phoneForm2= $this->input->post('#phoneForm2');
-        $fisica= $this->input->post('#fisica');
-        $moral= $this->input->post('#moral');
-        $license= $this->input->post('#license');
-        $supervisor= $this->input->post('#supervisor');
+        $idNumber= $this->input->post('idNumber');
+        $emailForm2= $this->input->post('emailForm2');
+        $nameForm2= $this->input->post('nameForm2');
+        $rfcForm2= $this->input->post('rfcForm2');
+        $domForm2= $this->input->post('domForm2');
+        $phoneForm2= $this->input->post('phoneForm2');
+        $fisica= $this->input->post('fisica');
+        $moral= $this->input->post('moral');
+        $license= $this->input->post('license');
+        $supervisor= $this->input->post('supervisor');
 
-        $dateAward= $this->input->post('#dateAward');
-        $typeLicense= $this->input->post('#typeLicense');
-        $audited= $this->input->post('#audited');
-        $anticorruption= $this->input->post('#anticorruption');
-        $dataProtection= $this->input->post('#dataProtection');
-        $vulnerable= $this->input->post('#vulnerable');
-        $servTrib= $this->input->post('#servTrib');
-        $obligations= $this->input->post('#obligations');
+        $dateAward= $this->input->post('dateAward');
+        $typeLicense= $this->input->post('typeLicense');
+        $audited= $this->input->post('audited');
+        $anticorruption= $this->input->post('anticorruption');
+        $dataProtection= $this->input->post('dataProtection');
+        $vulnerable= $this->input->post('vulnerable');
+        $servTrib= $this->input->post('servTrib');
+        $obligations= $this->input->post('obligations');
 
-		$companie = $this->session->userdata('datosEmpresa')['legal_name'];
+		$companie = $this->session->userdata('datosEmpresa')['id'];
 
 		$args = [
 			'bussinesName' => $bussinesName,
@@ -330,7 +332,7 @@ class Registro extends MY_Loggedin
 			'web' => $web,
 			'bank' => $bank,
 			'nameComercial' => $nameComercial,
-			'dateConst' => strotime($dateConst),
+			'dateConst' => strtotime($dateConst),
 
 			'rfc' => $rfc,
 			'dom' => $dom,
@@ -354,7 +356,7 @@ class Registro extends MY_Loggedin
 			'license' => $license,
 			'supervisor' => $supervisor,
 
-			'dateAward' => strotime($dateAward),
+			'dateAward' => strtotime($dateAward),
 			'typeLicense' => $typeLicense,
 			'audited' => $audited,
 			'anticorruption' => $anticorruption,
@@ -365,7 +367,7 @@ class Registro extends MY_Loggedin
 			'companie' => $companie,
 		];
 		$res = $this->prov->registrarProveedor($args);
-		echo json_encode($args);
+		echo json_encode('OK');
 	}
 }
 

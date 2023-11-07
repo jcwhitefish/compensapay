@@ -208,9 +208,9 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     dataType: 'json',
                     method: 'post',
                     beforeSend: function () {
+                        
                     },
                     success: function (data) {
-                        alert(data);
                         //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
                         //M.toast({html: toastHTML});
                     },
@@ -218,6 +218,10 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         //$('#descripcion').val('');
                         //$('#asunto').val('');
                         //getTickets();
+                    },
+                    error: function (){
+                        alert('Ha ocurrido un problema');
+                        location.reload();
                     }
                 });
 
