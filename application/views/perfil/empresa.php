@@ -97,6 +97,79 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             }       
         });
 
+        $('#btn-fase-3').on('click', function() {
+            var bandera = false;
+            var msg = '';
+            var fisica = $('input[name="fisica"]:checked').val();
+            var moral = $('input[name="moral"]:checked').val();
+            var license = $('input[name="license"]:checked').val();
+            var audited = $('input[name="audited"]:checked').val();
+            var anticorruption = $('input[name="anticorruption"]:checked').val();
+            var dataProtection = $('input[name="dataProtection"]:checked').val();
+            
+            if((fisica == '' ||  fisica == null) || (moral == '' ||  moral == null) || (license == '' ||  license == null) || (audited == '' ||  audited == null) || (anticorruption == '' ||  anticorruption == null) || (dataProtection == '' ||  dataProtection == null)){
+                msg += "Faltan respuestas por marcar, seleccione 'Si' o 'No'. "
+            }
+            //console.log(license == 1);
+            if(license == 1){
+                $(".form-3").each(function(){
+                    if ($(this).val() == '' ||  $(this).val() == null){
+                     bandera = true;
+                    }
+                });
+
+                if (bandera){
+                   msg += "\nRespondio 'Si' en Estatus regulatorio, aun faltan preguntas por responder."
+                }
+            }
+            
+
+            if(msg == ''){
+                hideForms();
+                $("#div-fase-4").show();
+                $("#btn-fase-4").show();
+                $("#back-fase-3").show();
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
+        });
+
+        $('#btn-fase-4').on('click', function() {
+            var bandera = false;
+            var msg = '';
+            var vulnerable = $('input[name="vulnerable"]:checked').val();
+            
+            if((vulnerable == '' ||  vulnerable == null)){
+                msg += "Faltan respuestas por marcar, seleccione 'Si' o 'No'. "
+            }
+            //console.log(license == 1);
+            if(vulnerable == 1){
+                $(".form-4").each(function(){
+                    if ($(this).val() == '' ||  $(this).val() == null){
+                     bandera = true;
+                    }
+                });
+
+                if (bandera){
+                   msg += "\nRespondio 'Si' en Actividades vulnerables, aun faltan preguntas por responder."
+                }
+            }
+            
+
+            if(msg == ''){
+                hideForms();
+                
+
+            }else{
+                alert (msg);
+                return false;
+
+            }       
+        });
+
         $('#back-fase-1').on('click', function() {
             hideForms();
             $("#div-fase-1").show();
@@ -267,6 +340,76 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 </div>
             </div>
         </div>
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <p>Documento</p>
+                        </th>
+                        <th>
+                            <p>Archivo</p>
+                        </th>
+                        <th>
+                            <p>Actualizar</p>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>Acta Constitutiva</p>
+                        </td>
+                        <td><a :href="actaConstitutivaUploadURL" target="_blank">{{actaConstitutivaUploadName}}</a></td>
+                        <td>
+                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Constancia de Situacion Fiscal</p>
+                        </td>
+                        <td><a :href="csfUploadURL" target="_blank">{{csfUploadName}}</a></td>
+                        <td>
+                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Comprobante de Domicilio</p>
+                        </td>
+                        <td><a :href="comprobanteDomicilioUploadURL" target="_blank">{{comprobanteDomicilioUploadName}}</a></td>
+                        <td>
+                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Identificacion de Representante Legal</p>
+                        </td>
+                        <td><a :href="representanteLegalUploadURL" target="_blank">{{representanteLegalUploadName}}</a></td>
+                        <td>
+                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                            <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="row">
+            <div class="col l12 right-align p-5">
+                <button @click="redireccion" class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
+
+                <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
+            </div>
+        </div>
+    </form>
 
     <!-- Modal Registrarse como Proveedor -->
     <div id="modal-proveedor" class="modal">
@@ -459,34 +602,52 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     </div>
                     <div hidden name="div-fase-3" id="div-fase-3">
                         <h5 class="p-3 h5-modular">E. Administración y representación legal</h5>
-						<p>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
+                        <p>¿Existe alguna persona que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
                         <label>
-                        	<input type="radio" name="fisica" id="1" value="1" checked>
-							<span>Si</span>
-						</label>
-						<br>
-						<label>
-							<input name="fisica" type="radio" />
-							<span>No</span>
-						</label>
-                        <label>¿Existe alguna persona moral que directa o indirectamente ejerza control* o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</label><br>
+                            <input class="form-3" type="radio" name="fisica" id="fisica" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="fisica" id="fisica" type="radio" value="0">
+                            <span>No</span>
+                        </label><br>
+                        <p>¿Existe alguna persona moral que directa o indirectamente ejerza control * o tenga la titularidad del 25% o mas de las acciones o partes sociales de la empresa?</p>
+                        <label>
+                            <input type="radio" name="moral" id="moral" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="moral" id="moral" type="radio" value="0">
+                            <span>No</span>
+                        </label>
 
                         <h5 class="p-3 h5-modular">F. Estatus regulatorio y mejores prácticas</h5>
-                        <label>¿La empresa requiere licencia, permiso o registro para la prestación de sus servicios?</label>
+                        <p>¿La empresa requiere licencia, permiso o registro para la prestación de sus servicios?</p>
+                        <label>
+                            <input type="radio" name="license" id="license" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="license" id="license" type="radio" value="0">
+                            <span>No</span>
+                        </label>
 
-                        <label>En caso afirmativo, indicar la información siguiente:</label>
+                        <p>En caso afirmativo, indicar la información siguiente:</p>
                         <div class="row">
                             <div class="col l6 especial-p">
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="supervisor">Nombre de la autoridad supervisora *</label>
-                                        <input type="text" name="supervisor" id="supervisor">
+                                        <input class="form-3" type="text" name="supervisor" id="supervisor">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="dateAward">Fecha en que fue otorgado *</label>
-                                        <input type="date" name="dateAward" id="dateAward">
+                                        <input class="form-3" type="date" name="dateAward" id="dateAward">
                                     </div>
                                 </div>
                             </div>
@@ -494,25 +655,61 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="typeLicense">Tipo de permiso, licencia o registro *</label>
-                                        <input type="text" name="typeLicense" id="typeLicense">
+                                        <input class="form-3" type="text" name="typeLicense" id="typeLicense">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <label>¿La empresa ha sido auditada o sujeta a un proceso de inspección por la autoridad supervisora? En caso afirmativo, proveer detalles</label>
-                        <label>¿La empresa cuenta con manuales o políticas en materia de anticorrupción?</label>
-                        <label>¿La empresa cuenta con manuales o políticas en materia de protección de datos y seguridad de la información?</label>
+                        <p>¿La empresa ha sido auditada o sujeta a un proceso de inspección por la autoridad supervisora? En caso afirmativo, proveer detalles</p>
+                        <label>
+                            <input type="radio" name="audited" id="audited" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="audited" id="audited" type="radio" value="0">
+                            <span>No</span>
+                        </label>
+                        <p>¿La empresa cuenta con manuales o políticas en materia de anticorrupción?</p>
+                        <label>
+                            <input type="radio" name="anticorruption" id="anticorruption" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="anticorruption" id="anticorruption" type="radio" value="0">
+                            <span>No</span>
+                        </label>
+                        <p>¿La empresa cuenta con manuales o políticas en materia de protección de datos y seguridad de la información?</p>
+                        <label>
+                            <input type="radio" name="dataProtection" id="dataProtection" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="dataProtection" id="dataProtection" type="radio" value="0">
+                            <span>No</span>
+                        </label>
                     </div>
                     <div hidden name="div-fase-4" id="div-fase-4">
                         <h5 class="p-3 h5-modular">G. Actividades vulnerables</h5>
-                        <label>¿El giro o actividad de la empresa está regulado como actividad vulnerable?</label>
-                        <label>En caso afirmativo, proporcionar la información siguiente:</label>
+                        <p>¿El giro o actividad de la empresa está regulado como actividad vulnerable?</p>
+                        <label>
+                            <input type="radio" name="vulnerable" id="vulnerable" value="1">
+                            <span>Si</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input name="vulnerable" id="vulnerable" type="radio" value="0">
+                            <span>No</span>
+                        </label>
+                        <p>En caso afirmativo, proporcionar la información siguiente:</p>
                         <div class="row">
                             <div class="col l6 especial-p">
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="servTrib">¿Se encuentra registrada la actividad ante el Servicio de Administración Tributaria? *</label>
-                                        <input type="text" name="servTrib" id="servTrib">
+                                        <input class="form-4" type="text" name="servTrib" id="servTrib">
                                     </div>
                                 </div>
                                 
@@ -521,7 +718,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="obligations">¿Se encuentra a corriente en el cumplimiento de sus obligaciones en esta materia? *</label>
-                                        <input type="text" name="obligations" id="obligations">
+                                        <input class="form-4" type="text" name="obligations" id="obligations">
                                     </div>
                                 </div>
                             </div>
@@ -532,91 +729,36 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                             <a class="modal-close button-gray" name="cancelForm" id="cancelForm" style="color:#fff; color:hover:#">Cancelar</a>
                             &nbsp;
                             <button hidden class="button-blue" name="back-fase-1" id="back-fase-1" type="submit">Atrás</button>
-                            <button hidden class="button-blue" name="back-fase-2" id="back-fase-2" type="submit">Atrás 2</button>
-                            <button hidden class="button-blue" name="back-fase-3" id="back-fase-3" type="submit">Atrás 3</button>
+                            <button hidden class="button-blue" name="back-fase-2" id="back-fase-2" type="submit">Atrás</button>
+                            <button hidden class="button-blue" name="back-fase-3" id="back-fase-3" type="submit">Atrás</button>
                             &nbsp;
                             <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
                             <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
-                            <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente 3</button>
-                            <button hidden class="button-blue" name="btn-fase-4" id="btn-fase-4" type="">Siguiente 4</button>
-                            <button hidden class="button-blue" :class="{ 'modal-close': modal-proveedor }" name="btn-fase-5" id="btn-fase-5" type="">Siguiente 5</button>
+                            <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente</button>
+                            <a hidden class="modal-trigger modal-close button-blue" name="btn-fase-4" id="btn-fase-4" href="#modal-proveedor-final" style="color:#fff; color:hover:#">
+                                Enviar registro
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-        <div class="row">
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            <p>Documento</p>
-                        </th>
-                        <th>
-                            <p>Archivo</p>
-                        </th>
-                        <th>
-                            <p>Actualizar</p>
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>
-                            <p>Acta Constitutiva</p>
-                        </td>
-                        <td><a :href="actaConstitutivaUploadURL" target="_blank">{{actaConstitutivaUploadName}}</a></td>
-                        <td>
-                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
-                            <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p>Constancia de Situacion Fiscal</p>
-                        </td>
-                        <td><a :href="csfUploadURL" target="_blank">{{csfUploadName}}</a></td>
-                        <td>
-                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
-                            <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p>Comprobante de Domicilio</p>
-                        </td>
-                        <td><a :href="comprobanteDomicilioUploadURL" target="_blank">{{comprobanteDomicilioUploadName}}</a></td>
-                        <td>
-                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
-                            <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p>Identificacion de Representante Legal</p>
-                        </td>
-                        <td><a :href="representanteLegalUploadURL" target="_blank">{{representanteLegalUploadName}}</a></td>
-                        <td>
-                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
-                            <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-        </div>
-        <div class="row">
-            <div class="col l12 right-align p-5">
-                <button @click="redireccion" class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
-
-                <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
+    <!-- Modal Registrarse como Proveedor -->
+    <div id="modal-proveedor-final" class="modal">
+        <div class="modal-content">
+            <h5>Fin del registro</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <p class="p-3 h5-modular">Te has registrado como proveedor, nuestro equipo revisara tu información y documentación y te haremos saber en cuanto puedas tener acceso a las funciuones de proveedor.</p>
+                    <br>
+                    <p style="margin-left:10px">Gracias por usar compensa pay</p>
+                    <br>
+                    <a class="modal-close button-gray" style="color:#fff; color:hover:#">Finalizar</a>
+                </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 <script>
     const {
