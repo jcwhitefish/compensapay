@@ -105,6 +105,18 @@ class Invoice_model extends CI_Model {
         return; 
     }
 
+    public function update_status_invoice($id, $status) {
+        $factura = array(
+			"status" => $status,
+            "updated_at" => date("Y-m-d")
+		);
+
+        $this->db->where('id', $id);
+		$this->db->update('invoices', $factura);
+
+        return;
+    }
+
     public function company($rfc) {
 
         $this->db->select('*');

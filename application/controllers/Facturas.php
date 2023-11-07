@@ -234,6 +234,59 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function cargaOperacionFacturaUnica(){
+		$dato = array();
+		$dato['status'] = "ok";
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$dato['facturaid'] = $selectedFacturaId;
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$this->load->helper('factura_helper');
+			$factura2 = procesar_factura_relacional($xml);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
+
+			$uuid1 = $factura1[0]->uuid;
+			$uuid2 = $factura2["uuid"];
+			$proveedor_id = $factura1[0]->id_user;
+
+			if ($uuid1 === $uuid2) {
+				//Agrega factura subida por cliente
+				$factura = procesar_xml($xml, $this->user);
+				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+
+				$operacion = array(
+					"id_invoice" => $selectedFacturaId,
+					"id_invoice_relational" => $id_insertado,
+					"id_uploaded_by" =>  $this->user,
+					"id_client" => $this->user,
+					"id_provider" => $proveedor_id,
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $factura2["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "1",
+					"created_at" => date('Y-m-d'),
+				);
+				//Crea la operacion con los datos anteriores
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+
+				//Actualiza factura del proveedor
+				$this->Invoice_model->update_status_invoice($selectedFacturaId, "1");
+				//Actualiza factura del cliente
+				$this->Invoice_model->update_status_invoice($id_insertado, "1");
+			} else{
+				$dato['status'] = "error";
+			}
+		}
+
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function cargaOperacionNota(){
 		$dato = array();
 		$dato['status'] = "ok";

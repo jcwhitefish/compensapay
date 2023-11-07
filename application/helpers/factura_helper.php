@@ -21,7 +21,7 @@ if (!function_exists('procesar_xml')) {
 			"invoice_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"uuid" => $timbreFiscalDigital->getAttribute('UUID'),
 			"invoice_date" => $comprobante->getAttribute('Fecha'),
-			"transaction_date" => "0000-00-00",
+			"transaction_date" => date('Y-m-d',strtotime(date('Y-m-d')."+ 45 days")),
 			"status" => "0",
 			"subtotal" => $comprobante->getAttribute('SubTotal'),
 			"iva" => $traslado->getAttribute('Importe'),
