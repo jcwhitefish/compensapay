@@ -97,7 +97,7 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $this->encriptar($args['trakingKeyReceived'], $op['companyClabe']),
 							];
 							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
-							var_dump($prov);
+//							var_dump($prov);
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $this->encriptar($data['data']['tracking_key'], $op['companyClabe']),
@@ -118,13 +118,13 @@ class Fintec extends MY_Loggedout{
 								'amount' => (floatval($op['exit'])*100),
 								'descriptor' => 'Pago ',
 								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $this->encriptar($data['data']['tracking_key'], $args['sourceClabe']),
+								'idempotency_key' => $this->encriptar($data['data']['tracking_key'], $data['data']['destination']['account_number']),
 							];
 							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
 							var_dump($transferCliente);
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
-								'trakingKeySend' => $this->encriptar($data['data']['tracking_key'], $args['sourceClabe']),
+								'trakingKeySend' => $this->encriptar($data['data']['tracking_key'], $data['data']['destination']['account_number']),
 								'arteriaId' => $transferCliente['id'],
 								'amount' => ($op['exit'])*100,
 								'descriptor' => 'Pago ',
@@ -138,7 +138,7 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 
-							$this->load->helper('send_mail_helper');
+//							$this->load->helper('sendmail_helper');
 
 							return $this->response->sendResponse(["response" => 'Devolucion correta a ambas partes'], $error);
 						}
@@ -154,9 +154,8 @@ class Fintec extends MY_Loggedout{
 	 * @param string $key llave que será usada en la encriptación y necesaria para desencriptar
 	 * @return string Devuelve el texto encriptado
 	 */
-	function encriptar(string $texto, string $key): string
-	{
-		return base64_encode($texto.$key);
+	function encriptar(string $texto, string $key){
+		return base64_encode($texto.'-'.$key);
 		//return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $texto, MCRYPT_MODE_CBC, md5(md5($key))));
 	}
 	function desencriptar(string $texto, string $key){
