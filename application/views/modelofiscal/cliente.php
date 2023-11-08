@@ -15,7 +15,7 @@
         </div>
         <div class="col l3">
             <a class="button-blue" href="#">
-                Descagar
+                Descargar
             </a>
         </div>
     </div>
@@ -148,7 +148,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaFacturasCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;

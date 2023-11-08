@@ -1,3 +1,76 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+
+        $('#download').on('click', function() {
+            var resume_table = document.getElementById("activeTbl");
+
+            var inputCheck = resume_table.querySelectorAll('input[id="checkTbl"]');
+            var inputChecked = resume_table.querySelectorAll('input[id="checkTbl"]:checked');
+            //console.log(inputChecked.length == 0)
+            if(inputChecked.length == 0){
+                return false;
+            }
+            var numCheck = 0;
+            var content = '';
+            var doc = new Array();
+
+            for (var i = 1, row; row = resume_table.rows[i]; i++) {
+
+              //alert(cell[i].innerText);
+                if (inputCheck[numCheck].checked){
+
+                    for (var j = 1, col; col = row.cells[j]; j++, content+= ',') {
+                        //alert(col[j].innerText);
+                        //console.log(`Txt: ${col.innerText} \tFila: ${i} \t Celda: ${j}`);
+                        content += col.innerText;
+                    }
+                    doc.push(content);
+                    content = '';
+                }
+              numCheck++;
+            }
+
+            $.ajax({
+                    url: '/Facturas/crearExcel',
+                    data: {
+                        info: doc,
+                    },
+                    dataType: 'json',
+                    method: 'post',
+                    beforeSend: function () {
+                        
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
+                        //M.toast({html: toastHTML});
+                    },
+                    complete: function () {
+                        //$('#descripcion').val('');
+                        //$('#asunto').val('');
+                        //getTickets();
+                    },
+                    error: function (){
+                        alert('Ha ocurrido un problema');
+                        location.reload();
+                    }
+                });
+                  
+        });
+
+
+    });
+    function hideForms(){
+        
+    }
+</script>
 <div class="p-5" id="app">
 
     <!-- head con el calendario -->
@@ -14,8 +87,8 @@
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a class="button-blue" href="#">
-                Descagar
+            <a id="download" class="button-blue" href="#">
+                Descargar
             </a>
         </div>
     </div>
@@ -37,10 +110,14 @@
                     <button class="button-table" :class="{ 'selected': selectedButton == 'Estados' }" @click="selectButton('Estados')">
                         Estados de cuenta
                     </button>
+                    &nbsp;
+                    <button class="button-table" :class="{ 'selected': selectedButton == 'Movimientos' }" @click="selectButton('Movimientos')">
+                        Movimientos
+                    </button>
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Facturas'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -57,7 +134,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="factura in facturas">
-                            <td class="center-align"><input type="checkbox"></td>
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
                             <td>{{factura.sender_rfc}}</td>
                             <td>{{factura.invoice_number}}</td>
                             <td>{{factura.invoice_date}}</td>
@@ -77,7 +154,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Comprobantes'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Comprobantes'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -94,7 +171,7 @@
 
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Estados'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Estados'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -111,6 +188,30 @@
                     </thead>
                     <tbody>
 
+                    </tbody>
+                </table>
+                <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped">
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Monto</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>No. de Referencia</th>
+                            <th>Descripción</th>
+                            <th>Fecha de Transacción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="moves in movements">
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td>{{moves.amount}}</td>
+                            <td>{{moves.source_rfc}}</td>
+                            <td>{{moves.receiver_rfc}}</td>
+                            <td>{{moves.trakig_key}}</td>
+                            <td>{{moves.descriptor}}</td>
+                            <td>{{moves.transaction_date}}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -163,6 +264,7 @@
         setup() {
             const selectedButton = Vue.ref('Facturas');
             const facturas = Vue.ref([]);
+            const movements = Vue.ref([]);
 
             //tabla de get facturas
             const getFacturas = () => {
@@ -180,6 +282,22 @@
                     .catch(error => console.log('error', error));
             };
 
+            const getMovements = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaMovimientos") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        //console.log(result)
+                        movements.value = result.movements;
+                        movements.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
             //Ver que tabla vamos a ver segun el boton seleccionado
             const selectButton = (buttonName) => {
                 if (selectedButton.value != buttonName) {
@@ -191,12 +309,14 @@
             Vue.onMounted(
                 () => {
                     getFacturas();
+                    getMovements();
                 }
             );
 
             //Returnar todo
             return {
                 selectedButton,
+                movements,
                 selectButton,
                 facturas,
              };

@@ -1,7 +1,7 @@
 <?php
 //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
-//var_dump($this->session->userdata('vista'));
+//var_dump($this->session->userdata('datosEmpresa'));
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"

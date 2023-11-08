@@ -68,6 +68,16 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function tablaMovimientos(){
+		$dato = array();
+		$dato['movements'] = $this->Invoice_model->get_provider_movements($this->user);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function tablaOperaciones(){
 		$dato = array();
 		$dato['operaciones'] = $this->Operation_model->get_my_operation($this->user);
@@ -467,6 +477,16 @@ class Facturas extends MY_Loggedin
 
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
+	}
+
+	public function crearExcel()
+	{
+		//$this->Invoice_model->get_provider_invoices($this->user)
+
+		$args = $this->input->post('info');
+
+		$res = $this->Invoice_model->crearExcel($args);
+		echo json_encode($this->input->post('info'));
 	}
 
 }
