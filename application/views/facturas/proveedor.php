@@ -68,9 +68,9 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion">Crear Operacion</a>
+                                <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaProveedor(factura)">Crear Operacion</a>
                             </td>
-                            <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.short_name}}</td>
                             <td><a href="<?= $factura; ?>1" target="_blank">{{factura.invoice_number}}</a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
@@ -291,7 +291,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-                                <label for="operationDisabled">Tu Nota de Credito XML</label>
+                                <label for="operationDisabled">Tu Nota de Crédito XML</label>
                             </div>
                             <div class="col l4 left-align p-5">
                                 <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
@@ -358,7 +358,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
     </div>
 
 
-    <!-- Desde cliente crera operacion especifica a factura -->
+    <!-- Desde cliente creara operacion especifica a factura -->
     <div id="modal-operacion-unica" class="modal">
         <div class="modal-content">
             <h5>Crear Operación</h5>
@@ -369,9 +369,11 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         <div class="row">
                             <div class="col l3 input-border">
                                 <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
-                                <label for="operationDisabledUnique">Tu factura XML</label>
+                                <label for="operationDisabledUnique">Tu Nota de Crédito XML</label>
                             </div>
-                            <div class="col l4 left-align p-5">
+                            <div class="col l0 left-align p-5">
+                                <label for="uniqueOperationUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input @change="checkFormatOperationUnique" name="uniqueOperationUpload" ref="uniqueOperationUpload" id="uniqueOperationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
@@ -381,7 +383,6 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th>Crear Operación</th>
                                             <th>Proveedor</th>
                                             <th>Factura</th>
                                             <th>Fecha Factura</th>
@@ -394,7 +395,23 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="facturaClientUnique in facturasClientUnique">
+                                        <tr v-for="factura in facturasUnique">
+                                            <td>{{factura.short_name }} {{ factura.sender_rfc}}</td>
+                                            <td>{{factura.invoice_number}}</td>
+                                            <td>{{factura.invoice_date}}</td>
+                                            <td>{{factura.created_at}}</td>
+                                            <td>
+                                                <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
+                                                <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
+                                            </td>
+                                            <td>
+                                                <p v-if="factura.status == '0' " >Por Aprobar</p>
+                                                <p v-if="factura.status == '1' " >Pagado</p>
+                                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                            </td>
+                                            <td>${{factura.subtotal}}</td>
+                                            <td>${{factura.iva}}</td>
+                                            <td>${{factura.total}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -403,7 +420,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
+                                <button class="button-blue modal-close" name="action" type="reset" @click="uploadOperationUnica">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -457,7 +474,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="XYZ832HS" disabled />
-                                    <label for="invoiceDisabled">Nota de Credito</label>
+                                    <label for="invoiceDisabled">Nota de Crédito</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -590,6 +607,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
         setup() {
             const invoiceUploadName = Vue.ref('');
             const operationUploadName = Vue.ref('');
+            const operationUploadNameUnique = Vue.ref('');
             const providerUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
@@ -597,8 +615,10 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             const operaciones = Vue.ref([]);
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
+            const facturasUnique = Vue.ref([]);
             const autorizar = Vue.ref(0);
             const operationsView = Vue.ref([]);
+            const providerUploadNameUnique = Vue.ref('');
 
             //darle aceptar a una factura (el feo)
             const actualizacion = () => {
@@ -691,6 +711,61 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             }
             };
 
+            //Subir una operacion unica
+            const uploadOperationUnica = async () => {
+                if (selectedButton.value == 'Operaciones') {
+                    const fileInput = document.getElementById('uniqueOperationUpload');
+                    let selectedValue = facturasUnique.value[0]['id'];
+
+                    const formData = new FormData();
+                    formData.append('operationUpload', fileInput.files[0]);
+                    formData.append('grupoRadio', selectedValue);
+
+                    var requestOptions = {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    };
+
+                    fetch("<?= base_url("facturas/cargaOperacionNotaUnica") ?>", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                            if(result.status == 'ok'){
+                                getOperations();
+                                M.toast({ html: 'Se ha subido la operacion' });
+                            }else{
+                                M.toast({ html: 'Error con la operacion, verifique su nota de crédito' });
+                            }
+
+                        })
+                        .catch(error => console.log('error', error));
+
+                } else {
+                    alert('Ingresa una nota de crédito')
+                }
+            };
+
+            //tabla de get facturas por cliente
+            const getFacturasByClientUnica = async () => {
+                const fileInput = document.getElementById('uniqueOperationUpload');
+                const formData = new FormData();
+                formData.append('operationUpload', fileInput.files[0]);
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+                fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        providerUploadNameUnique.value = result.emisor;
+                        //facturasClient.value = result.facturasClient;
+                        //facturasClient.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
             //tabla de get operaciones
             const getOperations = () => {
                 var requestOptions = {
@@ -757,6 +832,17 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 }
             };
 
+            const checkFormatOperationUnique = (event) => {
+                const fileInput = event.target;
+                if (fileInput.files.length > 0) {
+                    operationUploadNameUnique.value = fileInput.files[0].name;
+                    getFacturasByClientUnica();
+                } else {
+                    operationUploadNameUnique.value = '';
+                    providerUploadNameUnique.value = '';
+                }
+            };
+
             //cambiar de nombre el input para subir una factura
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -777,6 +863,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             //Llenar vista de operación seleccionada
             const vistaOperacion = (operacion) => {
                 operationsView.value[0] = operacion;
+            }
+
+             //Llenar tabla de operación unica con factura seleccionada
+             const operacionUnicaProveedor = (factura) => {
+                facturasUnique.value[0] = factura;
+                if (selectedButton.value != 'Operaciones') {
+                    selectedButton.value = 'Operaciones';
+                }
             }
 
             //mandar a llamar las funciones
@@ -807,7 +901,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 autorizar,
                 actualizacion,
                 vistaOperacion,
-                operationsView
+                operationsView,
+                operacionUnicaProveedor,
+                facturasUnique,
+                checkFormatOperationUnique,
+                operationUploadNameUnique,
+                getFacturasByClientUnica,
+                providerUploadNameUnique,
+                uploadOperationUnica
             };
         }
     });

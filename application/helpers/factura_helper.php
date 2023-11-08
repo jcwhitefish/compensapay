@@ -21,7 +21,7 @@ if (!function_exists('procesar_xml')) {
 			"invoice_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"uuid" => $timbreFiscalDigital->getAttribute('UUID'),
 			"invoice_date" => $comprobante->getAttribute('Fecha'),
-			"transaction_date" => date('Y-m-d',strtotime(date('Y-m-d')."+ 45 days")),
+			"transaction_date" => date('Y-m-d',strtotime($comprobante->getAttribute('Fecha')."+ 45 days")),
 			"status" => "0",
 			"subtotal" => $comprobante->getAttribute('SubTotal'),
 			"iva" => $traslado->getAttribute('Importe'),
@@ -69,8 +69,8 @@ if (!function_exists('procesar_nota_relacional')) {
 			"note_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 			"total" => $comprobante->getAttribute('Total'),
 			"xml_document" => $xml->saveXML(),
-			"created_at" => $comprobante->getAttribute('Fecha'),
-			"uuid" => 	$uuidRelacionado = $cfdiRelacionados->getElementsByTagName('CfdiRelacionado')->item(0)->getAttribute('UUID'),			
+			"created_at" => date('Y-m-d', strtotime($comprobante->getAttribute('Fecha'))),
+			"uuid" => 	$uuidRelacionado = $cfdiRelacionados->getElementsByTagName('CfdiRelacionado')->item(0)->getAttribute('UUID'),
 		);
 
         return $nota;
