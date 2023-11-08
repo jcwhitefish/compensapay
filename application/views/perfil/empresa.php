@@ -24,7 +24,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                  bandera = true;
                 }
             });
-            
+
             if (bandera){
                msg = "Debe llenar todos los campos para continuar."
             }
@@ -493,19 +493,19 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="nationality">Nacionalidad *</label>
-                                        <input class="form-1" type="text" name="nationality" id="nationality" value="Mexicana">
+                                        <input class="form-1" type="text" name="nationality" id="nationality" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="folio">Número de Folio en el Registro Público de Comercio o su equivalente *</label>
-                                        <input class="form-1" type="text" name="folio" id="folio" value="1457894">
+                                        <input class="form-1" type="text" name="folio" id="folio" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="efirma">Número de certificado de firma electrónica (e firma) o su equivalente *</label>
-                                        <input class="form-1" type="text" name="efirma" id="efirma" value="1457894">
+                                        <input class="form-1" type="text" name="efirma" id="efirma" value="">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -517,7 +517,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="web">Sitio web *</label>
-                                        <input class="form-1" type="text" name="web" id="web" value="http://www.drakoz.com">
+                                        <input class="form-1" type="text" name="web" id="web" value="">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -537,7 +537,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div  class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="dateConst">Fecha de constituci&oacute;n *</label>
-                                        <input style="height: 4rem !important;"class="form-1" value="2023-11-06" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
+                                        <input style="height: 4rem !important;"class="form-1" value="" max="<?= date("Y-m-d") ?>" type="date" name="dateConst" id="dateConst">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -555,7 +555,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="emailForm">"Correo Electrónico" *</label>
-                                        <input class="form-1" type="text" name="emailForm" id="emailForm" value="drakoz@hotmail.com">
+                                        <input class="form-1" type="text" name="emailForm" id="emailForm" value="">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -574,7 +574,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="socialobj">Objeto social *</label>
-                                        <textarea class="form-2" name="socialobj" id="socialobj" rows="10" cols="50" value="Lorem ipsum"></textarea>
+                                        <textarea class="form-2" name="socialobj" id="socialobj" rows="10" cols="50" value=""></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -582,7 +582,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="descOperation">Describa cómo utilizara la cuenta de fondos de pago electónico para su operación *</label>
-                                        <textarea class="form-2" name="descOperation" id="descOperation" rows="10" value="Lorem ipsum"></textarea>
+                                        <textarea class="form-2" name="descOperation" id="descOperation" rows="10" value=""></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -593,7 +593,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="transactMonth">Número estimado de transacciones por mes *</label>
-                                        <input class="form-2" type="text" name="transactMonth" id="transactMonth" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="transactMonth" id="transactMonth" value="">
                                     </div>
                                 </div>
                             </div>
@@ -601,7 +601,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="amount">Monto promedio de transacción (MXN o USD) *</label>
-                                        <input class="form-2" type="text" name="amount" id="amount" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="amount" id="amount" value="">
                                     </div>
                                 </div>
                             </div>
@@ -613,25 +613,25 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="charge">Cargo *</label>
-                                        <input class="form-2" type="text" name="charge" id="charge" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="charge" id="charge" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="curp">CURP *</label>
-                                        <input class="form-2" type="text" name="curp" id="curp" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="curp" id="curp" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="idNumber">Tipo y número de identificación oficial *</label>
-                                        <input class="form-2" type="text" name="idNumber" id="idNumber" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="idNumber" id="idNumber" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="emailForm2">Correo electrónico *</label>
-                                        <input class="form-2" type="text" name="emailForm2" id="emailForm2" value="drakoz@hormail.com">
+                                        <input class="form-2" type="text" name="emailForm2" id="emailForm2" value="">
                                     </div>
                                 </div>
                             </div>
@@ -639,25 +639,25 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="nameForm2">Nombre completo *</label>
-                                        <input class="form-2" type="text" name="nameForm2" id="nameForm2" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="nameForm2" id="nameForm2" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="rfcForm2">RFC *</label>
-                                        <input class="form-2" type="text" name="rfcForm2" id="rfcForm2" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="rfcForm2" id="rfcForm2" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="domForm2">Domicilio *</label>
-                                        <input class="form-2" type="text" name="domForm2" id="domForm2" value="Lorem ipsum">
+                                        <input class="form-2" type="text" name="domForm2" id="domForm2" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="phoneForm2">Numero de teléfono *</label>
-                                        <input class="form-2" type="text" name="phoneForm2" id="phoneForm2" value="7754678469">
+                                        <input class="form-2" type="text" name="phoneForm2" id="phoneForm2" value="">
                                     </div>
                                 </div>
                             </div>
