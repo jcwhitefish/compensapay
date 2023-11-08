@@ -287,7 +287,7 @@ class Registro extends MY_Loggedin
         $phoneForm= $this->input->post('phoneForm');
        	$web= $this->input->post('web');
         $bank= $this->input->post('bank');
-        $nameComercial= $this->input->post('namecomercial');
+        $nameComercial= $this->input->post('nameComercial');
         $dateConst= $this->input->post('dateConst');
 
         $rfc= $this->input->post('rfc');
@@ -322,6 +322,7 @@ class Registro extends MY_Loggedin
         $obligations= $this->input->post('obligations');
 
 		$companie = $this->session->userdata('datosEmpresa')['id'];
+		$companieName = $this->session->userdata('datosEmpresa')['legal_name'];
 
 		$args = [
 			'bussinesName' => $bussinesName,
@@ -333,6 +334,7 @@ class Registro extends MY_Loggedin
 			'bank' => $bank,
 			'nameComercial' => $nameComercial,
 			'dateConst' => strtotime($dateConst),
+			'dateConstPdf' => $dateConst,
 
 			'rfc' => $rfc,
 			'dom' => $dom,
@@ -357,6 +359,7 @@ class Registro extends MY_Loggedin
 			'supervisor' => $supervisor,
 
 			'dateAward' => strtotime($dateAward),
+			'dateAwardPdf' => $dateAward,
 			'typeLicense' => $typeLicense,
 			'audited' => $audited,
 			'anticorruption' => $anticorruption,
@@ -365,9 +368,11 @@ class Registro extends MY_Loggedin
 			'servTrib' => $servTrib,
 			'obligations' => $obligations,
 			'companie' => $companie,
+			'companieName' => $companieName,
 		];
 		$res = $this->prov->registrarProveedor($args);
-		echo json_encode('OK');
+		$pdf = $this->prov->createPDF($args);
+		echo json_encode($args);
 	}
 }
 
