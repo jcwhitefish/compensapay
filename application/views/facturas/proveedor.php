@@ -19,17 +19,17 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
+            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'" @click="clearData">
                 Añadir Facturas
             </a>
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
+            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'" @click="clearData">
                 Crear Operaciones
             </a>
         </div>
     </div>
 
 
-    <!-- Las tablas principales que se muestran -->
+    <!-- Las tablas principales que se muestran Facturas-->
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
@@ -53,8 +53,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     <thead>
                         <tr>
                             <th>Crear Operación</th>
-                            <th>Proveedor</th>
-                            <th>Factura</th>
+                            <th>Cliente</th>
+                            <th>UUID Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Fecha Transacción</th>
@@ -71,7 +71,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaProveedor(factura)">Crear Operacion</a>
                             </td>
                             <td>{{factura.short_name}}</td>
-                            <td><a href="<?= $factura; ?>1" target="_blank">{{factura.invoice_number}}</a></td>
+                            <td><a href="<?= $factura; ?>1" target="_blank"><p class="uuid-text">{{factura.uuid}}</p></a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -79,9 +79,9 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
                             </td>
                             <td>
-                                <p v-if="factura.status == '0' " >Por Aprobar</p>
-                                <p v-if="factura.status == '1' " >Pagado</p>
-                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                <p v-if="factura.status == '0' " >Libre</p>
+                                <p v-if="factura.status == '1' " >En Operación</p>
+                                <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>${{factura.subtotal}}</td>
                             <td>${{factura.iva}}</td>
@@ -89,13 +89,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         </tr>
                     </tbody>
                 </table>
+                <!-- TABLA DE OPERACIONES -->
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
                             <th>Aprobación<br>Operación</th>
-                            <th>Estatus <br>Factura</th>
+                            <th>Estatus <br>Operación</th>
                             <th>ID Operación</th>
-                            <th>Proveedor</th>
+                            <th>Cliente</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>UUID<br>Mi Factura</th>
@@ -116,9 +117,11 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td class="tabla-celda center-align">
-                                <p v-if="operacion.status == '0'">pendiente</p>
-                                <p v-if="operacion.status == '1'">aprobada</p>
-                                <p v-if="operacion.status == '2'">rechazada</p>
+                                <p v-if="operacion.status == '0' " >Por pagar</p>
+                                <p v-if="operacion.status == '1' " >Pagada</p>
+                                <p v-if="operacion.status == '2' " >Rechazada</p>
+                                <p v-if="operacion.status == '3' " >Realizada</p>
+                                <p v-if="operacion.status == '4' " >Vencida</p>
                             </td>
                             <td>
                                 <a class="modal-trigger " href="#modal-vista-operacion" @click="vistaOperacion(operacion)">{{ operacion.operation_number }}</a>
@@ -127,8 +130,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
                                 <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
                             </td>
-                            <td>{{ operacion.payment_date }}</td>
-                            <td>{{ operacion.created_at}}</td>
+                            <td class="uuid-text">{{ operacion.payment_date }}</td>
+                            <td class="uuid-text">{{ operacion.created_at}}</td>
                             <td>
                                 <p class="uuid-text">{{ operacion.uuid }}</p>
                             </td>
@@ -151,7 +154,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
                                 <p v-if="operacion.money_nota == null">N.A.</p>
                             </td>
-                            <td>{{ operacion.transaction_date }}</td>
+                            <td class="uuid-text">{{ operacion.transaction_date }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -299,19 +302,19 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
-                                <label for="providerDisabled">Proveedor</label>
+                                <label for="providerDisabled">Cliente</label>
                             </div>
                             <div>
                                 <table class="striped">
                                     <thead>
                                         <tr>
                                             <th>Crear Operación</th>
-                                            <th>Proveedor</th>
-                                            <th>Factura</th>
+                                            <th>Cliente</th>
+                                            <th>RFC Cliente</th>
+                                            <th>UUID Factura</th>
                                             <th>Fecha Factura</th>
                                             <th>Fecha Alta</th>
                                             <th>Fecha Transacción</th>
-                                            <th>Estatus</th>
                                             <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
@@ -322,18 +325,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
+                                            <td>{{facturaClient.short_name}}</td>
                                             <td>{{facturaClient.receiver_rfc}}</td>
-                                            <td>{{facturaClient.invoice_number}}</td>
-                                            <td>{{facturaClient.invoice_date}}</td>
-                                            <td>{{facturaClient.created_at}}</td>
+                                            <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
+                                            <td class="uuid-text">{{facturaClient.invoice_date}}</td>
+                                            <td class="uuid-text">{{facturaClient.created_at}}</td>
                                             <td>
                                                 <p v-if="facturaClient.transaction_date == '0000-00-00' " >Pendiente</p>
-                                                <p v-if="facturaClient.transaction_date != '0000-00-00' " >{{facturaClient.transaction_date}}</p>
-                                            </td>
-                                            <td>
-                                                <p v-if="facturaClient.status == '0' " >Pendiente</p>
-                                                <p v-if="facturaClient.status == '1' " >Aprobada</p>
-                                                <p v-if="facturaClient.status == '2' " >Recahazada</p>
+                                                <p class="uuid-text" v-if="facturaClient.transaction_date != '0000-00-00' " >{{facturaClient.transaction_date}}</p>
                                             </td>
                                             <td>${{facturaClient.subtotal}}</td>
                                             <td>${{facturaClient.iva}}</td>
@@ -377,18 +376,18 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
-                                <label for="providerDisabledUnique">Proveedor</label>
+                                <label for="providerDisabledUnique">Cliente</label>
                             </div>
                             <div>
                                 <table class="striped">
                                     <thead>
                                         <tr>
-                                            <th>Proveedor</th>
-                                            <th>Factura</th>
+                                            <th>Cliente</th>
+                                            <th>RFC Cliente</th>
+                                            <th>UUID Factura</th>
                                             <th>Fecha Factura</th>
                                             <th>Fecha Alta</th>
                                             <th>Fecha Transacción</th>
-                                            <th>Estatus</th>
                                             <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
@@ -396,18 +395,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                     </thead>
                                     <tbody>
                                         <tr v-for="factura in facturasUnique">
-                                            <td>{{factura.short_name }} {{ factura.sender_rfc}}</td>
-                                            <td>{{factura.invoice_number}}</td>
-                                            <td>{{factura.invoice_date}}</td>
-                                            <td>{{factura.created_at}}</td>
+                                            <td>{{factura.short_name }}</td>
+                                            <td>{{factura.receiver_rfc }}</td>
+                                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
+                                            <td class="uuid-text">{{factura.invoice_date}}</td>
+                                            <td class="uuid-text">{{factura.created_at}}</td>
                                             <td>
                                                 <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
-                                                <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
-                                            </td>
-                                            <td>
-                                                <p v-if="factura.status == '0' " >Por Aprobar</p>
-                                                <p v-if="factura.status == '1' " >Pagado</p>
-                                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                                <p class="uuid-text" v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
                                             </td>
                                             <td>${{factura.subtotal}}</td>
                                             <td>${{factura.iva}}</td>
@@ -871,6 +866,23 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 if (selectedButton.value != 'Operaciones') {
                     selectedButton.value = 'Operaciones';
                 }
+                clearData();
+            }
+
+            //Limpia datos de los modales
+            const clearData = () => {
+                //Datos modal operacion
+                providerUploadName.value = '';
+                operationUploadName.value = '';
+                facturasClient.value = [];
+
+                //Datos modal factura
+                invoiceUploadName.value = '';
+                checkboxChecked.value = false;
+
+                //Datos modal operación unica
+                providerUploadNameUnique.value = '';
+                operationUploadNameUnique.value = '';
             }
 
             //mandar a llamar las funciones
@@ -908,7 +920,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 operationUploadNameUnique,
                 getFacturasByClientUnica,
                 providerUploadNameUnique,
-                uploadOperationUnica
+                uploadOperationUnica,
+                clearData
             };
         }
     });

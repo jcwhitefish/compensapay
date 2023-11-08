@@ -14,17 +14,17 @@
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'">
+            <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'" @click="clearData">
                 Añadir Facturas
             </a>
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'">
+            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'" @click="clearData">
                 Crear Operaciones
             </a>
         </div>
     </div>
 
 
-    <!-- Las tablas principales que se muestran -->
+    <!-- Las tablas principales que se muestran FACTURAS -->
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
@@ -49,7 +49,7 @@
                         <tr>
                             <th>Crear Operación</th>
                             <th>Proveedor</th>
-                            <th>Factura</th>
+                            <th>UUID Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Fecha Transacción</th>
@@ -66,17 +66,17 @@
                                 <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
                             <td>{{factura.short_name}}</td>
-                            <td>{{factura.invoice_number}}</td>
-                            <td>{{factura.invoice_date}}</td>
-                            <td>{{factura.created_at}}</td>
+                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
+                            <td class="uuid-text">{{factura.invoice_date}}</td>
+                            <td class="uuid-text">{{factura.created_at}}</td>
                             <td>
                                 <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
-                                <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
+                                <p class="uuid-text" v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
                             </td>
                             <td>
-                                <p v-if="factura.status == '0' " >Por Aprobar</p>
-                                <p v-if="factura.status == '1' " >Pagado</p>
-                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                <p v-if="factura.status == '0' " >Libre</p>
+                                <p v-if="factura.status == '1' " >En Operación</p>
+                                <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>${{factura.subtotal}}</td>
                             <td>${{factura.iva}}</td>
@@ -88,7 +88,7 @@
                 <thead>
                         <tr>
                             <th>Aprobación<br>Operación</th>
-                            <th>Estatus <br>Factura</th>
+                            <th>Estatus <br>Operación</th>
                             <th>ID Operación</th>
                             <th>Proveedor</th>
                             <th>Fecha Factura</th>
@@ -111,9 +111,11 @@
                                 <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td class="tabla-celda center-align">
-                                <p v-if="operacion.status == '0'">pendiente</p>
-                                <p v-if="operacion.status == '1'">aprobada</p>
-                                <p v-if="operacion.status == '2'">rechazada</p>
+                                <p v-if="operacion.status == '0' " >Por pagar</p>
+                                <p v-if="operacion.status == '1' " >Pagada</p>
+                                <p v-if="operacion.status == '2' " >Rechazada</p>
+                                <p v-if="operacion.status == '3' " >Realizada</p>
+                                <p v-if="operacion.status == '4' " >Vencida</p>
                             </td>
                             <td>
                                 <a class="modal-trigger " href="#modal-vista-operacion" @click="vistaOperacion(operacion)">{{ operacion.operation_number }}</a>
@@ -122,8 +124,8 @@
                                 <p v-if="operacion.short_name != null && operacion.short_name != ''">{{ operacion.short_name }}</p>
                                 <p v-if="operacion.short_name == null || operacion.short_name == ''">{{ operacion.legal_name }}</p>
                             </td>
-                            <td>{{ operacion.payment_date }}</td>
-                            <td>{{ operacion.created_at}}</td>
+                            <td class="uuid-text">{{ operacion.payment_date }}</td>
+                            <td class="uuid-text">{{ operacion.created_at}}</td>
                             <td>
                                 <p class="uuid-text">{{ operacion.uuid }}</p>
                             </td>
@@ -146,7 +148,7 @@
                                 <p v-if="operacion.money_nota != null">${{ operacion.money_nota }}</p>
                                 <p v-if="operacion.money_nota == null">N.A.</p>
                             </td>
-                            <td>{{ operacion.transaction_date }}</td>
+                            <td class="uuid-text">{{ operacion.transaction_date }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -226,12 +228,12 @@
                                     <thead>
                                         <tr>
                                             <th>Crear Operación</th>
-                                            <th>Cliente</th>
-                                            <th>Factura</th>
+                                            <th>Proveedor</th>
+                                            <th>RFC Proveedor</th>
+                                            <th>UUID Factura</th>
                                             <th>Fecha Factura</th>
                                             <th>Fecha Alta</th>
                                             <th>Fecha Transacción</th>
-                                            <th>Estatus</th>
                                             <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
@@ -242,18 +244,14 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
+                                            <td>{{facturaClient.short_name}}</td>
                                             <td>{{facturaClient.receiver_rfc}}</td>
-                                            <td>{{facturaClient.invoice_number}}</td>
+                                            <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
                                             <td>
                                                 <p v-if="facturaClient.transaction_date == '0000-00-00' " >Pendiente</p>
                                                 <p v-if="facturaClient.transaction_date != '0000-00-00' " >{{facturaClient.transaction_date}}</p>
-                                            </td>
-                                            <td>
-                                                <p v-if="facturaClient.status == '0' " >Pendiente</p>
-                                                <p v-if="facturaClient.status == '1' " >Aprobada</p>
-                                                <p v-if="facturaClient.status == '2' " >Recahazada</p>
                                             </td>
                                             <td>${{facturaClient.subtotal}}</td>
                                             <td>${{facturaClient.iva}}</td>
@@ -304,11 +302,11 @@
                                     <thead>
                                         <tr>
                                             <th>Proveedor</th>
-                                            <th>Factura</th>
+                                            <th>RFC Proveedor</th>
+                                            <th>UUID Factura</th>
                                             <th>Fecha Factura</th>
                                             <th>Fecha Alta</th>
                                             <th>Fecha Transacción</th>
-                                            <th>Estatus</th>
                                             <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
@@ -317,17 +315,13 @@
                                     <tbody>
                                         <tr v-for="factura in facturasClientUnique">
                                             <td>{{factura.short_name}}</td>
-                                            <td>{{factura.invoice_number}}</td>
+                                            <td>{{factura.receiver_rfc}}</td>
+                                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
                                             <td>{{factura.invoice_date}}</td>
                                             <td>{{factura.created_at}}</td>
                                             <td>
                                                 <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
                                                 <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
-                                            </td>
-                                            <td>
-                                                <p v-if="factura.status == '0' " >Por Aprobar</p>
-                                                <p v-if="factura.status == '1' " >Pagado</p>
-                                                <p v-if="factura.status == '2' " >Recahazada</p>
                                             </td>
                                             <td>${{factura.subtotal}}</td>
                                             <td>${{factura.iva}}</td>
@@ -591,7 +585,7 @@
 
     /* Puntos suspensivos a fila donde se muestrael UUID */
     .uuid-text{
-        width: 130px;
+        width: 120px;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -916,6 +910,24 @@
                 if (selectedButton.value != 'Operaciones') {
                     selectedButton.value = 'Operaciones';
                 }
+                providerUploadNameUnique.value = '';
+                operationUploadNameUnique.value = '';
+            }
+
+            //Limpia datos de los modales
+            const clearData = () => {
+                //Datos modal operacion
+                providerUploadName.value = '';
+                operationUploadName.value = '';
+                facturasClient.value = [];
+
+                //Datos modal factura
+                invoiceUploadName.value = '';
+                checkboxChecked.value = false;
+
+                //Datos modal operación unica
+                providerUploadNameUnique.value = '';
+                operationUploadNameUnique.value = '';
             }
 
             //Llenar vista de operación seleccionada
@@ -962,7 +974,8 @@
                 getFacturasByClientUnica,
                 uploadOperationUnica,
                 vistaOperacion,
-                operationsView
+                operationsView,
+                clearData
             };
         }
     });
