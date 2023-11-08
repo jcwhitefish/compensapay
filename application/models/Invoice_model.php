@@ -69,6 +69,25 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
+    public function crearExcel($user) {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id_company', $user);
+        $query = $this->db->get();
+        $company = ($query->result())[0]->id_company;
+        $this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('id', $company);
+        $query = $this->db->get();
+        $rfc = $query->result()[0]->rfc;
+        $this->db->select('*');
+        $this->db->from('balance');
+        $this->db->where('source_rfc', $rfc);
+        $this->db->or_where('receiver_rfc', $rfc);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_invoices_by_id($id) {
         $this->db->select('*');
 		$this->db->from('invoices');
