@@ -316,7 +316,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="factura in facturasClientUnique">
-                                            <td>{{factura.sender_rfc}}</td>
+                                            <td>{{factura.short_name}}</td>
                                             <td>{{factura.invoice_number}}</td>
                                             <td>{{factura.invoice_date}}</td>
                                             <td>{{factura.created_at}}</td>
@@ -816,7 +816,7 @@
                     .then(result => {
                         providerUploadNameUnique.value = result.emisor;
                         //facturasClient.value = result.facturasClient;
-                        //acturasClient.value.reverse();
+                        //facturasClient.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };

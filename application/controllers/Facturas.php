@@ -286,6 +286,81 @@ class Facturas extends MY_Loggedin
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
+	
+	public function cargaOperacionNotaUnica(){
+		$dato = array();
+		$dato['status'] = "ok";
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$selectedFacturaId = $_POST['grupoRadio'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$dato['facturaid'] = $selectedFacturaId;
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			$this->load->helper('factura_helper');
+			$nota = procesar_nota_relacional($xml, $selectedFacturaId);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
+
+			$uuid1 = $factura1[0]->uuid;
+			$uuid2 = $nota["uuid"];
+
+
+			$client =  $this->Invoice_model->company($factura1[0]->receiver_rfc);
+			$provider =  $this->Invoice_model->company($factura1[0]->sender_rfc);
+
+			if ($uuid1 === $uuid2) {
+				unset($nota["uuid"]);
+				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
+				$dato['debitNote'] = $idDebitNote;
+
+				$operacion = array(
+					"id_invoice" => $dato['facturaid'],
+					"id_debit_note" => $idDebitNote,
+					"id_uploaded_by" =>  "$this->user",
+					"id_client" => $client[0]->id,
+					"id_provider" =>  $provider[0]->id,
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $nota["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "0",
+					"commentary" => "ok",
+					"created_at" => date('Y-m-d'),
+				);
+
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+
+			} else if ($uuid1 == null) {
+				unset($nota["uuid"]);
+				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
+				$dato['debitNote'] = $idDebitNote;
+
+				$operacion = array(
+					"id_debit_note" => $idDebitNote,
+					"id_uploaded_by" =>  "$this->user",
+					"id_client" => $client[0]->id,
+					"id_provider" =>  $provider[0]->id,
+					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"payment_date" =>  $factura1[0]->invoice_date,
+					"entry_money" => $nota["total"],
+					"exit_money" => $factura1[0]->total,
+					"status" => "0",
+					"commentary" => "ok",
+					"created_at" => date('Y-m-d'),
+				);
+
+				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+
+			}
+			else{
+				$dato['status'] = "error";
+			}
+		}
+
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
 
 	public function cargaOperacionNota(){
 		$dato = array();
@@ -365,7 +440,6 @@ class Facturas extends MY_Loggedin
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
-
 
 	public function cargaOperacionPorId(){
 
