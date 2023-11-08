@@ -78,8 +78,9 @@ class Invoice_model extends CI_Model {
     }
 
     public function get_invoices_by_client($emisor) {
-        $this->db->select('*');
+        $this->db->select('invoices.*, companies.short_name');
 		$this->db->from('invoices');
+        $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
 		$this->db->where('sender_rfc', $emisor);
         $query = $this->db->get();
         return $query->result();
