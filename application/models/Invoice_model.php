@@ -48,12 +48,12 @@ class Invoice_model extends CI_Model {
         $this->db->join('invoices AS i', 'i.receiver_rfc = c.rfc');
         $this->db->join('companies AS c2', 'c2.rfc = i.sender_rfc');
 		$this->db->where('c.id', $user);
-		$this->db->where('i.status', 0);
+		$this->db->where('i.status1', 0);
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function get_provider_movements($user) {
+    public function get_movements($user) {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->where('id_company', $user);
@@ -64,7 +64,7 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('balance.*, invoices.uuid, t1.legal_name as "client", t2.legal_name as "provider", t3.bnk_nombre as "bank_source", t4.bnk_nombre as "bank_receiver"');
+        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t1.legal_name as "client", t2.legal_name as "provider", t3.bnk_nombre as "bank_source", t4.bnk_nombre as "bank_receiver", CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl"');
         $this->db->from('balance as balance');
         $this->db->join('operations', 'balance.traking_key_received = operations.operation_number', 'inner');
         $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'inner');
@@ -157,11 +157,22 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
-    public function get_invoices_by_client($emisor) {
+    public function get_invoices_by_client($user) {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id_company', $user);
+        $query = $this->db->get();
+        $company = ($query->result())[0]->id_company;
+        $this->db->select('*');
+        $this->db->from('companies');
+        $this->db->where('id', $company);
+        $query = $this->db->get();
+        $rfc = $query->result()[0]->rfc;
         $this->db->select('invoices.*, companies.short_name');
 		$this->db->from('invoices');
         $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
-		$this->db->where('sender_rfc', $emisor);
+		$this->db->where('sender_rfc', $rfc);
+        $this->db->where('invoices.status', 0);
         $query = $this->db->get();
         return $query->result();
     }

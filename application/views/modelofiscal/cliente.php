@@ -1,3 +1,6 @@
+<?php
+    $factura = base_url('assets/factura/factura.php?idfactura=');
+?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
     crossorigin="anonymous"></script>
@@ -124,7 +127,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table id="activeTbl" v-if="selectedButton === 'Facturas'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Facturas'" class="visible-table striped responsive-table">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -178,7 +181,7 @@
 
                     </tbody>
                 </table>
-                <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped responsive-table">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -192,8 +195,8 @@
                             <th>RFC Origen</th>
                             <th>Razón social destino</th>
                             <th>RFC Destino</th>
-                            <th>Clabe origen</th>
-                            <th>Clabe destino</th>
+                            <th>CLABE origen</th>
+                            <th>CLABE destino</th>
                             <th>Fecha de transacción</th>
                             <th>CFDI correspondiente</th>
                             <th>Fecha de Transacción</th>
@@ -202,7 +205,7 @@
                     <tbody>
                         <tr v-for="moves in movements">
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
-                            <td>{{moves.amount}}</td>
+                            <td>{{moves.ammountf}}</td>
                             <td>{{moves.traking_key_received}}</td>
                             <td></td>
                             <td>{{moves.descriptor}}</td>
@@ -215,7 +218,7 @@
                             <td>{{moves.source_clabe}}</td>
                             <td>{{moves.receiver_clabe}}</td>
                             <td>{{moves.transaction_date}}</td>
-                            <td>{{moves.uuid}}</td>
+                            <td><a v-bind:href='moves.idurl' target="_blank"><p class="uuid-text">{{moves.uuid}}</p></a></td>
                             <td>{{moves.transaction_date}}</td>
                         </tr>
                     </tbody>
@@ -279,7 +282,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaFacturasCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;
