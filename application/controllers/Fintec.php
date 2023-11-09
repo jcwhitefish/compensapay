@@ -2,7 +2,7 @@
 
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message){
-		$logDir = '/var/www/logs/';
+		$logDir = 'C:\web\logs';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
@@ -45,6 +45,7 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $data['data']['tracking_key'],
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+//							$this->createLog('CreateTransfer', json_encode($back));
 							if ($back){
 								$argsR = [
 									'trakingKey' => $back['idempotency_key'],
@@ -72,6 +73,7 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $args['trakingKey'].'02',
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+//							$this->createLog('CreateTransfer', json_encode($back));
 							if ($back){
 								$argsR = [
 									'trakingKey' => $back['idempotency_key'],
@@ -100,8 +102,7 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $this->encriptar($args['trakingKeyReceived'], $op['companyClabe']),
 							];
 							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
-
-
+//							$this->createLog('CreateTransfer', json_encode($prov));
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $provedor['idempotency_key'],
@@ -116,8 +117,6 @@ class Fintec extends MY_Loggedout{
 								'receiverClabe' => $op['companyClabe'],
 								'transactionDate' => $prov['created_at'],
 							];
-
-
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
@@ -127,6 +126,7 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $this->encriptar($data['data']['tracking_key'], $data['data']['destination']['account_number']),
 							];
 							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
+//							$this->createLog('CreateTransfer', json_encode($transferCliente));
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $clientT['idempotency_key'],
