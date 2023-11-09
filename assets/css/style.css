@@ -274,7 +274,7 @@ input[type="number"] {
 
 /* Estilos para las tablas */
 tbody tr:hover{
-    background-color: #fffeb1 !important;
+    background-color: #f0ddf5 !important;
 }
 
 thead, thead tr,thead tr th{
@@ -283,6 +283,10 @@ thead, thead tr,thead tr th{
     border-radius: 0!important;
     color: white;
     
+}
+
+th, td {
+    padding: 20px 25px;
 }
 
 /* Estos estilos son para el navegador */
