@@ -484,9 +484,10 @@ class Facturas extends MY_Loggedin
 		//$this->Invoice_model->get_provider_invoices($this->user)
 
 		$args = $this->input->post('info');
+		$menu = $this->input->post('menu');
 
-		$res = $this->Invoice_model->crearExcel($args);
-		echo json_encode($this->input->post('info'));
+		$res = $this->Invoice_model->crearExcel($args, $menu);
+		echo json_encode($res);
 	}
 
 }
