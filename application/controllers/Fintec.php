@@ -148,7 +148,6 @@ class Fintec extends MY_Loggedout{
 		}
 		return $this->response->sendResponse($resp, $error);
 	}
-
 	/**
 	 * @param string $texto texto a encriptar
 	 * @param string $key llave que será usada en la encriptación y necesaria para desencriptar

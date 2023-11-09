@@ -26,7 +26,7 @@ class User_model extends CI_Model {
 		
         $usuario = array();
 
-		$query = "SELECT * FROM compensapay.users WHERE id = '{$id}'";
+		$query = "SELECT * FROM compensatest_base.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				$usuario = $result->result_array();
