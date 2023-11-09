@@ -1,10 +1,10 @@
 <?php
 
 class Arteria_model extends CI_Model{
-	private $ArteriaSandbox = 'https://sandbox-api.arteria.xyz';
+	private $ArteriaSandbox = 'https://api.arteria.xyz';
 	private $ArteriaLive = '';
-	private $usernameSandbox = 'AKsbIRh8GhQA--avQliNyzGQ';
-	private $passwordSandbox = 'bRQCqvlR7r0BbLSa2JV1Qf1PM-YPbDSLzsiQhxfer-T9fTG0a-zKO0BcjrCwH6XsdSLp9nUo0mCdYDxzo8KdIA';
+	private $usernameSandbox = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
+	private $passwordSandbox = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $usernameProd = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
 	private $passwordProd = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $headers = [];

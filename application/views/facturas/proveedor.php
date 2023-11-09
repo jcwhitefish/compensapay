@@ -70,7 +70,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <i v-if="factura.status == 'Pagada' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != 'Pagada'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaProveedor(factura)">Crear Operacion</a>
                             </td>
-                            <td>{{factura.short_name}}</td>
+                            <td>{{factura.name_client}}</td>
                             <td><a href="<?= $factura; ?>1" target="_blank"><p class="uuid-text">{{factura.uuid}}</p></a></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
@@ -301,7 +301,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <input @change="checkFormatOperation" name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
                             </div>
                             <div class="col l5 input-border select-white">
-                                <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
+                                <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="clientUploadName">
                                 <label for="providerDisabled">Cliente</label>
                             </div>
                             <div>
@@ -321,11 +321,11 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="facturaClient in facturasClient">
+                                        <tr v-for="facturaClient in facturasProveedor">
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td>{{facturaClient.short_name}}</td>
+                                            <td>{{facturaClient.name_client}}</td>
                                             <td>{{facturaClient.receiver_rfc}}</td>
                                             <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td class="uuid-text">{{facturaClient.invoice_date}}</td>
@@ -342,7 +342,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 </table>
                             </div><br>
                             <div class="col l8">
-                                <a class="modal-trigger modal-close button-blue" href="#modal-solicitar-factura" v-if="providerUploadName != ''">Solicitar otra factura</a>
+                                <a class="modal-trigger modal-close button-blue" href="#modal-solicitar-factura" v-if="clientUploadName != ''">Solicitar otra factura</a>
                             </div>
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
@@ -375,7 +375,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <input @change="checkFormatOperationUnique" name="uniqueOperationUpload" ref="uniqueOperationUpload" id="uniqueOperationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
                             </div>
                             <div class="col l5 input-border select-white">
-                                <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
+                                <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="clientUploadNameUnique">
                                 <label for="providerDisabledUnique">Cliente</label>
                             </div>
                             <div>
@@ -395,7 +395,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                     </thead>
                                     <tbody>
                                         <tr v-for="factura in facturasUnique">
-                                            <td>{{factura.short_name }}</td>
+                                            <td>{{factura.name_client }}</td>
                                             <td>{{factura.receiver_rfc }}</td>
                                             <td><p class="uuid-text">{{factura.uuid}}</p></td>
                                             <td class="uuid-text">{{factura.invoice_date}}</td>
@@ -603,17 +603,17 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             const invoiceUploadName = Vue.ref('');
             const operationUploadName = Vue.ref('');
             const operationUploadNameUnique = Vue.ref('');
-            const providerUploadName = Vue.ref('');
+            const clientUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
             const radioChecked = Vue.ref(false);
             const operaciones = Vue.ref([]);
             const facturas = Vue.ref([]);
-            const facturasClient = Vue.ref([]);
+            const facturasProveedor = Vue.ref([]);
             const facturasUnique = Vue.ref([]);
             const autorizar = Vue.ref(0);
             const operationsView = Vue.ref([]);
-            const providerUploadNameUnique = Vue.ref('');
+            const clientUploadNameUnique = Vue.ref('');
 
             //darle aceptar a una factura (el feo)
             const actualizacion = () => {
@@ -659,7 +659,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 M.toast({html: 'Error con el ZIP'});
                             } else if(result.error == 'rfc'){
                                 M.toast({html: 'el rfc no corresponde a el de su factura '});
-                            }                  
+                            }
                         }).catch(error => console.log('error', error));
                 } else {
                     alert('Ingresa una factura y acepta los terminos');
@@ -668,42 +668,40 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 
             //Subir una operacion
             const uploadOperation = async () => {
-
-            if (selectedButton.value == 'Operaciones' && radioChecked.value) {
-                const fileInput = document.getElementById('operationUpload');
-                const grupoRadio = document.getElementsByName('grupoRadio');
-                let selectedRadioValue;
-                grupoRadio.forEach(radio => {
-                    if (radio.checked) {
-                        selectedRadioValue = radio.value;
-                    }
-                });
-                const formData = new FormData();
-                formData.append('operationUpload', fileInput.files[0]);
-                formData.append('grupoRadio', selectedRadioValue);
-
-                var requestOptions = {
-                    method: 'POST',
-                    body: formData,
-                    redirect: 'follow'
-                };
-
-                fetch("<?= base_url("facturas/cargaOperacionNota") ?>", requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        if(result.status == 'ok'){
-                            getOperations();
-                            M.toast({ html: 'Se ha subido la operacion' });
-                        }else{
-                            M.toast({ html: 'Error con la operacion, verifique su factura' });
+                if (selectedButton.value == 'Operaciones' && radioChecked.value) {
+                    const fileInput = document.getElementById('operationUpload');
+                    const grupoRadio = document.getElementsByName('grupoRadio');
+                    let selectedRadioValue;
+                    grupoRadio.forEach(radio => {
+                        if (radio.checked) {
+                            selectedRadioValue = radio.value;
                         }
-                        
-                    })
-                    .catch(error => console.log('error', error));
+                    });
+                    const formData = new FormData();
+                    formData.append('operationUpload', fileInput.files[0]);
+                    formData.append('grupoRadio', selectedRadioValue);
 
-            } else {
-                alert('Ingresa una factura')
-            }
+                    var requestOptions = {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    };
+
+                    fetch("<?= base_url("facturas/cargaOperacionNota") ?>", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                            if(result.status == 'ok'){
+                                getOperations();
+                                M.toast({ html: 'Se ha subido la operacion' });
+                            }else{
+                                M.toast({ html: 'Error con la operacion, verifique su nota' });
+                            }
+                        })
+                        .catch(error => console.log('error', error));
+
+                } else {
+                    alert('Seleccione una factura e ingrese una nota')
+                }
             };
 
             //Subir una operacion unica
@@ -751,12 +749,12 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     body: formData,
                     redirect: 'follow'
                 };
-                fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
+                fetch("<?= base_url("facturas/cargaFacturasProveedorU") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        providerUploadNameUnique.value = result.emisor;
-                        //facturasClient.value = result.facturasClient;
-                        //facturasClient.value.reverse();
+                        clientUploadNameUnique.value = result.name_client;
+                        //facturasProveedor.value = result.facturasProveedor;
+                        //facturasProveedor.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
@@ -795,7 +793,6 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 
             //tabla de get facturas por cliente
             const getFacturasByClient = async () => {
-                
                 const fileInput = document.getElementById('operationUpload');
                 const formData = new FormData();
                 formData.append('operationUpload', fileInput.files[0]);
@@ -805,12 +802,12 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     body: formData,
                     redirect: 'follow'
                 };
-                fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
+                fetch("<?= base_url("facturas/cargaFacturasProveedor") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        providerUploadName.value = result.emisor;
-                        facturasClient.value = result.facturasClient;
-                        facturasClient.value.reverse();
+                        clientUploadName.value = result.name_client;
+                        facturasProveedor.value = result.facturasProveedor;
+                        facturasProveedor.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
@@ -823,7 +820,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     getFacturasByClient();
                 } else {
                     operationUploadName.value = '';
-                    providerUploadName.value = '';
+                    clientUploadName.value = '';
                 }
             };
 
@@ -834,7 +831,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     getFacturasByClientUnica();
                 } else {
                     operationUploadNameUnique.value = '';
-                    providerUploadNameUnique.value = '';
+                    clientUploadNameUnique.value = '';
                 }
             };
 
@@ -872,16 +869,16 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             //Limpia datos de los modales
             const clearData = () => {
                 //Datos modal operacion
-                providerUploadName.value = '';
+                clientUploadName.value = '';
                 operationUploadName.value = '';
-                facturasClient.value = [];
+                facturasProveedor.value = [];
 
                 //Datos modal factura
                 invoiceUploadName.value = '';
                 checkboxChecked.value = false;
 
                 //Datos modal operación unica
-                providerUploadNameUnique.value = '';
+                clientUploadNameUnique.value = '';
                 operationUploadNameUnique.value = '';
             }
 
@@ -897,7 +894,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
             return {
                 invoiceUploadName,
                 operationUploadName,
-                providerUploadName,
+                clientUploadName,
                 selectedButton,
                 checkFormatInvoice,
                 checkFormatOperation,
@@ -909,7 +906,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 getFacturasByClient,
                 operaciones,
                 facturas,
-                facturasClient,
+                facturasProveedor,
                 autorizar,
                 actualizacion,
                 vistaOperacion,
@@ -919,7 +916,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 checkFormatOperationUnique,
                 operationUploadNameUnique,
                 getFacturasByClientUnica,
-                providerUploadNameUnique,
+                clientUploadNameUnique,
                 uploadOperationUnica,
                 clearData
             };

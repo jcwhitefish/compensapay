@@ -65,7 +65,7 @@
                                 <i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
-                            <td>{{factura.short_name}}</td>
+                            <td>{{factura.name_provee}}</td>
                             <td><p class="uuid-text">{{factura.uuid}}</p></td>
                             <td class="uuid-text">{{factura.invoice_date}}</td>
                             <td class="uuid-text">{{factura.created_at}}</td>
@@ -244,7 +244,7 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td>{{facturaClient.short_name}}</td>
+                                            <td>{{facturaClient.name_provee}}</td>
                                             <td>{{facturaClient.receiver_rfc}}</td>
                                             <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td>{{facturaClient.invoice_date}}</td>
@@ -314,8 +314,8 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="factura in facturasClientUnique">
-                                            <td>{{factura.short_name}}</td>
-                                            <td>{{factura.receiver_rfc}}</td>
+                                            <td>{{factura.name_provee}}</td>
+                                            <td>{{factura.sender_rfc}}</td>
                                             <td><p class="uuid-text">{{factura.uuid}}</p></td>
                                             <td>{{factura.invoice_date}}</td>
                                             <td>{{factura.created_at}}</td>
@@ -692,6 +692,7 @@
                         .then(result => {
                             if(result.status == 'ok'){
                                 getOperations();
+                                getFacturas();
                                 M.toast({ html: 'Se ha subido la operacion' });
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su factura' });
@@ -710,7 +711,7 @@
                 if (selectedButton.value == 'Operaciones') {
                     const fileInput = document.getElementById('uniqueOperationUpload');
                     let selectedValue = facturasClientUnique.value[0]['id'];
-                    
+
                     const formData = new FormData();
                     formData.append('operationUpload', fileInput.files[0]);
                     formData.append('grupoRadio', selectedValue);
@@ -726,6 +727,7 @@
                         .then(result => {
                             if(result.status == 'ok'){
                                 getOperations();
+                                getFacturas();
                                 M.toast({ html: 'Se ha subido la operacion' });
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su factura' });
@@ -774,7 +776,6 @@
 
             //tabla de get facturas por cliente
             const getFacturasByClient = async () => {
-
                 const fileInput = document.getElementById('operationUpload');
                 const formData = new FormData();
                 formData.append('operationUpload', fileInput.files[0]);
@@ -787,7 +788,7 @@
                 fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        providerUploadName.value = result.emisor;
+                        providerUploadName.value = result.name_proveedor;
                         facturasClient.value = result.facturasClient;
                         facturasClient.value.reverse();
                     })
@@ -805,12 +806,10 @@
                     body: formData,
                     redirect: 'follow'
                 };
-                fetch("<?= base_url("facturas/cargaFacturasPorCliente") ?>", requestOptions)
+                fetch("<?= base_url("facturas/cargaFacturasPorClienteU") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        providerUploadNameUnique.value = result.emisor;
-                        //facturasClient.value = result.facturasClient;
-                        //facturasClient.value.reverse();
+                        providerUploadNameUnique.value = result.name_proveedor;
                     })
                     .catch(error => console.log('error', error));
             };
@@ -819,8 +818,8 @@
             const guardarSeleccion = async (id) => {
                 selectedoperationId.value = id;
                 getOperationById(id);
-            }; 
-            
+            };
+
             const getOperationById = async (selectedoperationId) => {
 
                 const formData = new FormData();

@@ -21,7 +21,7 @@ class Openpay_model extends CI_Model
 		$data = [];
 		$prevPay = strtotime("now");
 		$nextPay = strtotime('+1 month' );
-		$query = "SELECT name, last_name, email FROM compensapay.users WHERE id = '{$id}'";
+		$query = "SELECT name, last_name, email FROM compensatest_base.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row){
@@ -31,7 +31,7 @@ class Openpay_model extends CI_Model
 					];
 				}
 				$res = json_decode($this->SendNewClient($data, $env), true);
-				$query = "INSERT INTO compensapay.subscription (company_id, customer_id, prevPay, nextPay, dealings, statusSupplier)
+				$query = "INSERT INTO compensatest_base.subscription (company_id, customer_id, prevPay, nextPay, dealings, statusSupplier)
 							VALUES ('{$id}','{$res['id']}', '{$prevPay}', '{$nextPay}',300,1)";
 				if ($this->db->query($query)){
 					$id = $this->db->insert_id();
@@ -56,9 +56,9 @@ class Openpay_model extends CI_Model
 		$args['plan_id'] = (strtoupper($env) == 'SANDBOX') ? $this->planIdSandbox : $this->planIdProd;
 		$res = json_decode($this->SendNewSubscription($args, $env), true);
 		if (!empty($res['id'])){
-			$query = "UPDATE compensapay.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+			$query = "UPDATE compensatest_base.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
 			if ($this->db->query($query)){
-				$query = "INSERT INTO compensapay.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
+				$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
 				if ($this->db->query($query)){
 					$endCard = substr($args['card_number'], -4);
 					$monthText = $this->monthTranslate($args['expiration_month']);
@@ -97,11 +97,11 @@ class Openpay_model extends CI_Model
 //		var_dump($res);
 		if (!empty($res['id'])){
 			$endCard = substr($args['card_number'], -4);
-			$query = "INSERT INTO compensapay.cards (cardType_id, openpay_id, year, month, endCard, active) 
-					VALUES ((SELECT id FROM compensapay.cat_cardtype WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['expiration_year']}', '{$args['expiration_month']}', '{$endCard}', 1)";
+			$query = "INSERT INTO compensatest_base.cards (cardType_id, openpay_id, year, month, endCard, active) 
+					VALUES ((SELECT id FROM compensatest_base.cat_cardtype WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['expiration_year']}', '{$args['expiration_month']}', '{$endCard}', 1)";
 			if ($this->db->query($query)){
 				$id = $this->db->insert_id();
-				$query = "UPDATE compensapay.subscription set card_id = '{$id}' 
+				$query = "UPDATE compensatest_base.subscription set card_id = '{$id}' 
 					WHERE id = '{$args['recordId']}'";
 				if ($this->db->query($query)){
 					return $id;
@@ -137,9 +137,9 @@ class Openpay_model extends CI_Model
 		$res = $this->SendDeleteCard($args,$env);
 //		var_dump($res);
 		if($res===''){
-			$query = "UPDATE compensapay.cards SET active = 0 WHERE openpay_id ='{$args['openpay_id']}'";
+			$query = "UPDATE compensatest_base.cards SET active = 0 WHERE openpay_id ='{$args['openpay_id']}'";
 			if ($this->db->query($query)){
-				$query = "UPDATE compensapay.subscription SET card_id = NULL, active=0 WHERE id = '{$card['record_id']}'";
+				$query = "UPDATE compensatest_base.subscription SET card_id = NULL, active=0 WHERE id = '{$card['record_id']}'";
 				if ($this->db->query($query)){
 					return $card;
 				}
@@ -160,9 +160,9 @@ class Openpay_model extends CI_Model
 	public function getActiveCard(int $id){
 		$card = [];
 		$query = "SELECT t1.id, t1.customer_id, t2.endCard, t2.month, t2.year, t2.openpay_id, t3.type, t3.img_url
-			FROM compensapay.subscription t1
-			    INNER JOIN compensapay.cards t2 ON t1.card_id = t2.id
-			    INNER JOIN compensapay.cat_cardtype t3 ON t2.cardType_id = t3.id
+			FROM compensatest_base.subscription t1
+			    INNER JOIN compensatest_base.cards t2 ON t1.card_id = t2.id
+			    INNER JOIN compensatest_base.cat_cardtype t3 ON t2.cardType_id = t3.id
 			    WHERE t1.company_id = '{$id}' AND t1.active = 1 AND t2.active = 1";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
@@ -184,13 +184,13 @@ class Openpay_model extends CI_Model
 		return false;
 	}
 	public function NewCharge(array $args, int $id, string $env = 'SANDBOX') {
-		$query = "SELECT openpay_id FROM compensapay.cards WHERE id = '{$args['cardRecordID']}'";
+		$query = "SELECT openpay_id FROM compensatest_base.cards WHERE id = '{$args['cardRecordID']}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row) {
 					$args['openCardId'] = $row['openpay_id'];
 				}
-				$query = "SELECT name, last_name, email FROM compensapay.users WHERE id = '{$id}'";
+				$query = "SELECT name, last_name, email FROM compensatest_base.users WHERE id = '{$id}'";
 				if ($result = $this->db->query($query)) {
 					if ($result->num_rows() > 0) {
 						foreach ($result->result_array() as $row) {
@@ -200,10 +200,10 @@ class Openpay_model extends CI_Model
 						$args['orderId'] = 'SB-'.str_pad($id, 5, "0", STR_PAD_LEFT).strtotime("now");
 						$res = json_decode($this->SendCharges($args, $env), true);
 						if (!empty($res['id'])){
-							$query = "UPDATE compensapay.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+							$query = "UPDATE compensatest_base.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
 //							var_dump($query);
 							if ($this->db->query($query)){
-								$query = "INSERT INTO compensapay.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
+								$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
 								if ($this->db->query($query)){
 									$endCard = substr($args['card_number'], -4);
 									$monthText = $this->monthTranslate($args['expiration_month']);
