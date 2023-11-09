@@ -50,7 +50,7 @@ class Facturas extends MY_Loggedin
 
 	public function tablaFacturas(){
 		$dato = array();
-		$dato['facturas'] = $this->Invoice_model->get_provider_invoices($this->user);
+		$dato['facturas'] = $this->Invoice_model->get_provider_invoices_tabla($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -79,7 +79,6 @@ class Facturas extends MY_Loggedin
 	}
 
 	public function cargaFacturasPorCliente(){
-
 		$dato = array();
 
 		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
@@ -87,18 +86,59 @@ class Facturas extends MY_Loggedin
 			$xmlContent = file_get_contents($operationUpload['tmp_name']);
 			$xml = new DOMDocument();
 			$xml->loadXML($xmlContent);
-			$emisor = $xml->getElementsByTagName('Emisor')->item(0);
+			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
 			$this->load->helper('factura_helper');
-
-			$dato['emisor'] = $emisor->getAttribute('Rfc');
-			$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($emisor->getAttribute('Rfc'));
-
+			$dataEmisor = $this->Invoice_model->company($receptor->getAttribute('Rfc'));
+			$dato['name_proveedor'] = $dataEmisor[0]->short_name;
+			$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($receptor->getAttribute('Rfc'));
 		}
 
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
-		
+	}
+
+	public function cargaFacturasProveedor(){
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+
+			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
+			$rfc_rec = $receptor->getAttribute('Rfc');
+			$this->load->helper('factura_helper');
+			$dataEmisor = $this->Invoice_model->company($rfc_rec);
+			$dato['name_client'] = $dataEmisor[0]->short_name;
+			$dato['facturasProveedor'] = $this->Invoice_model->get_provider_invoices($this->user, $rfc_rec);
+		}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
+
+	public function cargaFacturasProveedorU(){
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			
+			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
+			$this->load->helper('factura_helper');
+			$dataEmisor = $this->Invoice_model->company($receptor->getAttribute('Rfc'));
+			$dato['name_client'] = $dataEmisor[0]->short_name;
+			//YA TIENE FACTURA UNICA
+		}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
 	}
 
 	public function subidaFactura(){
@@ -169,7 +209,7 @@ class Facturas extends MY_Loggedin
 			$xml->loadXML($xmlContent);
 			$this->load->helper('factura_helper');
 			$factura = procesar_xml($xml, $this->user);
-			$rfc = $factura["receiver_rfc"];
+			$rfc = $factura["sender_rfc"];
 			$xml = $factura["uuid"];
 			if (!$this->Invoice_model->uuid_exists($xml)) {
 				$dato['error'] = "rfc";
@@ -328,8 +368,10 @@ class Facturas extends MY_Loggedin
 					"commentary" => "ok",
 					"created_at" => date('Y-m-d'),
 				);
-
+				//Ingresa operación
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+				//Actualiza factura
+				$this->Invoice_model->update_status_invoice($selectedFacturaId, "1");
 
 			} else if ($uuid1 == null) {
 				unset($nota["uuid"]);
@@ -380,18 +422,17 @@ class Facturas extends MY_Loggedin
 			$uuid1 = $factura1[0]->uuid;
 			$uuid2 = $nota["uuid"];
 
-
 			$client =  $this->Invoice_model->company($factura1[0]->receiver_rfc);
 			$provider =  $this->Invoice_model->company($factura1[0]->sender_rfc);
 
 
 			if ($uuid1 === $uuid2) {
-
 				unset($nota["uuid"]);
 				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
 				$dato['debitNote'] = $idDebitNote;
 
 				$operacion = array(
+					"id_invoice" => $dato['facturaid'],
 					"id_debit_note" => $idDebitNote,
 					"id_uploaded_by" =>  "$this->user",
 					"id_client" => $client[0]->id,
@@ -405,11 +446,11 @@ class Facturas extends MY_Loggedin
 					"created_at" => date('Y-m-d'),
 				);
 
-				
+				//Ingresa operación
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
-
+				//Actualiza factura
+				$this->Invoice_model->update_status_invoice($selectedFacturaId, "1");
 			} else if ($uuid1 == null) {
-
 				unset($nota["uuid"]);
 				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
 				$dato['debitNote'] = $idDebitNote;
@@ -428,7 +469,6 @@ class Facturas extends MY_Loggedin
 					"created_at" => date('Y-m-d'),
 				);
 
-				
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
 			}

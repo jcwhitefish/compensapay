@@ -77,6 +77,7 @@
             }
             const datosDia = ref([]);
             const calendario = ref([]);
+            const operaciones = Vue.ref([]);
             const daysString = ref(['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']);
             const formatearDate = () => {
                 let options = {
@@ -93,6 +94,21 @@
 
             }
 
+            //tabla de get operaciones
+            const getOperations = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaOperaciones") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        operaciones.value = result.operaciones;
+                        operaciones.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
 
             const crearCalendario = () => {
                 let datepicker = document.getElementById('date');
@@ -142,6 +158,7 @@
                 () => {
                     formatearDate();
                     crearCalendario();
+                    getOperations();
                 }
             )
             // Retornar el estado y métodos
@@ -152,7 +169,8 @@
                 daysString,
                 calendario,
                 crearCalendario,
-                datosDia
+                datosDia,
+                operaciones
             };
         },
     });
