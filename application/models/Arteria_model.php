@@ -5,8 +5,8 @@ class Arteria_model extends CI_Model{
 	private $ArteriaLive = '';
 	private $usernameSandbox = 'AKsbIRh8GhQA--avQliNyzGQ';
 	private $passwordSandbox = 'bRQCqvlR7r0BbLSa2JV1Qf1PM-YPbDSLzsiQhxfer-T9fTG0a-zKO0BcjrCwH6XsdSLp9nUo0mCdYDxzo8KdIA';
-	private $usernameProd = '';
-	private $passwordProd = '';
+	private $usernameProd = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
+	private $passwordProd = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $headers = [];
 	public function __construct(){
 		parent::__construct();
@@ -28,16 +28,28 @@ class Arteria_model extends CI_Model{
 			'recipient_name' => $args['name'],
 			'idempotency_key' => $args['idempotency_key'],
 		];
+		$this->headers = [];
 		$endpoint = 'transfers';
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
 	}
 	public function AddMovement(array $args, string $env){
-		$query = "INSERT INTO compensapay.balance (trakig_key, arteriaD_id, amount, descriptor, 
+		$query = "INSERT INTO compensatest_base.balance (traking_key_received, traking_key_send, arteriaD_id, amount, descriptor, 
                                  source_bank, receiver_bank, source_rfc, receiver_rfc, 
                                  source_clabe, receiver_clabe, transaction_date) 
-					VALUES ('{$args['trakingKey']}', '{$args['arteriaId']}', '{$args['amount']}', '{$args['descriptor']}', 
-					        '{$args['sourceBank']}', '{$args['receiverBank']}', '{$args['sourceRfc']}', '{$args['receiverRfc']}', 
-					        '{$args['sourceClabe']}', '{$args['receiverClabe']}', '{$args['transactionDate']}')";
+					VALUES (";
+		if ($args['trakingKeyReceived'] === null){
+			$query .= "NULL, ";
+		}else{
+			$query .= "'{$args['trakingKeyReceived']}', ";
+		}
+		if ($args['trakingKeyReceived'] === null){
+			$query .= "NULL, ";
+		}else{
+			$query .= "'{$args['trakingKeySend']}', ";
+		}
+		$query .= "'{$args['arteriaId']}', '{$args['amount']}', '{$args['descriptor']}', 
+					'{$args['sourceBank']}', '{$args['receiverBank']}', '{$args['sourceRfc']}', '{$args['receiverRfc']}', 
+					'{$args['sourceClabe']}', '{$args['receiverClabe']}', '{$args['transactionDate']}')";
 		if($result = $this->db->query($query)){
 			return $this->db->insert_id();
 		}
@@ -45,16 +57,24 @@ class Arteria_model extends CI_Model{
 	}
 	public function SearchOperations(array $args, string $env){
 		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
-					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe',
-					t4.arteria_clabe, t1.entry_money, t1.exit_money,
-					t3.account_clabe as 'companyClabe', t3.legal_name
-					FROM compensapay.operations t1
-					LEFT JOIN compensapay.companies t2
+					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
+					t4.arteria_clabe, t5.total AS 'entry_money', t6.total AS 'exit_money', 
+					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid
+					FROM compensatest_base.operations t1
+					LEFT JOIN compensatest_base.companies t2
 					ON t1.id_client = t2.id
-					LEFT JOIN compensapay.companies t3
+					LEFT JOIN compensatest_base.companies t3
 					ON t1.id_provider = t3.id
-					INNER JOIN compensapay.fintech t4
+					INNER JOIN compensatest_base.fintech t4
 					ON t4.companie_id = t1.id_provider
+					INNER JOIN compensatest_base.invoices t5
+					ON t1.id_invoice = t5.id
+					INNER JOIN compensatest_base.debit_notes t6
+					ON t1.id_debit_note = t6.id
+					INNER JOIN compensatest_base.cat_bancos t7
+					ON t2.id_broadcast_bank = t7.bnk_id
+					LEFT JOIN compensatest_base.invoices t8
+					ON t1.id_invoice_relational = t8.id
 					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
@@ -63,6 +83,7 @@ class Arteria_model extends CI_Model{
 					$opData = [
 						'companyName' => $row['legal_name'],
 						'companyClabe' => $row['companyClabe'],
+						'companyBank' => $row['bnk_clave'],
 						'operationNumber' => $row['operation_number'],
 						'client' => $row['id_client'],
 						'clientName' => $row['cname'],
@@ -74,6 +95,7 @@ class Arteria_model extends CI_Model{
 						'providerClabe' => $row['pclabe'],
 						'entry' => $row['entry_money'],
 						'exit' => $row['exit_money'],
+						'uuid' => $row['uuid']
 					];
 				}
 				return $opData;
@@ -104,6 +126,7 @@ class Arteria_model extends CI_Model{
 		$secret=base64_encode(($env == 'SANDBOX') ? $this->usernameSandbox.':'.$this->passwordSandbox :
 			$this->usernameProd.':'.$this->passwordProd);
 		$this->headers[] = 'Authorization: Basic '.$secret;
+
 		if (($ch = curl_init())) {
 			curl_setopt($ch, CURLOPT_URL, "$url/$endpoint/");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -129,6 +152,12 @@ class Arteria_model extends CI_Model{
 				$response = json_encode($resp);
 			}
 			curl_close($ch);
+
+//			var_dump($this->headers);
+//			var_dump("$url/$endpoint/");
+//			var_dump(json_encode($data));
+//			var_dump($response);
+
 			return $response;
 		}else {
 			$resp['reason'] = 'No se pudo inicializar cURL';
