@@ -10,10 +10,11 @@
 
         $('#download').on('click', function() {
             var resume_table = document.getElementById("activeTbl");
+            var menu = document.getElementsByClassName("selected")[0].id;
 
             var inputCheck = resume_table.querySelectorAll('input[id="checkTbl"]');
             var inputChecked = resume_table.querySelectorAll('input[id="checkTbl"]:checked');
-            //console.log(inputChecked.length == 0)
+            //var menu = menu.querySelectorAll('button[class="selected"]');
             if(inputChecked.length == 0){
                 return false;
             }
@@ -26,7 +27,7 @@
               //alert(cell[i].innerText);
                 if (inputCheck[numCheck].checked){
 
-                    for (var j = 1, col; col = row.cells[j]; j++, content+= ',') {
+                    for (var j = 1, col; col = row.cells[j]; j++, content+= '|') {
                         //alert(col[j].innerText);
                         //console.log(`Txt: ${col.innerText} \tFila: ${i} \t Celda: ${j}`);
                         content += col.innerText;
@@ -36,11 +37,12 @@
                 }
               numCheck++;
             }
-
+            //console.log(doc);
             $.ajax({
                     url: '/Facturas/crearExcel',
                     data: {
                         info: doc,
+                        menu: menu
                     },
                     dataType: 'json',
                     method: 'post',
@@ -48,7 +50,15 @@
                         
                     },
                     success: function (data) {
-                        console.log(data);
+                        var opResult = data;
+                        var $a=$("<a>");
+                        $a.attr("href",opResult.data);
+                        //$a.html("LNK");
+                        $("body").append($a);
+                        $a.attr("download",menu+".xlsx");
+                        $a[0].click();
+                        $a.remove();
+                        //console.log(data);
                         //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
                         //M.toast({html: toastHTML});
                     },
@@ -57,9 +67,10 @@
                         //$('#asunto').val('');
                         //getTickets();
                     },
-                    error: function (){
+                    error: function (data){
                         alert('Ha ocurrido un problema');
-                        location.reload();
+                        console.log(data)
+                        //location.reload();
                     }
                 });
                   
@@ -87,7 +98,7 @@
         <div class="col l3">
         </div>
         <div class="col l3">
-            <a id="download" class="button-blue" href="#">
+            <a id="download" class="button-blue" href="#" download>
                 Descargar
             </a>
         </div>
@@ -98,20 +109,20 @@
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-                <div class="col l12 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                <div id="Menus" class="col l12 p-3">
+                    <button id="Facturas" class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Comprobantes' }" @click="selectButton('Comprobantes')">
+                    <button id="Comprobantes" class="button-table" :class="{ 'selected': selectedButton == 'Comprobantes' }" @click="selectButton('Comprobantes')">
                         Comprobantes de pago
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Estados' }" @click="selectButton('Estados')">
+                    <button id="Estados" class="button-table" :class="{ 'selected': selectedButton == 'Estados' }" @click="selectButton('Estados')">
                         Estados de cuenta
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Movimientos' }" @click="selectButton('Movimientos')">
+                    <button id="Movimientos" class="button-table" :class="{ 'selected': selectedButton == 'Movimientos' }" @click="selectButton('Movimientos')">
                         Movimientos
                     </button>
                 </div>
@@ -195,10 +206,19 @@
                         <tr>
                             <th>Seleccionar</th>
                             <th>Monto</th>
-                            <th>Origen</th>
-                            <th>Destino</th>
-                            <th>No. de Referencia</th>
+                            <th>Clave de rastreo</th>
+                            <th>Comprobante electrónico (CEP)</th>
                             <th>Descripción</th>
+                            <th>Banco origen</th>
+                            <th>Banco destino</th>
+                            <th>Razón social origen</th>
+                            <th>RFC Origen</th>
+                            <th>Razón social destino</th>
+                            <th>RFC Destino</th>
+                            <th>Clabe origen</th>
+                            <th>Clabe destino</th>
+                            <th>Fecha de transacción</th>
+                            <th>CFDI correspondiente</th>
                             <th>Fecha de Transacción</th>
                         </tr>
                     </thead>
@@ -206,10 +226,19 @@
                         <tr v-for="moves in movements">
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
                             <td>{{moves.amount}}</td>
-                            <td>{{moves.source_rfc}}</td>
-                            <td>{{moves.receiver_rfc}}</td>
-                            <td>{{moves.trakig_key}}</td>
+                            <td>{{moves.traking_key_received}}</td>
+                            <td></td>
                             <td>{{moves.descriptor}}</td>
+                            <td>{{moves.bank_source}}</td>
+                            <td>{{moves.bank_receiver}}</td>
+                            <td>{{moves.provider}}</td>
+                            <td>{{moves.source_rfc}}</td>
+                            <td>{{moves.client}}</td>
+                            <td>{{moves.receiver_rfc}}</td>
+                            <td>{{moves.source_clabe}}</td>
+                            <td>{{moves.receiver_clabe}}</td>
+                            <td>{{moves.transaction_date}}</td>
+                            <td>{{moves.uuid}}</td>
                             <td>{{moves.transaction_date}}</td>
                         </tr>
                     </tbody>

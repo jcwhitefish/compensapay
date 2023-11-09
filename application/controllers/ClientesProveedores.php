@@ -18,20 +18,43 @@ class ClientesProveedores extends MY_Loggedin {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		// Cargar la biblioteca de sesión
+		$this->load->library('session');
+
+	}
 	public function index(){
 
+		$data = array(
+			'clientes' => $this->Clientesproveedores_model->clientes()
+		);
+
+		$this->load->view('plantilla', $data);
+		$this->load->view('clientesproveedores/clientesprovedores');
+
 		//Se verifica si esta en la pantalla de cliente
-		$isClient = $this->session->userdata('vista');
-		$user = 6;
+		//$isClient = $this->session->userdata('vista');
+		//$user = 6;
 
 		//1 si es cliente o  si es proveedor
-		if($isClient == 1){
-			$data['main'] = $this->load->view('clientesproveedores/cliente', '' , true);
-			$this->load->view('plantilla', $data);
-		}else{
-			$data['main'] = $this->load->view('clientesproveedores/proveedor', '' , true);
-			$this->load->view('plantilla', $data);
-		}
+		//if($isClient == 1){
+		//	$data['main'] = $this->load->view('clientesproveedores/cliente', '' , true);
+		//	$this->load->view('plantilla', $data);
+		//}else{
+		//	$data['main'] = $this->load->view('clientesproveedores/proveedor', '' , true);
+		//	$this->load->view('plantilla', $data);
+		//}
+		//$this->load->model('clientesproveedores_model', 'dataUsr');
+		//$id = $this->session->userdata('id');
+		//$data['usuario'] = $this->dataUsr->get_cp($id);
+		//$data['main'] = $this->load->view('clientesproveedores/clientesprovedores', $data , true);
+	
+		//
+		//$this->load->view('plantilla', $data);
 
 	}					
 

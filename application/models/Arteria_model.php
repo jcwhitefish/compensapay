@@ -1,10 +1,12 @@
 <?php
-
+ini_set("xdebug.var_display_max_children", '-1');
+ini_set("xdebug.var_display_max_data", '-1');
+ini_set("xdebug.var_display_max_depth", '-1');
 class Arteria_model extends CI_Model{
-	private $ArteriaSandbox = 'https://sandbox-api.arteria.xyz';
+	private $ArteriaSandbox = 'https://api.arteria.xyz';
 	private $ArteriaLive = '';
-	private $usernameSandbox = 'AKsbIRh8GhQA--avQliNyzGQ';
-	private $passwordSandbox = 'bRQCqvlR7r0BbLSa2JV1Qf1PM-YPbDSLzsiQhxfer-T9fTG0a-zKO0BcjrCwH6XsdSLp9nUo0mCdYDxzo8KdIA';
+	private $usernameSandbox = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
+	private $passwordSandbox = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $usernameProd = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
 	private $passwordProd = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $headers = [];
@@ -76,6 +78,7 @@ class Arteria_model extends CI_Model{
 					LEFT JOIN compensatest_base.invoices t8
 					ON t1.id_invoice_relational = t8.id
 					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1";
+//		var_dump($query);
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
 				foreach ($result->result_array() as $row){

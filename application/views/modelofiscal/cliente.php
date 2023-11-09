@@ -10,10 +10,11 @@
 
         $('#download').on('click', function() {
             var resume_table = document.getElementById("activeTbl");
+            var menu = document.getElementsByClassName("selected")[0].id;
 
             var inputCheck = resume_table.querySelectorAll('input[id="checkTbl"]');
             var inputChecked = resume_table.querySelectorAll('input[id="checkTbl"]:checked');
-            //console.log(inputChecked.length == 0)
+            //var menu = menu.querySelectorAll('button[class="selected"]');
             if(inputChecked.length == 0){
                 return false;
             }
@@ -41,6 +42,7 @@
                     url: '/Facturas/crearExcel',
                     data: {
                         info: doc,
+                        menu: menu
                     },
                     dataType: 'json',
                     method: 'post',
@@ -48,7 +50,15 @@
                         
                     },
                     success: function (data) {
-                        console.log(data);
+                        var opResult = data;
+                        var $a=$("<a>");
+                        $a.attr("href",opResult.data);
+                        //$a.html("LNK");
+                        $("body").append($a);
+                        $a.attr("download",menu+".xlsx");
+                        $a[0].click();
+                        $a.remove();
+                        //console.log(data);
                         //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
                         //M.toast({html: toastHTML});
                     },
@@ -57,9 +67,10 @@
                         //$('#asunto').val('');
                         //getTickets();
                     },
-                    error: function (){
+                    error: function (data){
                         alert('Ha ocurrido un problema');
-                        location.reload();
+                        console.log(data)
+                        //location.reload();
                     }
                 });
                   
@@ -99,12 +110,16 @@
         <div class="card-content">
             <div class="row">
                 <div class="col l12 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                    <button id="Facturas" class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Comprobantes' }" @click="selectButton('Comprobantes')">
+                    <button id="Comprobantes" class="button-table" :class="{ 'selected': selectedButton == 'Comprobantes' }" @click="selectButton('Comprobantes')">
                         Comprobantes de pago
+                    </button>
+                    &nbsp;
+                    <button id="Movimientos" class="button-table" :class="{ 'selected': selectedButton == 'Movimientos' }" @click="selectButton('Movimientos')">
+                        Movimientos
                     </button>
                 </div>
             </div>
@@ -163,6 +178,48 @@
 
                     </tbody>
                 </table>
+                <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped">
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Monto</th>
+                            <th>Clave de rastreo</th>
+                            <th>Comprobante electrónico (CEP)</th>
+                            <th>Descripción</th>
+                            <th>Banco origen</th>
+                            <th>Banco destino</th>
+                            <th>Razón social origen</th>
+                            <th>RFC Origen</th>
+                            <th>Razón social destino</th>
+                            <th>RFC Destino</th>
+                            <th>Clabe origen</th>
+                            <th>Clabe destino</th>
+                            <th>Fecha de transacción</th>
+                            <th>CFDI correspondiente</th>
+                            <th>Fecha de Transacción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="moves in movements">
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td>{{moves.amount}}</td>
+                            <td>{{moves.traking_key_received}}</td>
+                            <td></td>
+                            <td>{{moves.descriptor}}</td>
+                            <td>{{moves.bank_source}}</td>
+                            <td>{{moves.bank_receiver}}</td>
+                            <td>{{moves.provider}}</td>
+                            <td>{{moves.source_rfc}}</td>
+                            <td>{{moves.client}}</td>
+                            <td>{{moves.receiver_rfc}}</td>
+                            <td>{{moves.source_clabe}}</td>
+                            <td>{{moves.receiver_clabe}}</td>
+                            <td>{{moves.transaction_date}}</td>
+                            <td>{{moves.uuid}}</td>
+                            <td>{{moves.transaction_date}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -213,6 +270,7 @@
         setup() {
             const selectedButton = Vue.ref('Facturas');
             const facturas = Vue.ref([]);
+            const movements = Vue.ref([]);
 
             //tabla de get facturas
             const getFacturas = () => {
@@ -221,11 +279,27 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturasCliente") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;
                         facturas.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
+            const getMovements = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaMovimientos") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        //console.log(result)
+                        movements.value = result.movements;
+                        movements.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
@@ -241,12 +315,14 @@
             Vue.onMounted(
                 () => {
                     getFacturas();
+                    getMovements();
                 }
             );
 
             //Returnar todo
             return {
                 selectedButton,
+                movements,
                 selectButton,
                 facturas,
              };
