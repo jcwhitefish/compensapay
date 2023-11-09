@@ -12,40 +12,38 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
-    public function get_provider_invoices($user) {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id_company', $user);
+    public function get_provider_invoices($user, $rfc_rec) {
+        $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
+		$this->db->from('users as u');
+        $this->db->join('companies AS c', 'c.id = u.id_company');
+        $this->db->join('invoices AS i', 'i.sender_rfc = c.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
+		$this->db->where('c.id', $user);
+		$this->db->where('i.receiver_rfc', $rfc_rec);
+		$this->db->where('i.status', 0);
         $query = $this->db->get();
-        $company = ($query->result())[0]->id_company;
-		$this->db->select('*');
-        $this->db->from('companies');
-        $this->db->where('id', $company);
-        $query = $this->db->get();
-        $rfc = $query->result()[0]->rfc;
-        $this->db->select('invoices.*, companies.short_name');
-		$this->db->from('invoices');
-        $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
-		$this->db->where('sender_rfc', $rfc);
+        return $query->result();
+    }
+
+    public function get_provider_invoices_tabla($user) {
+        $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
+		$this->db->from('users as u');
+        $this->db->join('companies AS c', 'c.id = u.id_company');
+        $this->db->join('invoices AS i', 'i.receiver_rfc = c.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.sender_rfc');
+		$this->db->where('c.id', $user);
+		$this->db->where('i.status', 0);
         $query = $this->db->get();
         return $query->result();
     }
 
     public function get_client_invoices($user) {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id_company', $user);
-        $query = $this->db->get();
-        $company = ($query->result())[0]->id_company;
-		$this->db->select('*');
-        $this->db->from('companies');
-        $this->db->where('id', $company);
-        $query = $this->db->get();
-        $rfc = $query->result()[0]->rfc;
-        $this->db->select('invoices.*, companies.short_name');
-		$this->db->from('invoices');
-        $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
-		$this->db->where('invoices.receiver_rfc', $rfc);
+        $this->db->select('c.short_name AS name_client, c2.short_name AS name_provee, i.*');
+		$this->db->from('users as u');
+        $this->db->join('companies AS c', 'c.id = u.id_company');
+        $this->db->join('invoices AS i', 'i.receiver_rfc = c.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.sender_rfc');
+		$this->db->where('c.id', $user);
         $query = $this->db->get();
         return $query->result();
     }
@@ -100,7 +98,6 @@ class Invoice_model extends CI_Model {
     }
 
     public function is_your_rfc($id, $rfc) {
-
         $this->db->select('*');
         $this->db->from('users');
         $this->db->where('id_company', $id);
@@ -111,11 +108,9 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         return ((($query->result())[0]->rfc) === $rfc);
-
     }
 
     public function update_status($id, $status) {
-
         $factura = array(
 			"status" => $status,
             "updated_at" => "2023-25-10"
@@ -124,7 +119,7 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $id);
 		$this->db->update('operations', $factura);
 
-        return; 
+        return;
     }
 
     public function update_status_invoice($id, $status) {
@@ -148,6 +143,5 @@ class Invoice_model extends CI_Model {
         return $query->result();
 
     }
-  
 }
 ?>

@@ -17,5 +17,13 @@ class Debitnote_model extends CI_Model {
         return $this->db->insert_id();
     }
 
+    public function get_note_by_content($xml) {
+        $this->db->select('*');
+		$this->db->from('debit_notes');
+		$this->db->where('xml', $xml);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 ?>
