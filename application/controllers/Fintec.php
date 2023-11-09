@@ -2,7 +2,7 @@
 
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message){
-		$logDir = 'C:\web\logs';
+		$logDir = '/home/compensatest/logs';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
@@ -14,6 +14,7 @@ class Fintec extends MY_Loggedout{
 		$error = 0;
 		$resp = ["response" => 'ok'];
 		if (Request::getStaticMethod() == 'POST' && ($body = Request::getBody())) {
+			$this->createLog('ping', json_encode($body));
 			$this->load->model('Arteria_model','dataArt');
 			$data = $body ?? NULL;
 			if ($data['object_type'] === 'transaction' && $data['data']['type']  === 'deposit') {
