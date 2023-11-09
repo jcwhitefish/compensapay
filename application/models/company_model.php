@@ -23,4 +23,12 @@ class Company_model extends CI_Model {
         $query = $this->db->get_where('companies', $condiciones);
         return $query->row_array();
     }
+
+    public function get_company_by_rfc($rfc) {
+        $this->db->select('c.*');
+		$this->db->from('companies as c');
+		$this->db->where('c.rfc', $rfc);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

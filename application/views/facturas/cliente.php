@@ -17,7 +17,7 @@
             <a class="modal-trigger button-blue" href="#modal-factura" v-if="selectedButton === 'Facturas'" @click="clearData">
                 Añadir Facturas
             </a>
-            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'" @click="clearData">
+            <a class="modal-trigger button-blue" href="#modal-operacion" v-if="selectedButton === 'Operaciones'" @click="openOperacion">
                 Crear Operaciones
             </a>
         </div>
@@ -29,11 +29,11 @@
         <div class="card-content">
             <div class="row">
                 <div class="col l3 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
+                    <button class="button-table" :class="{ 'selected-button': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
                         Operaciones
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                    <button class="button-table" :class="{ 'selected-button': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
                 </div>
@@ -211,13 +211,19 @@
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col l3 input-border">
-                                <input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-                                <label for="operationDisabled">Tu factura XML</label>
-                            </div>
-                            <div class="col l4 left-align p-5">
-                                <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatOperation" name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
+                                <!--input type="text" name="operationDisabled" id="operationDisabled" disabled >
+                                    <label for="operationDisabled">Tu factura XML</label>
+                                    </div>
+                                    <div class="col l4 left-align p-5">
+                                    <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
+                                <input name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/-->
+
+                            <div class="col l6 input-border select-white">
+                                <select @change="checkFormatOperation" name="operationUpload" id="operationUpload" v-model="selectFactura" required>
+                                    <option v-for="factura in facturasSeleccionar" :key="factura.id" :value="factura.id">{{ factura.uuid }}</option>
+                                </select>
+
+                                <label for="operationUpload">Selecciona tu factura</label>
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
@@ -244,8 +250,8 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td>{{facturaClient.name_provee}}</td>
-                                            <td>{{facturaClient.receiver_rfc}}</td>
+                                            <td>{{facturaClient.short_name}}</td>
+                                            <td>{{facturaClient.sender_rfc}}</td>
                                             <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
@@ -567,9 +573,9 @@
         pointer-events: auto;
     }
 
-    /* Fix button selected but all class selected afect */
+    /* Fix button selected-button but all class selected-button afect */
 
-    .selected {
+    .selected-button {
         background-color: black !important;
         color: white !important;
         height: 50px;
@@ -600,6 +606,10 @@
 </style>
 
 <script>
+    const {
+        nextTick
+    } = Vue
+
     const app = Vue.createApp({
         setup() {
             const invoiceUploadName = Vue.ref('');
@@ -615,10 +625,12 @@
             const operationsView = Vue.ref([]);
             const facturas = Vue.ref([]);
             const facturasClient = Vue.ref([]);
+            const facturasSeleccionar = Vue.ref([]);
             const facturasClientUnique = Vue.ref([]);
             const autorizar = Vue.ref(0);
             const selectedoperationId = Vue.ref('');
             const acceptDecline = Vue.ref('');
+            const selectFactura = Vue.ref('');
 
             //darle aceptar a una factura 
             const actualizacion = () => {
@@ -667,9 +679,7 @@
 
             //Subir una operacion
             const uploadOperation = async () => {
-
                 if (selectedButton.value == 'Operaciones' && radioChecked.value) {
-                    const fileInput = document.getElementById('operationUpload');
                     const grupoRadio = document.getElementsByName('grupoRadio');
                     let selectedRadioValue;
                     grupoRadio.forEach(radio => {
@@ -678,7 +688,7 @@
                         }
                     });
                     const formData = new FormData();
-                    formData.append('operationUpload', fileInput.files[0]);
+                    formData.append('id_f_s', selectFactura.value);
                     formData.append('grupoRadio', selectedRadioValue);
 
                     var requestOptions = {
@@ -776,9 +786,8 @@
 
             //tabla de get facturas por cliente
             const getFacturasByClient = async () => {
-                const fileInput = document.getElementById('operationUpload');
                 const formData = new FormData();
-                formData.append('operationUpload', fileInput.files[0]);
+                formData.append('id_f_s', selectFactura.value);
 
                 var requestOptions = {
                     method: 'POST',
@@ -835,7 +844,7 @@
                     .then(response => response.json())
                     .then(result => {
                         operationsClient.value = result.operationsClient;
-                        operationsClient.value.reverse();                    
+                        operationsClient.value.reverse();
                     }).catch(error => console.log('error', error));
             };
 
@@ -864,9 +873,9 @@
 
             //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
             const checkFormatOperation = (event) => {
-                const fileInput = event.target;
-                if (fileInput.files.length > 0) {
-                    operationUploadName.value = fileInput.files[0].name;
+                const idFactura = selectFactura.value;
+                if (idFactura != null && idFactura != "") {
+                    // VALOR DEL SELECT operationUploadName.value = fileInput.files[0].name;
                     getFacturasByClient();
                 } else {
                     operationUploadName.value = '';
@@ -913,12 +922,33 @@
                 operationUploadNameUnique.value = '';
             }
 
+            const openOperacion = () => {
+                //Limpia datos
+                clearData();
+                //Obtiene facturas disponibles para la operación subidas por cliente
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/facturasDisponibles") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        facturasSeleccionar.value = result.facturas;
+                        nextTick(() => {
+                            M.FormSelect.init(document.getElementById('operationUpload'));
+                        });
+                    })
+                    .catch(error => console.log('error', error));
+            }
+
             //Limpia datos de los modales
             const clearData = () => {
                 //Datos modal operacion
                 providerUploadName.value = '';
                 operationUploadName.value = '';
                 facturasClient.value = [];
+                selectFactura.value = '';
 
                 //Datos modal factura
                 invoiceUploadName.value = '';
@@ -974,7 +1004,10 @@
                 uploadOperationUnica,
                 vistaOperacion,
                 operationsView,
-                clearData
+                clearData,
+                openOperacion,
+                facturasSeleccionar,
+                selectFactura
             };
         }
     });
