@@ -29,6 +29,7 @@ class Arteria_model extends CI_Model{
 			'descriptor' => $args['descriptor'],
 			'recipient_name' => $args['name'],
 			'idempotency_key' => $args['idempotency_key'],
+			'user_id' => 'USgdLo9HvKTS6MaU_pcJPtGS',
 		];
 		$this->headers = [];
 		$endpoint = 'transfers';
