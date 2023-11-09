@@ -108,6 +108,28 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function cargaFacturasPorClienteU(){
+		$dato = array();
+
+		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
+			$operationUpload = $_FILES['operationUpload'];
+			$xmlContent = file_get_contents($operationUpload['tmp_name']);
+			$xml = new DOMDocument();
+			$xml->loadXML($xmlContent);
+			
+			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
+			$this->load->helper('factura_helper');
+			$dataEmisor = $this->Invoice_model->company($receptor->getAttribute('Rfc'));
+			$dato['name_proveedor'] = $dataEmisor[0]->short_name;
+			
+			//YA TIENE FACTURA UNICA
+		}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function cargaFacturasProveedor(){
 		$dato = array();
 
@@ -298,14 +320,11 @@ class Facturas extends MY_Loggedin
 			$this->load->helper('factura_helper');
 			$factura2 = procesar_factura_relacional($xml);
 			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
+			$factura = procesar_xml($xml, $this->user);
+			$provider =  $this->Invoice_model->company($factura1[0]->sender_rfc);
 
-			$uuid1 = $factura1[0]->uuid;
-			$uuid2 = $factura2["uuid"];
-			$proveedor_id = $factura1[0]->id_user;
-
-			if ($uuid1 === $uuid2) {
+			if ($factura1[0]->sender_rfc == $factura['receiver_rfc'] && $factura1[0]->receiver_rfc == $factura['sender_rfc']) {
 				//Agrega factura subida por cliente
-				$factura = procesar_xml($xml, $this->user);
 				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
 
 				$operacion = array(
@@ -313,7 +332,7 @@ class Facturas extends MY_Loggedin
 					"id_invoice_relational" => $id_insertado,
 					"id_uploaded_by" =>  $this->user,
 					"id_client" => $this->user,
-					"id_provider" => $proveedor_id,
+					"id_provider" => $provider[0]->id,
 					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $factura2["total"],
