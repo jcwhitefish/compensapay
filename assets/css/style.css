@@ -285,6 +285,10 @@ thead, thead tr,thead tr th{
     
 }
 
+th, td {
+    padding: 20px 25px;
+}
+
 /* Estos estilos son para el navegador */
 .small{
  font-size: 20px!important;
