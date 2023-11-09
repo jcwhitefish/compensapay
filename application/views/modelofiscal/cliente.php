@@ -184,6 +184,7 @@
                             <th>Seleccionar</th>
                             <th>Monto</th>
                             <th>Clave de rastreo</th>
+                            <th>Comprobante electrónico (CEP)</th>
                             <th>Descripción</th>
                             <th>Banco origen</th>
                             <th>Banco destino</th>
@@ -203,6 +204,7 @@
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
                             <td>{{moves.amount}}</td>
                             <td>{{moves.traking_key_received}}</td>
+                            <td></td>
                             <td>{{moves.descriptor}}</td>
                             <td>{{moves.bank_source}}</td>
                             <td>{{moves.bank_receiver}}</td>

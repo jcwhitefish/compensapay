@@ -102,17 +102,18 @@ class Invoice_model extends CI_Model {
             case 'Movimientos':
                 $sheet->setCellValueByColumnAndRow(1, 1, 'Monto');
                 $sheet->setCellValueByColumnAndRow(2, 1, 'Clave de rastreo');
-                $sheet->setCellValueByColumnAndRow(3, 1, 'Descripción');
-                $sheet->setCellValueByColumnAndRow(4, 1, 'Banco origen');
-                $sheet->setCellValueByColumnAndRow(5, 1, 'Banco destino');
-                $sheet->setCellValueByColumnAndRow(6, 1, 'Razón social origen');
-                $sheet->setCellValueByColumnAndRow(7, 1, 'RFC Origen');
-                $sheet->setCellValueByColumnAndRow(8, 1, 'Razón social destino');
-                $sheet->setCellValueByColumnAndRow(9, 1, 'CLABE origen');
-                $sheet->setCellValueByColumnAndRow(10, 1, 'CLABE destino');
-                $sheet->setCellValueByColumnAndRow(11, 1, 'Fecha de transacción');
-                $sheet->setCellValueByColumnAndRow(12, 1, 'CFDI correspondiente');
-                $sheet->setCellValueByColumnAndRow(13, 1, 'Fecha de Transacción');
+                $sheet->setCellValueByColumnAndRow(3, 1, 'Comprobante electrónico (CEP)');
+                $sheet->setCellValueByColumnAndRow(4, 1, 'Descripción');
+                $sheet->setCellValueByColumnAndRow(5, 1, 'Banco origen');
+                $sheet->setCellValueByColumnAndRow(6, 1, 'Banco destino');
+                $sheet->setCellValueByColumnAndRow(7, 1, 'Razón social origen');
+                $sheet->setCellValueByColumnAndRow(8, 1, 'RFC Origen');
+                $sheet->setCellValueByColumnAndRow(9, 1, 'Razón social destino');
+                $sheet->setCellValueByColumnAndRow(10, 1, 'CLABE origen');
+                $sheet->setCellValueByColumnAndRow(11, 1, 'CLABE destino');
+                $sheet->setCellValueByColumnAndRow(12, 1, 'Fecha de transacción');
+                $sheet->setCellValueByColumnAndRow(13, 1, 'CFDI correspondiente');
+                $sheet->setCellValueByColumnAndRow(14, 1, 'Fecha de Transacción');
                 break;
             case 'Comprobantes':
                 $sheet->setCellValueByColumnAndRow(1, 1, $key);
