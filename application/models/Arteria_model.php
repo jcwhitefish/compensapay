@@ -1,5 +1,7 @@
 <?php
-
+ini_set("xdebug.var_display_max_children", '-1');
+ini_set("xdebug.var_display_max_data", '-1');
+ini_set("xdebug.var_display_max_depth", '-1');
 class Arteria_model extends CI_Model{
 	private $ArteriaSandbox = 'https://api.arteria.xyz';
 	private $ArteriaLive = '';
@@ -76,6 +78,7 @@ class Arteria_model extends CI_Model{
 					LEFT JOIN compensatest_base.invoices t8
 					ON t1.id_invoice_relational = t8.id
 					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1";
+//		var_dump($query);
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
 				foreach ($result->result_array() as $row){
