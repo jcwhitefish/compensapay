@@ -97,7 +97,8 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $this->encriptar($args['trakingKeyReceived'], $op['companyClabe']),
 							];
 							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
-//							var_dump($prov);
+							var_dump($prov);
+							echo "<br><br>";
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $this->encriptar($data['data']['tracking_key'], $op['companyClabe']),
@@ -112,6 +113,8 @@ class Fintec extends MY_Loggedout{
 								'receiverClabe' => $op['companyClabe'],
 								'transactionDate' => $prov['created_at'],
 							];
+							var_dump($argsR);
+							die();
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
@@ -121,7 +124,6 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => $this->encriptar($data['data']['tracking_key'], $data['data']['destination']['account_number']),
 							];
 							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
-							var_dump($transferCliente);
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $this->encriptar($data['data']['tracking_key'], $data['data']['destination']['account_number']),
