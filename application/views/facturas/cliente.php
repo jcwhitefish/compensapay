@@ -211,23 +211,12 @@
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-                                <!--input type="text" name="operationDisabled" id="operationDisabled" disabled >
-                                    <label for="operationDisabled">Tu factura XML</label>
-                                    </div>
-                                    <div class="col l4 left-align p-5">
-                                    <label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/-->
-
-                            <div class="col l6 input-border select-white">
+                            <div class="col l12 input-border select-white">
                                 <select @change="checkFormatOperation" name="operationUpload" id="operationUpload" v-model="selectFactura" required>
-                                    <option v-for="factura in facturasSeleccionar" :key="factura.id" :value="factura.id">{{ factura.uuid }}</option>
+                                    <option v-for="factura in facturasSeleccionar" :key="factura.id" :value="factura.id">{{ factura.name_provee }} - {{ factura.uuid }} - ${{ factura.total }}</option>
                                 </select>
 
                                 <label for="operationUpload">Selecciona tu factura</label>
-                            </div>
-                            <div class="col l5 input-border select-white">
-                                <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="providerUploadName">
-                                <label for="providerDisabled">Proveedor</label>
                             </div>
                             <div>
                                 <table class="striped">
