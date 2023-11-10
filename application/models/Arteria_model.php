@@ -61,7 +61,7 @@ class Arteria_model extends CI_Model{
 	public function SearchOperations(array $args, string $env){
 		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
-					t4.arteria_clabe, t5.total AS 'entry_money', t6.total AS 'exit_money', 
+					t4.arteria_clabe, t5.total AS 'entry_money', t6.total AS 'exit_money_d', t8.total as 'exit_money_f', 
 					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid
 					FROM compensatest_base.operations t1
 					LEFT JOIN compensatest_base.companies t2
@@ -78,7 +78,7 @@ class Arteria_model extends CI_Model{
 					ON t2.id_broadcast_bank = t7.bnk_id
 					LEFT JOIN compensatest_base.invoices t8
 					ON t1.id_invoice_relational = t8.id
-					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1";
+					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1 and t1.operation_number = '{$args['trakingKeyReceived']}'";
 //		var_dump($query);
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
@@ -98,7 +98,8 @@ class Arteria_model extends CI_Model{
 						'providerRfc' => $row['prfc'],
 						'providerClabe' => $row['pclabe'],
 						'entry' => $row['entry_money'],
-						'exit' => $row['exit_money'],
+						'exitD' => $row['exit_money_d'],
+						'exitF' => $row['exit_money_f'],
 						'uuid' => $row['uuid']
 					];
 				}

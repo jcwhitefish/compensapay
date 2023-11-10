@@ -36,6 +36,7 @@ class Fintec extends MY_Loggedout{
 				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
 				if ($res){
 					if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
+						$exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
 						if ($op['operationNumber'] != $args['trakingKeyReceived']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
@@ -95,7 +96,7 @@ class Fintec extends MY_Loggedout{
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => (floatval($op['exit'])*100),
+								'amount' => (floatval($exitMoney)*100),
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => rand(1000000,9999999),
@@ -119,7 +120,7 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							//====| Comenzamos a enviar el dinero del proveedor |=====
-							$amountP = intval((floatval($op['entry'])*100) - (floatval($op['exit'])*100));
+							$amountP = intval((floatval($op['entry'])*100) - (floatval($exitMoney)*100));
 							$provedor = [
 								'clabe' => $op['companyClabe'],
 								'amount' => intval($amountP),
