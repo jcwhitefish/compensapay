@@ -41,6 +41,30 @@ class Invoice_model extends CI_Model {
         return $query->result();
     }
 
+    public function get_invoices_client($user) {
+        $this->db->select('c1.short_name AS name_client, c2.short_name AS name_provee, i.*');
+		$this->db->from('users as u');
+        $this->db->join('companies AS c1', 'c1.id = u.id_company');
+        $this->db->join('invoices AS i', 'i.sender_rfc = c1.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
+		$this->db->where('c1.id', $user);
+		$this->db->where('i.status', 0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_inv_prov_send_by_rfc($rfc) {
+        $this->db->select('c2.short_name AS name_client, c1.short_name AS name_provee, i.*');
+		$this->db->from('users as u');
+        $this->db->join('companies AS c1', 'c1.id = u.id_company');
+        $this->db->join('invoices AS i', 'i.sender_rfc = c1.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
+		$this->db->where('c1.rfc', $rfc);
+		$this->db->where('i.status', 0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_provider_invoices_tabla($user) {
         $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
 		$this->db->from('users as u');

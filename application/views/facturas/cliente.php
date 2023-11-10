@@ -108,7 +108,7 @@
                             <td class="tabla-celda center-align">
                                 <i v-if="operacion.status == '2'" class="small material-icons" style="color: red;">cancel</i>
                                 <i v-if="operacion.status == '1'" class="small material-icons" style="color: green;">check_circle</i>
-                                <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
+                                <a v-if="operacion.status == '0'" class="modal-trigger" href="#modal-cargar-factura" @click='getOperationById(operacion)'>Autorizar</a>
                             </td>
                             <td class="tabla-celda center-align">
                                 <p v-if="operacion.status == '0' " >Por pagar</p>
@@ -291,13 +291,9 @@
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col l3 input-border">
-                                <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
+                            <div class="col l5 input-border">
+                                <input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="uuidSelectedUnica">
                                 <label for="operationDisabledUnique">Tu factura XML</label>
-                            </div>
-                            <div class="col l0 left-align p-5">
-                                <label for="uniqueOperationUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                <input @change="checkFormatOperationUnique" name="uniqueOperationUpload" ref="uniqueOperationUpload" id="uniqueOperationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
                             </div>
                             <div class="col l5 input-border select-white">
                                 <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="providerUploadNameUnique">
@@ -307,6 +303,7 @@
                                 <table class="striped">
                                     <thead>
                                         <tr>
+                                            <th>Crear Operación</th>
                                             <th>Proveedor</th>
                                             <th>RFC Proveedor</th>
                                             <th>UUID Factura</th>
@@ -320,6 +317,9 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="factura in facturasClientUnique">
+                                            <td class="tabla-celda center-align">
+                                                <input type="radio" name="grupoRadioUnica" :value="factura.id" ref="grupoRadioUnica" id="grupoRadioUnica" v-model="radioCheckedUnica" required></i>
+                                            </td>
                                             <td>{{factura.name_provee}}</td>
                                             <td>{{factura.sender_rfc}}</td>
                                             <td><p class="uuid-text">{{factura.uuid}}</p></td>
@@ -340,7 +340,7 @@
                             <div class="col l4 center-align">
                                 <a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
                                 &nbsp;
-                                <button class="button-blue modal-close" type="reset" name="action" @click="uploadOperationUnica">Siguiente</button>
+                                <button class="button-blue" :class="{ 'modal-close': radioCheckedUnica }" name="action" type="reset" @click="uploadOperationUnica">Siguiente</button>
                             </div>
                         </div>
                     </form>
@@ -416,7 +416,7 @@
                                 </div>
                                 <div class="col l1"></div>
                                 <div class="col l4 input-border px-3">
-                                    <input class="input-border-null" type="text" placeholder="1(cuenta_clave)" disabled />
+                                    <input class="input-border-null" type="text" :placeholder="operationClient.account_clabe" disabled />
                                     <label for="invoiceDisabled">Cuenta CLABE del proveedor:</label>
                                 </div>
                             </div>
@@ -614,12 +614,14 @@
         setup() {
             const invoiceUploadName = Vue.ref('');
             const operationUploadName = Vue.ref('');
-            const operationUploadNameUnique = Vue.ref('');
+            const uuidSelectedUnica = Vue.ref('');
+            const id_factura_cliente_unica = Vue.ref('');
             const providerUploadName = Vue.ref('');
             const providerUploadNameUnique = Vue.ref('');
             const selectedButton = Vue.ref('Operaciones');
             const checkboxChecked = Vue.ref(false);
             const radioChecked = Vue.ref(false);
+            const radioCheckedUnica = Vue.ref(false);
             const operaciones = Vue.ref([]);
             const operationsClient = Vue.ref([]);
             const operationsView = Vue.ref([]);
@@ -716,41 +718,6 @@
                 }
             };
 
-            //Subir una operacion unica
-            const uploadOperationUnica = async () => {
-                if (selectedButton.value == 'Operaciones') {
-                    const fileInput = document.getElementById('uniqueOperationUpload');
-                    let selectedValue = facturasClientUnique.value[0]['id'];
-
-                    const formData = new FormData();
-                    formData.append('operationUpload', fileInput.files[0]);
-                    formData.append('grupoRadio', selectedValue);
-
-                    var requestOptions = {
-                        method: 'POST',
-                        body: formData,
-                        redirect: 'follow'
-                    };
-
-                    fetch("<?= base_url("facturas/cargaOperacionFacturaUnica") ?>", requestOptions)
-                        .then(response => response.json())
-                        .then(result => {
-                            if(result.status == 'ok'){
-                                getOperations();
-                                getFacturas();
-                                M.toast({ html: 'Se ha subido la operacion' });
-                            }else{
-                                M.toast({ html: 'Error con la operacion, verifique su factura' });
-                            }
-
-                        })
-                        .catch(error => console.log('error', error));
-
-                } else {
-                    alert('Ingresa una factura')
-                }
-            };
-
             //tabla de get operaciones
             const getOperations = () => {
                 var requestOptions = {
@@ -774,7 +741,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaFacturasCliente") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaVistaFacturasCliente") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         facturas.value = result.facturas;
@@ -804,25 +771,6 @@
                     .catch(error => console.log('error', error));
             };
 
-            //tabla de get facturas por cliente
-            const getFacturasByClientUnica = async () => {
-                const fileInput = document.getElementById('uniqueOperationUpload');
-                const formData = new FormData();
-                formData.append('operationUpload', fileInput.files[0]);
-
-                var requestOptions = {
-                    method: 'POST',
-                    body: formData,
-                    redirect: 'follow'
-                };
-                fetch("<?= base_url("facturas/cargaFacturasPorClienteU") ?>", requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        providerUploadNameUnique.value = result.name_proveedor;
-                    })
-                    .catch(error => console.log('error', error));
-            };
-
             //tabla get operacion por id y obtencion del id
             const guardarSeleccion = async (id) => {
                 selectedoperationId.value = id;
@@ -832,8 +780,7 @@
             const getOperationById = async (selectedoperationId) => {
 
                 const formData = new FormData();
-                console.log(selectedoperationId);
-                formData.append('selectedoperationId', selectedoperationId);
+                formData.append('selectedoperationId', selectedoperationId.id);
 
                 var requestOptions = {
                     method: 'POST',
@@ -883,18 +830,6 @@
                 }
             };
 
-            //cambiar de nombre el input para subir una operacion y manda a llamar las operaciones
-            const checkFormatOperationUnique = (event) => {
-                const fileInput = event.target;
-                if (fileInput.files.length > 0) {
-                    operationUploadNameUnique.value = fileInput.files[0].name;
-                    getFacturasByClientUnica();
-                } else {
-                    operationUploadNameUnique.value = '';
-                    providerUploadNameUnique.value = '';
-                }
-            };
-
             //cambiar de nombre el input para subir una factura
             const checkFormatInvoice = (event) => {
                 const fileInput = event.target;
@@ -914,13 +849,75 @@
 
             //Llenar tabla de operación unica con factura seleccionada
             const operacionUnicaCliente = (factura) => {
-                facturasClientUnique.value[0] = factura;
+                clearData();
+                uuidSelectedUnica.value = factura.uuid;
+                id_factura_cliente_unica.value = factura.id;
+                providerUploadNameUnique.value = factura.name_provee;
+                getFacturasByClientUnica(factura.receiver_rfc);
                 if (selectedButton.value != 'Operaciones') {
                     selectedButton.value = 'Operaciones';
                 }
-                providerUploadNameUnique.value = '';
-                operationUploadNameUnique.value = '';
             }
+
+            //tabla de get facturas por cliente
+            const getFacturasByClientUnica = async (rfc_proveedor) => {
+                const formData = new FormData();
+                formData.append('rfc_proveedor', rfc_proveedor);
+
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+                fetch("<?= base_url("facturas/cargaFacturasPorClienteU") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        facturasClientUnique.value = result.facturas;
+                        facturasClientUnique.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+            
+            //Subir una operacion unica
+            const uploadOperationUnica = async () => {
+                if (selectedButton.value == 'Operaciones' && radioCheckedUnica.value) {
+                    const grupoRadio = document.getElementsByName('grupoRadioUnica');
+                    let id_factura_prov;
+                    grupoRadio.forEach(radio => {
+                        if (radio.checked) {
+                            id_factura_prov = radio.value;
+                        }
+                    });
+
+                    const formData = new FormData();
+                    formData.append('id_factura_cliente', id_factura_cliente_unica.value);
+                    formData.append('id_factura_prov', id_factura_prov);
+
+                    var requestOptions = {
+                        method: 'POST',
+                        body: formData,
+                        redirect: 'follow'
+                    };
+
+                    fetch("<?= base_url("facturas/cargaOperacionFacturaUnica") ?>", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                            if(result.status == 'ok'){
+                                getOperations();
+                                getFacturas();
+                                M.toast({ html: 'Se ha subido la operacion' });
+                            }else{
+                                M.toast({ html: 'Error con la operacion, verifique su factura' });
+                            }
+
+                        })
+                        .catch(error => console.log('error', error));
+
+                } else {
+                    alert('Ingresa una factura')
+                }
+            };
+
 
             const openOperacion = () => {
                 //Limpia datos
@@ -956,7 +953,8 @@
 
                 //Datos modal operación unica
                 providerUploadNameUnique.value = '';
-                operationUploadNameUnique.value = '';
+                uuidSelectedUnica.value = '';
+                id_factura_cliente_unica.value = '';
             }
 
             //Llenar vista de operación seleccionada
@@ -997,8 +995,8 @@
                 changeStatus,
                 operacionUnicaCliente,
                 facturasClientUnique,
-                checkFormatOperationUnique,
-                operationUploadNameUnique,
+                uuidSelectedUnica,
+                id_factura_cliente_unica,
                 providerUploadNameUnique,
                 getFacturasByClientUnica,
                 uploadOperationUnica,
@@ -1007,7 +1005,8 @@
                 clearData,
                 openOperacion,
                 facturasSeleccionar,
-                selectFactura
+                selectFactura,
+                radioCheckedUnica
             };
         }
     });

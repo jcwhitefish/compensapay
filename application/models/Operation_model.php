@@ -27,9 +27,10 @@ class Operation_model extends CI_Model {
     }
 
     public function get_operation_by_id($id) {
-        $this->db->select('*');
-		$this->db->from('operations');
-		$this->db->where('id', $id);
+        $this->db->select('o.*, c.account_clabe');
+		$this->db->from('operations as o');
+        $this->db->join('companies as c', 'c.id = o.id_provider');
+		$this->db->where('o.id', $id);
         $query = $this->db->get();
         return $query->result();
     }

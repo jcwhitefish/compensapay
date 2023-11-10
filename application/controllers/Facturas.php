@@ -69,6 +69,16 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function tablaVistaFacturasCliente(){
+		$dato = array();
+		$dato['facturas'] = $this->Invoice_model->get_invoices_client($this->user);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function facturasDisponibles(){
 		$dato = array();
 		$dato['facturas'] = $this->Invoice_model->get_available_invoices($this->user);
@@ -128,19 +138,8 @@ class Facturas extends MY_Loggedin
 	public function cargaFacturasPorClienteU(){
 		$dato = array();
 
-		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
-			$operationUpload = $_FILES['operationUpload'];
-			$xmlContent = file_get_contents($operationUpload['tmp_name']);
-			$xml = new DOMDocument();
-			$xml->loadXML($xmlContent);
-			
-			$receptor = $xml->getElementsByTagName('Receptor')->item(0);
-			$this->load->helper('factura_helper');
-			$dataEmisor = $this->Invoice_model->company($receptor->getAttribute('Rfc'));
-			$dato['name_proveedor'] = $dataEmisor[0]->short_name;
-			
-			//YA TIENE FACTURA UNICA
-		}
+		$rfc_proveedor = $_POST['rfc_proveedor'];
+		$dato['facturas'] = $this->Invoice_model->get_inv_prov_send_by_rfc($rfc_proveedor);
 
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
@@ -329,32 +328,23 @@ class Facturas extends MY_Loggedin
 		$dato = array();
 		$dato['status'] = "ok";
 
-		if ($_FILES['operationUpload']['error'] == UPLOAD_ERR_OK) {
-			$operationUpload = $_FILES['operationUpload'];
-			$selectedFacturaId = $_POST['grupoRadio'];
-			$xmlContent = file_get_contents($operationUpload['tmp_name']);
-			$dato['facturaid'] = $selectedFacturaId;
-			$xml = new DOMDocument();
-			$xml->loadXML($xmlContent);
-			$this->load->helper('factura_helper');
-			$factura2 = procesar_factura_relacional($xml);
-			$factura1 = $this->Invoice_model->get_invoices_by_id($selectedFacturaId);
-			$factura = procesar_xml($xml, $this->user);
-			$provider =  $this->Invoice_model->company($factura1[0]->receiver_rfc);
+		if ($_POST['id_factura_cliente'] != '' && $_POST['id_factura_prov'] != '') {
+			$id_factura_cliente = $_POST['id_factura_cliente'];
+			$id_factura_prov = $_POST['id_factura_prov'];
 
-			if ($factura1[0]->sender_rfc != '' && $factura['receiver_rfc'] != '' && $factura1[0]->receiver_rfc != '' && $factura['sender_rfc']!= '') {
-				//Agrega factura subida por cliente
-				$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+			$factura2 = $this->Invoice_model->get_invoices_by_id($id_factura_cliente);
+			$factura1 = $this->Invoice_model->get_invoices_by_id($id_factura_prov);
 
+			if ($factura1[0]->sender_rfc == $factura2[0]->receiver_rfc && $factura1[0]->receiver_rfc == $factura2[0]->sender_rfc) {
 				$operacion = array(
-					"id_invoice" => $selectedFacturaId,
-					"id_invoice_relational" => $id_insertado,
+					"id_invoice" => $id_factura_prov,
+					"id_invoice_relational" => $id_factura_cliente,
 					"id_uploaded_by" =>  $this->user,
 					"id_client" => $this->user,
-					"id_provider" => $provider[0]->id,
+					"id_provider" => $factura1[0]->id_user,
 					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
-					"entry_money" => $factura2["total"],
+					"entry_money" => $factura2[0]->total,
 					"exit_money" => $factura1[0]->total,
 					"status" => "1",
 					"created_at" => date('Y-m-d'),
@@ -363,9 +353,9 @@ class Facturas extends MY_Loggedin
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
 				//Actualiza factura del proveedor
-				$this->Invoice_model->update_status_invoice($selectedFacturaId, "1");
+				$this->Invoice_model->update_status_invoice($id_factura_prov, "1");
 				//Actualiza factura del cliente
-				$this->Invoice_model->update_status_invoice($id_insertado, "1");
+				$this->Invoice_model->update_status_invoice($id_factura_cliente, "1");
 			} else{
 				$dato['status'] = "error";
 			}
@@ -530,7 +520,6 @@ class Facturas extends MY_Loggedin
 	}
 
 	public function cargaOperacionPorId(){
-
 		$dato = array();
 
 		$selectedoperationId = $_POST['selectedoperationId'];
