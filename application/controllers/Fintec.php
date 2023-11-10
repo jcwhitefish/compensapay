@@ -69,13 +69,13 @@ class Fintec extends MY_Loggedout{
 								'amount' => $args['amount'],
 								'descriptor' => 'Devolucion por monto incorrecto',
 								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $args['trakingKeyReceived'].'02',
+								'idempotency_key' => $args['trakingKeyReceived'].'03',
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', json_encode($back));
 							if ($back){
 								$argsR = [
-									'trakingKey' => $args['trakingKeyReceived'].'02',
+									'trakingKey' => $back['idempotency_key'],
 									'arteriaId' => $back['id'],
 									'amount' => $back['amount'],
 									'descriptor' => $back['descriptor'],
