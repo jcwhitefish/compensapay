@@ -20,10 +20,10 @@ class Invoice_model extends CI_Model {
         $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
 		$this->db->from('users as u');
         $this->db->join('companies AS c', 'c.id = u.id_company');
-        $this->db->join('invoices AS i', 'i.receiver_rfc = c.rfc');
-        $this->db->join('companies AS c2', 'c2.rfc = i.sender_rfc');
+        $this->db->join('invoices AS i', 'i.sender_rfc = c.rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
 		$this->db->where('c.id', $user);
-		$this->db->where('i.receiver_rfc', $rfc_emi);
+		$this->db->where('i.sender_rfc', $rfc_emi);
 		$this->db->where('i.status', 0);
         $query = $this->db->get();
         return $query->result();

@@ -128,7 +128,7 @@ class Facturas extends MY_Loggedin
 		//var_dump($facturaData);
 		$company = $this->company_model->get_company_by_rfc($facturaData[0]->receiver_rfc);
 		$dato['name_proveedor'] = $company[0]->short_name;
-		$dato['facturasClient'] = $this->Invoice_model->get_invoices_by_client($facturaData[0]->receiver_rfc);
+		$dato['facturasClient'] = $this->Invoice_model->get_inv_prov_send_by_rfc($facturaData[0]->receiver_rfc);
 
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');

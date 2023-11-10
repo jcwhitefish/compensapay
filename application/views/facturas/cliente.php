@@ -250,7 +250,7 @@
                                             <td class="tabla-celda center-align">
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
-                                            <td>{{facturaClient.short_name}}</td>
+                                            <td>{{facturaClient.name_provee}}</td>
                                             <td>{{facturaClient.sender_rfc}}</td>
                                             <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td>{{facturaClient.invoice_date}}</td>
