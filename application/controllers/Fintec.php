@@ -75,7 +75,7 @@ class Fintec extends MY_Loggedout{
 							$this->createLog('CreateTransfer', json_encode($back));
 							if ($back){
 								$argsR = [
-									'trakingKey' => $back['idempotency_key'],
+									'trakingKey' => $args['trakingKeyReceived'].'02',
 									'arteriaId' => $back['id'],
 									'amount' => $back['amount'],
 									'descriptor' => $back['descriptor'],
