@@ -3,6 +3,7 @@
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message){
 		$logDir = '/home/compensatest/logs/';
+//		$logDir = 'C:\web\logs';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
@@ -14,7 +15,7 @@ class Fintec extends MY_Loggedout{
 		$error = 0;
 		$resp = ["response" => 'ok'];
 		if (Request::getStaticMethod() == 'POST' && ($body = Request::getBody())) {
-//			$this->createLog('ping', json_encode($body));
+			$this->createLog('ping', json_encode($body, JSON_PRETTY_PRINT));
 			$this->load->model('Arteria_model','dataArt');
 			$data = $body ?? NULL;
 			if ($data['object_type'] === 'transaction' && $data['data']['type']  === 'deposit') {
@@ -41,10 +42,10 @@ class Fintec extends MY_Loggedout{
 								'amount' => $args['amount'],
 								'descriptor' => 'Devolucion por referencia no encontrada',
 								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $data['data']['trakingKeyReceived'],
+								'idempotency_key' => $args['trakingKeyReceived'].'01',
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($back));
+							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
 							if ($back){
 								$argsR = [
 									'trakingKey' => $back['idempotency_key'],
@@ -69,10 +70,10 @@ class Fintec extends MY_Loggedout{
 								'amount' => $args['amount'],
 								'descriptor' => 'Devolucion por monto incorrecto',
 								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $args['trakingKeyReceived'].'02',
+								'idempotency_key' => $args['trakingKeyReceived'].'03',
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($back));
+							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
 							if ($back){
 								$argsR = [
 									'trakingKey' => $back['idempotency_key'],
@@ -92,31 +93,7 @@ class Fintec extends MY_Loggedout{
 
 							}
 						}else{
-							$amountP = (floatval($op['entry']) - floatval($op['exit']))*100;
-							$provedor = [
-								'clabe' => $op['companyClabe'],
-								'amount' => $amountP,
-								'descriptor' => 'Movimiento entre cuentas',
-								'name' => $op['companyName'],
-								'idempotency_key' => rand(1000000,9999999),
-							];
-							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($prov));
-							$argsR = [
-								'trakingKeyReceived' => $data['data']['tracking_key'],
-								'trakingKeySend' => $provedor['idempotency_key'],
-								'arteriaId' => $prov['id'],
-								'amount' => $prov['amount'],
-								'descriptor' => 'Movimiento entre cuentas',
-								'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
-								'receiverBank' => substr($op['companyBank'], 0, 3),
-								'sourceRfc' => $data['data']['destination']['rfc'],
-								'receiverRfc' => $data['data']['destination']['rfc'],
-								'sourceClabe' => $data['data']['destination']['account_number'],
-								'receiverClabe' => $op['companyClabe'],
-								'transactionDate' => $prov['created_at'],
-							];
-							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
+							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
 								'amount' => (floatval($op['exit'])*100),
@@ -125,25 +102,51 @@ class Fintec extends MY_Loggedout{
 								'idempotency_key' => rand(1000000,9999999),
 							];
 							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($transferCliente));
+							$this->createLog('CreateTransfer', 'Send ->'.json_encode($clientT, JSON_PRETTY_PRINT));
+							$this->createLog('CreateTransfer', 'Response ->'.json_encode($transferCliente, JSON_PRETTY_PRINT));
 							$argsR = [
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $clientT['idempotency_key'],
-								'arteriaId' => $transferCliente['id'],
+								'arteriaId' => 'asdasdsd',//$transferCliente['id'],
 								'amount' => ($op['exit'])*100,
-								'descriptor' => 'Pago ',
+								'descriptor' => 'Pago por '.$op['uuid'],
 								'sourceBank' => $data['data']['destination']['bank_code'],
 								'receiverBank' => $data['data']['source']['bank_code'],
 								'sourceRfc' => $data['data']['destination']['rfc'],
 								'receiverRfc' => $data['data']['source']['rfc'],
 								'sourceClabe' => $data['data']['destination']['account_number'],
 								'receiverClabe' => $data['data']['source']['account_number'],
-								'transactionDate' => $transferCliente['created_at'],
+								'transactionDate' => '2023-11-10T14:33:08.727404+00:00',//$transferCliente['created_at'],
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-
+							//====| Comenzamos a enviar el dinero del proveedor |=====
+							$amountP = intval((floatval($op['entry'])*100) - (floatval($op['exit'])*100));
+							$provedor = [
+								'clabe' => $op['companyClabe'],
+								'amount' => intval($amountP),
+								'descriptor' => 'Movimiento entre cuentas',
+								'name' => $op['companyName'],
+								'idempotency_key' => rand(1000000,9999999),
+							];
+							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
+							$this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
+							$this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
+							$argsR = [
+								'trakingKeyReceived' => $data['data']['tracking_key'],
+								'trakingKeySend' => $provedor['idempotency_key'],
+								'arteriaId' => 'dasdasda',//$prov['id'],
+								'amount' => $amountP,
+								'descriptor' => 'Movimiento entre cuentas',
+								'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
+								'receiverBank' => substr($op['companyBank'], 0, 3),
+								'sourceRfc' => $data['data']['destination']['rfc'],
+								'receiverRfc' => $data['data']['destination']['rfc'],
+								'sourceClabe' => $data['data']['destination']['account_number'],
+								'receiverClabe' => $op['companyClabe'],
+								'transactionDate' => '2023-11-10T14:33:08.727404+00:00',//$prov['created_at'],
+							];
+							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 //							$this->load->helper('sendmail_helper');
-
 							return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
 						}
 					}

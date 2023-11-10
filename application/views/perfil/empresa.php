@@ -71,6 +71,18 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                msg = "Debe llenar todos los campos para continuar."
             }
 
+            var fileInput = document.getElementById('firmaLegal');
+            var filePrueba = document.getElementById('firmaLegal').files[0];
+            var nameImage = document.getElementById('nameImage');
+            
+            var filePath = fileInput.value;
+            var allowedExtensions = /(.jpg|.jpeg|.png)$/i;
+            if(!allowedExtensions.exec(filePath)){
+                fileInput.value = '';
+                nameImage.value = '';
+                msg += "\nLa imagen de la firma solo acepta los siguientes formatos: 'jpg', 'jpeg' o 'png'.";
+            }
+
             
             if( validEmail.test(emailField.value) ){
                 
@@ -89,6 +101,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 $("#div-fase-3").show();
                 $("#btn-fase-3").show();
                 $("#back-fase-2").show();
+                console.log(filePrueba)
 
             }else{
                 alert (msg);
@@ -140,6 +153,10 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
         $('#btn-fase-4').on('click', function() {
             var bandera = false;
             var msg = '';
+            var firmabase64 = '';
+            var value = '';
+            //Este objeto FileReader te permite leer archivos
+            var reader = new FileReader();
             var vulnerable = $('input[name="vulnerable"]:checked').val();
             
             if((vulnerable == '' ||  vulnerable == null)){
@@ -157,80 +174,90 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                    msg += "\nRespondio 'Si' en Actividades vulnerables, aun faltan preguntas por responder."
                 }
             }
+
+            value = document.getElementById("firmaLegal").files[0];
+
+            //Esta función se ejecuta cuando el reader.readAsDataURL termina 
+            reader.onload = function (e) {
+                firmabase64 = e.target.result.split("base64,")[1];
+                    if(msg == ''){
+                    hideForms();
+                    $.ajax({
+                        url: '/Registro/registrarProveedor',
+                        data: {
+                            bussinesName: $('#bussinesNameForm').val(),
+                            nationality: $('#nationality').val(),
+                            folio: $('#folio').val(),
+                            efirma: $('#efirma').val(),
+                            phoneForm: $('#phoneForm').val(),
+                            web: $('#web').val(),
+                            bank: $('#bankForm1').val(),
+                            nameComercial: $('#nameComercialForm1').val(),
+                            dateConst: $('#dateConst').val(),
+
+                            rfc: $('#rfcForm').val(),
+                            dom: $('#dom').val(),
+                            emailForm: $('#emailForm').val(),
+                            clabe: $('#clabeForm').val(),
+                            socialobj: $('#socialobj').val(),
+                            descOperation: $('#descOperation').val(),
+                            transactMonth: $('#transactMonth').val(),
+                            amount: $('#amount').val(),
+                            charge: $('#charge').val(),
+                            curp: $('#curp').val(),
+
+                            idNumber: $('#idNumber').val(),
+                            emailForm2: $('#emailForm2').val(),
+                            nameForm2: $('#nameForm2').val(),
+                            rfcForm2: $('#rfcForm2').val(),
+                            domForm2: $('#domForm2').val(),
+                            phoneForm2: $('#phoneForm2').val(),
+                            fisica: $('input[name="fisica"]:checked').val(),
+                            moral: $('input[name="moral"]:checked').val(),
+                            license: $('input[name="license"]:checked').val(),
+                            supervisor: $('#supervisor').val(),
+
+                            dateAward: $('#dateAward').val(),
+                            typeLicense: $('#typeLicense').val(),
+                            audited: $('input[name="audited"]:checked').val(),
+                            anticorruption: $('input[name="anticorruption"]:checked').val(),
+                            dataProtection: $('input[name="dataProtection"]:checked').val(),
+                            vulnerable: $('input[name="vulnerable"]:checked').val(),
+                            servTrib: $('#servTrib').val(),
+                            obligations: $('#obligations').val(),
+                            firma: firmabase64
+                            
+                        },
+                        dataType: 'json',
+                        method: 'post',
+                        beforeSend: function () {
+                            
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
+                            //M.toast({html: toastHTML});
+                        },
+                        complete: function () {
+                            //$('#descripcion').val('');
+                            //$('#asunto').val('');
+                            //getTickets();
+                        },
+                        error: function (){
+                            alert('Ha ocurrido un problema');
+                            //location.reload();
+                        }
+                    });
+
+                }else{
+                    alert (msg);
+                    return false;
+
+                } 
+            }
             
-
-            if(msg == ''){
-                hideForms();
-                $.ajax({
-                    url: '/Registro/registrarProveedor',
-                    data: {
-                        bussinesName: $('#bussinesName').val(),
-                        nationality: $('#nationality').val(),
-                        folio: $('#folio').val(),
-                        efirma: $('#efirma').val(),
-                        phoneForm: $('#phoneForm').val(),
-                        web: $('#web').val(),
-                        bank: $('#bankForm1').val(),
-                        nameComercial: $('#nameComercialForm1').val(),
-                        dateConst: $('#dateConst').val(),
-
-                        rfc: $('#rfc').val(),
-                        dom: $('#dom').val(),
-                        emailForm: $('#emailForm').val(),
-                        clabe: $('#clabe').val(),
-                        socialobj: $('#socialobj').val(),
-                        descOperation: $('#descOperation').val(),
-                        transactMonth: $('#transactMonth').val(),
-                        amount: $('#amount').val(),
-                        charge: $('#charge').val(),
-                        curp: $('#curp').val(),
-
-                        idNumber: $('#idNumber').val(),
-                        emailForm2: $('#emailForm2').val(),
-                        nameForm2: $('#nameForm2').val(),
-                        rfcForm2: $('#rfcForm2').val(),
-                        domForm2: $('#domForm2').val(),
-                        phoneForm2: $('#phoneForm2').val(),
-                        fisica: $('input[name="fisica"]:checked').val(),
-                        moral: $('input[name="moral"]:checked').val(),
-                        license: $('input[name="license"]:checked').val(),
-                        supervisor: $('#supervisor').val(),
-
-                        dateAward: $('#dateAward').val(),
-                        typeLicense: $('#typeLicense').val(),
-                        audited: $('input[name="audited"]:checked').val(),
-                        anticorruption: $('input[name="anticorruption"]:checked').val(),
-                        dataProtection: $('input[name="dataProtection"]:checked').val(),
-                        vulnerable: $('input[name="vulnerable"]:checked').val(),
-                        servTrib: $('#servTrib').val(),
-                        obligations: $('#obligations').val(),
-                    },
-                    dataType: 'json',
-                    method: 'post',
-                    beforeSend: function () {
-                        
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
-                        //M.toast({html: toastHTML});
-                    },
-                    complete: function () {
-                        //$('#descripcion').val('');
-                        //$('#asunto').val('');
-                        //getTickets();
-                    },
-                    error: function (){
-                        alert('Ha ocurrido un problema');
-                        location.reload();
-                    }
-                });
-
-            }else{
-                alert (msg);
-                return false;
-
-            }       
+            reader.readAsDataURL(value);
+      
         });
 
         $('#back-fase-1').on('click', function() {
@@ -274,6 +301,24 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
         $("#btn-fase-2").hide();
         $("#btn-fase-3").hide();
         $("#btn-fase-4").hide();
+    }
+
+    function fileValidation(){
+        var fileInput = document.getElementById('firmaLegal');
+        var filePath = fileInput.value;
+        var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
+        if(!allowedExtensions.exec(filePath)){
+            
+        }else{
+            //Image preview
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').innerHTML = '<img src="'+e.target.result+'"/>';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
     }
 </script>
 
@@ -486,8 +531,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                             <div class="col l6 especial-p">
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="bussinesName">Denominaci&oacute; o raz&oacute;n social *</label>
-                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['legal_name']  ?>" type="text" name="bussinesName" id="bussinesName">
+                                        <label style="top:auto" for="bussinesNameForm">Denominaci&oacute; o raz&oacute;n social *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['legal_name']  ?>" type="text" name="bussinesNameForm" id="bussinesNameForm">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -542,8 +587,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="rfc">"RFC o equivalente" *</label>
-                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['rfc']  ?>" type="text" name="rfc" id="rfc">
+                                        <label style="top:auto" for="rfcForm">"RFC o equivalente" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['rfc']  ?>" type="text" name="rfcForm" id="rfcForm">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -560,8 +605,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                 </div>
                                 <div class="row">
                                     <div class="input-border col cover">
-                                        <label style="top:auto" for="clabe">"Número de cuenta, CLABE" *</label>
-                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['account_clabe']  ?>" type="text" name="clabe" id="clabe">
+                                        <label style="top:auto" for="clabeForm">"Número de cuenta, CLABE" *</label>
+                                        <input class="form-1" value="<?php echo $this->session->userdata('datosEmpresa')['account_clabe']  ?>" type="text" name="clabeForm" id="clabeForm">
                                     </div>
                                 </div>
                             </div>
@@ -634,6 +679,23 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                         <input class="form-2" type="text" name="emailForm2" id="emailForm2" value="">
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div style="margin-bottom: 15px" class="input-border col cover">
+                                        <label style="top:auto;" for="firmaLegal">Firma del representante legal *</label>
+                                    </div>
+                                    <form style="margin-left: 10px" action="#">
+                                        <div class="file-field input-field">
+                                            <div class="btn">
+                                                <span>Cargar Firma</span>
+                                                <input style="display: block !important;" class="form-2" type="file" name="firmaLegal" id="firmaLegal" onchange="return fileValidation()">
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input id="nameImage" class="file-path validate" type="text" placeholder="Firma del representante legal">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div style="text-align: center" id="imagePreview"></div>
+                                </div>
                             </div>
                             <div class="col l6 especial-p">
                                 <div class="row">
@@ -658,6 +720,11 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                     <div class="input-border col cover">
                                         <label style="top:auto" for="phoneForm2">Numero de teléfono *</label>
                                         <input class="form-2" type="text" name="phoneForm2" id="phoneForm2" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-border col cover">
+                                        <p style="top:auto; margin-top: 30px;" for="labelFirma">Al continuar con el formulario usted esta aceptando que esta firma es verídica y que se utilizará para aceptar los términos del contrato.</p>
                                     </div>
                                 </div>
                             </div>
@@ -775,7 +842,6 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                         <input class="form-4" type="text" name="servTrib" id="servTrib">
                                     </div>
                                 </div>
-                                
                             </div>
                             <div class="col l6 especial-p">
                                 <div class="row">
