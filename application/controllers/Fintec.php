@@ -41,7 +41,7 @@ class Fintec extends MY_Loggedout{
 								'amount' => $args['amount'],
 								'descriptor' => 'Devolucion por referencia no encontrada',
 								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $data['data']['trakingKeyReceived'],
+								'idempotency_key' => $args['trakingKeyReceived'].'01',
 							];
 							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', json_encode($back));
