@@ -61,7 +61,7 @@ class Facturas extends MY_Loggedin
 
 	public function tablaFacturasCliente(){
 		$dato = array();
-		$dato['facturas'] = $this->Invoice_model->get_client_invoices($this->user);
+		$dato['facturas'] = $this->Invoice_model->get_invoices_by_client($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -81,7 +81,7 @@ class Facturas extends MY_Loggedin
 
 	public function tablaMovimientos(){
 		$dato = array();
-		$dato['movements'] = $this->Invoice_model->get_provider_movements($this->user);
+		$dato['movements'] = $this->Invoice_model->get_movements($this->user);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
