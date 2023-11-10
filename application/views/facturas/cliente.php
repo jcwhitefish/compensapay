@@ -758,7 +758,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaOperaciones") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaOperacionesC") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         operaciones.value = result.operaciones;
