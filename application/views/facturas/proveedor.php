@@ -326,7 +326,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                                 <input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
                                             </td>
                                             <td>{{facturaClient.name_client}}</td>
-                                            <td>{{facturaClient.receiver_rfc}}</td>
+                                            <td>{{facturaClient.sender_rfc}}</td>
                                             <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
                                             <td class="uuid-text">{{facturaClient.invoice_date}}</td>
                                             <td class="uuid-text">{{facturaClient.created_at}}</td>
@@ -693,6 +693,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             if(result.status == 'ok'){
                                 getOperations();
                                 M.toast({ html: 'Se ha subido la operacion' });
+                            }else if(result.status == 'uuid'){
+                                M.toast({ html: 'Error con la operacion, el UUID no coincide' });
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su nota' });
                             }
@@ -766,7 +768,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     redirect: 'follow'
                 };
 
-                fetch("<?= base_url("facturas/tablaOperaciones") ?>", requestOptions)
+                fetch("<?= base_url("facturas/tablaOperacionesP") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         operaciones.value = result.operaciones;
