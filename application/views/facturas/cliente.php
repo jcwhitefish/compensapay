@@ -111,8 +111,8 @@
                                 <a v-if="operacion.status == '0'" class="modal-trigger" href="#modal-cargar-factura" @click='getOperationById(operacion)'>Autorizar</a>
                             </td>
                             <td class="tabla-celda center-align">
-                                <p v-if="operacion.status == '0' " >Por pagar</p>
-                                <p v-if="operacion.status == '1' " >Pagada</p>
+                                <p v-if="operacion.status == '0' " >Por autorizar</p>
+                                <p v-if="operacion.status == '1' " >Autorizada</p>
                                 <p v-if="operacion.status == '2' " >Rechazada</p>
                                 <p v-if="operacion.status == '3' " >Realizada</p>
                                 <p v-if="operacion.status == '4' " >Vencida</p>

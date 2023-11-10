@@ -154,6 +154,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             var bandera = false;
             var msg = '';
             var firmabase64 = '';
+            var formato = '';
             var value = '';
             //Este objeto FileReader te permite leer archivos
             var reader = new FileReader();
@@ -181,6 +182,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             //Esta función se ejecuta cuando el reader.readAsDataURL termina 
             reader.onload = function (e) {
                 firmabase64 = e.target.result.split("base64,")[1];
+                formato = e.target.result.split(";")[0];
                     if(msg == ''){
                     hideForms();
                     $.ajax({
@@ -226,7 +228,8 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                             vulnerable: $('input[name="vulnerable"]:checked').val(),
                             servTrib: $('#servTrib').val(),
                             obligations: $('#obligations').val(),
-                            firma: firmabase64
+                            firma: firmabase64,
+                            formato: formato
                             
                         },
                         dataType: 'json',

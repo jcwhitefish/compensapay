@@ -117,8 +117,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <i v-if="operacion.status == '0'" class="small material-icons">panorama_fish_eye</i>
                             </td>
                             <td class="tabla-celda center-align">
-                                <p v-if="operacion.status == '0' " >Por pagar</p>
-                                <p v-if="operacion.status == '1' " >Pagada</p>
+                                <p v-if="operacion.status == '0' " >Pendiente de autorización</p>
+                                <p v-if="operacion.status == '1' " >Autorizada</p>
                                 <p v-if="operacion.status == '2' " >Rechazada</p>
                                 <p v-if="operacion.status == '3' " >Realizada</p>
                                 <p v-if="operacion.status == '4' " >Vencida</p>
