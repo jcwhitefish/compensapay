@@ -176,6 +176,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             }
 
             value = document.getElementById("firmaLegal").files[0];
+            var base_url = window.location.origin;
 
             //Esta función se ejecuta cuando el reader.readAsDataURL termina 
             reader.onload = function (e) {
@@ -183,7 +184,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     if(msg == ''){
                     hideForms();
                     $.ajax({
-                        url: '/Registro/registrarProveedor',
+                        url: base_url + '/Registro/registrarProveedor',
                         data: {
                             bussinesName: $('#bussinesNameForm').val(),
                             nationality: $('#nationality').val(),
@@ -314,7 +315,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
             if (fileInput.files && fileInput.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('imagePreview').innerHTML = '<img src="'+e.target.result+'"/>';
+                    document.getElementById('imagePreview').innerHTML = '<img style="width: 300px; height:160;" src="'+e.target.result+'"/>';
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             }
@@ -694,7 +695,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                             </div>
                                         </div>
                                     </form>
-                                    <div style="text-align: center;width: 150px height:80" id="imagePreview"></div>
+                                    <div style="text-align: center" id="imagePreview"></div>
                                 </div>
                             </div>
                             <div class="col l6 especial-p">
