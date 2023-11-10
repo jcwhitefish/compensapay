@@ -48,12 +48,12 @@
                     <thead>
                         <tr>
                             <th>Crear Operación</th>
+                            <th>Estatus</th>
                             <th>Proveedor</th>
                             <th>UUID Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
                             <th>Fecha Transacción</th>
-                            <th>Estatus</th>
                             <th>Subtotal</th>
                             <th>IVA</th>
                             <th>Total</th>
@@ -65,6 +65,11 @@
                                 <i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>
                                 <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaCliente(factura)">Crear Operacion</a>
                             </td>
+                            <td>
+                                <p v-if="factura.status == '0' " >Libre</p>
+                                <p v-if="factura.status == '1' " >En Operación</p>
+                                <p v-if="factura.status == '2' " >Pagada</p>
+                            </td>
                             <td>{{factura.name_provee}}</td>
                             <td><p class="uuid-text">{{factura.uuid}}</p></td>
                             <td class="uuid-text">{{factura.invoice_date}}</td>
@@ -72,11 +77,6 @@
                             <td>
                                 <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
                                 <p class="uuid-text" v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
-                            </td>
-                            <td>
-                                <p v-if="factura.status == '0' " >Libre</p>
-                                <p v-if="factura.status == '1' " >En Operación</p>
-                                <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>${{factura.subtotal}}</td>
                             <td>${{factura.iva}}</td>
@@ -580,7 +580,7 @@
 
     /* Puntos suspensivos a fila donde se muestrael UUID */
     .uuid-text{
-        width: 120px;
+        width: 85px;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
