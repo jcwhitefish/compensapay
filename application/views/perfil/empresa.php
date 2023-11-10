@@ -2,6 +2,14 @@
 //TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
 //var_dump($this->session->userdata('datosEmpresa'));
+if(empty($this->session->userdata('datosEmpresa')['rec_id'])){
+    $botonProv = '<a class="modal-trigger button-blue" href="#modal-proveedor" >
+                        Regístrate Proveedor
+                    </a>';
+}else{
+    $botonProv ='';
+}
+
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -424,9 +432,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     </div>
                 </div>
                 <div class="row" style="text-align: center;">
-                    <a class="modal-trigger button-blue" href="#modal-proveedor" >
-                        Regístrate Proveedor
-                    </a>
+                    <?php echo $botonProv;  ?>
                 </div>
                 
                 <div v-if="false" class="row">

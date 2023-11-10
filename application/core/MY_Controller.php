@@ -25,7 +25,7 @@ class MY_Loggedin extends CI_Controller
 
             // var_dump($this->session->userdata('datosUsuario'));
             //consultamos los datos de la empresa con $this->session->set_userdata('datosUsuario',); el id de la empresa
-            $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $this->session->userdata('datosUsuario')['id_company'])));
+            $this->session->set_userdata('datosEmpresa',$this->company_model->get_company($this->session->userdata('datosUsuario')['id_company']));
 
             //var_dump($this->session->userdata('datosEmpresa'));
         } else {
