@@ -48,7 +48,7 @@ class Invoice_model extends CI_Model {
         $this->db->join('invoices AS i', 'i.sender_rfc = c1.rfc');
         $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
 		$this->db->where('c1.id', $user);
-		$this->db->where('i.status', 0);
+		//$this->db->where('i.status', 0);
         $query = $this->db->get();
         return $query->result();
     }
@@ -72,7 +72,7 @@ class Invoice_model extends CI_Model {
         $this->db->join('invoices AS i', 'i.sender_rfc = c.rfc');
         $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
 		$this->db->where('c.id', $user);
-		$this->db->where('i.status', 0);
+		//$this->db->where('i.status', 0);
         $query = $this->db->get();
         return $query->result();
     }
