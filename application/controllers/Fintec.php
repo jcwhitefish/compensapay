@@ -108,7 +108,7 @@ class Fintec extends MY_Loggedout{
 								'trakingKeySend' => $clientT['idempotency_key'],
 								'arteriaId' => $transferCliente['id'],
 								'amount' => ($op['exit'])*100,
-								'descriptor' => 'Pago ',
+								'descriptor' => 'Pago por '.$op['uuid'],
 								'sourceBank' => $data['data']['destination']['bank_code'],
 								'receiverBank' => $data['data']['source']['bank_code'],
 								'sourceRfc' => $data['data']['destination']['rfc'],
