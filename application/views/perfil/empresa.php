@@ -101,7 +101,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 $("#div-fase-3").show();
                 $("#btn-fase-3").show();
                 $("#back-fase-2").show();
-                console.log(filePrueba)
+                //console.log(filePrueba)
 
             }else{
                 alert (msg);
@@ -694,7 +694,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                                             </div>
                                         </div>
                                     </form>
-                                    <div style="text-align: center" id="imagePreview"></div>
+                                    <div style="text-align: center;width: 150px height:80" id="imagePreview"></div>
                                 </div>
                             </div>
                             <div class="col l6 especial-p">
