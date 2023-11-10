@@ -242,7 +242,7 @@ class Invoice_model extends CI_Model {
     public function update_status($id, $status) {
         $factura = array(
 			"status" => $status,
-            "updated_at" => "2023-25-10"
+            "updated_at" => date("Y-m-d")
 		);
 
         $this->db->where('id', $id);

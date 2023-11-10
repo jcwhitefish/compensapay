@@ -533,12 +533,15 @@ class Facturas extends MY_Loggedin
 	}
 
 	public function statusOperacion(){
-
 		$dato = array();
 
 		$selectedoperationId = $_POST['selectedoperationId'];
 		$status = $_POST['acceptDecline'];
 		$this->Invoice_model->update_status($selectedoperationId, $status);
+		if($status == 2){//regresar status 0 a factura cuando se rechaza la OP
+			$ope = $this->Operation_model->get_operation_by_id($selectedoperationId);
+			$this->Invoice_model->update_status_invoice($ope[0]->id_invoice, '0');
+		}
 
 		$dato['status'] = 'ok';
 

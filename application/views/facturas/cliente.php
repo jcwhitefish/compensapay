@@ -372,15 +372,15 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.id_uploaded_by" disabled />
+                                    <input type="text" :placeholder="operationClient.name_proveedor" disabled />
                                     <label for="invoiceDisabled">Provedor: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.id_invoice" disabled />
+                                    <input type="text" :placeholder="operationClient.uuid_factura" disabled />
                                     <label for="invoiceDisabled">Factura: </label>
                                 </div>
                                 <div class="col l4 input-border">
-                                    <input type="text" :placeholder="operationClient.id_debit_note !== null ? operationClient.id_debit_note : (operationClient.id_invoice_relational !== null ? operationClient.id_invoice_relational : '')" disabled />
+                                    <input type="text" :placeholder="operationClient.uuid_nota" disabled />
                                     <label for="invoiceDisabled">Nota de Credito/ Factura: </label>
                                 </div>
                             </div>
@@ -400,12 +400,12 @@
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
-                                    <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
+                                    <input type="date" id="start" name="trip-start" :value="operationClient.transaction_date" min="2023-01-01" max="2040-12-31" />
                                     <label for="start">Inicio:</label>
                                 </div>
                                 <div class="col l1"></div>
                                 <div class="col l4 input-border px-3">
-                                    <input class="input-border-null" type="text" :placeholder="operationClient.account_clabe" disabled />
+                                    <input class="input-border-null" type="text" :placeholder="operationClient.arteria_clabe" disabled />
                                     <label for="invoiceDisabled">Cuenta CLABE del proveedor:</label>
                                 </div>
                             </div>
@@ -760,16 +760,10 @@
                     .catch(error => console.log('error', error));
             };
 
-            //tabla get operacion por id y obtencion del id
-            const guardarSeleccion = async (id) => {
-                selectedoperationId.value = id;
-                getOperationById(id);
-            };
-
-            const getOperationById = async (selectedoperationId) => {
-
+            const getOperationById = async (selectId) => {
+                selectedoperationId.value = selectId.id;
                 const formData = new FormData();
-                formData.append('selectedoperationId', selectedoperationId.id);
+                formData.append('selectedoperationId', selectId.id);
 
                 var requestOptions = {
                     method: 'POST',
@@ -786,7 +780,6 @@
 
             //aprobar operacion
             const changeStatus =  async (acceptOrDecline)  => {
-
                 const formData = new FormData();
                 acceptDecline.value = acceptOrDecline;
                 formData.append('selectedoperationId', selectedoperationId.value);
@@ -980,12 +973,12 @@
                 facturasClient,
                 autorizar,
                 actualizacion,
-                guardarSeleccion,
                 changeStatus,
                 operacionUnicaCliente,
                 facturasClientUnique,
                 uuidSelectedUnica,
                 id_factura_cliente_unica,
+                selectedoperationId,
                 providerUploadNameUnique,
                 getFacturasByClientUnica,
                 uploadOperationUnica,
