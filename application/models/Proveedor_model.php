@@ -166,7 +166,7 @@ class Proveedor_model extends CI_Model{
 
 									<p>La información contenida en este documento es privada y confidencial.</p>
 									<div style="text-align: right; width:80%">
-										<img width="150" height="80" src="data:image/png;base64,'. $args['firma'] .'">
+										<img width="150" height="80" src="'. $args['formato'] .';base64,'. $args['firma'] .'">
 									</div>
 									<p>Firma del representante legal: _________________________________________________________</p>
 									<p>A. Información general</p>

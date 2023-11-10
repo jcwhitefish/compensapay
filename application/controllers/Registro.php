@@ -322,6 +322,7 @@ class Registro extends MY_Loggedin
         $obligations= $this->input->post('obligations');
 
         $firma= $this->input->post('firma');
+        $formato= $this->input->post('formato');
 
 		$companie = $this->session->userdata('datosEmpresa')['id'];
 		$companieName = $this->session->userdata('datosEmpresa')['legal_name'];
@@ -372,6 +373,7 @@ class Registro extends MY_Loggedin
 			'companie' => $companie,
 			'companieName' => $companieName,
 			'firma' => $firma,
+			'formato' => $formato,
 		];
 		$res = $this->prov->registrarProveedor($args);
 		$this->session->set_userdata('legal_name', $bussinesName);
@@ -381,7 +383,7 @@ class Registro extends MY_Loggedin
 		$this->session->set_userdata('telephone', $phoneForm);
 		$this->session->set_userdata('account_clabe', $clabe);
 		$pdf = $this->prov->createPDF($args);
-		echo json_encode($args);
+		echo json_encode($pdf);
 	}
 }
 
