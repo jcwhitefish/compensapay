@@ -93,7 +93,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>
-                            <th>Aprobación<br>Operación</th>
+                            <th>Autorizar<br>Operación</th>
                             <th>Estatus <br>Operación</th>
                             <th>ID Operación</th>
                             <th>Cliente</th>
@@ -450,7 +450,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
     <!-- darle aceptar a una factura (el feo) -->
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
-            <h5>Porfavor, autoriza la transacción</h5>
+            <h5>Por favor, autoriza la transacción</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
@@ -461,7 +461,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             <div class="row">
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="Frontier" disabled />
-                                    <label for="invoiceDisabled">Provedor</label>
+                                    <label for="invoiceDisabled">Proveedor</label>
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="XYZ832HS" disabled />
@@ -475,7 +475,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             <div class="row">
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="TRA10035904" disabled />
-                                    <label for="invoiceDisabled">ID Transaccion</label>
+                                    <label for="invoiceDisabled">ID Transacción</label>
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" placeholder="$ 21,576.00" disabled />
@@ -516,7 +516,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 
     <!-- darle rechazar una factura -->
     <div id="modal-rechazo" class="modal p-5">
-        <h5>Operacion rechazada</h5>
+        <h5>Operación rechazada</h5>
         <div class="card esquinasRedondas">
             <form>
                 <div class="card-content ">
@@ -624,7 +624,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 
                 fetch("<?= base_url('facturas/actualizacion/')?>" + autorizar.value, requestOptions)
                     .then(response => response.json())
-                    .then(result => {console.log(result);alert('Se autorizo la operacion con exito'); window.location.replace('<?php echo base_url('facturas'); ?>');})
+                    .then(result => {console.log(result);alert('Se autorizo la operacion con éxito'); window.location.replace('<?php echo base_url('facturas'); ?>');})
                     .catch(error => console.log('error', error));
 
             };
@@ -654,7 +654,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             } else if(result.error == 'uuid'){
                                 M.toast({html: 'Ya se ha subido la factura'});
                             } else if(result.error == 'uuids'){
-                                M.toast({html: 'Ya habia facturas subidas'});
+                                M.toast({html: 'Ya había facturas subidas'});
                             } else if(result.error == 'zip'){
                                 M.toast({html: 'Error con el ZIP'});
                             } else if(result.error == 'rfc'){
@@ -692,11 +692,12 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         .then(result => {
                             if(result.status == 'ok'){
                                 getOperations();
-                                M.toast({ html: 'Se ha subido la operacion' });
+                                getFacturas();
+                                M.toast({ html: 'Se ha subido la operación' });
                             }else if(result.status == 'uuid'){
-                                M.toast({ html: 'Error con la operacion, el UUID no coincide' });
+                                M.toast({ html: 'Error con la operación, el UUID no coincide' });
                             }else{
-                                M.toast({ html: 'Error con la operacion, verifique su nota' });
+                                M.toast({ html: 'Error con la operación, verifique su nota' });
                             }
                         })
                         .catch(error => console.log('error', error));
@@ -727,9 +728,10 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         .then(result => {
                             if(result.status == 'ok'){
                                 getOperations();
-                                M.toast({ html: 'Se ha subido la operacion' });
+                                getFacturas();
+                                M.toast({ html: 'Se ha subido la operación' });
                             }else{
-                                M.toast({ html: 'Error con la operacion, verifique su nota de crédito' });
+                                M.toast({ html: 'Error con la operación, verifique su nota de crédito' });
                             }
 
                         })

@@ -87,7 +87,7 @@
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                 <thead>
                         <tr>
-                            <th>Aprobación<br>Operación</th>
+                            <th>Autorizar<br>Operación</th>
                             <th>Estatus <br>Operación</th>
                             <th>ID Operación</th>
                             <th>Proveedor</th>
@@ -365,7 +365,7 @@
     <!-- darle aceptar a una factura -->
     <div id="modal-cargar-factura" class="modal">
         <div class="modal-content">
-            <h5>Porfavor, autoriza la transacción</h5>
+            <h5>Por favor, autoriza la transacción</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content" v-for="operationClient in operationsClient">
                     <form id="uploadForm" enctype="multipart/form-data">
@@ -373,7 +373,7 @@
                             <div class="row">
                                 <div class="col l4 input-border">
                                     <input type="text" :placeholder="operationClient.name_proveedor" disabled />
-                                    <label for="invoiceDisabled">Provedor: </label>
+                                    <label for="invoiceDisabled">Proveedor: </label>
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" :placeholder="operationClient.uuid_factura" disabled />
@@ -381,13 +381,13 @@
                                 </div>
                                 <div class="col l4 input-border">
                                     <input type="text" :placeholder="operationClient.uuid_nota" disabled />
-                                    <label for="invoiceDisabled">Nota de Credito/ Factura: </label>
+                                    <label for="invoiceDisabled">Nota de Crédito/ Factura: </label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col l4 input-border">
                                     <input class="input-border-null" type="text" :placeholder="operationClient.operation_number" disabled />
-                                    <label for="invoiceDisabled">ID Transaccion: </label>
+                                    <label for="invoiceDisabled">ID Transacción: </label>
                                 </div>
                                 <div class="col l4 input-border">
                                     <input class="input-border-null" type="text" :placeholder="operationClient.entry_money" disabled />
@@ -578,7 +578,7 @@
         box-shadow: 0 1px 0 0 #fff !important;
     }
 
-    /* Puntos suspensivos a fila donde se muestrael UUID */
+    /* Puntos suspensivos a fila donde se muestra el UUID */
     .uuid-text{
         width: 85px;
         white-space: nowrap;
@@ -632,7 +632,7 @@
 
                 fetch("<?= base_url('facturas/actualizacion/')?>" + autorizar.value, requestOptions)
                     .then(response => response.json())
-                    .then(result => {console.log(result);alert('Se autorizo la operacion con exito'); window.location.replace('<?php echo base_url('facturas'); ?>');})
+                    .then(result => {console.log(result);alert('Se autorizo la operacion con éxito'); window.location.replace('<?php echo base_url('facturas'); ?>');})
                     .catch(error => console.log('error', error));
 
             };
@@ -659,12 +659,12 @@
                             } else if(result.error == 'uuid'){
                                 M.toast({html: 'Ya se ha subido la factura'});
                             } else if(result.error == 'rfc'){
-                                M.toast({html: 'el rfc no corresponde a el de su factura '});
+                                M.toast({html: 'El rfc no corresponde a el de su factura '});
                             }
                         })
                         .catch(error => console.log('error', error));
                 } else {
-                    alert('Ingresa una factura y acepta los terminos');
+                    alert('Ingresa una factura y acepta los términos');
                 }
             };
 
@@ -795,7 +795,8 @@
                     .then(response => response.json())
                     .then(result => {
                         getOperations();
-                        M.toast({ html: 'Se ha aprobo la operacion' });
+                        getFacturas();
+                        M.toast({ html: 'Se ha aprobado la operación' });
                     })
                     .catch(error => console.log('error', error));
             };
@@ -822,7 +823,7 @@
                 }
             };
 
-            //Ver que tabla vamos a ver segun el boton seleccionado
+            //Ver que tabla vamos a ver según el botón seleccionado
             const selectButton = (buttonName) => {
                 if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
