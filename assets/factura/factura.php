@@ -366,7 +366,7 @@ $pdf->Line(8, 70, 200, 70);
 //
 //posicion inicial y por pagina
 //
-$y_axis_initial = 72; $y_axis=76;
+$y_axis_initial = 72; $y_axis=77;
 //
 //titulos de las columnas
 //
@@ -404,24 +404,79 @@ $pdf->SetY($y_axis);
 //
 foreach($xml["cfdi:Comprobante"]["cfdi:Conceptos"] AS $concepto)
 {
-    //foreach($concepto AS $valor)
-    //{
-//
-    //    $data=json_encode($valor);
-//
-    //    $datos=json_decode($data, false);
-    //
-    //    //
-    //    $pdf->SetFillColor(255,255,255);
-    //    //
-    //    $pdf->SetFont('Arial','',7);
-    //    //
-    //    $pdf->SetTextColor(000,000,000);
-    //    //
-    //    $pdf->SetX(5);
-    //    //
-    //    $pdf->Cell(25,4,$datos[1]->ClaveProdServ,0,0,'C',1); 
-    //}
+    $claveprodserv=''; $cantidad='';$unidad='';$descripcion='';$importe='';$valorunitario='';
+    foreach ($concepto as $clave => $valor) {
+        // Si el valor es otro arreglo, iterar sobre él
+        //if (is_array($valor)) {
+        //    //echo "[$clave] => \n";
+        //    //foreach ($valor as $clave2 => $valor2) {
+        //    //    // Si hay otro nivel de arreglo, iterar sobre él
+        //    //    if (is_array($valor2)) {
+        //    //        echo "  [$clave2] => \n";
+        //    //        foreach ($valor2 as $clave3 => $valor3) {
+        //    //            // Si hay otro nivel de arreglo, iterar sobre él
+        //    //            if (is_array($valor3)) {
+        //    //                echo "    [$clave3] => \n";
+        //    //                foreach ($valor3 as $clave4 => $valor4) {
+        //    //                    echo "      [$clave4] => " . json_encode($valor4) . "\n";
+        //    //                }
+        //    //            } else {
+        //    //                echo "    [$clave3] => " . json_encode($valor3) . "\n";
+        //    //            }
+        //    //        }
+        //    //    } else {
+        //    //        echo "  [$clave2] => " . json_encode($valor2) . "\n";
+        //    //    }
+        //    //}
+        //} else {
+        if(!is_array($valor))
+        {
+            if($clave=='ClaveProdServ'){ $claveprodserv = $valor;}
+            if($clave=='Cantidad'){ $cantidad = $valor;}
+            if($clave=='Unidad'){ $unidad = $valor;}    
+            if($clave=='Descripcion'){ $descripcion = $valor;}
+            if($clave=='Importe'){ $importe = '$ '.number_format($valor, 2);}
+            if($clave=='ValorUnitario'){ $valorunitario = '$ '.number_format($valor,2);}
+        }
+
+        
+    }
+    
+    if($claveprodserv!='' AND $cantidad!='' AND $unidad!='' AND $descripcion!='' AND $importe!='' AND $valorunitario!='')
+    {
+        //
+        $pdf->SetFillColor(255,255,255);
+        //
+        $pdf->SetFont('Arial','',8);
+        //
+        $pdf->SetTextColor(000,000,000);
+        //
+        $pdf->SetX(5);
+        //
+        $pdf->Cell(25,4,$claveprodserv,0,0,'C',1);
+        //
+        $pdf->SetX(55);
+        //
+        $pdf->Cell(20,4,$cantidad,0,0,'C',1);
+        //
+        $pdf->SetX(165);
+        //
+        $pdf->Cell(20,4,$valorunitario,0,0,'R',1);
+        //
+        $pdf->Cell(20,4,$importe,0,0,'R',1);
+        //
+        $pdf->SetX(75);
+        //
+        $pdf->MultiCell(20,4,$unidad,0,'C',1);
+        // 
+        $pdf->SetY($y_axis);
+        //
+        $pdf->SetX(95);
+        //
+        $pdf->MultiCell(70,4,$descripcion,0,'C',1);
+        //
+        $y_axis=$pdf->GetY()+5;
+    }
 }
 //while($RResPartidas=mysql_fetch_array($ResPartidas))
 //
@@ -434,19 +489,16 @@ foreach($xml["cfdi:Comprobante"]["cfdi:Conceptos"] AS $concepto)
 
 
 //
-//	$pdf->Cell(25,4,$RResPartidas["Clave"],0,0,'C',1);
+//	
 //
-//	$pdf->Cell(20,4,$RResPartidas["Cantidad"],0,0,'C',1);
-//
-//	$pdf->SetX(165);
-//
-//	$pdf->Cell(20,4,'$ '.number_format($RResPartidas["PrecioUnitario"],2,'.',','),0,0,'R',1);
-//
-//	$pdf->Cell(20,4,'$ '.number_format($RResPartidas["Subtotal"],2,'.',','),0,0,'R',1);
 //
 //	
 //
-//	// $pdf->SetX(75);
+//	
+//
+//	
+//
+//	// 
 //
 //	//retencion IVA partida
 //
@@ -508,21 +560,21 @@ foreach($xml["cfdi:Comprobante"]["cfdi:Conceptos"] AS $concepto)
 //
 //	// }
 //
-//  $pdf->SetX(75);
+//  
 //
 //	$ResClaveUnidad=mysql_fetch_array(mysql_query("SELECT Descripcion FROM c_claveunidad WHERE ClaveUnidad='".$RResPartidas["ClaveUnidad"]."' LIMIT 1"));
 //
-//	$pdf->MultiCell(20,4,$RResPartidas["ClaveUnidad"].' '.$ResClaveUnidad["Descripcion"],0,'C',1);
-//
-//	$pdf->SetY($y_axis);
-//
-//	$pdf->SetX(95);
-//
-//	$pdf->MultiCell(70,4,utf8_decode($RResPartidas["Descripcion"]),0,'C',1);
+//	
 //
 //	
 //
-//	$y_axis=$pdf->GetY()+2;
+//	
+//
+//	
+//
+//	
+//
+//	
 //
 //	
 //
