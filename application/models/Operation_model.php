@@ -45,4 +45,3 @@ class Operation_model extends CI_Model {
     
   
 }
-?>
