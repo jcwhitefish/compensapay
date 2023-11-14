@@ -72,7 +72,7 @@ class Arteria_model extends CI_Model{
 					ON t4.companie_id = t1.id_provider
 					INNER JOIN compensatest_base.invoices t5
 					ON t1.id_invoice = t5.id
-					INNER JOIN compensatest_base.debit_notes t6
+					LEFT JOIN compensatest_base.debit_notes t6
 					ON t1.id_debit_note = t6.id
 					INNER JOIN compensatest_base.cat_bancos t7
 					ON t2.id_broadcast_bank = t7.bnk_id

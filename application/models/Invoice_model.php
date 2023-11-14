@@ -102,15 +102,16 @@ class Invoice_model extends CI_Model {
         $rfc = $query->result()[0]->rfc;
         $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t1.legal_name as "client", t2.legal_name as "provider", t3.bnk_nombre as "bank_source", t4.bnk_nombre as "bank_receiver", CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl"');
         $this->db->from('balance as balance');
-        $this->db->join('operations', 'balance.traking_key_received = operations.operation_number', 'inner');
-        $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'inner');
-        $this->db->join('companies t1', 't1.id = operations.id_client ', 'inner');
-        $this->db->join('companies t2', 't2.id = operations.id_provider', 'inner');
-        $this->db->join('cat_bancos t3', 't3.bnk_clave = balance.source_bank ', 'inner');
-        $this->db->join('cat_bancos t4', 't4.bnk_clave = balance.receiver_bank ', 'inner');
+        $this->db->join('operations', 'balance.traking_key_received = operations.operation_number', 'LEFT');
+        $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'LEFT');
+        $this->db->join('companies t1', 't1.id = operations.id_client ', 'LEFT');
+        $this->db->join('companies t2', 't2.id = operations.id_provider', 'LEFT');
+        $this->db->join('cat_bancos t3', 't3.bnk_clave = balance.source_bank ', 'LEFT');
+        $this->db->join('cat_bancos t4', 't4.bnk_clave = balance.receiver_bank ', 'LEFT');
 
         $this->db->where('balance.source_rfc', $rfc);
         $this->db->or_where('balance.receiver_rfc', $rfc);
+		$this->db->order_by('created_at', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

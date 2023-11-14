@@ -119,6 +119,17 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function operacionesCalendario(){
+		$dato = array();
+		$mesSelected = $_POST['mesSelected'];
+		$dato['operaciones'] = $this->Operation_model->get_operation_calendar($this->user, $mesSelected);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function cargaFacturasPorCliente(){
 		$dato = array();
 
@@ -302,7 +313,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" => $this->user,
 					"id_client" => $this->user,
 					"id_provider" => $factura1[0]->id_user,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $factura2[0]->total,
 					"exit_money" => $factura1[0]->total,
@@ -342,7 +353,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" =>  $this->user,
 					"id_client" => $this->user,
 					"id_provider" => $factura1[0]->id_user,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $factura2[0]->total,
 					"exit_money" => $factura1[0]->total,
@@ -364,7 +375,7 @@ class Facturas extends MY_Loggedin
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
-	
+
 	public function cargaOperacionNotaUnica(){
 		$dato = array();
 		$dato['status'] = "ok";
@@ -398,7 +409,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" =>  "$this->user",
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
@@ -421,7 +432,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" =>  "$this->user",
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
@@ -474,7 +485,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" =>  "$this->user",
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
@@ -497,7 +508,7 @@ class Facturas extends MY_Loggedin
 					"id_uploaded_by" =>  "$this->user",
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
-					"operation_number" => str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+					"operation_number" => str_pad(rand(1, 99999999), 7, '0', STR_PAD_LEFT),
 					"payment_date" =>  $factura1[0]->invoice_date,
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
