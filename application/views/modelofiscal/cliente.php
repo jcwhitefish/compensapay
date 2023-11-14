@@ -186,7 +186,7 @@
                         <tr>
                             <th>Seleccionar</th>
                             <th>Monto</th>
-                            <th>Clave de rastreo</th>
+                            <th>Numero de Referencia</th>
                             <th>Comprobante electrónico (CEP)</th>
                             <th>Descripción</th>
                             <th>Banco origen</th>
@@ -207,7 +207,7 @@
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
                             <td>{{moves.ammountf}}</td>
                             <td>{{moves.traking_key_received}}</td>
-                            <td></td>
+							<td><a href="">Descargar CEP</a></td>
                             <td>{{moves.descriptor}}</td>
                             <td>{{moves.bank_source}}</td>
                             <td>{{moves.bank_receiver}}</td>

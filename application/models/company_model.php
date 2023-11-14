@@ -20,10 +20,10 @@ class Company_model extends CI_Model {
     }
     public function get_company($condiciones) {
         // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
-        $this->db->select('rec_supplier.rec_id, companies.*');
+        $this->db->select('rec_supplier.rec_id, companies.* ');
         $this->db->from('companies');
         $this->db->join('rec_supplier', 'rec_supplier.id_com = companies.id', 'left');
-        $this->db->where('companies.id', $condiciones);
+        $this->db->where('companies.id', $condiciones['id']);
         $query = $this->db->get();
         //$query = $this->db->get_where('companies', $condiciones);
         return $query->row_array();
