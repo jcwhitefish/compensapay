@@ -21,13 +21,17 @@ class MY_Loggedin extends CI_Controller
         // Verificar si el usuario ha iniciado sesión en todas las páginas protegidas
         if ($this->session->userdata('logged_in')) {
             //consultamos los datos del usuario cada que se recarga la pagina
-            $this->session->set_userdata('datosUsuario', $this->user_model->get_user(array('id' => $this->session->userdata('id'))));
+			$data['datosUsuario']  = $this->user_model->get_user(array('id' => $this->session->userdata('id')));
+//			 var_dump($data['datosUsuario']);
+			//consultamos los datos de la empresa
+			$data['datosEmpresa']  = $this->company_model->get_company(array('id' => $data['datosUsuario']['id_company']));
+			$this->session->set_userdata('datosUsuario', $this->user_model->get_user(array('id' => $this->session->userdata('id'))));
 
-            // var_dump($this->session->userdata('datosUsuario'));
-            //consultamos los datos de la empresa con $this->session->set_userdata('datosUsuario',); el id de la empresa
-            $this->session->set_userdata('datosEmpresa',$this->company_model->get_company($this->session->userdata('datosUsuario')['id_company']));
-
-            //var_dump($this->session->userdata('datosEmpresa'));
+			// var_dump($this->session->userdata('datosUsuario'));
+			//consultamos los datos de la empresa con $this->session->set_userdata('datosUsuario',); el id de la empresa
+			$this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $this->session->userdata('datosUsuario')['id_company'])));
+//			var_dump($data['datosEmpresa']);
+//            var_dump($this->session->userdata('datosEmpresa'));
         } else {
             redirect(base_url('login')); // Redirigir al inicio de sesión si no está autenticado
         }

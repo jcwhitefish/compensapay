@@ -36,7 +36,9 @@ class Fintec extends MY_Loggedout{
 				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
 				if ($res){
 					if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
+//						var_dump($op);
 						$exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
+//						var_dump($exitMoney);
 						if ($op['operationNumber'] != $args['trakingKeyReceived']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
@@ -108,7 +110,7 @@ class Fintec extends MY_Loggedout{
 								'trakingKeyReceived' => $data['data']['tracking_key'],
 								'trakingKeySend' => $clientT['idempotency_key'],
 								'arteriaId' => $transferCliente['id'],
-								'amount' => ($op['exit'])*100,
+								'amount' => ($exitMoney)*100,
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'sourceBank' => $data['data']['destination']['bank_code'],
 								'receiverBank' => $data['data']['source']['bank_code'],
