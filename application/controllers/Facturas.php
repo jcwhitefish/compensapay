@@ -119,6 +119,17 @@ class Facturas extends MY_Loggedin
 		$this->output->set_output(json_encode($dato));
 	}
 
+	public function operacionesCalendario(){
+		$dato = array();
+		$mesSelected = $_POST['mesSelected'];
+		$dato['operaciones'] = $this->Operation_model->get_operation_calendar($this->user, $mesSelected);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
+
 	public function cargaFacturasPorCliente(){
 		$dato = array();
 
@@ -364,7 +375,7 @@ class Facturas extends MY_Loggedin
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));
 	}
-	
+
 	public function cargaOperacionNotaUnica(){
 		$dato = array();
 		$dato['status'] = "ok";
