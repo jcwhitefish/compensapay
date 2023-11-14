@@ -383,7 +383,35 @@ class Registro extends MY_Loggedin
 		$this->session->set_userdata('telephone', $phoneForm);
 		$this->session->set_userdata('account_clabe', $clabe);
 		$pdf = $this->prov->createPDF($args);
-		echo json_encode($pdf);
+
+		$config = Array(
+            'protocol'  => 'smtp',
+            'smtp_host' => 'compensapay.xyz',
+            'smtp_port' => '465',
+            'smtp_user' => 'hola@compensapay.xyz',
+            'smtp_pass' => 'compensamail2023#',
+            'mailtype'  => 'html',
+            'starttls'  => true,
+            'newline'   => "\r\n"
+        );
+
+		$this->email->initialize($config);
+
+		$this->email->to('mega.megaman@hotmail.com');
+		$this->email->from('hola@compensapay.xyz', 'Compensapay');
+		$this->email->subject('Test Email (TEXT)');
+		$this->email->message('<p>Mensaje Funciona</p>');
+		$this->email->attach(__DIR__ . '/../../assets/proveedores/RegistroProveedor_'.$companieName.'.pdf');
+		if($this->email->send())
+         {
+          $resp = 'Email send.';
+         }
+         else
+        {
+         $resp = $this->email->print_debugger();
+        }
+        
+		echo json_encode($resp);
 	}
 }
 

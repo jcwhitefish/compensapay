@@ -184,6 +184,15 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 }
             }
 
+            if(msg == ''){
+                hideForms();
+
+            }else{
+                alert (msg);
+                return false;
+
+            } 
+
             value = document.getElementById("firmaLegal").files[0];
             var base_url = window.location.origin;
 
@@ -316,6 +325,24 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     }
 
     function fileValidation(){
+        var fileInput = document.getElementById('firmaLegal');
+        var filePath = fileInput.value;
+        var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
+        if(!allowedExtensions.exec(filePath)){
+            
+        }else{
+            //Image preview
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').innerHTML = '<img style="width: 300px; height:160;" src="'+e.target.result+'"/>';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    }
+
+    function chargeValidation(){
         var fileInput = document.getElementById('firmaLegal');
         var filePath = fileInput.value;
         var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
@@ -874,7 +901,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                             <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
                             <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
                             <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente</button>
-                            <a hidden class="modal-trigger modal-close button-blue" name="btn-fase-4" id="btn-fase-4" href="#modal-proveedor-final" style="color:#fff; color:hover:#">
+                            <a hidden class="modal-trigger modal-close button-blue" name="btn-fase-4" id="btn-fase-4" href="#modal-proveedor-final" onchange="return fileValidation()" style="color:#fff; color:hover:#">
                                 Enviar registro
                             </a>
                         </div>
