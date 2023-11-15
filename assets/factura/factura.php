@@ -1,6 +1,5 @@
 <?php 
-$conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
-mysqli_select_db($conn,"compensatest_base");
+include ('../../db/conexion.php');
  
 require('fpdf/fpdf.php');
 
