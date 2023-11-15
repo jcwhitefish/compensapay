@@ -1,6 +1,6 @@
 <?php 
 $conn=mysqli_connect("localhost", "root", "") OR DIE ('Unable to connect to database! Please try again later.');
-mysqli_select_db($conn,"compensapay");
+mysqli_select_db($conn,"compensatest_base");
  
 require('fpdf/fpdf.php');
 
@@ -1564,7 +1564,7 @@ function num2letras($num, $fem = true, $dec = true) {
 
    while ($num[0] == '0') $num = substr($num, 1); 
 
-   if ($num[0] < '1' or $num[0] > 9) $num = '0' . $num; 
+   if ($num[0] <= '1' or $num[0] >= '9') $num = '0' . $num;
 
    $zeros = true; 
 
@@ -1702,21 +1702,28 @@ function num2letras($num, $fem = true, $dec = true) {
 
       } 
 
-      $n = $num[0]; 
+      
+        $n = $num[0]; 
 
-      if ($n == 1) { 
+        if($n!=0)
+        {
 
-         $t = ' ciento' . $t; 
+            if ($n == 1) { 
 
-      }elseif ($n == 5){ 
+                $t = ' ciento' . $t; 
 
-         $t = ' ' . $matunisub[$n] . 'ient' . $subcent . $t; 
+            }elseif ($n == 5){ 
 
-      }elseif ($n != 0){ 
+                $t = ' ' . $matunisub[$n] . 'ient' . $subcent . $t; 
 
-         $t = ' ' . $matunisub[$n] . 'cient' . $subcent . $t; 
+            }elseif ($n > 0 ){ 
 
-      } 
+                $t = ' ' . $matunisub[$n] . 'cient' . $subcent . $t; 
+
+            } 
+        }
+      
+      //$t= $num[0].'|';
 
       if ($sub == 1) { 
 
