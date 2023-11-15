@@ -134,13 +134,13 @@ class Proveedor extends MY_Loggedin
 			'firma' => $firma,
 			'formato' => $formato,
 		];
-		/*$res = $this->prov->registrarProveedor($args);
+		$res = $this->prov->registrarProveedor($args);
 		$this->session->set_userdata('legal_name', $bussinesName);
 		$this->session->set_userdata('short_name', $nameComercial);
 		$this->session->set_userdata('rfc', $rfc);
 		$this->session->set_userdata('address', $dom);
 		$this->session->set_userdata('telephone', $phoneForm);
-		$this->session->set_userdata('account_clabe', $clabe);*/
+		$this->session->set_userdata('account_clabe', $clabe);
 		$pdf = $this->prov->createPDF($args);
 
 		$data = [
