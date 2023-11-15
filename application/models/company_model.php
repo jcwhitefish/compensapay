@@ -7,7 +7,7 @@ class Company_model extends CI_Model {
     // Funcion para registrar las companias
     public function insert_company($datos) {
         // Asegurar que solo se insertan las columnas deseadas
-        $columnas_permitidas = ['legal_name', 'short_name', 'id_type', 'rfc', 'id_fiscal', 'id_postal_code', 'id_country', 'address', 'telephone', 'account_clabe', 'id_broadcast_bank', 'unique_key'];
+        $columnas_permitidas = ['legal_name', 'short_name', 'id_type', 'rfc', 'id_fiscal', 'id_postal_code', 'id_country', 'address', 'telephone', 'account_clabe', 'id_broadcast_bank', 'dias_pago', 'unique_key'];
 
         // Filtrar solo las columnas permitidas
         $datos_insertar = array_intersect_key($datos, array_flip($columnas_permitidas));

@@ -90,6 +90,14 @@
                                 <label for="bank">Banco emisor *</label>
                             </div>
                         </div>
+                        <div class="row">
+                        <div class="col l12" style="margin-bottom: 30px;">
+                                <p>Numero de días en los que se pagara la factura una vez recibida en el sistema, puede personalizar los datos por proveedor posteriormente</p>
+                            </div>
+                            <div class="input-border col l12">
+                                <input v-model="data['diaspago']" @blur="checkFormat('diaspago')" :style="colorsBorder['diaspago'] || {}" type="number" name="diaspago" id="diaspago" required pattern="[0-9]{3}" maxlength="3" value="45" required>
+                            </div>
+                        </div>
                         <div v-if="false" class="row">
 
                             <p class="bold p-3">
@@ -178,6 +186,7 @@
                 rfc: ref(''),
                 clabe: ref(''),
                 bank: ref([]),
+                diaspago: ref(''),
                 imageUpload: ref(''),
                 csfUpload: ref(''),
                 actaConstitutivaUpload: ref(''),
@@ -385,6 +394,21 @@
 
                         }
                         break;
+                    case 'diaspago':
+                        var patron = /[^0-9]/;
+                        if (data[nombreInput] != '' && data[nombreInput].length <= 3 )
+                        {
+                            colorsBorder[nombreInput] = {
+                                            border: '1px solid #03BB85!important',
+                                        }
+                        }
+                        else
+                        {
+                            colorsBorder[nombreInput] = {
+                                            border: '1px solid red!important',
+                                        }
+                        }
+                        break;
                     case 'partner':
                         data[nombreInput] = data[nombreInput].toUpperCase();
                         var patron = /[^A-Z0-9]/;
@@ -582,6 +606,7 @@
                     fiscal: data.regimen,
                     clabe: data.clabe,
                     bank: data.bank.bnk_id,
+                    diaspago: data.diaspago,
                     documentos: data.uniqueString,
                 };
 
