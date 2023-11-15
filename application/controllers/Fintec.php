@@ -36,9 +36,7 @@ class Fintec extends MY_Loggedout{
 				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
 				if ($res){
 					if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
-						var_dump($op);
 						$exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
-						var_dump($exitMoney);
 						if ($op['operationNumber'] != $args['trakingKeyReceived']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
@@ -47,11 +45,12 @@ class Fintec extends MY_Loggedout{
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'01',
 							];
-//							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
 							if ($back){
 								$argsR = [
-									'trakingKey' => $back['idempotency_key'],
+									'trakingKeyReceived' => $data['data']['tracking_key'],
+									'trakingKeySend' => $rollback['idempotency_key'],
 									'arteriaId' => $back['id'],
 									'amount' => $back['amount'],
 									'descriptor' => $back['descriptor'],
@@ -66,7 +65,7 @@ class Fintec extends MY_Loggedout{
 								$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 								return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
 							}
-						}else if (intval((floatval($op['entry'])*100).'') != $args['amount']){
+						}else if (($op['entry']) != $args['amount']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
 								'amount' => $args['amount'],
@@ -74,11 +73,12 @@ class Fintec extends MY_Loggedout{
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'03',
 							];
-//							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
 							if ($back){
 								$argsR = [
-									'trakingKey' => $back['idempotency_key'],
+									'trakingKeyReceived' => $data['data']['tracking_key'],
+									'trakingKeySend' => $rollback['idempotency_key'],
 									'arteriaId' => $back['id'],
 									'amount' => $back['amount'],
 									'descriptor' => $back['descriptor'],
@@ -98,19 +98,19 @@ class Fintec extends MY_Loggedout{
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => (floatval($exitMoney)*100),
+								'amount' => $exitMoney,
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => rand(1000000,9999999),
 							];
-//							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
+							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', 'Send ->'.json_encode($clientT, JSON_PRETTY_PRINT));
-//							$this->createLog('CreateTransfer', 'Response ->'.json_encode($transferCliente, JSON_PRETTY_PRINT));
+							$this->createLog('CreateTransfer', 'Response ->'.json_encode($transferCliente, JSON_PRETTY_PRINT));
 							$argsR = [
-								'trakingKeyReceived' => $data['data']['tracking_key'],
+								'trakingKeyReceived' => $data['data']['reference_number'],
 								'trakingKeySend' => $clientT['idempotency_key'],
-								'arteriaId' => 'cvefgegfd',//$transferCliente['id'],
-								'amount' => ($exitMoney)*100,
+								'arteriaId' => $transferCliente['id'],
+								'amount' => ($exitMoney),
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'sourceBank' => $data['data']['destination']['bank_code'],
 								'receiverBank' => $data['data']['source']['bank_code'],
@@ -118,27 +118,27 @@ class Fintec extends MY_Loggedout{
 								'receiverRfc' => $data['data']['source']['rfc'],
 								'sourceClabe' => $data['data']['destination']['account_number'],
 								'receiverClabe' => $data['data']['source']['account_number'],
-								'transactionDate' => '2023-11-13T17:34:55.702812+00:00',//$transferCliente['created_at'],
+								'transactionDate' => $transferCliente['created_at'],
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							//====| Comenzamos a enviar el dinero del proveedor |=====
-							$amountP = intval((floatval($op['entry'])*100) - (floatval($exitMoney)*100));
-							var_dump($amountP);
+							$amountP = $op['entry']-$exitMoney;
+//							var_dump($amountP);
 							$provedor = [
 								'clabe' => $op['companyClabe'],
-								'amount' => intval($amountP),
+								'amount' => $amountP,
 								'descriptor' => 'Movimiento entre cuentas',
 								'name' => $op['companyName'],
 								'idempotency_key' => rand(1000000,9999999),
 							];
-							var_dump($provedor);
-//							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
+//							var_dump($provedor);
+							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
-//							$this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
+							$this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
 							$argsR = [
-								'trakingKeyReceived' => $data['data']['tracking_key'],
+								'trakingKeyReceived' => $data['data']['reference_number'],
 								'trakingKeySend' => $provedor['idempotency_key'],
-								'arteriaId' => 'fdsfsdhdfg',//$prov['id'],
+								'arteriaId' => $prov['id'],
 								'amount' => $amountP,
 								'descriptor' => 'Movimiento entre cuentas',
 								'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
@@ -147,7 +147,7 @@ class Fintec extends MY_Loggedout{
 								'receiverRfc' => $data['data']['destination']['rfc'],
 								'sourceClabe' => $data['data']['destination']['account_number'],
 								'receiverClabe' => $op['companyClabe'],
-								'transactionDate' => '2023-11-13T17:34:55.702812+00:00',//$prov['created_at'],
+								'transactionDate' => $prov['created_at'],
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 //							$this->load->helper('sendmail_helper');
@@ -158,6 +158,23 @@ class Fintec extends MY_Loggedout{
 			}
 		}
 		return $this->response->sendResponse($resp, $error);
+	}
+	public function getCEP(){
+		$args = [
+			'tipoCriterio' => 'T',
+			'receptorParticipante' => 0,
+			'captcha' => 'c',
+			'tipoConsulta' => 1,
+			'fecha' => '15-10-2021',
+			'criterio' => 'CUENCA180822236927',
+			'emisor' => '90646',
+			'receptor' => '40012',
+			'cuenta' => '012180015782098848',
+			'monto' => '16000.00'
+		];
+		$this->load->model('Arteria_model', 'dataArt');
+		$res = $this->dataArt->DownloadCEP($args, 'SANDBOX');
+
 	}
 	/**
 	 * @param string $texto texto a encriptar
@@ -172,4 +189,5 @@ class Fintec extends MY_Loggedout{
 		return base64_decode($texto.$key);
 		//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 	}
+
 }
