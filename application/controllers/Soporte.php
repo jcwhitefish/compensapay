@@ -108,4 +108,18 @@ class Soporte extends MY_Loggedin{
         echo json_encode($res);
 		return true;
 	}
+
+	public function tryMail(){
+		$this->load->helper('sendmail_helper');
+		$mail       = 'ury197@hotmail.com';
+		$inicio     = date('Y-m-d H:i:s');
+		$fin        = date('Y-m-d H:i:s');
+		$data = [
+			'inicio'    => $inicio,
+			'fin'       => $fin,
+			'mail'      => $mail,
+		];
+		send_mail($mail, $data, 1, date('Y-m-d'));
+
+	}
 }
