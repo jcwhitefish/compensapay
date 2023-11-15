@@ -23,7 +23,7 @@ class Fintec extends MY_Loggedout{
 					'trakingKeyReceived' => $data['data']['reference_number'],
 					'trakingKeySend' => NULL,
 					'arteriaId' => $data['id'],
-					'amount' => $data['data']['amount'],
+					'amount' => ($data['data']['amount']/100),
 					'descriptor' => $data['data']['descriptor'],
 					'sourceBank' => substr($data['data']['source']['account_number'], 0, 3),
 					'receiverBank' => substr($data['data']['destination']['account_number'], 0, 3),
