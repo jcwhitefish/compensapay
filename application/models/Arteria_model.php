@@ -97,9 +97,9 @@ class Arteria_model extends CI_Model{
 						'providerName' => $row['pname'],
 						'providerRfc' => $row['prfc'],
 						'providerClabe' => $row['pclabe'],
-						'entry' => $row['entry_money'],
-						'exitD' => $row['exit_money_d'],
-						'exitF' => $row['exit_money_f'],
+						'entry' => intval($row['entry_money']),
+						'exitD' => intval($row['exit_money_d']),
+						'exitF' => intval($row['exit_money_f']),
 						'uuid' => $row['uuid']
 					];
 				}
