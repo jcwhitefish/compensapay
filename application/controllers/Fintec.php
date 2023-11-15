@@ -40,7 +40,7 @@ class Fintec extends MY_Loggedout{
 						if ($op['operationNumber'] != $args['trakingKeyReceived']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => $args['amount'],
+								'amount' => intval($args['amount']),
 								'descriptor' => 'Devolucion por referencia no encontrada',
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'01',
@@ -68,7 +68,7 @@ class Fintec extends MY_Loggedout{
 						}else if (($op['entry']) != $args['amount']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => $args['amount'],
+								'amount' => intval($args['amount']),
 								'descriptor' => 'Devolucion por monto incorrecto',
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'03',
@@ -98,7 +98,7 @@ class Fintec extends MY_Loggedout{
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => $exitMoney,
+								'amount' => intval($exitMoney),
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => rand(1000000,9999999),
@@ -125,7 +125,7 @@ class Fintec extends MY_Loggedout{
 							$amountP = $op['entry']-$exitMoney;
 							$provedor = [
 								'clabe' => $op['companyClabe'],
-								'amount' => $amountP,
+								'amount' => intval($amountP),
 								'descriptor' => 'Movimiento entre cuentas',
 								'name' => $op['companyName'],
 								'idempotency_key' => rand(1000000,9999999),
