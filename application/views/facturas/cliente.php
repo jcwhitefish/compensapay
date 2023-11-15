@@ -71,7 +71,7 @@
                                 <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>{{factura.name_provee}}</td>
-                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
+                            <td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+factura.id" target="_blank">{{factura.uuid}}</a></p></td>
                             <td class="uuid-text">{{factura.invoice_date}}</td>
                             <td class="uuid-text">{{factura.created_at}}</td>
                             <td>
@@ -127,13 +127,13 @@
                             <td class="uuid-text">{{ operacion.payment_date }}</td>
                             <td class="uuid-text">{{ operacion.created_at}}</td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid }}</p>
+                                <p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+operacion.id_invoice" target="_blank">{{ operacion.uuid }}</a></p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_prov != null">${{ operacion.money_prov }}</p>
                             </td>
                             <td>
-                                <p v-if="operacion.uuid_relation != null" class="uuid-text">{{ operacion.uuid_relation }}</p>
+                                <p v-if="operacion.uuid_relation != null" class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+operacion.id_invoice_relational" target="_blank">{{ operacion.uuid_relation }}</a></p>
                                 <p v-if="operacion.uuid_relation == null" class="uuid-text">N.A.</p>
                             </td>
                             <td>
@@ -141,7 +141,7 @@
                                 <p v-if="operacion.money_clie == null">N.A.</p>
                             </td>
                             <td>
-                                <p v-if="operacion.uuid_nota != null" class="uuid-text">{{ operacion.uuid_nota }}</p>
+                                <p v-if="operacion.uuid_nota != null" class="uuid-text"><a :href="'assets/factura/nota.php?idnota='+operacion.id_debit_note" target="_blank">{{ operacion.uuid_nota }}</a></p>
                                 <p v-if="operacion.uuid_nota == null" class="uuid-text">N.A.</p>
                             </td>
                             <td>
@@ -211,12 +211,15 @@
                     <h6 class="p-3">Carga tu xml relacionada a una factura</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col l12 input-border select-white">
+                            <div class="col l10 input-border select-white">
                                 <select @change="checkFormatOperation" name="operationUpload" id="operationUpload" v-model="selectFactura" required>
                                     <option v-for="factura in facturasSeleccionar" :key="factura.id" :value="factura.id">{{ factura.name_provee }} - {{ factura.uuid }} - ${{ factura.total }}</option>
                                 </select>
 
                                 <label for="operationUpload">Selecciona tu factura</label>
+                            </div>
+                            <div v-if="selectFactura != ''" class="col l2 input-border select-white" style="margin-top: 25px;">
+                                <a class="button-gray" style="color:#fff; color:hover:#" :href="'assets/factura/factura.php?idfactura='+selectFactura" target="_blank">Ver factura</a>
                             </div>
                             <div>
                                 <table class="striped">
@@ -241,7 +244,7 @@
                                             </td>
                                             <td>{{facturaClient.name_provee}}</td>
                                             <td>{{facturaClient.sender_rfc}}</td>
-                                            <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
+                                            <td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+facturaClient.id" target="_blank">{{facturaClient.uuid}}</a></p></td>
                                             <td>{{facturaClient.invoice_date}}</td>
                                             <td>{{facturaClient.created_at}}</td>
                                             <td>
@@ -311,7 +314,8 @@
                                             </td>
                                             <td>{{factura.name_provee}}</td>
                                             <td>{{factura.sender_rfc}}</td>
-                                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
+                                            <td>
+                                                <p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+factura.id" target="_blank">{{factura.uuid}}</a></p></td>
                                             <td>{{factura.invoice_date}}</td>
                                             <td>{{factura.created_at}}</td>
                                             <td>

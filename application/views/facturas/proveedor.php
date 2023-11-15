@@ -76,7 +76,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>{{factura.name_client}}</td>
-                            <td><a href="<?= $factura; ?>1" target="_blank"><p class="uuid-text">{{factura.uuid}}</p></a></td>
+                            <td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+factura.id" target="_blank">{{factura.uuid}}</a></p></td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -133,13 +133,13 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                             <td class="uuid-text">{{ operacion.payment_date }}</td>
                             <td class="uuid-text">{{ operacion.created_at}}</td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid }}</p>
+                                <p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+operacion.id_invoice" target="_blank">{{ operacion.uuid }}</a></p>
                             </td>
                             <td>
                                 <p v-if="operacion.money_prov != null">${{ operacion.money_prov }}</p>
                             </td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid_relation }}</p>
+                                <p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+operacion.id_invoice_relational" target="_blank">{{ operacion.uuid_relation }}</a></p>
                                 <p v-if="operacion.uuid_relation == null">N.A.</p>
                             </td>
                             <td>
@@ -147,7 +147,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <p v-if="operacion.money_clie == null">N.A.</p>
                             </td>
                             <td>
-                                <p class="uuid-text">{{ operacion.uuid_nota }}</p>
+                                <p class="uuid-text"><a :href="'assets/factura/nota.php?idnota='+operacion.id_debit_note" target="_blank">{{ operacion.uuid_nota }}</a></p>
                                 <p v-if="operacion.uuid_nota == null">N.A.</p>
                             </td>
                             <td>
@@ -327,7 +327,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                             </td>
                                             <td>{{facturaClient.name_client}}</td>
                                             <td>{{facturaClient.sender_rfc}}</td>
-                                            <td><p class="uuid-text">{{facturaClient.uuid}}</p></td>
+                                            <td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+facturaClient.id" target="_blank">{{facturaClient.uuid}}</a></p></td>
                                             <td class="uuid-text">{{facturaClient.invoice_date}}</td>
                                             <td class="uuid-text">{{facturaClient.created_at}}</td>
                                             <td>
@@ -397,7 +397,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                         <tr v-for="factura in facturasUnique">
                                             <td>{{factura.name_client }}</td>
                                             <td>{{factura.receiver_rfc }}</td>
-                                            <td><p class="uuid-text">{{factura.uuid}}</p></td>
+                                            <td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+factura.id" target="_blank">{{factura.uuid}}</a></p></td>
                                             <td class="uuid-text">{{factura.invoice_date}}</td>
                                             <td class="uuid-text">{{factura.created_at}}</td>
                                             <td>

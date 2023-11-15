@@ -72,7 +72,7 @@
                     <div class="row">
                         <div class="row">
                             <div class="col l4">
-                                <p class="font_head_op_info" for="invoiceDisabled">Estatus Factura: </p>
+                                <p class="font_head_op_info" for="invoiceDisabled">Estatus Operación: </p>
                                 <h6 v-if="ope.status == '0' " >Por autorizar</h6>
                                 <h6 v-if="ope.status == '1' " >Autorizada</h6>
                                 <h6 v-if="ope.status == '2' " >Rechazada</h6>
