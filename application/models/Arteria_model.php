@@ -61,7 +61,7 @@ class Arteria_model extends CI_Model{
 	public function SearchOperations(array $args, string $env){
 		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
-					t4.arteria_clabe, t5.total AS 'entry_money', t6.total AS 'exit_money_d', t8.total as 'exit_money_f', 
+					t4.arteria_clabe, (t5.total*100) AS 'entry_money', (t6.total*100) AS 'exit_money_d', (t8.total*100) as 'exit_money_f', 
 					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid
 					FROM compensatest_base.operations t1
 					LEFT JOIN compensatest_base.companies t2
@@ -118,6 +118,68 @@ class Arteria_model extends CI_Model{
 			}
 		}
 		return $hash;
+	}
+	public function DownloadCEP (array $args, string $env){
+		if (($ch = curl_init())) {
+			curl_setopt($ch, CURLOPT_URL, "https://www.banxico.org.mx/cep/valida.do");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($args));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/x-www-form-urlencoded',
+			));
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
+			));
+			curl_setopt($ch, CURLOPT_COOKIEJAR, 'COOKIE_FILE');
+			curl_setopt($ch, CURLOPT_COOKIEFILE, 'COOKIE_FILE');
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
+			));
+			curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+			curl_setopt($ch, CURLOPT_COOKIEFILE, 'COOKIE_FILE');
+			$response = curl_exec($ch);
+			$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if ($response === false) {
+				$error = 500;
+				curl_close($ch);
+				$resp = ['error' => 500, 'error_description' => 'SAPLocalTransport'];
+				$response = json_encode($resp);
+			}
+			curl_setopt($ch, CURLOPT_URL, "https://www.banxico.org.mx/cep/descarga.do?formato=PDF");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
+			$pdf_content = curl_exec($ch);
+			if (curl_errno($ch)) {
+				header('HTTP/1.1 500 Internal Server Error');
+				echo 'Error al descargar el PDF.';
+				exit;
+			}
+
+			curl_close($ch);
+			$filename = strtotime('now').'_'.$args['criterio'].'.pdf';
+			$ruta_destino = './boveda/CEP/'.$filename;
+			file_put_contents($ruta_destino, $pdf_content);
+			echo 'PDF descargado y guardado con éxito en: ' . $ruta_destino;
+
+
+		}else {
+			$resp['reason'] = 'No se pudo inicializar cURL';
+			$response = json_encode($resp);
+		}
+		return $response;
 	}
 	private function SendRequest(string $endpoint, $data, ?string $env, ?string $method, ?string $dataType) {
 		$env = strtoupper($env) ?? 'SANDBOX';
