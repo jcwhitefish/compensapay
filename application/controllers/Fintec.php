@@ -40,7 +40,7 @@ class Fintec extends MY_Loggedout{
 						if ($op['operationNumber'] != $args['trakingKeyReceived']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => intval($args['amount']),
+								'amount' => $data['data']['amount'],
 								'descriptor' => 'Devolucion por referencia no encontrada',
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'01',
@@ -52,7 +52,7 @@ class Fintec extends MY_Loggedout{
 									'trakingKeyReceived' => $data['data']['reference_number'],
 									'trakingKeySend' => $rollback['idempotency_key'],
 									'arteriaId' => $back['id'],
-									'amount' => ($back['amount']/100),
+									'amount' => ($data['data']['amount'])/100,
 									'descriptor' => $back['descriptor'],
 									'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
 									'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
@@ -65,10 +65,10 @@ class Fintec extends MY_Loggedout{
 								$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 								return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
 							}
-						}else if (($op['entry']) != $args['amount']){
+						}else if (($op['entry']) != $data['data']['amount']){
 							$rollback = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => intval($args['amount']),
+								'amount' => $data['data']['amount'],
 								'descriptor' => 'Devolucion por monto incorrecto',
 								'name' => $data['data']['source']['name'],
 								'idempotency_key' => $args['trakingKeyReceived'].'03',
@@ -80,7 +80,7 @@ class Fintec extends MY_Loggedout{
 									'trakingKeyReceived' => $data['data']['reference_number'],
 									'trakingKeySend' => $rollback['idempotency_key'],
 									'arteriaId' => $back['id'],
-									'amount' => ($back['amount']/100),
+									'amount' => ($data['data']['amount'])/100,
 									'descriptor' => $back['descriptor'],
 									'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
 									'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
@@ -98,9 +98,17 @@ class Fintec extends MY_Loggedout{
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
 								'clabe' => $args['sourceClabe'],
-								'amount' => intval($exitMoney),
+								'amount' => filter_var($exitMoney, FILTER_VALIDATE_INT) ,
 								'descriptor' => 'Pago por '.$op['uuid'],
 								'name' => $data['data']['source']['name'],
+								'idempotency_key' => rand(1000000,9999999),
+							];
+							$amountP = $op['entry']-$exitMoney;
+							$provedor = [
+								'clabe' => $op['companyClabe'],
+								'amount' => filter_var($amountP, FILTER_VALIDATE_INT),
+								'descriptor' => 'Movimiento entre cuentas',
+								'name' => $op['companyName'],
 								'idempotency_key' => rand(1000000,9999999),
 							];
 							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
@@ -122,14 +130,7 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							//====| Comenzamos a enviar el dinero del proveedor |=====
-							$amountP = $op['entry']-$exitMoney;
-							$provedor = [
-								'clabe' => $op['companyClabe'],
-								'amount' => intval($amountP),
-								'descriptor' => 'Movimiento entre cuentas',
-								'name' => $op['companyName'],
-								'idempotency_key' => rand(1000000,9999999),
-							];
+
 							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
 							$this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
 							$this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
