@@ -92,10 +92,10 @@
                         </div>
                         <div class="row">
                         <div class="col l12" style="margin-bottom: 30px;">
-                                <p>Numero de días en los que se pagara la factura una vez recibida en el sistema, puede personalizar los datos por proveedor posteriormente</p>
+                                <p>Número de días en los que se pagará la factura una vez recibida en la plataforma. (Puede personalizar los datos por proveedor posteriormente en el apartado de configuración avanzada).</p>
                             </div>
                             <div class="input-border col l12">
-                                <input v-model="data['diaspago']" @blur="checkFormat('diaspago')" :style="colorsBorder['diaspago'] || {}" type="number" name="diaspago" id="diaspago" required pattern="[0-9]{3}" maxlength="3" value="45" required>
+                                <input v-model="data['diaspago']" @blur="checkFormat('diaspago')" :style="colorsBorder['diaspago'] || {}" :value="45" type="number" name="diaspago" id="diaspago" required pattern="[0-9]{3}" maxlength="3" required>
                             </div>
                         </div>
                         <div v-if="false" class="row">
