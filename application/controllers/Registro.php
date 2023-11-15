@@ -51,6 +51,7 @@ class Registro extends MY_Loggedout
 				'fiscal' => $decodedParams[8],
 				'clabe' => $decodedParams[9],
 				'bank' => $decodedParams[10],
+				'diaspago' =>$decodedParams[11],
 				'uniqueString' => $decodedParams[11]
 			);
 			$datos = json_encode($datos);
@@ -108,6 +109,7 @@ class Registro extends MY_Loggedout
 		$this->form_validation->set_rules('direccion', 'Direccion', 'required');
 		$this->form_validation->set_rules('telefono', 'Telefono', 'required|regex_match[/^[0-9]+$/]');
 		$this->form_validation->set_rules('bank', 'Bank', 'required');
+		$this->form_validation->set_rules('diaspago', 'DiasPago', 'required');
 		$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
 		if ($this->form_validation->run() === FALSE) {
 			$validation_errors = validation_errors();
@@ -123,6 +125,7 @@ class Registro extends MY_Loggedout
 			$direccion = $this->input->post('direccion');
 			$telefono = $this->input->post('telefono');
 			$clabe = $this->input->post('clabe');
+			$diaspago = $this->input->post('diaspago');
 			$bank = $this->input->post('bank');
 			$uniqueString = $this->input->post('uniqueString');
 		}
@@ -144,6 +147,7 @@ class Registro extends MY_Loggedout
 			'telephone' => $telefono,
 			'account_clabe' => $clabe,
 			'id_broadcast_bank' => $bank,
+			'dias_pago' => $diaspago,
 			'unique_key' => $uniqueString
 		);
 
