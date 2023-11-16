@@ -53,7 +53,7 @@ if ($this->session->userdata('logged_in')) {
                         <?php 
                         $vista=$this->uri->segment(1);
 
-                        if($vista=='facturas' OR $vista=='modelofiscal')
+                        if($vista=='facturas' OR $vista=='ModeloFiscal')
                         {
                         ?>   
                         <select onchange="cambiarVista(this.value)" name="type" id="type" class="nav-max browser-default input-nav" style="top: -2px;">
@@ -88,7 +88,7 @@ if ($this->session->userdata('logged_in')) {
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'ModeloFiscal', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">swap_horiz</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
                     <!-- <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('xml'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?> -->
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('modelofiscal'), (strpos(current_url(), 'ModeloFiscal')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('ModeloFiscal'), (strpos(current_url(), 'ModeloFiscal')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('clientesproveedores'), (strpos(current_url(), 'clientesproveedores')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">settings</i></a></li>', base_url('perfil/empresa'), (strpos(current_url(), 'perfil/empresa')) ? ' icon-list-hover' : ''); ?>

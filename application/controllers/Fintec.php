@@ -194,11 +194,11 @@ class Fintec extends MY_Loggedout{
 			'captcha' => 'c',
 			'tipoConsulta' => 1,
 			'fecha' => '16-11-2023',
-			'criterio' => 'CUENCA476333124907',
-			'emisor' => '90646',
+			'criterio' => 'CUENCA725054557695',
+			'emisor' => '90696',
 			'receptor' => '40012',
-			'cuenta' => '012180015782098848',
-			'monto' => '16000.00'
+			'cuenta' => '012180015926668199',
+			'monto' => '7.35'
 		];
 		$this->load->model('Arteria_model', 'dataArt');
 		$res = $this->dataArt->DownloadCEP($args, 'SANDBOX');
