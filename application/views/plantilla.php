@@ -43,10 +43,10 @@ if ($this->session->userdata('logged_in')) {
                     </div>
                 </div>
                 <div class="d-flex justificarVertical" style="height: 80px!important;">
-                    <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
+                    <!--<div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
                         <p class="balance nav-max">Balance</p>
                         <a class="nav-max" style="top:-25px;" href="">$200.000</a>
-                    </div>
+                    </div>-->
                     <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
                         <p class="nav-max" style="padding-left: 10px;top:-15px"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
 
