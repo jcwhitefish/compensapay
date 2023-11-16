@@ -22,15 +22,15 @@ $PNG_WEB_DIR = 'temp/';
 
 //recibo el id de la factura
 
-if(isset($_POST["idfactura"])){$idfactura=$_POST["idfactura"];}
+if(isset($_POST["idnota"])){$idfactura=$_POST["idnota"];}
 
-elseif(isset($_GET["idfactura"])){$idfactura=$_GET["idfactura"];}
+elseif(isset($_GET["idnota"])){$idfactura=$_GET["idnota"];}
 
 
 
 //datos de la factura
 
-$ResFactura=mysqli_fetch_array(mysqli_query($conn, "SELECT uuid, xml_document, subtotal, iva, total FROM invoices WHERE id='".$idfactura."' LIMIT 1"));
+$ResFactura=mysqli_fetch_array(mysqli_query($conn, "SELECT uuid, xml_document, total FROM debit_notes WHERE id='".$idfactura."' LIMIT 1"));
 
 $xml=xml2array($ResFactura["xml_document"]); //lee el xml y lo convierte en array
 
@@ -113,7 +113,7 @@ $pdf->SetY(6);
 //
 $pdf->SetX(140);
 //
-$pdf->Cell(60,4,'Tipo de Comprobante: I Ingreso',1,0,'C',1);
+$pdf->Cell(60,4,'Tipo de Comprobante: E Egreso',1,0,'C',1);
 //
 $pdf->SetFillColor(204,204,204);
 //
@@ -785,7 +785,7 @@ $pdf->Cell(20,4,'Subtotal: ',0,0,'R',1);
 //
 $pdf->SetFont('Arial','',7);
 //
-$pdf->Cell(20,4,'$ '.number_format($ResFactura["subtotal"], 2),0,0,'R',1);
+$pdf->Cell(20,4,'$ '.number_format($xml["cfdi:Comprobante_attr"]["SubTotal"], 2),0,0,'R',1);
 //
 $y_axis=$y_axis+4;
 //
@@ -915,7 +915,7 @@ $pdf->Cell(60,4,'Tasa Iva Traslado 16%: ',0,0,'R',1);
 //
 $pdf->SetFont('Arial','',7);
 //
-$pdf->Cell(20,4,'$ '.number_format($ResFactura["iva"], 2),0,0,'R',1);
+$pdf->Cell(20,4,'$ '.number_format($xml["cfdi:Comprobante"]["cfdi:Impuestos_attr"]["TotalImpuestosTrasladados"], 2),0,0,'R',1);
 //
 $y_axis=$y_axis+4;
 //

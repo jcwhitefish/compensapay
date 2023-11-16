@@ -203,7 +203,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     if(msg == ''){
                     hideForms();
                     $.ajax({
-                        url: base_url + '/Registro/registrarProveedor',
+                        url: base_url + '/Proveedor/registrarProveedor',
                         data: {
                             bussinesName: $('#bussinesNameForm').val(),
                             nationality: $('#nationality').val(),

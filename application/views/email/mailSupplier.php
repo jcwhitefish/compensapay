@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Solicitud automática de Nota de Crédito</title>
+    <title>Prueba para registro de Proveedor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css?family=Saira+Semi+Condensed:400,600" rel="stylesheet" />
 </head>
@@ -13,10 +13,10 @@
 
 <table cellspacing="0" cellpadding="0" border="0" width="100%" bgcolor="#FFFFFF">
     <tr>
-        <td><img src="https://sime.tratamientos.mx/assets/img/logo.png" alt="Logo Integramed" width="270" height="74" /></td>
+        <td></td>
     </tr>
     <tr>
-        <td style="padding:15px"><b>Estimado colaborador</b></td>
+        <td style="padding:15px"><b>Esto es una prueba</b></td>
     </tr>
     <tr>
         <td style="padding:0px 15px;">

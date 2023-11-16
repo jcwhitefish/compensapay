@@ -28,11 +28,14 @@ function send_mail($mail, $data, $view, $date=null){
         if($view===1){
 			$CI->email->set_newline("\r\n");
             $CI->email->subject('Prueba envio de correos');
-//            $CI->email->attach('FarmaListo '.$date.'.xlsx');
+            $CI->email->attach($data['registro']);
+            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-actaConstitutiva.pdf');
+            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-comprobanteDomicilio.pdf');
+            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-constanciaSituacionFiscal.pdf');
+            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-representanteLegal.pdf');
 //            $CI->email->attach('SanPablo '.$date.'.xlsx');
             //$CI->email->attach('Rappi '.$date.'.xlsx');
-//            $CI->email->cc( array('cecilia.tornel@integramed.mx','oscar.velazquez@integramed.mx','uriel.magallon@integramed.mx','vianey.anduaga@integramed.mx'));
-            $html = $CI->load->view('mailReport', $data, true);
+            $html = $CI->load->view('email/mailSupplier', $data, true);
         }
 		$CI->email->set_newline("\r\n");
         $CI->email->message($html);
