@@ -34,6 +34,7 @@ class Fintec extends MY_Loggedout{
 					'transactionDate' => $data['data']['created_at'],
 				];
 				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
+
 				if ($res){
 					if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
 						$exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
@@ -152,7 +153,35 @@ class Fintec extends MY_Loggedout{
 //							$this->load->helper('sendmail_helper');
 							return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
 						}
-					}
+					}else{
+                        $rollback = [
+                            'clabe' => $args['sourceClabe'],
+                            'amount' => $data['data']['amount'],
+                            'descriptor' => 'Devolucion por referencia no encontrada',
+                            'name' => $data['data']['source']['name'],
+                            'idempotency_key' => $args['trakingKeyReceived'].'01',
+                        ];
+                        $back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+                        $this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
+                        if ($back){
+                            $argsR = [
+                                'trakingKeyReceived' => $data['data']['reference_number'],
+                                'trakingKeySend' => $rollback['idempotency_key'],
+                                'arteriaId' => $back['id'],
+                                'amount' => ($data['data']['amount'])/100,
+                                'descriptor' => $back['descriptor'],
+                                'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
+                                'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
+                                'sourceRfc' => $data['data']['destination']['rfc'],
+                                'receiverRfc' => $data['data']['source']['rfc'],
+                                'sourceClabe' => $data['data']['destination']['account_number'],
+                                'receiverClabe' => $data['data']['source']['account_number'],
+                                'transactionDate' => $back['created_at'],
+                            ];
+                            $res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
+                            return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
+                        }
+                    }
 				}
 			}
 		}
@@ -164,8 +193,8 @@ class Fintec extends MY_Loggedout{
 			'receptorParticipante' => 0,
 			'captcha' => 'c',
 			'tipoConsulta' => 1,
-			'fecha' => '15-10-2021',
-			'criterio' => 'CUENCA180822236927',
+			'fecha' => '16-11-2023',
+			'criterio' => 'CUENCA476333124907',
 			'emisor' => '90646',
 			'receptor' => '40012',
 			'cuenta' => '012180015782098848',
