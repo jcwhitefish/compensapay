@@ -107,18 +107,6 @@ class Arteria_model extends CI_Model{
 			}
 		}
 	}
-	function MakeTrackingKey(array $ids): string{
-		$trash = 'GHIJKLMNOPQRSTUVWXYZ';
-		$hash = '';
-		for ($i = 0; $i < 3; $i++) {
-			if($i <= 1){
-				$hash .= str_pad(dechex($ids[$i]), 4, substr(str_shuffle($trash), 0, 4), STR_PAD_LEFT);
-			}else{
-				$hash .= str_pad(dechex($ids[$i]), 7, substr(str_shuffle($trash), 0, 7), STR_PAD_LEFT);
-			}
-		}
-		return $hash;
-	}
 	public function DownloadCEP (array $args, string $env){
 		if (($ch = curl_init())) {
 			curl_setopt($ch, CURLOPT_URL, "https://www.banxico.org.mx/cep/valida.do");
