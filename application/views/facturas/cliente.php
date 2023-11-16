@@ -699,6 +699,8 @@
                                 getOperations();
                                 getFacturas();
                                 M.toast({ html: 'Se ha subido la operacion' });
+                            }else if(result.status == 'monto'){
+                                M.toast({html: 'El monto de la nota es mayor al de la factura'});
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su factura' });
                             }
@@ -893,6 +895,8 @@
                                 getOperations();
                                 getFacturas();
                                 M.toast({ html: 'Se ha subido la operacion' });
+                            }else if(result.status == 'monto'){
+                                M.toast({html: 'El monto de la nota es mayor al de la factura'});
                             }else{
                                 M.toast({ html: 'Error con la operacion, verifique su factura' });
                             }

@@ -306,7 +306,9 @@ class Facturas extends MY_Loggedin
 			$uuid1 = $factura1[0]->uuid;
 			$uuid2 = $factura2[0]->uuid;
 
-			if ($factura1[0]->sender_rfc == $factura2[0]->receiver_rfc && $factura1[0]->receiver_rfc == $factura2[0]->sender_rfc) {
+			if($factura2[0]->total > $factura1[0]->total){
+				$dato['status'] = "monto";
+			}else if ($factura1[0]->sender_rfc == $factura2[0]->receiver_rfc && $factura1[0]->receiver_rfc == $factura2[0]->sender_rfc) {
 				$operacion = array(
 					"id_invoice" => $id_factura_p,
 					"id_invoice_relational" => $id_factura_c,
@@ -346,7 +348,9 @@ class Facturas extends MY_Loggedin
 			$factura2 = $this->Invoice_model->get_invoices_by_id($id_factura_cliente);
 			$factura1 = $this->Invoice_model->get_invoices_by_id($id_factura_prov);
 
-			if ($factura1[0]->sender_rfc == $factura2[0]->receiver_rfc && $factura1[0]->receiver_rfc == $factura2[0]->sender_rfc) {
+			if($factura2[0]->total > $factura1[0]->total){
+				$dato['status'] = "monto";
+			}else if ($factura1[0]->sender_rfc == $factura2[0]->receiver_rfc && $factura1[0]->receiver_rfc == $factura2[0]->sender_rfc) {
 				$operacion = array(
 					"id_invoice" => $id_factura_prov,
 					"id_invoice_relational" => $id_factura_cliente,
@@ -397,8 +401,9 @@ class Facturas extends MY_Loggedin
 
 			$client =  $this->Invoice_model->company($factura1[0]->receiver_rfc);
 			$provider =  $this->Invoice_model->company($factura1[0]->sender_rfc);
-
-			if ($uuid1 === $uuid2) {
+			if($nota['total'] > $factura1[0]->total){
+				$dato['status'] = "monto";
+			}else if ($uuid1 === $uuid2) {
 				unset($nota["uuid"]);
 				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
 				$dato['debitNote'] = $idDebitNote;
@@ -443,8 +448,7 @@ class Facturas extends MY_Loggedin
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
 
-			}
-			else{
+			}else{
 				$dato['status'] = "error";
 			}
 		}
