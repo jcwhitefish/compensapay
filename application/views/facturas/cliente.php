@@ -221,8 +221,8 @@
                             <div v-if="selectFactura != ''" class="col l2 input-border select-white" style="margin-top: 25px;">
                                 <a class="button-gray" style="color:#fff; color:hover:#" :href="'assets/factura/factura.php?idfactura='+selectFactura" target="_blank">Ver factura</a>
                             </div>
-                            <div>
-                                <table class="striped">
+                            <div class="col l12" style="overflow: scroll">
+                                <table class="visible-table striped">
                                     <thead>
                                         <tr>
                                             <th>Crear Operación</th>
