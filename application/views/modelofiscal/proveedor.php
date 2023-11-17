@@ -193,15 +193,22 @@
                             <th>Días del periodo</th>
                             <th>Depósitos</th>
                             <th>Retiros</th>
-                            <th>Depósitos</th>
-                            <th>Depósitos</th>
                             <th>Saldo inicial</th>
                             <th>Saldo Final</th>
                             <th>Movimientos</th>
                         </tr>
                     </thead>
                     <tbody>
-
+                        <tr>
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td><a href="<?php echo base_url('boveda/edoscuenta/652fedab76eab-16/estado_cuenta_cliente_compania_v2-14.11.2023.pdf');?>" target="_blank">Octubre 2023</a></td>
+                            <td class="right-align">31</td>
+                            <td class="right-align">$ 143,000.21</td>
+                            <td class="right-align">$ 16.99</td>
+                            <td class="right-align">$ 142,463.81</td>
+                            <td class="right-align">$ 997 .64</td>
+                            <td class="right-align">9</td>
+                        </tr>
                     </tbody>
                 </table>
                 <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped responsive-table">
