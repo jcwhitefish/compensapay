@@ -304,8 +304,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="clientUploadName">
                                 <label for="providerDisabled">Cliente</label>
                             </div>
-                            <div>
-                                <table class="striped">
+                            <div class="col l12" style="overflow: scroll">
+                                <table class="visible-table striped">
                                     <thead>
                                         <tr>
                                             <th>Crear Operación</th>
@@ -378,8 +378,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                                 <input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="clientUploadNameUnique">
                                 <label for="providerDisabledUnique">Cliente</label>
                             </div>
-                            <div>
-                                <table class="striped">
+                            <div class="col l12" style="overflow: scroll">
+                                <table class="visible-table striped">
                                     <thead>
                                         <tr>
                                             <th>Cliente</th>
