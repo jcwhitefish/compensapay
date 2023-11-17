@@ -102,16 +102,16 @@
                         <div class="row">
                             <div class="col l4 h6-border">
                                 <p class="font_head_op_info" for="invoiceDisabled">UUID Factura Proveedor: </p>
-                                <h6>{{ope.uuid}}</h6>
+                                <h6><a :href="'assets/factura/factura.php?idfactura='+ope.urlid" target="_blank">{{ope.uuid}}</a></h6>
                             </div>
                             <div class="col l4 h6-border">
                                 <p class="font_head_op_info" for="invoiceDisabled">UUID Mi Factura: </p>
-                                <h6 v-if="ope.uuid_relation != null">{{ope.uuid_relation}}</h6>
+                                <h6 v-if="ope.uuid_relation != null"><a :href="'assets/factura/factura.php?idfactura='+ope.urlidrel" target="_blank">{{ope.uuid_relation}}</a></h6>
                                 <h6 v-if="ope.uuid_relation == null">N.A.</h6>
                             </div>
                             <div class="col l4 h6-border">
                                 <p class="font_head_op_info" for="invoiceDisabled">UUID Nota: </p>
-                                <h6 v-if="ope.uuid_nota != null">{{ope.uuid_nota}}</h6>
+                                <h6 v-if="ope.uuid_nota != null"><a :href="'assets/factura/nota.php?idnota='+ope.urldeb" target="_blank">{{ope.uuid_nota}}</a></h6>
                                 <h6 v-if="ope.uuid_nota == null">N.A.</h6>
                             </div>
                         </div>
