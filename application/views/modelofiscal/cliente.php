@@ -206,8 +206,8 @@
                         <tr v-for="moves in movements">
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
                             <td>{{moves.ammountf}}</td>
-                            <td>{{moves.traking_key_received}}</td>
-							<td><a href="">Descargar CEP</a></td>
+                            <td>{{moves.traking_key}}</td>
+							<td><a v-bind:href='moves.cepUrl' target="_blank">Descargar CEP</a></td>
                             <td>{{moves.descriptor}}</td>
                             <td>{{moves.bank_source}}</td>
                             <td>{{moves.bank_receiver}}</td>
