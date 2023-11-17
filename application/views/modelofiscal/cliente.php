@@ -145,8 +145,8 @@
                     <tbody>
                         <tr v-for="factura in facturas">
                             <td class="center-align"><input id="checkTbl" type="checkbox"></td>
-                            <td>{{factura.sender_rfc}}</td>
-                            <td>{{factura.invoice_number}}</td>
+                            <td>{{factura.short_name}}</td>
+                            <td><a v-bind:href='factura.idurl' target="_blank">{{factura.uuid}}</a> </td>
                             <td>{{factura.invoice_date}}</td>
                             <td>{{factura.created_at}}</td>
                             <td>
@@ -154,9 +154,9 @@
                                 <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
                             </td>
                             <td>
-                                <p v-if="factura.status == '0' " >Por Aprobar</p>
-                                <p v-if="factura.status == '1' " >Pagado</p>
-                                <p v-if="factura.status == '2' " >Recahazada</p>
+                                <p v-if="factura.status == '0' " >Libre</p>
+                                <p v-if="factura.status == '1' " >En Operación</p>
+                                <p v-if="factura.status == '2' " >Pagada</p>
                             </td>
                             <td>${{factura.subtotal}}</td>
                             <td>${{factura.iva}}</td>

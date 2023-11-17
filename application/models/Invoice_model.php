@@ -205,11 +205,11 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('invoices.*, companies.short_name');
+        $this->db->select('invoices.*, companies.short_name, CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl"');
 		$this->db->from('invoices');
         $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
 		$this->db->where('sender_rfc', $rfc);
-        $this->db->where('invoices.status', 0);
+        $this->db->where_in('invoices.status', [1,2]);
         $query = $this->db->get();
         return $query->result();
     }
