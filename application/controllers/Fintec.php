@@ -2,8 +2,8 @@
 
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message){
-		$logDir = '/home/compensatest/logs/';
-//		$logDir = 'C:\web\logs\\';
+//		$logDir = '/home/compensatest/logs/';
+		$logDir = 'C:\web\logs\\';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
@@ -19,154 +19,48 @@ class Fintec extends MY_Loggedout{
 			$this->load->model('Arteria_model','dataArt');
 			$data = $body ?? NULL;
 			if ($data['object_type'] === 'transaction' && $data['data']['type']  === 'deposit') {
-				$args = [
-					'trakingKeyReceived' => $data['data']['reference_number'],
-					'trakingKeySend' => NULL,
-					'arteriaId' => $data['id'],
-					'amount' => ($data['data']['amount']/100),
-					'descriptor' => $data['data']['descriptor'],
-					'sourceBank' => substr($data['data']['source']['account_number'], 0, 3),
-					'receiverBank' => substr($data['data']['destination']['account_number'], 0, 3),
-					'sourceRfc' => $data['data']['source']['rfc'],
-					'receiverRfc' => $data['data']['destination']['rfc'],
-					'sourceClabe' => $data['data']['source']['account_number'],
-					'receiverClabe' => $data['data']['destination']['account_number'],
-					'transactionDate' => $data['data']['created_at'],
-				];
-				$res = $this->dataArt->AddMovement($args, 'SANDBOX');
-
-				if ($res){
-					if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
-						$exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
-						if ($op['operationNumber'] != $args['trakingKeyReceived']){
-							$rollback = [
-								'clabe' => $args['sourceClabe'],
-								'amount' => $data['data']['amount'],
-								'descriptor' => 'Devolucion por referencia no encontrada',
-								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $args['trakingKeyReceived'].'01',
-							];
-							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
-							if ($back){
-								$argsR = [
-									'trakingKeyReceived' => $data['data']['reference_number'],
-									'trakingKeySend' => $rollback['idempotency_key'],
-									'arteriaId' => $back['id'],
-									'amount' => ($data['data']['amount'])/100,
-									'descriptor' => $back['descriptor'],
-									'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
-									'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
-									'sourceRfc' => $data['data']['destination']['rfc'],
-									'receiverRfc' => $data['data']['source']['rfc'],
-									'sourceClabe' => $data['data']['destination']['account_number'],
-									'receiverClabe' => $data['data']['source']['account_number'],
-									'transactionDate' => $back['created_at'],
-								];
-								$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-								return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
-							}
-						}else if (($op['entry']) != $data['data']['amount']){
-							$rollback = [
-								'clabe' => $args['sourceClabe'],
-								'amount' => $data['data']['amount'],
-								'descriptor' => 'Devolucion por monto incorrecto',
-								'name' => $data['data']['source']['name'],
-								'idempotency_key' => $args['trakingKeyReceived'].'03',
-							];
-							$back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
-							if ($back){
-								$argsR = [
-									'trakingKeyReceived' => $data['data']['reference_number'],
-									'trakingKeySend' => $rollback['idempotency_key'],
-									'arteriaId' => $back['id'],
-									'amount' => ($data['data']['amount'])/100,
-									'descriptor' => $back['descriptor'],
-									'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
-									'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
-									'sourceRfc' => $data['data']['destination']['rfc'],
-									'receiverRfc' => $data['data']['source']['rfc'],
-									'sourceClabe' => $data['data']['destination']['account_number'],
-									'receiverClabe' => $data['data']['source']['account_number'],
-									'transactionDate' => $back['created_at'],
-								];
-								$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-								return $this->response->sendResponse(["response" => 'Operación correcta err 2'], $error);
-
-							}
-						}else{
-							//====| Comenzamos a enviar el dinero del cliente |=====
-							$clientT = [
-								'clabe' => $args['sourceClabe'],
-								'amount' => filter_var($exitMoney, FILTER_VALIDATE_INT) ,
-								'descriptor' => 'Pago por '.$op['uuid'],
-								'name' => $data['data']['source']['name'],
-								'idempotency_key' => rand(1000000,9999999),
-							];
-							$amountP = $op['entry']-$exitMoney;
-							$provedor = [
-								'clabe' => $op['companyClabe'],
-								'amount' => filter_var($amountP, FILTER_VALIDATE_INT),
-								'descriptor' => 'Movimiento entre cuentas',
-								'name' => $op['companyName'],
-								'idempotency_key' => rand(1000000,9999999),
-							];
-							$transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', 'Send ->'.json_encode($clientT, JSON_PRETTY_PRINT));
-							$this->createLog('CreateTransfer', 'Response ->'.json_encode($transferCliente, JSON_PRETTY_PRINT));
-							$argsR = [
-								'trakingKeyReceived' => $data['data']['reference_number'],
-								'trakingKeySend' => $clientT['idempotency_key'],
-								'arteriaId' => $transferCliente['id'],
-								'amount' => ($exitMoney/100),
-								'descriptor' => 'Pago por '.$op['uuid'],
-								'sourceBank' => $data['data']['destination']['bank_code'],
-								'receiverBank' => $data['data']['source']['bank_code'],
-								'sourceRfc' => $data['data']['destination']['rfc'],
-								'receiverRfc' => $data['data']['source']['rfc'],
-								'sourceClabe' => $data['data']['destination']['account_number'],
-								'receiverClabe' => $data['data']['source']['account_number'],
-								'transactionDate' => $transferCliente['created_at'],
-							];
-							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-							//====| Comenzamos a enviar el dinero del proveedor |=====
-
-							$prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
-							$this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
-							$this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
-							$argsR = [
-								'trakingKeyReceived' => $data['data']['reference_number'],
-								'trakingKeySend' => $provedor['idempotency_key'],
-								'arteriaId' => $prov['id'],
-								'amount' => ($amountP/100),
-								'descriptor' => 'Movimiento entre cuentas',
-								'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
-								'receiverBank' => substr($op['companyBank'], 0, 3),
-								'sourceRfc' => $data['data']['destination']['rfc'],
-								'receiverRfc' => $data['data']['destination']['rfc'],
-								'sourceClabe' => $data['data']['destination']['account_number'],
-								'receiverClabe' => $op['companyClabe'],
-								'transactionDate' => $prov['created_at'],
-							];
-							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-//							$this->load->helper('sendmail_helper');
-							return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
-						}
-					}else{
+                $args = [
+                    'receiverClabe' => $data['data']['destination']['account_number'],
+                    'operationNumber' => $data['data']['reference_number'],
+                    'descriptor' => $data['data']['descriptor'],
+                ];
+                if ($op = $this->dataArt->SearchOperations($args, 'SANDBOX')){
+                    $args = [
+                        'trakingKey' => $data['data']['tracking_key'],
+                        'arteriaId' => $data['id'],
+                        'amount' => ($data['data']['amount']/100),
+                        'descriptor' => $data['data']['descriptor'],
+                        'sourceBank' => substr($data['data']['source']['account_number'], 0, 3),
+                        'receiverBank' => substr($data['data']['destination']['account_number'], 0, 3),
+                        'sourceRfc' => $data['data']['source']['rfc'],
+                        'receiverRfc' => $data['data']['destination']['rfc'],
+                        'sourceClabe' => $data['data']['source']['account_number'],
+                        'transactionDate' => $data['data']['created_at'],
+                        'operationNumber' => $op['operationNumber'],
+                        'receiverClabe' => $data['data']['destination']['account_number'],
+                    ];
+                    $res = $this->dataArt->AddMovement($args, 'SANDBOX');
+                    $cep = $this->getCEP($args);
+                    $exitMoney = $op['exitD'] === NULL || $op['exitD'] === '' || empty($op['exitD']) ? $op['exitF'] : $op['exitD'];
+//                    die(var_dump(($op['entry']) != $data['data']['amount']));
+                    if (($op['entry']) != $data['data']['amount']){
                         $rollback = [
-                            'clabe' => $args['sourceClabe'],
+                            'clabe' =>  $data['data']['source']['account_number'],
                             'amount' => $data['data']['amount'],
-                            'descriptor' => 'Devolucion por referencia no encontrada',
+                            'descriptor' => 'Devolucion por monto incorrecto',
                             'name' => $data['data']['source']['name'],
-                            'idempotency_key' => $args['trakingKeyReceived'].'01',
+                            'idempotency_key' => base64_encode($data['data']['tracking_key']),
                         ];
                         $back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
                         $this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
                         if ($back){
+                            $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                            if(!$traking['tracking_key']){
+                                sleep(15);
+                                $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                            }
                             $argsR = [
-                                'trakingKeyReceived' => $data['data']['reference_number'],
-                                'trakingKeySend' => $rollback['idempotency_key'],
+                                'trakingKey' => $traking['tracking_key'],
                                 'arteriaId' => $back['id'],
                                 'amount' => ($data['data']['amount'])/100,
                                 'descriptor' => $back['descriptor'],
@@ -177,32 +71,160 @@ class Fintec extends MY_Loggedout{
                                 'sourceClabe' => $data['data']['destination']['account_number'],
                                 'receiverClabe' => $data['data']['source']['account_number'],
                                 'transactionDate' => $back['created_at'],
+                                'operationNumber' => NULL,
                             ];
                             $res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
-                            return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
+                            $cep = $this->getCEP($argsR);
+                            return $this->response->sendResponse(["response" => 'Operación correcta err 2'], $error);
+
                         }
+                    }else{
+                        //====| Comenzamos a enviar el dinero del cliente |=====
+                        $clientT = [
+                            'clabe' => $data['data']['source']['account_number'],
+                            'amount' => filter_var($exitMoney, FILTER_VALIDATE_INT) ,
+                            'descriptor' => 'Pago por '.$op['uuid'],
+                            'name' => $data['data']['source']['name'],
+                            'idempotency_key' => rand(1000000,9999999),
+                        ];
+                        $amountP = $op['entry']-$exitMoney;
+                        $provedor = [
+                            'clabe' => $op['companyClabe'],
+                            'amount' => filter_var($amountP, FILTER_VALIDATE_INT),
+                            'descriptor' => 'Movimiento entre cuentas',
+                            'name' => $op['companyName'],
+                            'idempotency_key' => rand(1000000,9999999),
+                        ];
+//                        $transferCliente = json_decode($this->dataArt->CreateTransfer($clientT, 'SANDBOX'), true);
+                        $this->createLog('CreateTransfer', 'Send ->'.json_encode($clientT, JSON_PRETTY_PRINT));
+//                        $this->createLog('CreateTransfer', 'Response ->'.json_encode($transferCliente, JSON_PRETTY_PRINT));
+
+                        $traking = json_decode($this->dataArt->getIdRastreo('TRu-PaiAzVQKuZifassQOmWg', 'SANDBOX'), true);//$back['id'], 'SANDBOX'));
+                        if(!$traking['tracking_key']){
+                            sleep(15);
+                            $traking = ($this->dataArt->getIdRastreo('TRu-PaiAzVQKuZifassQOmWg', 'SANDBOX'));//$back['id'], 'SANDBOX'));
+                        }
+                        $argsR = [
+                            'trakingKey' => $traking['tracking_key'],
+                            'arteriaId' => 'TRu-PaiAzVQKuZifassQOmWg',//$transferCliente['id'],
+                            'amount' => ($exitMoney/100),
+                            'descriptor' => 'Pago por '.$op['uuid'],
+                            'sourceBank' => substr($data['data']['destination']['account_number'],0,3),
+                            'receiverBank' => substr($data['data']['source']['account_number'],0,3),
+                            'sourceRfc' => $data['data']['destination']['rfc'],
+                            'receiverRfc' => $data['data']['source']['rfc'],
+                            'sourceClabe' => $data['data']['destination']['account_number'],
+                            'receiverClabe' => $data['data']['source']['account_number'],
+                            'transactionDate' => "2023-11-17T19:04:08.472152+00:00",//$transferCliente['created_at'],
+                            'operationNumber' => $op['operationNumber'],
+                        ];
+                        $res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
+                        $cepC = $this->getCEP($argsR);
+                        //====| Comenzamos a enviar el dinero del proveedor |=====
+//                        $prov = json_decode($this->dataArt->CreateTransfer($provedor, 'SANDBOX'), true);
+                        $this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
+//                        $this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
+//                        $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                        $traking = json_decode($this->dataArt->getIdRastreo('TRHcI0y0azSBq9ALGVzfrFxA', 'SANDBOX'), true);
+                        if(!$traking['tracking_key']){
+                            sleep(15);
+//                            $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                            $traking = ($this->dataArt->getIdRastreo('TRHcI0y0azSBq9ALGVzfrFxA', 'SANDBOX'));
+                        }
+                        $argsProv = [
+                            'trakingKey' => $traking['tracking_key'],
+                            'arteriaId' => 'TRHcI0y0azSBq9ALGVzfrFxA',//$prov['id'],
+                            'amount' => ($amountP/100),
+                            'descriptor' => 'Movimiento entre cuentas',
+                            'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
+                            'receiverBank' => substr($op['clientClabe'], 0, 3),
+                            'sourceRfc' => $data['data']['destination']['rfc'],
+                            'receiverRfc' => $data['data']['destination']['rfc'],
+                            'sourceClabe' => $data['data']['destination']['account_number'],
+                            'receiverClabe' => $op['companyClabe'],
+                            'transactionDate' => "2023-11-17T19:04:08.472152+00:00",//$prov['created_at'],
+                            'operationNumber' => $op['operationNumber'],
+                        ];
+                        $res = $this->dataArt->AddMovement($argsProv, 'SANDBOX');
+                        $cepC = $this->getCEP($argsProv);
+//							$this->load->helper('sendmail_helper');
+                        return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
                     }
-				}
+                }else{
+                    $args = [
+                        'trakingKey' => $data['data']['tracking_key'],
+                        'arteriaId' => $data['id'],
+                        'amount' => ($data['data']['amount']/100),
+                        'descriptor' => $data['data']['descriptor'],
+                        'sourceBank' => substr($data['data']['source']['account_number'], 0, 3),
+                        'receiverBank' => substr($data['data']['destination']['account_number'], 0, 3),
+                        'sourceRfc' => $data['data']['source']['rfc'],
+                        'receiverRfc' => $data['data']['destination']['rfc'],
+                        'sourceClabe' => $data['data']['source']['account_number'],
+                        'transactionDate' => $data['data']['created_at'],
+                        'operationNumber' => NULL,
+                        'receiverClabe' => $data['data']['destination']['account_number'],
+                    ];
+                    $res = $this->dataArt->AddMovement($args, 'SANDBOX');
+                    $cep = $this->getCEP($args);
+                    $rollback = [
+                        'clabe' => $args['sourceClabe'],
+                        'amount' => $data['data']['amount'],
+                        'descriptor' => 'Devolucion por referencia no encontrada',
+                        'name' => $data['data']['source']['name'],
+                        'idempotency_key' => $args['trakingKeyReceived'].'01',
+                    ];
+                    $back = json_decode($this->dataArt->CreateTransfer($rollback, 'SANDBOX'), true);
+                    $this->createLog('CreateTransfer', json_encode($back, JSON_PRETTY_PRINT));
+                    if ($back){
+                        $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                        if(!$traking['tracking_key']){
+                            sleep(15);
+                            $traking = ($this->dataArt->getIdRastreo($back['id'], 'SANDBOX'));
+                        }
+                        $argsR = [
+                            'trakingKey' => $traking['tracking_key'],
+                            'arteriaId' => $back['id'],
+                            'amount' => ($data['data']['amount'])/100,
+                            'descriptor' => $back['descriptor'],
+                            'sourceBank' => substr($data['data']['destination']['account_number'], 0, 3),
+                            'receiverBank' => substr($data['data']['source']['account_number'], 0, 3),
+                            'sourceRfc' => $data['data']['destination']['rfc'],
+                            'receiverRfc' => $data['data']['source']['rfc'],
+                            'sourceClabe' => $data['data']['destination']['account_number'],
+                            'receiverClabe' => $data['data']['source']['account_number'],
+                            'transactionDate' => $back['created_at'],
+                            'operationNumber' => NULL,
+                        ];
+                        $res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
+                        $cep = $this->getCEP($argsR);
+                        return $this->response->sendResponse(["response" => 'Operación correcta err 1'], $error);
+                    }
+                }
 			}
 		}
 		return $this->response->sendResponse($resp, $error);
 	}
-	public function getCEP(){
-		$args = [
+	public function getCEP($args){
+        $this->load->model('Arteria_model','dataArt');
+        $sourceBank = $this->dataArt->getBankByClabe($args['sourceBank']);
+        $receiverBank = $this->dataArt->getBankByClabe($args['receiverBank']);
+		$data = [
 			'tipoCriterio' => 'T',
 			'receptorParticipante' => 0,
 			'captcha' => 'c',
 			'tipoConsulta' => 1,
-			'fecha' => '16-11-2023',
-			'criterio' => 'CUENCA725054557695',
-			'emisor' => '90696',
-			'receptor' => '40012',
-			'cuenta' => '012180015926668199',
-			'monto' => '7.35'
+			'fecha' => date('d-m-Y', strtotime($args['transactionDate'])),
+			'criterio' => $args['trakingKey'],
+			'emisor' => $sourceBank[0]['bnk_code'],
+			'receptor' => $receiverBank[0]['bnk_code'],
+			'cuenta' => $args['receiverClabe'],
+			'monto' => $args['amount'],
 		];
-		$this->load->model('Arteria_model', 'dataArt');
-		$res = $this->dataArt->DownloadCEP($args, 'SANDBOX');
-
+//        var_dump($data);
+		$res = $this->dataArt->DownloadCEP($data, 'SANDBOX');
+        if ($res){$this->dataArt->insertCEP($args, $res, 'SANDBOX');}
+        return $res;
 	}
 	/**
 	 * @param string $texto texto a encriptar
@@ -217,5 +239,10 @@ class Fintec extends MY_Loggedout{
 		return base64_decode($texto.$key);
 		//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 	}
+
+    function checkTracking($id){
+        $this->load->model('Arteria_model','dataArt');
+        return json_decode($this->dataArt->getIdRastreo($id, 'SANDBOX'));
+    }
 
 }

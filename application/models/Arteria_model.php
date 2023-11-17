@@ -36,28 +36,35 @@ class Arteria_model extends CI_Model{
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
 	}
 	public function AddMovement(array $args, string $env){
-		$query = "INSERT INTO compensatest_base.balance (traking_key_received, traking_key_send, arteriaD_id, amount, descriptor, 
+        $sourceBank = $this->getBankByClabe($args['sourceBank']);
+        $receiverBank = $this->getBankByClabe($args['receiverBank']);
+        $fecha = strtotime($args['transactionDate']);
+
+		$query = "INSERT INTO compensatest_base.balance (operationNumber, traking_key, arteriaD_id, amount, descriptor, 
                                  source_bank, receiver_bank, source_rfc, receiver_rfc, 
                                  source_clabe, receiver_clabe, transaction_date) 
 					VALUES (";
-		if ($args['trakingKeyReceived'] === null){
-			$query .= "NULL, ";
-		}else{
-			$query .= "'{$args['trakingKeyReceived']}', ";
-		}
-		if ($args['trakingKeyReceived'] === null){
-			$query .= "NULL, ";
-		}else{
-			$query .= "'{$args['trakingKeySend']}', ";
-		}
+
+        $query .= $args['operationNumber'] === null ? "NULL, " : "'{$args['operationNumber']}', ";
+        $query .= $args['trakingKey'] === null ? "NULL, " : "'{$args['trakingKey']}', ";
+
 		$query .= "'{$args['arteriaId']}', '{$args['amount']}', '{$args['descriptor']}', 
-					'{$args['sourceBank']}', '{$args['receiverBank']}', '{$args['sourceRfc']}', '{$args['receiverRfc']}', 
-					'{$args['sourceClabe']}', '{$args['receiverClabe']}', '{$args['transactionDate']}')";
+					'{$sourceBank[0]['bnk_code']}', '{$receiverBank[0]['bnk_code']}', '{$args['sourceRfc']}', '{$args['receiverRfc']}', 
+					'{$args['sourceClabe']}', '{$args['receiverClabe']}', '{$fecha}')";
 		if($result = $this->db->query($query)){
 			return $this->db->insert_id();
 		}
 		return false;
 	}
+    public function getBankByClabe (string $clabe){
+        $query = "SELECT * FROM compensatest_base.cat_bancos WHERE bnk_clave = '{$clabe}'";
+//        var_dump($query);
+        if ($result = $this->db->query($query)) {
+            if ($result->num_rows() > 0){
+                return $result->result_array();
+            }
+        }
+    }
 	public function SearchOperations(array $args, string $env){
 		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
@@ -78,8 +85,9 @@ class Arteria_model extends CI_Model{
 					ON t2.id_broadcast_bank = t7.bnk_id
 					LEFT JOIN compensatest_base.invoices t8
 					ON t1.id_invoice_relational = t8.id
-					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1 and t1.operation_number = '{$args['trakingKeyReceived']}'";
-//		var_dump($query);
+					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1 
+					and (t1.operation_number = '{$args['operationNumber']}' OR t1.operation_number = '{$args['descriptor']}')";
+//		var_dump($result = $this->db->query($query));
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
 				foreach ($result->result_array() as $row){
@@ -103,6 +111,7 @@ class Arteria_model extends CI_Model{
 						'uuid' => $row['uuid']
 					];
 				}
+//                var_dump($opData);
 				return $opData;
 			}
 		}
@@ -160,7 +169,7 @@ class Arteria_model extends CI_Model{
 			$filename = strtotime('now').'_'.$args['criterio'].'.pdf';
 			$ruta_destino = './boveda/CEP/'.$filename;
 			file_put_contents($ruta_destino, $pdf_content);
-			echo 'PDF descargado y guardado con éxito en: ' . $ruta_destino;
+            return $filename;
 
 
 		}else {
@@ -169,6 +178,20 @@ class Arteria_model extends CI_Model{
 		}
 		return $response;
 	}
+    public function insertCEP (array $args, $cep, string $env){
+        $query = "UPDATE compensatest_base.balance SET url_cep = '{$cep}' 
+                                 WHERE traking_key = '{$args['trakingKey']}' and arteriaD_id = '{$args['arteriaId']}'";
+        if($result = $this->db->query($query)){
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+
+    public function getIdRastreo (string $id, string $env) {
+        $this->headers = [];
+        $endpoint = 'transfers/'.$id;
+        return $this->SendRequest($endpoint, [], $env, 'GET', 'JSON');
+    }
 	private function SendRequest(string $endpoint, $data, ?string $env, ?string $method, ?string $dataType) {
 		$env = strtoupper($env) ?? 'SANDBOX';
 		$url = ($env == 'SANDBOX') ? $this->ArteriaSandbox : $this->ArteriaLive;
