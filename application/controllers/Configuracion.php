@@ -53,6 +53,7 @@ class Configuracion extends MY_Loggedin{
 		$this->load->model('Openpay_model', 'dataOp');
 		$id = $this->session->userdata('id');
 		$subsData= $this->dataOp->DeleteCard($id, 'SANDBOX');
+		var_dump($subsData);
 		if ($subsData != 0){
 			$cardNumber = $this->input->post('cardNumber');
 			$holderName = $this->input->post('holderName');

@@ -345,8 +345,14 @@
 			beforeSend: function () {
 			},
 			success: function (data) {
-				console.log(data);
-				if(data.type != null){
+				let toastHTML;
+				if(data.code === 502){
+					$('#addCardM').modal('close');
+					toastHTML = '<span><strong>' + data.error + '</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>'+data.message+'</strong></span>';
+					M.toast({html: toastHTML});
+				}else if(data.type != null){
 					$('#cardInfoImg').empty();
 					$('#cardInfoText').empty();
 					const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';
@@ -356,14 +362,14 @@
 					$('#changeCard').empty();
 					$('#changeCard').append('Cambiar');
 					$('#addCardM').modal('close');
-					var toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
+					toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
 					M.toast({html: toastHTML});
 				}else{
 					$('#addCardM').modal('close');
 					if (data.error_code === 3002){
-						var toastHTML = '<span><strong>Error</strong></span>';
+						toastHTML = '<span><strong>Error</strong></span>';
 						M.toast({html: toastHTML});
-						var toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
+						toastHTML = '<span><strong>Tarjeta expirada</strong></span>';
 						M.toast({html: toastHTML});
 					}
 				}
@@ -398,8 +404,11 @@
 			beforeSend: function () {
 			},
 			success: function (data) {
-				console.log(data);
-				if(data.type != null){
+				if(data.code === 502){
+					$('#addCardM').modal('close');
+					alert('Error');
+					console.log(data);
+				}else if(data.type != null){
 					$('#cardInfoImg').empty();
 					$('#cardInfoText').empty();
 					const img = '<img src="/assets/images/cardtype/'+data.type+'.svg" alt="'+data.type+'" width="100px">';

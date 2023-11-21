@@ -130,6 +130,7 @@ class Openpay_model extends CI_Model
 	}
 	public function DeleteCard(int $id, string $env = 'SANDBOX'){
 		$card = $this->getActiveCard($id);
+//		var_dump($card);
 		$args = [
 			'customer_id' => $card['customer_id'],
 			'card_id' => $card['openpay_id']
@@ -163,7 +164,7 @@ class Openpay_model extends CI_Model
 			FROM compensatest_base.subscription t1
 			    INNER JOIN compensatest_base.cards t2 ON t1.card_id = t2.id
 			    INNER JOIN compensatest_base.cat_cardtype t3 ON t2.cardType_id = t3.id
-			    WHERE t1.company_id = '{$id}' AND t1.active = 1 AND t2.active = 1";
+			    WHERE t1.company_id = '{$id}' AND t1.active = 1 AND t2.active = 1 LIMIT 1";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row){
@@ -177,6 +178,7 @@ class Openpay_model extends CI_Model
 						'openpay_id' => $row['openpay_id'],
 						'customer_id' => $row['customer_id'],
 						];
+//					var_dump($card);
 				}
 				return $card;
 			}
@@ -184,6 +186,9 @@ class Openpay_model extends CI_Model
 		return false;
 	}
 	public function NewCharge(array $args, int $id, string $env = 'SANDBOX') {
+		if (is_array($args['cardRecordID'])){
+			return ['code' => 502,'error' => 'Error: No se pudo agregar el método de pago.', 'message' =>'Verifique los campos o intente con otra tarjeta.'];
+		}
 		$query = "SELECT openpay_id FROM compensatest_base.cards WHERE id = '{$args['cardRecordID']}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {

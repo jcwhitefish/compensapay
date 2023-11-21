@@ -119,60 +119,101 @@ class Invoice_model extends CI_Model {
     }
 
     public function crearExcel($args, $menu) {
-        //var_dump($args);
+        $letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $spread = new Spreadsheet();
-
         $sheet = $spread->getActiveSheet();
         $sheet->setTitle("Hoja 1");
         $i = 1;
         $j = 0;
         switch($menu){
             case 'Facturas':
-                $sheet->setCellValueByColumnAndRow(1, 1, 'Proveedor');
-                $sheet->setCellValueByColumnAndRow(2, 1, 'Factura');
-                $sheet->setCellValueByColumnAndRow(3, 1, 'Fecha Factura');
-                $sheet->setCellValueByColumnAndRow(4, 1, 'Fecha Alta');
-                $sheet->setCellValueByColumnAndRow(5, 1, 'Fecha Transacción');
-                $sheet->setCellValueByColumnAndRow(6, 1, 'Estatus');
-                $sheet->setCellValueByColumnAndRow(7, 1, 'Subtotal');
-                $sheet->setCellValueByColumnAndRow(8, 1, 'IVA');
-                $sheet->setCellValueByColumnAndRow(9, 1, 'Total');
+				$sheet->setCellValue('A1', 'Proveedor');
+				$sheet->setCellValue('B1', 'Factura');
+				$sheet->setCellValue('C1', 'Fecha Factura');
+				$sheet->setCellValue('D1', 'Fecha Alta');
+				$sheet->setCellValue('E1', 'Fecha Transacción');
+				$sheet->setCellValue('F1', 'Estatus');
+				$sheet->setCellValue('G1', 'Subtotal');
+				$sheet->setCellValue('H1', 'IVA');
+				$sheet->setCellValue('I1', 'Total');
+				$sheet->getStyle('A1:I1')->applyFromArray(
+					array(
+						'font'  => array(
+							'bold'  => true,
+							'color' => array('rgb' => 'FFFFFF'),
+							'size'  => 12,
+						),
+						'fill' => array(
+							'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+							'color' => array('rgb' => '128293')
+						),
+					)
+				);
+				foreach($args as $value){
+					$i++;
+					$arr = explode(',', $value);
+					foreach($arr as $key){
+						$sheet->setCellValue( $letter[$j].$i, $key);
+						$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
+						$j++;
+					}
+					$j = 0;
+				}
                 break;
             case 'Movimientos':
-                $sheet->setCellValueByColumnAndRow(1, 1, 'Monto');
-                $sheet->setCellValueByColumnAndRow(2, 1, 'Clave de rastreo');
-                $sheet->setCellValueByColumnAndRow(3, 1, 'Comprobante electrónico (CEP)');
-                $sheet->setCellValueByColumnAndRow(4, 1, 'Descripción');
-                $sheet->setCellValueByColumnAndRow(5, 1, 'Banco origen');
-                $sheet->setCellValueByColumnAndRow(6, 1, 'Banco destino');
-                $sheet->setCellValueByColumnAndRow(7, 1, 'Razón social origen');
-                $sheet->setCellValueByColumnAndRow(8, 1, 'RFC Origen');
-                $sheet->setCellValueByColumnAndRow(9, 1, 'Razón social destino');
-                $sheet->setCellValueByColumnAndRow(10, 1, 'CLABE origen');
-                $sheet->setCellValueByColumnAndRow(11, 1, 'CLABE destino');
-                $sheet->setCellValueByColumnAndRow(12, 1, 'Fecha de transacción');
-                $sheet->setCellValueByColumnAndRow(13, 1, 'CFDI correspondiente');
-                $sheet->setCellValueByColumnAndRow(14, 1, 'Fecha de Transacción');
+				$sheet->setCellValue('A1', 'Monto');
+				$sheet->setCellValue('B1', 'Clave de rastreo');
+				$sheet->setCellValue('C1', 'Comprobante electrónico (CEP)');
+				$sheet->setCellValue('D1', 'Descripción');
+				$sheet->setCellValue('E1', 'Banco origen');
+				$sheet->setCellValue('F1', 'Banco destino');
+				$sheet->setCellValue('G1', 'Razón social origen');
+				$sheet->setCellValue('H1', 'RFC origen');
+				$sheet->setCellValue('I1', 'Razón social destino');
+				$sheet->setCellValue('J1', 'RFC destino');
+				$sheet->setCellValue('K1', 'CLABE origen');
+				$sheet->setCellValue('L1', 'CLABE destino');
+				$sheet->setCellValue('M1', 'Fecha de transacción');
+				$sheet->setCellValue('N1', 'CFDI correspondiente');
+				$sheet->setCellValue('O1', 'Fecha de Transacción');
+				$sheet->getStyle('A1:O1')->applyFromArray(
+					array(
+						'font'  => array(
+							'bold'  => true,
+							'color' => array('rgb' => 'FFFFFF'),
+							'size'  => 12,
+						),
+						'fill' => array(
+							'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+							'color' => array('rgb' => '128293')
+						),
+					)
+				);
+				foreach($args as $value){
+					$i++;
+					$arr = explode(',', $value);
+					foreach($arr as $key){
+						if ($j == 10 || $j == 11){
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+						}
+						if ($j == 12 || $j == 14){
+							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', $key) );
+						}else{
+							$sheet->setCellValue( $letter[$j].$i, $key);
+						}
+						$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
+						$j++;
+					}
+					$j = 0;
+				}
+				$sheet->removeColumn('C', $i);
                 break;
-            case 'Comprobantes':
-                $sheet->setCellValueByColumnAndRow(1, 1, $key);
+			case 'Estados':
+			case 'Comprobantes':
+                $sheet->setCellValue('A1', $key);
                 break;
-            case 'Estados':
-                $sheet->setCellValueByColumnAndRow(1, 1, $key);
-                break;
-        }
-        
-        foreach($args as $value){
-            $i++;
-            
-            $arr = explode('|', $value);
-            foreach($arr as $key){
-                $j++;
-                $sheet->setCellValueByColumnAndRow($j, $i, $key);
-            }
-            $j = 0;
-
-        }
+		}
         $writer = new Xlsx($spread);
         ob_start();
         $writer->save('php://output');
