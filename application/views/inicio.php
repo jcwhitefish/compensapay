@@ -2,19 +2,26 @@
     <div class="row section black" style="border-radius: 15px">
         <div class="col s3 white-text">
             <h5><strong>Oper. Totales</strong></h5>
-            <h6>107</h6>
+            <h6><?php echo $dashboard["TotalOperaciones"][0]["TotOper"];?></h6>
         </div>
         <div class="col s3 white-text">
-            <h5><strong>Total por Cobrar</strong></h5>
-            <h6>$ 76,452.07</h6>
+            <h5 style="margin: 1.0933333333rem 0 -1rem 0;"><strong>Total por Cobrar</strong></h5>
+            <p style="font-size: 12px">(Monto Facturas)</p>
+            <h6>$ <?php 
+                    $Stpoc = $dashboard["TotalPorCobrar"]["facturas"][0]["TTotal"] + $dashboard["TotalPorCobrar"]["notas"][0]["TTotal"];
+                    echo number_format($Stpoc,2);
+            ?></h6>
         </div>
         <div class="col s3 white-text">
-            <h5><strong>Total por pagar</strong></h5>
-            <h6>$ 451,324.23</h6>
+        <h5 style="margin: 1.0933333333rem 0 -1rem 0;"><strong>Total por pagar</strong></h5>
+        <p style="font-size: 12px">(Monto Facturas)</p>
+            <h6>$ <?php 
+            $Stpp = $dashboard["TotalPorPagar"]["facturas"][0]["TTotal"] + $dashboard["TotalPorPagar"]["notas"][0]["TTotal"];
+            echo number_format($Stpp, 2);?></h6>
         </div>
         <div class="col s3 white-text">
             <h5><strong>Diferencia Total</strong></h5>
-            <h6>$ -169,831.42</h6>
+            <h6>$ <?php echo number_format(($Stpoc - $Stpp), 2);?></h6>
         </div>
     </div>
 </div>
@@ -22,18 +29,26 @@
     <div class="row">
         <div class="col s3">
             <h5><strong>Periodo</strong></h5>
-            <input type="date">
-            <h6>Inicio</h6>
+            <input type="date" value="<?php echo date("Y-m").'-01';?>">
+            <h6>Desde</h6>
         </div>
         <div class="col s3">
             <h5>&nbsp;</h5>
-            <input type="date">
-            <h6>Fin</h6>
+            <input type="date" value="<?php echo date("Y-m-d");?>">
+            <h6>Hasta</h6>
         </div>
         <div class="col s6">
             <h5>&nbsp;</h5>
             <select>
                 <option value="0">Todos los proveedores</option>
+                <?php
+                if(is_array($dashboard["Proveedores"]))
+                {
+                    foreach ($dashboard["Proveedores"] as $proveedor){
+                        echo '<option value="'.$proveedor["Id"].'">'.$proveedor["Proveedor"].'</option>';
+                    }
+                }
+                ?>
             </select>
         </div>
     </div>
