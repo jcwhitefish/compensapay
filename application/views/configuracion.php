@@ -265,6 +265,7 @@
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
 		</div>
 	</div>
+	<div id="solveLoader" ></div>
 </div>
 <style>
 	div.section{
@@ -274,6 +275,19 @@
 	p{
 		margin-top: 4px;
 		margin-bottom: 4px;
+	}
+	#solveLoader{
+		display: none;
+		position: absolute;
+		/*float: left;*/
+		background-color: rgba(255, 255, 255, 0.5);
+		background-image: url('/assets/images/loader.gif') !important;
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: 150px 150px;
+		top: 0;
+		width: 100px;
+		height: 100px;
 	}
 </style>
 <script type="text/javascript" src="https://resources.openpay.mx/lib/openpay-js/1.2.38/openpay.v1.min.js"></script>
@@ -343,6 +357,16 @@
 			dataType: 'json',
 			method: 'post',
 			beforeSend: function () {
+				const left = $('#addCardM').offset().left;
+				const top = $('#addCardM').offset().top;
+				const width = $('#addCardM').width();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top + 59,
+					width: width,
+					zIndex: 999999
+				}).focus();
 			},
 			success: function (data) {
 				let toastHTML;
@@ -363,6 +387,7 @@
 					$('#changeCard').append('Cambiar');
 					$('#addCardM').modal('close');
 					toastHTML = '<span><strong>¡Tarjeta agregada exitosamente!</strong></span>';
+					$('#cardFlag').val('2');
 					M.toast({html: toastHTML});
 				}else{
 					$('#addCardM').modal('close');
@@ -376,6 +401,9 @@
 
 			},
 			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
 			}
 		});
 	}

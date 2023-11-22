@@ -19,8 +19,6 @@ class Openpay_model extends CI_Model
 	}
 	public function NewClient($id, string $env = 'SANDBOX'){
 		$data = [];
-		$prevPay = strtotime("now");
-		$nextPay = strtotime('+1 month' );
 		$query = "SELECT name, last_name, email FROM compensatest_base.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
@@ -30,13 +28,7 @@ class Openpay_model extends CI_Model
 						'email'     => $row['email'],
 					];
 				}
-				$res = json_decode($this->SendNewClient($data, $env), true);
-				$query = "INSERT INTO compensatest_base.subscription (company_id, customer_id, prevPay, nextPay, dealings, statusSupplier)
-							VALUES ('{$id}','{$res['id']}', '{$prevPay}', '{$nextPay}',300,1)";
-				if ($this->db->query($query)){
-					$id = $this->db->insert_id();
-					return ['customerId' =>$res['id'], 'recordId' => $id];
-				}
+				return json_decode($this->SendNewClient($data, $env), true);
 			}
 		}
 		return false;
@@ -52,28 +44,28 @@ class Openpay_model extends CI_Model
 		$this->headers=[];
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
-	public function NewSubscription(array $args, string $env = 'SANDBOX'){
-		$args['plan_id'] = (strtoupper($env) == 'SANDBOX') ? $this->planIdSandbox : $this->planIdProd;
-		$res = json_decode($this->SendNewSubscription($args, $env), true);
-		if (!empty($res['id'])){
-			$query = "UPDATE compensatest_base.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+	public function SuccessfulSubscription(array $args, $company, string $env = 'SANDBOX'){
+		$prevPay = strtotime("now");
+		$nextPay = strtotime('+1 month' );
+		$query = "INSERT INTO compensatest_base.subscription (company_id, card_id, customer_id, subscriptionOp_id, prevPay, nextPay, 
+                                      dealings, extraDealing, statusSupplier, active) 
+				VALUES ('{$company}', '{$args['cardRecordID']}', '{$args['customer_id']}', '{$args['payment']['id']}', '{$prevPay}', '{$nextPay}',
+				        300, 0, 1, 1)";
+		if ($this->db->query($query)){
+			$subs = $this->db->insert_id();
+			$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) 
+						VALUES ('{$subs}', '{$args['cardRecordID']}', 300)";
 			if ($this->db->query($query)){
-				$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
-				if ($this->db->query($query)){
-					$endCard = substr($args['card_number'], -4);
-					$monthText = $this->monthTranslate($args['expiration_month']);
-					return [
-						'endCard' => $endCard,
-						'month' =>  $monthText,
-						'year' => $args['expiration_year'],
-						'type' => $args['cardType'],
-					];
-				}
+				$endCard = substr($args['card_number'], -4);
+				$monthText = $this->monthTranslate($args['expiration_month']);
+				return [
+					'endCard' => $endCard,
+					'month' =>  $monthText,
+					'year' => $args['expiration_year'],
+					'type' => $args['cardType'],
+				];
 			}
-		}else{
-			return $res;
 		}
-		return -1;
 	}
 	public function SendNewSubscription(array $args, string $env){
 		$request = [
@@ -94,22 +86,21 @@ class Openpay_model extends CI_Model
 	}
 	public function NewCard(array $args, string $env = 'SANDBOX'){
 		$res = json_decode($this->SendNewCard($args, $env), true);
-//		var_dump($res);
+		if (!empty($res['http_code'])){
+			return ['code' => 502,'error' => 'Error: No se pudo agregar el método de pago.',
+				'message' =>'Verifique los campos o intente con otra tarjeta.'];
+		}
 		if (!empty($res['id'])){
 			$endCard = substr($args['card_number'], -4);
 			$query = "INSERT INTO compensatest_base.cards (cardType_id, openpay_id, year, month, endCard, active) 
-					VALUES ((SELECT id FROM compensatest_base.cat_cardtype WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['expiration_year']}', '{$args['expiration_month']}', '{$endCard}', 1)";
+					VALUES ((SELECT id FROM compensatest_base.cat_cardtype 
+				   	WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['expiration_year']}', '{$args['expiration_month']}', 
+					'{$endCard}', 1)";
 			if ($this->db->query($query)){
-				$id = $this->db->insert_id();
-				$query = "UPDATE compensatest_base.subscription set card_id = '{$id}' 
-					WHERE id = '{$args['recordId']}'";
-				if ($this->db->query($query)){
-					return $id;
-				}else{
-					return -2;
-				}
+				return $this->db->insert_id();
 			}else{
-				return -1;
+				return ['code' => 502,'error' => 'Error: No se pudo agregar el método de pago.',
+					'message' =>'No es posible agregar el método de pago en este momento.'];
 			}
 		}
 		return $res;
@@ -186,9 +177,6 @@ class Openpay_model extends CI_Model
 		return false;
 	}
 	public function NewCharge(array $args, int $id, string $env = 'SANDBOX') {
-		if (is_array($args['cardRecordID'])){
-			return ['code' => 502,'error' => 'Error: No se pudo agregar el método de pago.', 'message' =>'Verifique los campos o intente con otra tarjeta.'];
-		}
 		$query = "SELECT openpay_id FROM compensatest_base.cards WHERE id = '{$args['cardRecordID']}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
@@ -202,27 +190,8 @@ class Openpay_model extends CI_Model
 							$args['clientName'] = $row['name'];
 							$args['email'] = $row['email'];
 						}
-						$args['orderId'] = 'SB-'.str_pad($id, 5, "0", STR_PAD_LEFT).strtotime("now");
-						$res = json_decode($this->SendCharges($args, $env), true);
-						if (!empty($res['id'])){
-							$query = "UPDATE compensatest_base.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
-//							var_dump($query);
-							if ($this->db->query($query)){
-								$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
-								if ($this->db->query($query)){
-									$endCard = substr($args['card_number'], -4);
-									$monthText = $this->monthTranslate($args['expiration_month']);
-									return [
-										'endCard' => $endCard,
-										'month' =>  $monthText,
-										'year' => $args['expiration_year'],
-										'type' => $args['cardType'],
-									];
-								}
-							}
-						}
-//						var_dump($res);
-						return $res;
+						$args['orderId'] = 'SolveSB-'.str_pad($id, 5, "0", STR_PAD_LEFT).strtotime("now");
+						return json_decode($this->SendCharges($args, $env), true);
 					}
 				}
 			}
@@ -299,4 +268,31 @@ class Openpay_model extends CI_Model
 		}
 		return $response;
 	}
+
+
+//$query = "INSERT INTO compensatest_base.subscription (company_id, customer_id, prevPay, nextPay, dealings, statusSupplier)
+//							VALUES ('{$id}','{$res['id']}', '{$prevPay}', '{$nextPay}',300,1)";
+//if ($this->db->query($query)){
+//	$id = $this->db->insert_id();
+//	return ['customerId' =>$res['id'], 'recordId' => $id];
+//}
+
+
+//if (!empty($res['id'])){
+//$query = "UPDATE compensatest_base.subscription SET subscriptionOp_id = '{$res['id']}', active = 1 WHERE id = '{$args['recordId']}'";
+////							var_dump($query);
+//if ($this->db->query($query)){
+//	$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) VALUES ('{$args['recordId']}', '{$args['cardRecordID']}',300)";
+//	if ($this->db->query($query)){
+//		$endCard = substr($args['card_number'], -4);
+//		$monthText = $this->monthTranslate($args['expiration_month']);
+//		return [
+//			'endCard' => $endCard,
+//			'month' =>  $monthText,
+//			'year' => $args['expiration_year'],
+//			'type' => $args['cardType'],
+//		];
+//	}
+//}
+//}
 }

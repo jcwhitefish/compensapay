@@ -1,7 +1,7 @@
 <?php
 
 class Configuracion extends MY_Loggedin{
-	private $amount = 600;
+	private int $amount = 600;
 	public function index(){
 		$this->load->model('Openpay_model','dataOP');
 		$id = $this->session->userdata('id');
@@ -16,34 +16,29 @@ class Configuracion extends MY_Loggedin{
 		$id = $this->session->userdata('id');
 		$customerDAta = $this->dataOp->NewClient($id, 'SANDBOX');
 
-		$customerId = $customerDAta['customerId'];
-		$recordId = $customerDAta['recordId'];
-		$cardNumber = $this->input->post('cardNumber');
-		$holderName = $this->input->post('holderName');
-		$expirationMonth = $this->input->post('expirationMonth');
-		$expirationYear = $this->input->post('expirationYear');
-		$cvv = $this->input->post('cvv');
-		$sessionId = $this->input->post('sessionID');
-		$cardType = $this->input->post('cardType');
 		$args = [
-			'card_number' => $cardNumber,
-			'holder_name' => $holderName,
-			'expiration_year' => $expirationYear,
-			'expiration_month' => $expirationMonth,
-			'cvv' => $cvv,
-			'session_id' => $sessionId,
-			'customer_id' => $customerId,
-			'recordId' => $recordId,
-			'cardType' => $cardType,
+			'card_number' => $this->input->post('cardNumber'),
+			'holder_name' => $this->input->post('holderName'),
+			'expiration_year' => $this->input->post('expirationYear'),
+			'expiration_month' => $this->input->post('expirationMonth'),
+			'cvv' => $this->input->post('cvv'),
+			'session_id' => $this->input->post('sessionID'),
+			'customer_id' => $customerDAta['id'],
+			'cardType' => $this->input->post('cardType'),
 		];
-//		var_dump($args);
+
 		$cardData = $this->dataOp->NewCard($args, 'SANDBOX');
-//		die(json_encode($cardData));
+		if (!empty($cardData['code'])){
+			echo json_encode($cardData);
+			return false;
+		}
+
 		if ($cardData > 0){
 			$args['cardRecordID'] =  $cardData;
 			$args['amount'] = $this->amount;
-			$subscription = $this->dataOp->NewCharge($args, $id,'SANDBOX');
-			echo(json_encode($subscription));
+			$payment = $this->dataOp->NewCharge($args, $id,'SANDBOX');
+			$args['payment'] = $payment;
+			echo json_encode($this->dataOp->SuccessfulSubscription($args, $id, 'SANDBOX'));
 			return true;
 		}
 		return false;
