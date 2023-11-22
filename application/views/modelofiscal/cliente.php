@@ -102,7 +102,7 @@
         </div>
         <div class="col l3">
             <a id="download" class="button-blue" href="#">
-                Descargar
+                Exportar
             </a>
         </div>
     </div>

@@ -101,7 +101,7 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
         $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t1.legal_name as "client", 
-        t2.legal_name as "provider", t3.bnk_nombre as "bank_source", t4.bnk_nombre as "bank_receiver", 
+        t2.legal_name as "provider", t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
         CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl", 
         CONCAT("'.base_url('boveda/CEP/').'",balance.url_cep) AS "cepUrl"');
         $this->db->from('balance as balance');
@@ -109,8 +109,8 @@ class Invoice_model extends CI_Model {
         $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'LEFT');
         $this->db->join('companies t1', 't1.id = operations.id_client ', 'LEFT');
         $this->db->join('companies t2', 't2.id = operations.id_provider', 'LEFT');
-        $this->db->join('cat_bancos t3', 't3.bnk_clave = balance.source_bank ', 'LEFT');
-        $this->db->join('cat_bancos t4', 't4.bnk_clave = balance.receiver_bank ', 'LEFT');
+        $this->db->join('cat_bancos t3', 't3.bnk_code = balance.source_bank ', 'LEFT');
+        $this->db->join('cat_bancos t4', 't4.bnk_code = balance.receiver_bank ', 'LEFT');
         $this->db->where('operations.id_provider', $company);
         $this->db->or_where('operations.id_client', $company);
 		$this->db->order_by('created_at', 'DESC');
