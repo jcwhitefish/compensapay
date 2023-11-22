@@ -168,12 +168,14 @@
                         <tr>
                             <th>Seleccionar</th>
                             <th>Institución Emisora</th>
+							<th>Institución receptora</th>
+							<th>Cuenta beneficiaria</th>
                             <th>Clave de rastreo</th>
                             <th>Numero de referencia</th>
                             <th>Fecha de pago</th>
-                            <th>Institución receptora</th>
+
                             <th>Monto del pago</th>
-                            <th>Cuenta beneficiaria</th>
+
 							<th>Descargar CEP</th>
                         </tr>
                     </thead>
@@ -181,12 +183,12 @@
 						<tr v-for="cep in CEPS">
 							<td class="center-align"><input id="checkTbl" type="checkbox"></td>
 							<td>{{cep.source_bank}}</td>
+							<td>{{cep.receiver_bank}}</td>
+							<td>{{cep.receiver_clabe}}</td>
 							<td>{{cep.traking_key}}</td>
 							<td>{{cep.operationNumber}}</td>
 							<td>{{cep.transaction_date}}</td>
-							<td>{{cep.receiver_bank}}</td>
 							<td>{{cep.amount}}</td>
-							<td>{{cep.receiver_clabe}}</td>
 							<td><a v-bind:href='cep.cepUrl' target="_blank">Descargar CEP</a></td>
 						</tr>
                     </tbody>

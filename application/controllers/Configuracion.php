@@ -47,6 +47,43 @@ class Configuracion extends MY_Loggedin{
 	public function changeCard(){
 		$this->load->model('Openpay_model', 'dataOp');
 		$id = $this->session->userdata('id');
+		$subs =  $this->dataOp->getSubscription($id, 'SANDBOX');
+		$subs = $subs[0];
+		var_dump($subs);
+		$args = [
+			'card_number' => $this->input->post('cardNumber'),
+			'holder_name' => $this->input->post('holderName'),
+			'expiration_year' => $this->input->post('expirationYear'),
+			'expiration_month' => $this->input->post('expirationMonth'),
+			'cvv' => $this->input->post('cvv'),
+			'session_id' => $this->input->post('sessionID'),
+			'customer_id' => $subs['customer_id'],
+			'cardType' => $this->input->post('cardType'),
+		];
+		$cardData = $this->dataOp->NewCard($args, 'SANDBOX');
+
+		if (!empty($cardData['code'])){
+			echo json_encode($cardData);
+			return false;
+		}
+
+		if ($cardData > 0){
+			$args['cardRecordID'] =  $cardData;
+			$args['amount'] = $this->amount;
+			if (strtotime('NOW') <= $subs['nextPay'] ){
+				$subsData= $this->dataOp->DeleteCard($args, $subs['card_id'], 'SANDBOX');
+				var_dump('aun no hay que pagar');
+			}else{
+				var_dump('Se hace el cobro');
+			}
+//			$payment = $this->dataOp->NewCharge($args, $id,'SANDBOX');
+//			$args['payment'] = $payment;
+//			echo json_encode($this->dataOp->SuccessfulSubscription($args, $id, 'SANDBOX'));
+//			return true;
+		}
+
+		var_dump($subs);
+		die();
 		$subsData= $this->dataOp->DeleteCard($id, 'SANDBOX');
 		var_dump($subsData);
 		if ($subsData != 0){
