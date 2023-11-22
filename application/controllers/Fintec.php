@@ -125,12 +125,13 @@ class Fintec extends MY_Loggedout{
                         $this->createLog('CreateTransfer', 'Send ->'.json_encode($provedor, JSON_PRETTY_PRINT));
                         $this->createLog('CreateTransfer', 'Response ->'.json_encode($prov, JSON_PRETTY_PRINT));
                         $traking = json_decode($this->dataArt->getIdRastreo($prov['id'], 'SANDBOX'));
+						$this->createLog('getIdRastreo', 'Response ->'.json_encode($traking, JSON_PRETTY_PRINT));
 //                        $traking = json_decode($this->dataArt->getIdRastreo('TRHcI0y0azSBq9ALGVzfrFxA', 'SANDBOX'), true);
-                        if(!$traking['tracking_key']){
-                            sleep(15);
-                            $traking = json_decode($this->dataArt->getIdRastreo($prov['id'], 'SANDBOX'));
-//                            $traking = ($this->dataArt->getIdRastreo('TRHcI0y0azSBq9ALGVzfrFxA', 'SANDBOX'));
-                        }
+						while (!$traking['tracking_key']){
+							sleep(15);
+							$traking = json_decode($this->dataArt->getIdRastreo($prov['id'], 'SANDBOX'));
+							$this->createLog('getIdRastreo', 'Response ->'.json_encode($traking, JSON_PRETTY_PRINT));
+						}
                         $argsProv = [
                             'trakingKey' => $traking['tracking_key'],
                             'arteriaId' => $prov['id'],
@@ -145,7 +146,9 @@ class Fintec extends MY_Loggedout{
                             'transactionDate' => $prov['created_at'],
                             'operationNumber' => $op['operationNumber'],
                         ];
+						$this->createLog('AddMovement', 'Send ->'.json_encode($argsProv, JSON_PRETTY_PRINT));
                         $res = $this->dataArt->AddMovement($argsProv, 'SANDBOX');
+						$this->createLog('AddMovement', 'response ->'.json_encode($res, JSON_PRETTY_PRINT));
                         $cepC = $this->getCEP($argsProv);
 //							$this->load->helper('sendmail_helper');
                         return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
