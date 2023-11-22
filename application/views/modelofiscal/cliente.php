@@ -107,7 +107,6 @@
         </div>
     </div>
 
-
     <!-- Las tablas principales que se muestran -->
     <div class="card esquinasRedondas">
         <div class="card-content">
@@ -175,10 +174,21 @@
                             <th>Institución receptora</th>
                             <th>Monto del pago</th>
                             <th>Cuenta beneficiaria</th>
+							<th>Descargar CEP</th>
                         </tr>
                     </thead>
                     <tbody>
-
+						<tr v-for="cep in CEPS">
+							<td class="center-align"><input id="checkTbl" type="checkbox"></td>
+							<td>{{cep.source_bank}}</td>
+							<td>{{cep.traking_key}}</td>
+							<td>{{cep.operationNumber}}</td>
+							<td>{{cep.transaction_date}}</td>
+							<td>{{cep.receiver_bank}}</td>
+							<td>{{cep.amount}}</td>
+							<td>{{cep.receiver_clabe}}</td>
+							<td><a v-bind:href='cep.cepUrl' target="_blank">Descargar CEP</a></td>
+						</tr>
                     </tbody>
                 </table>
                 <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped responsive-table">
@@ -274,6 +284,7 @@
             const selectedButton = Vue.ref('Facturas');
             const facturas = Vue.ref([]);
             const movements = Vue.ref([]);
+			const CEPS = Vue.ref([]);
 
             //tabla de get facturas
             const getFacturas = () => {
@@ -300,12 +311,27 @@
                 fetch("<?= base_url("facturas/tablaMovimientos") ?>", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        //console.log(result)
+                        console.log(result)
                         movements.value = result.movements;
                         movements.value.reverse();
                     })
                     .catch(error => console.log('error', error));
             };
+
+			const getCEP = () => {
+				var requestOptions = {
+					method: 'GET',
+					redirect: 'follow'
+				};
+				fetch("<?= base_url("ModeloFiscal/tablaCEP") ?>", requestOptions)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result)
+						CEPS.value = result.CEPS;
+						CEPS.value.reverse();
+					})
+					.catch(error => console.log('error', error));
+			}
 
             //Ver que tabla vamos a ver segun el boton seleccionado
             const selectButton = (buttonName) => {
@@ -319,6 +345,7 @@
                 () => {
                     getFacturas();
                     getMovements();
+					getCEP();
                 }
             );
 
@@ -328,6 +355,7 @@
                 movements,
                 selectButton,
                 facturas,
+				CEPS,
              };
         }
     });

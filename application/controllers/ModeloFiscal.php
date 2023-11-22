@@ -3,25 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class ModeloFiscal extends MY_Loggedin {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/userguide3/general/urls.html
-	 */
 	public function index(){
-
 		$isClient = $this->session->userdata('vista');
-
 		// If is client
 		if ($isClient == 1) {
 			$data['main'] = $this->load->view('modelofiscal/cliente', '', true);
@@ -30,9 +13,18 @@ class ModeloFiscal extends MY_Loggedin {
 			$data['main'] = $this->load->view('modelofiscal/proveedor', '', true);
 			$this->load->view('plantilla', $data);
 		}
+	}
 
-	}	
-
-	
+	public function tablaCEP(){
+		$this->load->model('Fiscal_model', 'fdata');
+		$companie = $this->session->userdata('id');
+		$dato = [];
+		$dato['CEPS'] = $this->fdata->getInfoCEP($companie);
+		$dato['status'] = 'ok';
+		// Configura la respuesta para que sea en formato JSON
+		$this->output->set_content_type('application/json');
+		// Envía los datos en formato JSON
+		$this->output->set_output(json_encode($dato));
+	}
 
 }
