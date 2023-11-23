@@ -23,10 +23,12 @@
 		<td>actividad</td>
 	</tr>
 	<tr>
-		<td>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a href="https://compensapay.xyz/">{}</a></td>
+		<td>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a href="">{}</a></td>
 	</tr>
 	<tr>
-		<td>Cualquier duda o comentario, no dudes en contactarnos en el módulo de atención a clientes: Liga o contáctanos por ayuda@solve.com.mx.</td>
+		<td>Cualquier duda o comentario, no dudes en contactarnos en el módulo de atención a clientes:
+			<a href="">{}/soporte</a>
+			o contáctanos por <a href="mailto:ayuda@solve.com.mx?Subject=Ayuda%20con">ayuda@solve.com.mx</a>.</td>
 	</tr>
 	<tr>
 		<td>
