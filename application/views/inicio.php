@@ -60,8 +60,8 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg;">import_export</i></span>
-                    <p>19</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">-1.22%</h6>
+                    <p><?php echo $dashboard["OperacionesMes"];?></p>
+                    <!--<h6 style="font-size: 12px; color: #bdbdbd;">-1.22%</h6>-->
                 </div>
             </div>
         </div>
@@ -69,8 +69,8 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Ingresos</strong><i class="material-icons right">arrow_downward</i></span>
-                    <p>$ 51,493.10</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">+2.031</h6>
+                    <p>$ <?php echo number_format($dashboard["IngresosMes"], 2);?></p>
+                    <!--<h6 style="font-size: 12px; color: #bdbdbd;">+2.031</h6>-->
                 </div>
             </div>
         </div>
@@ -78,8 +78,8 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Egresos</strong><i class="material-icons right">arrow_upward</i></span>
-                    <p>$ 221,324.52</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">+$2.201</h6>
+                    <p>$ <?php echo number_format($dashboard["EgresosMes"], 2);?></p>
+                    <!--<h6 style="font-size: 12px; color: #bdbdbd;">+$2.201</h6>-->
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Diferencia</strong><i class="material-icons right">attach_money</i></span>
-                    <p>$-169,831.42</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">+3.392</h6>
+                    <p>$ <?php echo number_format(($dashboard["IngresosMes"] - $dashboard["EgresosMes"]), 2);?></p>
+                    <!--<h6 style="font-size: 12px; color: #bdbdbd;">+3.392</h6>-->
                 </div>
             </div>
         </div>
@@ -288,10 +288,10 @@
   var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+        labels: [<?php echo $dashboard["GraficoMovimientos"]["meses"];?>],
             datasets: [{
             label: 'Ingresos',
-            data: [65, 59, 80, 81, 56, 55, 40],
+            data: [<?php echo $dashboard["GraficoMovimientos"]["Ingresos"];?>],
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgb(75, 192, 192)',
@@ -299,7 +299,7 @@
             }, 
             {
             label: 'Egresos',
-            data: [83, 45, 23, 48, 68, 49, 75],
+            data: [<?php echo $dashboard["GraficoMovimientos"]["Egresos"];?>],
             fill: false,
             borderColor: 'rgb(194, 0, 5)',
             backgroundColor: 'rgb(194, 0, 5)',

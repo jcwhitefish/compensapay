@@ -88,6 +88,199 @@ class Inicio_model extends CI_Model {
             }
         }
 
+        //Operaciones mensuales
+        $ResOperMes = "SELECT 0.id FROM operations AS o 
+                        INNER JOIN balance AS b ON o.operation_number = b.operationNumber
+                        WHERE (o.id_client = ".$idCompanie." OR o.id_provider = ".$idCompanie.") 
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."' 
+                        LIMIT 1";
+
+        if($resOperMes = $this->db->query($ResOperMes)){
+            $NumResOperMes = $resOperMes->num_rows();
+        }
+
+        //ingresos mes
+        $ResIngMesP = "SELECT SUM(b.amount) AS ingreso 
+                        FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_provider = c.id 
+                        INNER JOIN fintech f ON f.companie_id = c.id 
+                        WHERE c.id = ".$idCompanie." AND b.receiver_clabe = f.arteria_clabe
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+
+        $ResIngMesC = "SELECT b.amount AS ingreso 
+                        FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_provider = c.id 
+                        INNER JOIN fintech f ON f.companie_id = c.id 
+                        WHERE o.id_client = ".$idCompanie." AND b.receiver_clabe != f.arteria_clabe AND b.receiver_clabe != c.account_clabe 
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+
+        $RRResIngMesP= 0; $RRResIngMesC = 0;
+
+        if($RResIngMesP = $this->db->query($ResIngMesP)) {
+            if($RResIngMesP->num_rows() > 0){
+                foreach ($RResIngMesP->result_array() as $row){
+                    $RRResIngMesP =$RRResIngMesP + $row["ingreso"];
+                }
+            }
+        }
+
+        if($RResIngMesC = $this->db->query($ResIngMesC)) {
+            if($RResIngMesC->num_rows() > 0){
+                foreach($RResIngMesC->result_array() as $row){
+                    $RRResIngMesC = $RRResIngMesC + $row["ingreso"];
+                }
+            }
+        }
+
+        $IngresosMes = $RRResIngMesP + $RRResIngMesC;
+
+        //total egresos mes
+        $ResEgrMesP = "SELECT SUM(b.amount) AS egreso 
+                        FROM balance b 
+                        INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_provider = c.id 
+                        INNER JOIN fintech f ON f.companie_id = c.id 
+                        WHERE c.id = ".$idCompanie." AND (b.receiver_clabe = f.arteria_clabe OR b.receiver_clabe = c.account_clabe)
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+
+        $ResEgrMesC = "SELECT SUM(b.amount) AS egreso
+                        FROM balance b
+                        INNER JOIN operations o ON b.operationNumber = o.operation_number
+                        INNER JOIN companies c ON o.id_provider = c.id
+                        INNER JOIN fintech f ON f.companie_id = c.id
+                        WHERE o.id_client = ".$idCompanie." AND b.source_clabe != f.arteria_clabe AND  b.source_clabe != c.account_clabe
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+
+        $RRResEgrMesP= 0; $RRResEgrMesC = 0;
+            
+        if($RResEgrMesP = $this->db->query($ResEgrMesP)) {
+            if($RResEgrMesP->num_rows() > 0){
+                foreach ($RResEgrMesP->result_array() as $row){
+                    $RRResEgrMesP =$RRResEgrMesP + $row["egreso"];
+                }
+            }
+        }
+        
+        if($RResEgrMesC = $this->db->query($ResEgrMesC)) {
+            if($RResEgrMesC->num_rows() > 0){
+                foreach($RResEgrMesC->result_array() as $row){
+                    $RRResEgrMesC = $RRResEgrMesC + $row["egreso"];
+                }
+            }
+        }
+
+        $EgresosMes = $RRResEgrMesP + $RRResEgrMesC;
+
+        //datos grafica ingreso y egreso
+        $fecha_actual=date("Y-m").'-01';
+        $datai=''; $dataf=''; $dmes='';
+        for($j=6; $j>=0; $j--)
+        {
+            $date = date("Y-m-d",strtotime($fecha_actual."- ".$j." months"));
+        
+            $fecha = new DateTime($date);
+            $fecha->modify('first day of this month');
+            $fechai = $fecha->format('Y-m-d'); 
+        
+            $fecha2 = new DateTime($date);
+            $fecha2->modify('last day of this month');
+            $fechaf = $fecha2->format('Y-m-d'); 
+
+            $ResIngMesP = "SELECT SUM(b.amount) AS ingreso 
+                        FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_provider = c.id 
+                        INNER JOIN fintech f ON f.companie_id = c.id 
+                        WHERE c.id = ".$idCompanie." AND b.receiver_clabe = f.arteria_clabe
+                        AND b.created_at >= '".strtotime($fechai)."' AND b.created_at <= '".strtotime($fechaf)."'";
+
+            $ResIngMesC = "SELECT b.amount AS ingreso 
+                            FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                            INNER JOIN companies c ON o.id_provider = c.id 
+                            INNER JOIN fintech f ON f.companie_id = c.id 
+                            WHERE o.id_client = ".$idCompanie." AND b.receiver_clabe != f.arteria_clabe AND b.receiver_clabe != c.account_clabe 
+                            AND b.created_at >= '".strtotime($fechai)."' AND b.created_at <= '".strtotime($fechaf)."'";
+
+            $RRResIngMesP= 0; $RRResIngMesC = 0;
+
+            if($RResIngMesP = $this->db->query($ResIngMesP)) {
+                if($RResIngMesP->num_rows() > 0){
+                    foreach ($RResIngMesP->result_array() as $row){
+                        $RRResIngMesP =$RRResIngMesP + $row["ingreso"];
+                    }
+                }
+            }
+
+            if($RResIngMesC = $this->db->query($ResIngMesC)) {
+                if($RResIngMesC->num_rows() > 0){
+                    foreach($RResIngMesC->result_array() as $row){
+                        $RRResIngMesC = $RRResIngMesC + $row["ingreso"];
+                    }
+                }
+            }
+
+            $ResEgrMesP = "SELECT SUM(b.amount) AS egreso 
+                        FROM balance b 
+                        INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_provider = c.id 
+                        INNER JOIN fintech f ON f.companie_id = c.id 
+                        WHERE c.id = ".$idCompanie." AND (b.receiver_clabe = f.arteria_clabe OR b.receiver_clabe = c.account_clabe)
+                        AND b.created_at >= '".strtotime($fechai)."' AND b.created_at <= '".strtotime($fechaf)."'";
+
+            $ResEgrMesC = "SELECT SUM(b.amount) AS egreso
+                            FROM balance b
+                            INNER JOIN operations o ON b.operationNumber = o.operation_number
+                            INNER JOIN companies c ON o.id_provider = c.id
+                            INNER JOIN fintech f ON f.companie_id = c.id
+                            WHERE o.id_client = ".$idCompanie." AND b.source_clabe != f.arteria_clabe AND  b.source_clabe != c.account_clabe
+                            AND b.created_at >= '".strtotime($fechai)."' AND b.created_at <= '".strtotime($fechaf)."'";
+
+            $RRResEgrMesP= 0; $RRResEgrMesC = 0;
+
+            if($RResEgrMesP = $this->db->query($ResEgrMesP)) {
+                if($RResEgrMesP->num_rows() > 0){
+                    foreach ($RResEgrMesP->result_array() as $row){
+                        $RRResEgrMesP =$RRResEgrMesP + $row["egreso"];
+                    }
+                }
+            }
+            
+            if($RResEgrMesC = $this->db->query($ResEgrMesC)) {
+                if($RResEgrMesC->num_rows() > 0){
+                    foreach($RResEgrMesC->result_array() as $row){
+                        $RRResEgrMesC = $RRResEgrMesC + $row["egreso"];
+                    }
+                }
+            }
+
+            $datai.=''.($RRResIngMesP + $RRResIngMesC).''; if($j>0){$datai.=', ';}
+            $datae.=''.($RRResEgrMesC + $RRResEgrMesP).''; if($j>0){$datae.=', ';}
+
+            switch($date[5].$date[6])
+            {
+                case '01': $mes='Ene'; break;
+                case '02': $mes='Feb'; break;
+                case '03': $mes='Mar'; break;
+                case '04': $mes='Abr'; break;
+                case '05': $mes='May'; break;
+                case '06': $mes='Jun'; break;
+                case '07': $mes='Jul'; break;
+                case '08': $mes='Ago'; break;
+                case '09': $mes='Sep'; break;
+                case '10': $mes='Oct'; break;
+                case '11': $mes='Nov'; break;
+                case '12': $mes='Dic'; break;
+            }
+
+            $dmes.='"'.$mes.'"'; if($j>0){$dmes.=', ';}
+
+        }
+
+        //obtener los proveedores principales
+        //$ResProvPrin = ""
+
+
+        //creamos la respuesta
+
         $ResDash = array (
             "TotalOperaciones" => $rrestop,
             "TotalPorCobrar" => array(
@@ -98,7 +291,15 @@ class Inicio_model extends CI_Model {
                 "facturas" => $rrestpp,
                 "notas" => $rrestpp2
             ),
-            "Proveedores" => $rresprov
+            "Proveedores" => $rresprov,
+            "OperacionesMes" => $NumResOperMes, 
+            "IngresosMes" => $IngresosMes,
+            "EgresosMes" => $EgresosMes,
+            "GraficoMovimientos" => array(
+                "Ingresos" => $datai,
+                "Egresos" => $datae,
+                "meses" => $dmes
+            )
         );
 
 		return $ResDash;
