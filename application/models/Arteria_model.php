@@ -69,7 +69,9 @@ class Arteria_model extends CI_Model{
 		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
 					t4.arteria_clabe, (t5.total*100) AS 'entry_money', (t6.total*100) AS 'exit_money_d', (t8.total*100) as 'exit_money_f', 
-					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid
+					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid,
+					t9.name AS 'provName', t9.last_name AS 'provLast', t9.email AS 'provEmail', t2.legal_name AS 'provCompany',
+					t10.name AS 'clientName', t10.last_name AS 'clientLast', t10.email AS 'clientEmail', t3.legal_name AS 'clientCompany'
 					FROM compensatest_base.operations t1
 					LEFT JOIN compensatest_base.companies t2
 					ON t1.id_client = t2.id
@@ -85,13 +87,17 @@ class Arteria_model extends CI_Model{
 					ON t2.id_broadcast_bank = t7.bnk_id
 					LEFT JOIN compensatest_base.invoices t8
 					ON t1.id_invoice_relational = t8.id
+					INNER JOIN compensatest_base.users t9 
+					ON t9.id_company = t3.id
+					INNER JOIN compensatest_base.users t10
+					ON t10.id_company = t2.id
 					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1 
 					and (t1.operation_number = '{$args['operationNumber']}' OR t1.operation_number = '{$args['descriptor']}')";
 //		var_dump($result = $this->db->query($query));
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0){
+				$opData=[];
 				foreach ($result->result_array() as $row){
-					$opData=[];
 					$opData = [
 						'companyName' => $row['legal_name'],
 						'companyClabe' => $row['companyClabe'],
@@ -108,7 +114,19 @@ class Arteria_model extends CI_Model{
 						'entry' => intval($row['entry_money']),
 						'exitD' => intval($row['exit_money_d']),
 						'exitF' => intval($row['exit_money_f']),
-						'uuid' => $row['uuid']
+						'uuid' => $row['uuid'],
+						'providerPerson' => [
+							'name' => $row['provName'],
+							'last' => $row['provLast'],
+							'mail' => $row['provEmail'],
+							'company' => $row['provCompany'],
+						],
+						'clientPerson' => [
+							'name' => $row['clientName'],
+							'last' => $row['clientLast'],
+							'mail' => $row['provEmail'],
+							'company' => $row['clientCompany'],
+						]
 					];
 				}
 //                var_dump($opData);
