@@ -149,18 +149,10 @@ class Arteria_model extends CI_Model{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
-			));
-			curl_setopt($ch, CURLOPT_COOKIEJAR, 'COOKIE_FILE');
-			curl_setopt($ch, CURLOPT_COOKIEFILE, 'COOKIE_FILE');
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
-			));
 			curl_setopt($ch, CURLOPT_COOKIESESSION, true);
-			curl_setopt($ch, CURLOPT_COOKIEFILE, 'COOKIE_FILE');
 			$response = curl_exec($ch);
 			$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			var_dump($code, $response);
 			if ($response === false) {
 				$error = 500;
 				curl_close($ch);
@@ -177,14 +169,15 @@ class Arteria_model extends CI_Model{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
 			$pdf_content = curl_exec($ch);
+
 			if (curl_errno($ch)) {
 				header('HTTP/1.1 500 Internal Server Error');
 				echo 'Error al descargar el PDF.';
 				exit;
 			}
-
 			curl_close($ch);
-			$filename = strtotime('now').'_'.$args['criterio'].'.pdf';
+
+			$filename = $args['criterio'].'.pdf';
 			$ruta_destino = './boveda/CEP/'.$filename;
 			file_put_contents($ruta_destino, $pdf_content);
             return $filename;
@@ -205,7 +198,10 @@ class Arteria_model extends CI_Model{
         return false;
     }
 	public function getAllBalanceCEP(){
-		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount FROM compensatest_base.balance";
+		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount 
+					FROM compensatest_base.balance where traking_key like '%CUENCA%' 
+				   	ORDER BY transaction_date DESC limit 2";
+//		var_dump($query);
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				return $result->result_array();

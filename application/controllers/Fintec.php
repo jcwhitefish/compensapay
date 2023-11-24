@@ -285,10 +285,30 @@ class Fintec extends MY_Loggedout{
 		];
 //        var_dump($data);
 		$res = $this->dataArt->DownloadCEP($data, 'SANDBOX');
-		if ($res){$this->dataArt->insertCEP($args, $res, 'SANDBOX');}
+//		if ($res){$this->dataArt->insertCEP($args, $res, 'SANDBOX');}
 		return $res;
 	}
+	function checkTracking($id){
+		$this->load->model('Arteria_model','dataArt');
+		return json_decode($this->dataArt->getIdRastreo($id, 'SANDBOX'));
+	}
+	public function tryCEPMultiDownload(){
+		$this->load->model('Arteria_model', 'dataArt');
+		$balance = $this->dataArt->getAllBalanceCEP();
+		foreach ($balance as $row => $item){
+			$cep1 = [
+				'transactionDate' => date('d-m-Y', $item['transaction_date']),
+				'trakingKey' => $item['traking_key'],
+				'sourceBank' => substr($item['source_clabe'], 0, 3),
+				'receiverBank' => substr($item['receiver_clabe'], 0, 3),
+				'receiverClabe' => $item['receiver_clabe'],
+				'amount' => $item['amount'],
+			];
+//			var_dump($cep1);
+			$this->getCEP($cep1);
 
+		}
+	}
 	/**
 	 * @param string $texto texto a encriptar
 	 * @param string $key llave que será usada en la encriptación y necesaria para desencriptar
@@ -302,27 +322,4 @@ class Fintec extends MY_Loggedout{
 		return base64_decode($texto.$key);
 		//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 	}
-
-	function checkTracking($id){
-		$this->load->model('Arteria_model','dataArt');
-		return json_decode($this->dataArt->getIdRastreo($id, 'SANDBOX'));
-	}
-
-	public function tryCEPMultiDownload(){
-		$this->load->model('Arteria_model', 'dataArt');
-		$balance = $this->dataArt->getAllBalanceCEP();
-		foreach ($balance as $row => $item){
-			$cep1 = [
-				'transactionDate' => date('d-m-Y', strtotime($item['transaction_date'])),
-				'trakingKey' => $item['traking_key'],
-				'sourceBank' => substr($item['source_clabe'], 0, 3),
-				'receiverBank' => substr($item['receiver_clabe'], 0, 3),
-				'receiverClabe' => $item['receiver_clabe'],
-				'amount' => $item['amount'],
-			];
-			$this->getCEP($cep1);
-			var_dump($cep1);
-		}
-	}
-
 }

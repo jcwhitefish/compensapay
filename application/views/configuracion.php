@@ -14,6 +14,7 @@
 			<div class="col 12"><span></span> Invita a tus clientes y/o proveedores. <a href="">aquí</a></div>
 		</div>
 	</div>
+	<?php var_dump($notifications);?>
 	<div class="row">
 		<div class="col l12">
 			<div><h5 style="font-weight: bold">Configuración para Transfigura</h5></div>
@@ -91,100 +92,68 @@
 			<div class="section">
 				<h6>Operaciones</h6>
 				<p><label>
-						<input type="checkbox" id="newOp" name="newOp" class="filled-in"/>
+						<input type="checkbox" id="nt_OperationNew" name="nt_OperationNew" <?=$notifications[0]['nt_OperationNew'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Nueva operación</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" id="ClienteAOP" name="ClienteAOP" class="filled-in"/>
+						<input type="checkbox" id="nt_OperationApproved" name="nt_OperationApproved" <?=$notifications[0]['nt_OperationApproved'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Cliente autoriza operación</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_OperationStatus" name="nt_OperationStatus" <?=$notifications[0]['nt_OperationStatus'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Cambio estatus de operación</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_OperationPaid" name="nt_OperationPaid"  <?=$notifications[0]['nt_OperationPaid'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Pago de operación</span>
 					</label></p>
 				<p></p><label>
-					<input type="checkbox" name="" class="filled-in"/>
+					<input type="checkbox" id = "nt_OperationReturn" name=nt_OperationReturn" <?=$notifications[0]['nt_OperationReturn'] === '1' ? 'checked' : ''?> name="" class="filled-in"/>
 					<span>Devolución del pago</span>
 				</label><p
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_OperationReject" name="nt_OperationReject"  <?=$notifications[0]['nt_OperationReject'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Rechazo a operación</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_OperationDate" name="nt_OperationDate" <?=$notifications[0]['nt_OperationDate'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Autorización de operación y cambio de fecha</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_OperationInvoiceRequest" name="nt_OperationInvoiceRequest" <?=$notifications[0]['nt_OperationInvoiceRequest'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Solicitud de factura</span>
+					</label></p>
+				<p><label>
+						<input type="checkbox"id = "nt_OperationExternalAccount" name="nt_OperationExternalAccount" <?=$notifications[0]['nt_OperationExternalAccount'] === '1' ? 'checked' : ''?> class="filled-in"/>
+						<span>Pago a cuenta externa</span>
 					</label></p>
 			</div>
 			<section>
 				<h6>Solicitudes o invitaciones</h6>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_InviteNew" name="nt_InviteNew" <?=$notifications[0]['nt_InviteNew'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Invitación de un cliente a ser proveedor</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_InviteStatus" name="nt_InviteStatus" <?=$notifications[0]['nt_InviteStatus'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Aprobación de solicitud</span>
 					</label></p>
 			</section>
 			<section><h5>Generales</h5></section>
 			<div class="divider"></div>
 			<div class="section">
-				<h6>Operaciones</h6>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>Pago a cuenta externa</span>
-					</label></p>
 				<h6>Documentos</h6>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_DocumentStatementReady" name="nt_DocumentStatementReady" <?=$notifications[0]['nt_DocumentStatementReady'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Estado de cuennta</span>
-					</label></p>
-
-				<h6>Programación de pagos</h6>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>7 días antes del vencimiento de una factura</span>
-					</label></p>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>3 días antes del vencimiento de una factura</span>
-					</label></p>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>1 día antes del vencimiento de una factura</span>
-					</label></p>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>El día del vencimiento de una factura</span>
-					</label></p>
-				<h6>Subscripción</h6>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>Cobro de subscripción</span>
-					</label></p>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>Rechazo de cobro de subscripción</span>
-					</label></p>
-				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
-						<span>Suspension de la  cuenta</span>
 					</label></p>
 				<h6>Soporte</h6>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_SupportTicketStatus" name="nt_SupportTicketStatus" <?=$notifications[0]['nt_SupportTicketStatus'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Tickets y cambio de status</span>
 					</label></p>
 				<p><label>
-						<input type="checkbox" name="" class="filled-in"/>
+						<input type="checkbox" id = "nt_SupportReply" name="nt_SupportReply" <?=$notifications[0]['nt_SupportReply'] === '1' ? 'checked' : ''?> class="filled-in"/>
 						<span>Mensaje de respuesta</span>
 					</label></p>
 			</div>

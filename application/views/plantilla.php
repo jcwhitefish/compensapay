@@ -29,7 +29,7 @@ if ($this->session->userdata('logged_in')) {
         <div class="nav nav-wrapper navegador d-flex">
             <div class="d-flex justificarVertical">
 
-                <img src="<?= base_url('assets/images/logo_solve_2.png'); ?>" alt="Logo" class="nav-image">
+                <img src="<?= base_url('assets/images/logo_solve_2.svg'); ?>" alt="Logo" class="nav-image">
             </div>
 
 

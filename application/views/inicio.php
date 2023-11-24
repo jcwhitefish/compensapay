@@ -143,7 +143,8 @@
             {
                 foreach ($dashboard["OperRecientes"] as $value)
                 {
-                    echo '<td>'.$value["operation_number"].'</td>
+                    echo '<tr>
+                        <td>'.$value["operation_number"].'</td>
                         <td>';if($value["short_name"]!=NULL){echo $value["short_name"];}else{echo $value["legal_name"];}echo '</td>
                         <td>'.$value["created_at"].'</td>
                         <td><a href="'.base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice"]).'" target="_blank">'.$value["uuid"].'</a></td>
@@ -158,7 +159,8 @@
                         case 3: echo 'Realizada'; break;
                         case 4: echo 'Vencida'; break;
                     } 
-                    echo '</td>';
+                    echo '</td>
+                        </tr>';
                 }
             }
         ?>

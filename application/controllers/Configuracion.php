@@ -4,9 +4,11 @@ class Configuracion extends MY_Loggedin{
 	private int $amount = 600;
 	public function index(){
 		$this->load->model('Openpay_model','dataOP');
+		$this->load->model('Settings_model' , 'dataConf');
 		$id = $this->session->userdata('id');
-		$card['card'] = $this->dataOP->getActiveCard($id);
-		$data['main'] = $this->load->view('configuracion',$card, true);
+		$conf['card'] = $this->dataOP->getActiveCard($id);
+		$conf['notifications'] = $this->dataConf->getNotificationsSettings($id);
+		$data['main'] = $this->load->view('configuracion', $conf, true);
 		$this->load->view('plantilla', $data);
 	}
 
