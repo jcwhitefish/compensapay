@@ -10,24 +10,24 @@
 <table class=" grey darken-4 white-text" style="border-collapse: unset">
 	<tr>
 		<td class="black center-align">
-			<image class="center-align responsive-img" style="margin: auto; max-height: 225px" id="imgHeader" src="https://compensapay.xyz/assets/images/SolveCapital_Branding-24.png" alt="SOLVE"></image>
+			<image class="center-align responsive-img" style="max-height: 75px; margin: 25px 25px;" id="imgHeader" src="/assets/images/solveDarkMode.svg" alt="SOLVE"></image>
 		</td>
 	</tr>
 	<tr>
-		<td><h5>Estimado {}, de la empresa {}.</h5></td>
+		<td><h5>Estimado <?=$user['lastName'].' '.$user['name']?>, de la empresa <?=$user['company']?>.</h5></td>
 	</tr>
 	<tr>
 		<td>Te informamos que:</td>
 	</tr>
 	<tr>
-		<td>actividad</td>
+		<td><?=$text?></td>
 	</tr>
 	<tr>
-		<td>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a href="">{}</a></td>
+		<td>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a target="_blank" href="<?=$urlDetail['url']?>"><?=$urlDetail['name']?></a></td>
 	</tr>
 	<tr>
 		<td>Cualquier duda o comentario, no dudes en contactarnos en el módulo de atención a clientes:
-			<a href="">{}/soporte</a>
+			<a href="<?=$urlSoporte['url']?>" target="_blank"><?=$urlSoporte['name']?></a>
 			o contáctanos por <a href="mailto:ayuda@solve.com.mx?Subject=Ayuda%20con">ayuda@solve.com.mx</a>.</td>
 	</tr>
 	<tr>

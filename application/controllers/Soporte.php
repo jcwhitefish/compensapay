@@ -109,17 +109,34 @@ class Soporte extends MY_Loggedin{
 		return true;
 	}
 
+	public function seeMail(){
+		$userData = ['name' => 'Uriel', 'lastName' => 'Magallon', 'company' => 'WHITEFISH SOLVE TECH'];
+		$text = 'Esto es una prueba que se est&aacute; realizando para ver el funcionamiento de nuestro sistema de notificaciones por correo, Lo que se intenta es ver que el dise&ntilde;o, estructura y la informaci&oacute;n del correo lleguen de forma correcta y se muestren bien ya estando en un gestor de correos electr&oacute;nicos, <br>Por su atenci&oacute;n gracias. ';
+		$urlDetail = ['url' => base_url('/soporte'), 'name' => 'Soporte'];
+		$urlSoporte = ['url' => base_url('/soporte'), 'name' => base_url('/soporte')];
+		$data = [
+			'user' => $userData,
+			'text' => $text,
+			'urlDetail' => $urlDetail,
+			'urlSoporte' => $urlSoporte,
+		];
+		$this->load->view('email/notifications', $data);
+	}
+
 	public function tryMail(){
 		$this->load->helper('sendmail_helper');
 		$mail       = 'ury197@hotmail.com';
-		$inicio     = date('Y-m-d H:i:s');
-		$fin        = date('Y-m-d H:i:s');
+		$userData = ['name' => 'Uriel', 'lastName' => 'Magallon', 'company' => 'WHITEFISH SOLVE TECH'];
+		$text = 'Esto es una prueba que se est&aacute; realizando para ver el funcionamiento de nuestro sistema de notificaciones por correo, Lo que se intenta es ver que el dise&ntilde;o, estructura y la informaci&oacute;n del correo lleguen de forma correcta y se muestren bien ya estando en un gestor de correos electr&oacute;nicos, <br>Por su atenci&oacute;n gracias. ';
+		$urlDetail = ['url' => base_url('/soporte'), 'name' => 'Soporte'];
+		$urlSoporte = ['url' => base_url('/soporte'), 'name' => base_url('/soporte')];
 		$data = [
-			'inicio'    => $inicio,
-			'fin'       => $fin,
-			'mail'      => $mail,
+			'user' => $userData,
+			'text' => $text,
+			'urlDetail' => $urlDetail,
+			'urlSoporte' => $urlSoporte,
 		];
-		send_mail($mail, $data, 1, date('Y-m-d'));
+		send_mail($mail, $data, 2, date('Y-m-d'));
 
 	}
 }

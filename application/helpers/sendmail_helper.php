@@ -1,6 +1,9 @@
 <?php
 
+
+
 function send_mail($mail, $data, $view, $date=null){
+	$html = '';
     if ($date === null){
         $date = date('Y-m-d');
     }
@@ -22,7 +25,7 @@ function send_mail($mail, $data, $view, $date=null){
         $CI->load->library('email', $config);
         $CI->email->set_newline("\r\n");
         $CI->email->from('hola@compensapay.xyz', 'Equipo Solve');
-	$CI->email->set_newline("\r\n");
+		$CI->email->set_newline("\r\n");
         $CI->email->to($mail);
 
         if($view===1){
@@ -36,7 +39,11 @@ function send_mail($mail, $data, $view, $date=null){
 //            $CI->email->attach('SanPablo '.$date.'.xlsx');
             //$CI->email->attach('Rappi '.$date.'.xlsx');
             $html = $CI->load->view('email/mailSupplier', $data, true);
-        }
+        }elseif ($view===2){
+			$CI->email->set_newline("\r\n");
+			$CI->email->subject('Prueba de notificacion por correo');
+			$html = $CI->load->view('email/notifications', $data);
+		}
 		$CI->email->set_newline("\r\n");
         $CI->email->message($html);
 		$CI->email->set_newline("\r\n");
