@@ -74,6 +74,25 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							$cep = $this->getCEP($argsR);
+							$newOPNumber = '6666666';
+							$this->load->helper('sendmail_helper');
+							$data = [
+								'user' => [
+									'name' => $op['clientPerson']['name'],
+									'lastName' => $op['clientPerson']['last'],
+									'company' => $op['clientPerson']['company'],
+								],
+								'text' =>
+									"No se pudo procesar el pago por la operaci&oacute;n <strong>#%name</strong> debido a que ingres&oacute; 
+									un monto diferente al de la factura: <br><table><tr><td>Monto pagado</td><td>Monto factura</td></tr><tr><td>".
+									($data['data']['amount']/100)."</td><td>".($op['entry']/100)."</td></tr></table><br>Por este motivo se le a 
+									hecho un reembolso total de su pago, realize nuevamente la tranferencia por el monto correcto con el siguiente 
+									n&uacute;mero de referencia y descripci&oacute;n:<br><table><tr><td>N&uacute;mero de referencia</td>
+									<td>Descripci&oacute;n</td></tr><tr><td colspan='2'>".$newOPNumber."</td></tr></table>",
+								'urlDetail' => ['url' => base_url('/ModeloFiscal'), 'name' => 'Modelo Fiscal'],
+								'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+							];
+							send_mail($op['clientPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', 'Operación realizada.');
 							return $this->response->sendResponse(["response" => 'Operación correcta err 2'], $error);
 
 						}
@@ -172,6 +191,25 @@ class Fintec extends MY_Loggedout{
 						$cepC = $this->getCEP($argsProv);
 //                        $this->createLog('var_dump', 'step6');
 //							$this->load->helper('sendmail_helper');
+						$this->load->helper('sendmail_helper');
+						$data = [
+							'user' => [
+								'name' => $op['providerPerson']['name'],
+								'lastName' => $op['providerPerson']['last'],
+								'company' => $op['providerPerson']['company'],
+							],
+							'text' =>
+								"Se realizó con éxito el proceso de la operación <strong>#".$args['operationNumber']."</strong>. ",
+							'urlDetail' => ['url' => base_url('/ModeloFiscal'), 'name' => 'Modelo Fiscal'],
+							'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+						];
+						send_mail($op['providerPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', 'Operación realizada.');
+						$data['user'] = [
+							'name' => $op['clientPerson']['name'],
+							'lastName' => $op['clientPerson']['last'],
+							'company' => $op['clientPerson']['company'],
+						];
+						send_mail($op['clientPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', 'Operación realizada.');
 						return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
 					}
 				}else{
@@ -250,6 +288,7 @@ class Fintec extends MY_Loggedout{
 		if ($res){$this->dataArt->insertCEP($args, $res, 'SANDBOX');}
 		return $res;
 	}
+
 	/**
 	 * @param string $texto texto a encriptar
 	 * @param string $key llave que será usada en la encriptación y necesaria para desencriptar

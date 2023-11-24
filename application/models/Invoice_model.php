@@ -46,7 +46,7 @@ class Invoice_model extends CI_Model {
 		$this->db->from('users as u');
         $this->db->join('companies AS c1', 'c1.id = u.id_company');
         $this->db->join('invoices AS i', 'i.sender_rfc = c1.rfc');
-        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc');
+        $this->db->join('companies AS c2', 'c2.rfc = i.receiver_rfc', 'LEFT');
 		$this->db->where('c1.id', $user);
 		//$this->db->where('i.status', 0);
         $query = $this->db->get();

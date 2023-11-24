@@ -2,7 +2,7 @@
 
 
 
-function send_mail($mail, $data, $view, $cc=null, $date=null){
+function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null){
     if ($date === null){
         $date = date('Y-m-d');
     }
@@ -28,8 +28,8 @@ function send_mail($mail, $data, $view, $cc=null, $date=null){
 	$CI->email->to($mail);
 	$CI->email->set_newline("\r\n");
 	$html = '';
+
 	if($view===1){
-		$CI->email->set_newline("\r\n");
 		$CI->email->subject('Prueba envio de correos');
 		$CI->email->attach($data['registro']);
 		$CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-actaConstitutiva.pdf');
@@ -40,12 +40,15 @@ function send_mail($mail, $data, $view, $cc=null, $date=null){
 		//$CI->email->attach('Rappi '.$date.'.xlsx');
 		$html = $CI->load->view('email/mailSupplier', $data, true);
 	}else if ($view===2){
-		$CI->email->subject('Prueba de notificacion por correo');
+		$CI->email->subject('Notificación: '.$subject);
 		$html = $CI->load->view('email/notifications', $data, true);
 		$CI->email->set_newline("\r\n");
-		$CI->email->cc('alejandro@whitefish.mx', 'juan.carreno@whitefish.mx');
 	}
 
+	if($cc != null){
+		$CI->email->cc($cc);
+		$CI->email->set_newline("\r\n");
+	}
 	$CI->email->message($html);
 	$CI->email->set_newline("\r\n");
 	$CI->email->send();
