@@ -3,7 +3,6 @@
 
 
 function send_mail($mail, $data, $view, $date=null){
-	$html = '';
     if ($date === null){
         $date = date('Y-m-d');
     }
@@ -21,33 +20,34 @@ function send_mail($mail, $data, $view, $date=null){
             'charset'       => 'UTF-8',
         );
 
-        $CI =& get_instance();
-        $CI->load->library('email', $config);
-        $CI->email->set_newline("\r\n");
-        $CI->email->from('hola@compensapay.xyz', 'Equipo Solve');
-		$CI->email->set_newline("\r\n");
-        $CI->email->to($mail);
+	$CI =& get_instance();
+	$CI->load->library('email', $config);
+	$CI->email->set_newline("\r\n");
+	$CI->email->from('hola@compensapay.xyz', 'Equipo Solve');
+	$CI->email->set_newline("\r\n");
+	$CI->email->to($mail);
+	$CI->email->set_newline("\r\n");
+	$CI->email->subject('Prueba de notificacion por correo');
+	$html = $CI->load->view('email/notifications', $data, true);
+	$CI->email->set_newline("\r\n");
+	$CI->email->message($html);
+	$CI->email->set_newline("\r\n");
+	$CI->email->send();
+	$debug = $CI->email->print_debugger();
+	var_dump($debug);
+//        if($view===1){
+//			$CI->email->set_newline("\r\n");
+//            $CI->email->subject('Prueba envio de correos');
+//            $CI->email->attach($data['registro']);
+//            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-actaConstitutiva.pdf');
+//            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-comprobanteDomicilio.pdf');
+//            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-constanciaSituacionFiscal.pdf');
+//            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-representanteLegal.pdf');
+////            $CI->email->attach('SanPablo '.$date.'.xlsx');
+//            //$CI->email->attach('Rappi '.$date.'.xlsx');
+//            $html = $CI->load->view('email/mailSupplier', $data, true);
+//        }else if ($view===2){
 
-        if($view===1){
-			$CI->email->set_newline("\r\n");
-            $CI->email->subject('Prueba envio de correos');
-            $CI->email->attach($data['registro']);
-            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-actaConstitutiva.pdf');
-            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-comprobanteDomicilio.pdf');
-            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-constanciaSituacionFiscal.pdf');
-            $CI->email->attach(__DIR__ . '\/../../boveda/'. $data['uuid'] .'/'. $data['uuid'] .'-representanteLegal.pdf');
-//            $CI->email->attach('SanPablo '.$date.'.xlsx');
-            //$CI->email->attach('Rappi '.$date.'.xlsx');
-            $html = $CI->load->view('email/mailSupplier', $data, true);
-        }elseif ($view===2){
-			$CI->email->set_newline("\r\n");
-			$CI->email->subject('Prueba de notificacion por correo');
-			$html = $CI->load->view('email/notifications', $data);
-		}
-		$CI->email->set_newline("\r\n");
-        $CI->email->message($html);
-		$CI->email->set_newline("\r\n");
-        $CI->email->send();
-        $debug = $CI->email->print_debugger();
-		var_dump($debug);
+//		}
+
 }

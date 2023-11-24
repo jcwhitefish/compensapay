@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Notificaciones</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body style="margin:0; padding:0;" class="grey darken-4">
-<table class=" grey darken-4 white-text" style="border-collapse: unset">
+<table style="border-collapse: unset;">
 	<tr>
-		<td class="black center-align">
-			<image class="center-align responsive-img" style="max-height: 75px; margin: 25px 25px;" id="imgHeader" src="/assets/images/solveDarkMode.svg" alt="SOLVE"></image>
+		<td style="background-color: black; text-align: center">
+			<image class="center-align responsive-img" style="max-height: 75px; margin: 25px 25px;" id="imgHeader" src="https://compensapay.xyz/assets/images/solveDarkMode.svg" alt="SOLVE"></image>
 		</td>
 	</tr>
 	<tr>
