@@ -66,7 +66,7 @@ class Arteria_model extends CI_Model{
         }
     }
 	public function SearchOperations(array $args, string $env){
-		$query = "SELECT t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
+		$query = "SELECT t1.id, t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
 					t4.arteria_clabe, (t5.total*100) AS 'entry_money', (t6.total*100) AS 'exit_money_d', (t8.total*100) as 'exit_money_f', 
 					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid,
@@ -124,7 +124,7 @@ class Arteria_model extends CI_Model{
 						'clientPerson' => [
 							'name' => $row['clientName'],
 							'last' => $row['clientLast'],
-							'mail' => $row['provEmail'],
+							'mail' => $row['clientEmail'],
 							'company' => $row['clientCompany'],
 						]
 					];
@@ -204,6 +204,14 @@ class Arteria_model extends CI_Model{
         }
         return false;
     }
+	public function getAllBalanceCEP(){
+		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount FROM compensatest_base.balance";
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0) {
+				return $result->result_array();
+			}
+		}
+	}
 
     public function getIdRastreo (string $id, string $env) {
         $this->headers = [];

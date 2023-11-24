@@ -74,7 +74,7 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							$cep = $this->getCEP($argsR);
-							$newOPNumber = '6666666';
+							$newOPNumber = $this->dataArt->GetNewOperationNumber('','SANDBOX');
 							$this->load->helper('sendmail_helper');
 							$data = [
 								'user' => [
@@ -89,7 +89,7 @@ class Fintec extends MY_Loggedout{
 									hecho un reembolso total de su pago, realize nuevamente la tranferencia por el monto correcto con el siguiente 
 									n&uacute;mero de referencia y descripci&oacute;n:<br><table><tr><td>N&uacute;mero de referencia</td>
 									<td>Descripci&oacute;n</td></tr><tr><td colspan='2'>".$newOPNumber."</td></tr></table>",
-								'urlDetail' => ['url' => base_url('/ModeloFiscal'), 'name' => 'Modelo Fiscal'],
+								'urlDetail' => ['url' => base_url('/ModeloFiscal'), 'name' => 'Documentos'],
 								'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 							];
 							send_mail($op['clientPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', 'Operación realizada.');
@@ -306,6 +306,23 @@ class Fintec extends MY_Loggedout{
 	function checkTracking($id){
 		$this->load->model('Arteria_model','dataArt');
 		return json_decode($this->dataArt->getIdRastreo($id, 'SANDBOX'));
+	}
+
+	public function tryCEPMultiDownload(){
+		$this->load->model('Arteria_model', 'dataArt');
+		$balance = $this->dataArt->getAllBalanceCEP();
+		foreach ($balance as $row => $item){
+			$cep1 = [
+				'transactionDate' => date('d-m-Y', strtotime($item['transaction_date'])),
+				'trakingKey' => $item['traking_key'],
+				'sourceBank' => substr($item['source_clabe'], 0, 3),
+				'receiverBank' => substr($item['receiver_clabe'], 0, 3),
+				'receiverClabe' => $item['receiver_clabe'],
+				'amount' => $item['amount'],
+			];
+			$this->getCEP($cep1);
+			var_dump($cep1);
+		}
 	}
 
 }
