@@ -5,7 +5,7 @@
 	<title>Notificaciones</title>
 </head>
 <body style="margin:0; padding:0;" class="grey darken-4">
-<table style="border-collapse: unset;">
+<table style="border-collapse: unset; font-family: Arial,serif">
 	<tr>
 		<td style="background-color: black; text-align: center">
 			<image class="center-align responsive-img" style="max-height: 75px; margin: 25px 25px;" id="imgHeader" src="https://compensapay.xyz/assets/images/solveDarkMode.svg" alt="SOLVE"></image>
@@ -15,18 +15,18 @@
 		<td><h5>Estimado <?=$user['lastName'].' '.$user['name']?>, de la empresa <?=$user['company']?>.</h5></td>
 	</tr>
 	<tr>
-		<td>Te informamos que:</td>
+		<td><p>Te informamos que:</p></td>
 	</tr>
 	<tr>
 		<td><?=$text?></td>
 	</tr>
 	<tr>
-		<td>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a target="_blank" href="<?=$urlDetail['url']?>"><?=$urlDetail['name']?></a></td>
+		<td><p>Para más detalles ingresa con tu cuenta a  nuestra plataforma en <a target="_blank" href="<?=$urlDetail['url']?>"><?=$urlDetail['name']?></a></p></td>
 	</tr>
 	<tr>
-		<td>Cualquier duda o comentario, no dudes en contactarnos en el módulo de atención a clientes:
+		<td><p>Cualquier duda o comentario, no dudes en contactarnos en el módulo de atención a clientes:
 			<a href="<?=$urlSoporte['url']?>" target="_blank"><?=$urlSoporte['name']?></a>
-			o contáctanos por <a href="mailto:ayuda@solve.com.mx?Subject=Ayuda%20con">ayuda@solve.com.mx</a>.</td>
+				o contáctanos por <a href="mailto:ayuda@solve.com.mx?Subject=Ayuda%20con">ayuda@solve.com.mx</a>.</p></td>
 	</tr>
 	<tr>
 		<td>
