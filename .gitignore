@@ -1,7 +1,7 @@
 #carpeta temporales
 temporales/*
 boveda/*
-assets/factura/temp
+assets/factura/temp/*
 #carpeta ads
 /ads
 

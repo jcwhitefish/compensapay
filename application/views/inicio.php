@@ -131,136 +131,40 @@
         <th>Proveedor</th>
         <th>Fecha</th>
         <th>Factura</th>
-        <th>Nota de Débito</th>
+        <th class="right-align">Monto</th>
+        <th>Nota de Débito /<br /> Mi Factura</th>
+        <th class="right-align">Monto</th>
         <th>Estatus</th>
-        <th class="right-align">Monto Ingreso</th>
-        <th class="right-align">Monto Egreso</th>
       </tr>
     </thead>
     <tbody>
-      <!-- Fila 1 -->
-      <tr>
-        <td>01864921</td>
-        <td>Proveedor A (Acero)</td>
-        <td>2023-09-01</td>
-        <td>Factura001</td>
-        <td>Debito001</td>
-        <td>Aprobado</td>
-        <td class="right-align"> $1,500.50</td>
-        <td class="right-align"> $1,200.25</td>
-      </tr>
-      <!-- Fila 2 -->
-      <tr>
-        <td>1682372</td>
-        <td>Proveedor B (Otro)</td>
-        <td>2023-09-02</td>
-        <td>Factura002</td>
-        <td>Debito002</td>
-        <td>Pendiente</td>
-        <td class="right-align"> $800.75</td>
-        <td class="right-align"> $500.25</td>
-      </tr>
-      <!-- Filas 3 a 10 (datos aleatorios) -->
-      <!-- Puedes generar datos aleatorios con un lenguaje de programación como Python o JavaScript -->
-      <!-- En este ejemplo, los datos son completamente ficticios -->
-      <!-- Puedes copiar y pegar estas filas según sea necesario -->
-
-      <!-- Fila 3 -->
-      <tr>
-        <td>4656836484</td>
-        <td>Proveedor C (Acero)</td>
-        <td>2023-09-03</td>
-        <td>Factura003</td>
-        <td>Debito003</td>
-        <td>Aprobado</td>
-        <td class="right-align"> $2,300.25</td>
-        <td class="right-align"> $1,800.50</td>
-      </tr>
-
-      <!-- Fila 4 -->
-      <tr>
-        <td>45647527</td>
-        <td>Proveedor D (Otro)</td>
-        <td>2023-09-04</td>
-        <td>Factura004</td>
-        <td>Debito004</td>
-        <td>Pendiente</td>
-        <td class="right-align"> $1,200.50</td>
-        <td class="right-align"> $900.75</td>
-      </tr>
-
-      <!-- Fila 5 -->
-      <tr>
-        <td>54867915</td>
-        <td>Proveedor E (Acero)</td>
-        <td>2023-09-05</td>
-        <td>Factura005</td>
-        <td>Debito005</td>
-        <td>Aprobado</td>
-        <td class="right-align"> $900.25</td>
-        <td class="right-align"> $600.50</td>
-      </tr>
-
-      <!-- Fila 6 -->
-      <tr>
-        <td>48967913</td>
-        <td>Proveedor F (Otro)</td>
-        <td>2023-09-06</td>
-        <td>Factura006</td>
-        <td>Debito006</td>
-        <td>Pendiente</td>
-        <td class="right-align"> $1,600.75</td>
-        <td class="right-align"> $1,200.25</td>
-      </tr>
-
-      <!-- Fila 7 -->
-      <tr>
-        <td>718734861</td>
-        <td>Proveedor G (Acero)</td>
-        <td>2023-09-07</td>
-        <td>Factura007</td>
-        <td>Debito007</td>
-        <td>Aprobado</td>
-        <td class="right-align"> $2,100.50</td>
-        <td class="right-align"> $1,600.75</td>
-      </tr>
-
-      <!-- Fila 8 -->
-      <tr>
-        <td>1568368</td>
-        <td>Proveedor H (Otro)</td>
-        <td>2023-09-08</td>
-        <td>Factura008</td>
-        <td>Debito008</td>
-        <td>Pendiente</td>
-        <td class="right-align"> $700.25</td>
-        <td class="right-align"> $400.50</td>
-      </tr>
-
-      <!-- Fila 9 -->
-      <tr>
-        <td>91837213</td>
-        <td>Proveedor I (Acero)</td>
-        <td>2023-09-09</td>
-        <td>Factura009</td>
-        <td>Debito009</td>
-        <td>Aprobado</td>
-        <td class="right-align"> $1,400.50</td>
-        <td class="right-align"> $1,100.75</td>
-      </tr>
-
-      <!-- Fila 10 -->
-      <tr>
-        <td>14837690</td>
-        <td>Proveedor J (Otro)</td>
-        <td>2023-09-10</td>
-        <td>Factura010</td>
-        <td>Debito010</td>
-        <td>Pendiente</td>
-        <td class="right-align"> $1,900.75</td>
-        <td class="right-align"> $1,400.25</td>
-      </tr>
-
+        <?php
+            if(is_array($dashboard["OperRecientes"]))
+            {
+                foreach ($dashboard["OperRecientes"] as $value)
+                {
+                    echo '<td>'.$value["operation_number"].'</td>
+                        <td>';if($value["short_name"]!=NULL){echo $value["short_name"];}else{echo $value["legal_name"];}echo '</td>
+                        <td>'.$value["created_at"].'</td>
+                        <td><a href="'.base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice"]).'" target="_blank">'.$value["uuid"].'</a></td>
+                        <td class="right-align">$'.number_format($value["money_prov"], 2).'</td>
+                        <td><a href="';if($value["uuid_nota"]!=NULL){echo base_url('/assets/factura/nota.php?idnota='.$value["uudi_nota"]).'" target="_blank">'.$value["uudi_nota"];}else{echo base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice_relational"]).'" target="_blank">'.$value["uuid_relation"];}echo '</a></td>
+                        <td class="right-align">$'.number_format($value["money_clie"], 2).'</td>
+                        <td>';
+                    switch ($value["status"]) {
+                        case 0: echo 'Por autorizar'; break;
+                        case 1: echo 'Autorizada'; break;
+                        case 2: echo 'Rechazada'; break;
+                        case 3: echo 'Realizada'; break;
+                        case 4: echo 'Vencida'; break;
+                    } 
+                    echo '</td>';
+                }
+            }
+        ?>
+        <tr>
+            <td colspan="8" class="right-align"><a href="<?php echo base_url('/facturas');?>">Ver mas>></a></td>
+        </tr>
     </tbody>
   </table>
         </div>
@@ -311,20 +215,20 @@
   var myLineChart2 = new Chart(ctx2, {
     type: 'doughnut',
     data: {
-        labels: ['Aceros Plus', 'Disilex', 'Acerux'],
+        labels: [<?php echo $dashboard["GraficoProveedores"]["Proveedores"];?>],
             datasets: [{
-            label: 'Ingresos',
-            data: [65, 59, 80],
-            fill: false,
-            borderColor: ['rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-            ],
-            backgroundColor: ['rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
+                label: 'Operaciones',
+                data: [<?php echo $dashboard["GraficoProveedores"]["NumeroOperaciones"];?>],
+                fill: false,
+                borderColor: ['rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                ],
+                backgroundColor: ['rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
             }
         ]}
 });

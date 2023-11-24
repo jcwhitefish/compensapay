@@ -253,7 +253,7 @@ class Inicio_model extends CI_Model {
             }
 
             $datai.=''.($RRResIngMesP + $RRResIngMesC).''; if($j>0){$datai.=', ';}
-            $datae.=''.($RRResEgrMesC + $RRResEgrMesP).''; if($j>0){$datae.=', ';}
+            $dataf.=''.($RRResEgrMesC + $RRResEgrMesP).''; if($j>0){$dataf.=', ';}
 
             switch($date[5].$date[6])
             {
@@ -276,7 +276,44 @@ class Inicio_model extends CI_Model {
         }
 
         //obtener los proveedores principales
-        //$ResProvPrin = ""
+        $ResProvPrin = "SELECT o.id_provider, c.legal_name, c.short_name, COUNT(*) AS cuantos FROM operations AS o 
+                        INNER JOIN companies AS c ON c.id=o.id_provider 
+                        INNER JOIN clientprovider AS cp ON cp.provider_id=c.id 
+                        WHERE cp.client_id = '".$idCompanie."'
+                        GROUP BY o.id_provider ORDER BY cuantos DESC LIMIT 3";
+
+
+        $nomProv=''; $numOpe=''; $i=1;
+        if($RResProvPrin = $this->db->query($ResProvPrin)) {
+            if($RResProvPrin->num_rows() > 0){
+                foreach($RResProvPrin->result_array() as $row){
+                    if($row["short_name"]!=NULL){$nomProv.='"'.$row["short_name"].'"';}else{$nomProv.='"'.$row["legal_name"].'"';}
+                    if($i<$RResProvPrin->num_rows()){$nomProv.=', ';}
+
+                    $numOpe.=$row["cuantos"];if($i<$RResProvPrin->num_rows()){$nomProv.=', ';}
+                }
+            }
+        }
+
+        //operaciones recientes
+        $ResOper = "SELECT o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation, companies.short_name, companies.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie, debit_notes.uuid AS uuid_nota, debit_notes.total as money_nota 
+                    FROM operations as o 
+                    LEFT JOIN debit_notes ON debit_notes.id = o.id_debit_note 
+                    LEFT JOIN invoices as ip ON ip.id = o.id_invoice 
+                    LEFT JOIN invoices as ic ON ic.id = o.id_invoice_relational 
+                    INNER JOIN companies ON companies.id = o.id_provider 
+                    WHERE o.id_client = '".$idCompanie."' 
+                    ORDER BY o.id DESC LIMIT 10";
+
+        if($RResOper = $this->db->query($ResOper)){
+            if($RResOper->num_rows() > 0)
+            {
+                $RRResOper = $RResOper->result_array();
+            }
+            else{
+                $RRResOper = ''; 
+            }
+        }
 
 
         //creamos la respuesta
@@ -297,9 +334,14 @@ class Inicio_model extends CI_Model {
             "EgresosMes" => $EgresosMes,
             "GraficoMovimientos" => array(
                 "Ingresos" => $datai,
-                "Egresos" => $datae,
+                "Egresos" => $dataf,
                 "meses" => $dmes
-            )
+            ),
+            "GraficoProveedores" => array(
+                "Proveedores" => $nomProv,
+                "NumeroOperaciones" => $numOpe
+            ),
+            "OperRecientes" => $RRResOper
         );
 
 		return $ResDash;
