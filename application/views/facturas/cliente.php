@@ -497,6 +497,11 @@
                             </div>
                         </div>
                         <div class="col l12">
+                            <div class="col l12">
+                                <p style="margin-bottom: 25px">Al momento de hacer la transferencia de fondos no olvide colocar el id de operación <strong>( {{operationClient.operation_number}} )</strong> en los campos referencia y descripción del portal de su banco.</p>
+                            </div>
+                        </div>
+                        <div class="col l12">
                             <div class="col l8">
                                 <a class="button-gray modal-close">Cerrar</a>
                             </div>
