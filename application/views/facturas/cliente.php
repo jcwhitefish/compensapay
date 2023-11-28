@@ -5,11 +5,11 @@
         <p class="px-3">Periodo:</p>
         <div class="col l3">
             <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="start">Inicio:</label>
+            <label for="start">Desde:</label>
         </div>
         <div class="col l3">
             <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="fin">Fin:</label>
+            <label for="fin">Hasta:</label>
         </div>
         <div class="col l3">
         </div>
@@ -494,6 +494,11 @@
                                 <p class="font_head_op_info" for="invoiceDisabled">Monto Nota: </p>
                                 <h6 v-if="operationClient.money_nota != null">${{operationClient.money_nota}}</h6>
                                 <h6 v-if="operationClient.money_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="col l12">
+                            <div class="col l12">
+                                <p style="margin-bottom: 25px">Al momento de hacer la transferencia de fondos no olvide colocar el id de operación <strong>( {{operationClient.operation_number}} )</strong> en los campos referencia y descripción del portal de su banco.</p>
                             </div>
                         </div>
                         <div class="col l12">

@@ -10,11 +10,11 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
         <p class="px-3">Periodo:</p>
         <div class="col l3">
             <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="start">Inicio:</label>
+            <label for="start">Desde:</label>
         </div>
         <div class="col l3">
             <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="fin">Fin:</label>
+            <label for="fin">Hasta:</label>
         </div>
         <div class="col l3">
         </div>
