@@ -1,6 +1,7 @@
 <?php
-
-class Settings_model extends CI_Model {
+if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
+class Settings_model extends \CI_Model {
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
@@ -12,5 +13,15 @@ class Settings_model extends CI_Model {
 				return $result->result_array();
 			}
 		}
+		return false;
+	}
+
+	/**
+	 * @param array $args data
+	 * @param string $env Environment
+	 * @return void
+	 */
+	public function updateNotifications(array $args, string $env){
+		var_dump($args);
 	}
 }

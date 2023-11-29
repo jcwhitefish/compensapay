@@ -78,6 +78,7 @@ class Login extends MY_Loggedout
 				'password' => cifrarAES($pass)
 			);
 			$cambio = $this->user_model->update_user($user, $nuevos_datos);
+			$this->user_model->setInitialConf($user);
 			$dato['status'] = $cambio;
 		}
 		// Configura la respuesta para que sea en formato JSON

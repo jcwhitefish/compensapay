@@ -1,6 +1,7 @@
 <?php
+use /application/models/Settings_model::;
 
-class Configuracion extends MY_Loggedin{
+class Configuracion extends \MY_Loggedin {
 	private int $amount = 600;
 	public function index(){
 		$this->load->model('Openpay_model','dataOP');
@@ -118,5 +119,27 @@ class Configuracion extends MY_Loggedin{
 				return true;
 			}
 		}
+	}
+	public function saveChanges(){
+		$data = [
+			'nt_OperationNew' => filter_var($this->input->post('nt_OperationNew'), FILTER_VALIDATE_INT),
+			'nt_OperationApproved' => filter_var($this->input->post('nt_OperationApproved'), FILTER_VALIDATE_INT),
+			'nt_OperationStatus' => filter_var($this->input->post('nt_OperationStatus'), FILTER_VALIDATE_INT),
+			'nt_OperationPaid' => filter_var($this->input->post('nt_OperationPaid'), FILTER_VALIDATE_INT),
+			'nt_OperationReturn' => filter_var($this->input->post('nt_OperationReturn'), FILTER_VALIDATE_INT),
+			'nt_OperationReject' => filter_var($this->input->post('nt_OperationReject'), FILTER_VALIDATE_INT),
+			'nt_OperationDate' => filter_var($this->input->post('nt_OperationDate'), FILTER_VALIDATE_INT),
+			'nt_OperationInvoiceRequest' => filter_var($this->input->post('nt_OperationInvoiceRequest'), FILTER_VALIDATE_INT),
+			'nt_OperationExternalAccount' => filter_var($this->input->post('nt_OperationExternalAccount'), FILTER_VALIDATE_INT),
+			'nt_InviteNew' => filter_var($this->input->post('nt_InviteNew'), FILTER_VALIDATE_INT),
+			'nt_InviteStatus' => filter_var($this->input->post('nt_InviteStatus'), FILTER_VALIDATE_INT),
+			'nt_DocumentStatementReady' => filter_var($this->input->post('nt_DocumentStatementReady'), FILTER_VALIDATE_INT),
+			'nt_SupportTicketStatus' => filter_var($this->input->post('nt_SupportTicketStatus'), FILTER_VALIDATE_INT),
+			'nt_SupportReply' => filter_var($this->input->post('nt_SupportReply'), FILTER_VALIDATE_INT),
+		];
+		var_dump($data);
+		$settings = new Settings;
+		$settings->updateNotifications($data, 'SANDBOX');
+
 	}
 }

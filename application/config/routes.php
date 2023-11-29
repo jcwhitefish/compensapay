@@ -53,3 +53,4 @@ $route['default_controller'] = 'inicio';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['getEvents'] = 'Fintec/getEvents';
+$route['Configuracion/saveChanges'] = 'Configuracion/saveChanges';

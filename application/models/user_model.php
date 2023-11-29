@@ -52,4 +52,11 @@ class User_model extends CI_Model {
     public function imprimir()  {
         echo 'Hola mundo';
     }
+	public function setInitialConf($id){
+		$query = "INSERT INTO compensatest_base.notifications (user_id) VALUES ('{$id}')";
+		if($this->db->query($query)){
+			return true;
+		}
+		return false;
+	}
 }
