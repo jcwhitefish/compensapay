@@ -2,6 +2,10 @@
 ini_set("xdebug.var_display_max_children", '-1');
 ini_set("xdebug.var_display_max_data", '-1');
 ini_set("xdebug.var_display_max_depth", '-1');
+/**
+ * Class Arteria_model model
+ * @property Arteria_model $dataArt Arteria module
+ */
 class Arteria_model extends CI_Model{
 	private $ArteriaSandbox = 'https://api.arteria.xyz';
 	private $ArteriaLive = '';
@@ -99,6 +103,7 @@ class Arteria_model extends CI_Model{
 				$opData=[];
 				foreach ($result->result_array() as $row){
 					$opData = [
+						'operationId' => $row['id'],
 						'companyName' => $row['legal_name'],
 						'companyClabe' => $row['companyClabe'],
 						'companyBank' => $row['bnk_clave'],
@@ -209,11 +214,38 @@ class Arteria_model extends CI_Model{
 		}
 	}
 
+	/**
+	 * Permite crear una nueva operación a partir de una anterior ($id) y genera un nuevo número de operación para que sea utilizado en las
+	 * transferencias entre cliente y proveedor
+	 * @param string $idOperation
+	 * @param string $env
+	 * @return bool|string
+	 */
+	public function GetNewOperationNumber(string $idOperation, string $env): bool|string
+	{
+		$opNumber =$this->MakeOperationNumber($idOperation);
+		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_invoice_relational, id_debit_note, id_uploaded_by, id_client, 
+                                          id_provider, operation_number, payment_date, entry_money, exit_money, status, commentary) 
+                                          SELECT id_invoice, id_invoice_relational, id_debit_note, id_uploaded_by, id_client, 
+                                          id_provider, '$opNumber', payment_date, entry_money, exit_money, status, commentary 
+                                          FROM compensatest_base.operations WHERE id = '$idOperation'";
+		if($this->db->query($query)){
+			$query = "UPDATE compensatest_base.operations SET status = 5 WHERE id = '{$idOperation}'";
+			if($this->db->query($query)){
+				return $opNumber;
+			}
+		}
+		return false;
+	}
     public function getIdRastreo (string $id, string $env) {
         $this->headers = [];
         $endpoint = 'transfers/'.$id;
         return $this->SendRequest($endpoint, [], $env, 'GET', 'JSON');
     }
+	private function MakeOperationNumber($operation): string{
+		$trash = '010203040506070809';
+		return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
+	}
 	private function SendRequest(string $endpoint, $data, ?string $env, ?string $method, ?string $dataType) {
 		$env = strtoupper($env) ?? 'SANDBOX';
 		$url = ($env == 'SANDBOX') ? $this->ArteriaSandbox : $this->ArteriaLive;
@@ -265,5 +297,6 @@ class Arteria_model extends CI_Model{
 		}
 		return $response;
 	}
+
 
 }

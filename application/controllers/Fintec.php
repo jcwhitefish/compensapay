@@ -2,9 +2,11 @@
 /**
  *@property Settings_model $conf
  * @property Notification_model $nt
+ * @property Arteria_model $dataArt
  */
 class Fintec extends MY_Loggedout{
-	public function createLog ($logname, $message){
+	public function createLog ($logname, $message): void
+	{
 		$logDir = '/home/compensatest/logs/';
 //		$logDir = 'C:\web\logs\\';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
@@ -77,12 +79,13 @@ class Fintec extends MY_Loggedout{
 							];
 							$res = $this->dataArt->AddMovement($argsR, 'SANDBOX');
 							$cep = $this->getCEP($argsR);
-							$newOPNumber = $this->dataArt->GetNewOperationNumber('','SANDBOX');
+							$newOPNumber = $this->dataArt->GetNewOperationNumber($op['operationId'],'SANDBOX');
 							$this->load->helper('sendmail_helper');
 							$this->load->helper('notifications_helper');
 							$data['OpEntrty'] = ($args['entry']/100);
 							$data['NewOpNumber'] = $newOPNumber;
 							$notification = notificationBody($data,1);
+							$notification2 = notificationBody($data,7);
 							$data = [
 								'user' => [
 									'name' => $op['clientPerson']['name'],
@@ -94,6 +97,20 @@ class Fintec extends MY_Loggedout{
 								'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 							];
 							send_mail($op['clientPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', $notification['title']);
+							$this->nt->insertNotification(
+								['id'=>$op['client'], 'title' =>$notification['title'], 'body' =>$notification['body'],],'SANDBOX');
+							$notification = notificationBody($data,1);
+
+							$data ['user']= [
+								'name' => $op['providerPerson']['name'],
+								'lastName' => $op['providerPerson']['last'],
+								'company' => $op['providerPerson']['company'],
+							];
+							$data['text'] = $notification2['body'];
+							send_mail($op['providerPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', $notification2['title']);
+							$this->nt->insertNotification(
+								['id'=>$op['provider'], 'title' =>$notification2['title'], 'body' =>$notification2['body'],],'SANDBOX');
+
 							return $this->response->sendResponse(["response" => 'Operación correcta err 2'], $error);
 
 						}
