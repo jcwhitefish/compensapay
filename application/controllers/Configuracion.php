@@ -1,19 +1,25 @@
 <?php
-use /application/models/Settings_model::;
+/**
+ *@property Settings_model $conf
+ * @property Openpay_model $dataOp
+ */
 
-class Configuracion extends \MY_Loggedin {
+class Configuracion extends MY_Loggedin {
 	private int $amount = 600;
-	public function index(){
+
+	public function index(): void
+	{
 		$this->load->model('Openpay_model','dataOP');
-		$this->load->model('Settings_model' , 'dataConf');
+		$this->load->model('Settings_model' , 'conf');
 		$id = $this->session->userdata('id');
 		$conf['card'] = $this->dataOP->getActiveCard($id);
-		$conf['notifications'] = $this->dataConf->getNotificationsSettings($id);
+		$conf['notifications'] = $this->conf->getNotificationsSettings($id);
 		$data['main'] = $this->load->view('configuracion', $conf, true);
 		$this->load->view('plantilla', $data);
 	}
 
-	public function newSubscription(){
+	public function newSubscription(): bool
+	{
 		$this->load->model('Openpay_model', 'dataOp');
 
 		$id = $this->session->userdata('id');
@@ -120,7 +126,9 @@ class Configuracion extends \MY_Loggedin {
 			}
 		}
 	}
-	public function saveChanges(){
+	public function saveChanges(): void
+	{
+		$id = $this->session->userdata('id');
 		$data = [
 			'nt_OperationNew' => filter_var($this->input->post('nt_OperationNew'), FILTER_VALIDATE_INT),
 			'nt_OperationApproved' => filter_var($this->input->post('nt_OperationApproved'), FILTER_VALIDATE_INT),
@@ -137,9 +145,14 @@ class Configuracion extends \MY_Loggedin {
 			'nt_SupportTicketStatus' => filter_var($this->input->post('nt_SupportTicketStatus'), FILTER_VALIDATE_INT),
 			'nt_SupportReply' => filter_var($this->input->post('nt_SupportReply'), FILTER_VALIDATE_INT),
 		];
-		var_dump($data);
-		$settings = new Settings;
-		$settings->updateNotifications($data, 'SANDBOX');
-
+		$this->load->model('Settings_model', 'conf');
+		$res = $this->conf->updateNotifications($data, $id,'SANDBOX');
+		if ($res){
+			header('HTTP/1.0 200 Configuración guardada con éxito');
+			echo json_encode(['code'=>'200', 'message'=>'Configuración guardada con éxito', 'details'=>$res['message']]);
+		}else{
+			header('HTTP/1.0 500 Internal Server Error');
+			echo json_encode(['code'=>'500', 'message'=>'No se pudo guardar la configuración']);
+		}
 	}
 }

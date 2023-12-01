@@ -1,4 +1,8 @@
 <?php
+/**
+ * Class Settings model
+ * @property Openpay_model $dataOp OpenPay module
+ */
 class Openpay_model extends CI_Model
 {
 	private string $openPaySandbox = 'https://sandbox-api.openpay.mx/v1';
