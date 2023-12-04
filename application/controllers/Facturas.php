@@ -328,6 +328,27 @@ class Facturas extends MY_Loggedin
 				$this->Invoice_model->update_status_invoice($id_factura_p, "1");
 				//Actualiza factura del cliente
 				$this->Invoice_model->update_status_invoice($id_factura_c, "1");
+				//Envía notificación de que se a creado la operación
+				$this->load->helper('sendmail_helper');
+				$this->load->helper('notifications_helper');
+				$data = [
+					'operationNumber' => $operacion['operation_number'],
+					'cliente' => $this->session->userdata('datosEmpresa')["short_name"],
+				];
+				$notification = notificationBody($data,3);
+				$data = [
+					'user' => [
+						'name' => $this->session->userdata('datosUsuario')["name"],
+						'lastName' => $this->session->userdata('datosUsuario')["last_name"],
+						'company' => $this->session->userdata('datosUsuario')["short_name"],
+					],
+					'text' => $notification['body'],
+					'urlDetail' => ['url' => base_url('/facturas'), 'name' => 'Operaciones'],
+					'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+				];
+				send_mail($this->session->userdata('datosUsuario')["email"], $data, 2, 'uriel.magallon@whitefish.mx', $notification['title']);
+				$this->nt->insertNotification(
+					['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],'SANDBOX');
 			} else{
 				$dato['status'] = "error";
 			}
@@ -371,6 +392,27 @@ class Facturas extends MY_Loggedin
 				$this->Invoice_model->update_status_invoice($id_factura_prov, "1");
 				//Actualiza factura del cliente
 				$this->Invoice_model->update_status_invoice($id_factura_cliente, "1");
+
+				$this->load->helper('sendmail_helper');
+				$this->load->helper('notifications_helper');
+				$data = [
+					'operationNumber' => $operacion['operation_number'],
+					'cliente' => $this->session->userdata('datosEmpresa')["short_name"],
+				];
+				$notification = notificationBody($data,3);
+				$data = [
+					'user' => [
+						'name' => $this->session->userdata('datosUsuario')["name"],
+						'lastName' => $this->session->userdata('datosUsuario')["last_name"],
+						'company' => $this->session->userdata('datosUsuario')["short_name"],
+					],
+					'text' => $notification['body'],
+					'urlDetail' => ['url' => base_url('/facturas'), 'name' => 'Operaciones'],
+					'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+				];
+				send_mail($this->session->userdata('datosUsuario')["email"], $data, 2, 'uriel.magallon@whitefish.mx', $notification['title']);
+				$this->nt->insertNotification(
+					['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],'SANDBOX');
 			} else{
 				$dato['status'] = "error";
 			}
@@ -427,6 +469,27 @@ class Facturas extends MY_Loggedin
 				//Actualiza factura
 				$this->Invoice_model->update_status_invoice($selectedFacturaId, "1");
 
+				$this->load->helper('sendmail_helper');
+				$this->load->helper('notifications_helper');
+				$data = [
+					'operationNumber' => $operacion['operation_number'],
+					'cliente' => $this->session->userdata('datosEmpresa')["short_name"],
+				];
+				$notification = notificationBody($data,3);
+				$data = [
+					'user' => [
+						'name' => $this->session->userdata('datosUsuario')["name"],
+						'lastName' => $this->session->userdata('datosUsuario')["last_name"],
+						'company' => $this->session->userdata('datosUsuario')["short_name"],
+					],
+					'text' => $notification['body'],
+					'urlDetail' => ['url' => base_url('/facturas'), 'name' => 'Operaciones'],
+					'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+				];
+				send_mail($this->session->userdata('datosUsuario')["email"], $data, 2, 'uriel.magallon@whitefish.mx', $notification['title']);
+				$this->nt->insertNotification(
+					['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],'SANDBOX');
+
 			} else if ($uuid1 == null) {
 				unset($nota["uuid"]);
 				$idDebitNote = $this->Debitnote_model->post_my_debit_note($nota);
@@ -447,6 +510,26 @@ class Facturas extends MY_Loggedin
 				);
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
+				$this->load->helper('sendmail_helper');
+				$this->load->helper('notifications_helper');
+				$data = [
+					'operationNumber' => $operacion['operation_number'],
+					'cliente' => $this->session->userdata('datosEmpresa')["short_name"],
+				];
+				$notification = notificationBody($data,3);
+				$data = [
+					'user' => [
+						'name' => $this->session->userdata('datosUsuario')["name"],
+						'lastName' => $this->session->userdata('datosUsuario')["last_name"],
+						'company' => $this->session->userdata('datosUsuario')["short_name"],
+					],
+					'text' => $notification['body'],
+					'urlDetail' => ['url' => base_url('/facturas'), 'name' => 'Operaciones'],
+					'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+				];
+				send_mail($this->session->userdata('datosUsuario')["email"], $data, 2, 'uriel.magallon@whitefish.mx', $notification['title']);
+				$this->nt->insertNotification(
+					['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],'SANDBOX');
 
 			}else{
 				$dato['status'] = "error";

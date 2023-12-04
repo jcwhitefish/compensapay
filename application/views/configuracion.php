@@ -1,13 +1,8 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-		crossorigin="anonymous"
-></script>
-<script	src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-		   integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-		   crossorigin="anonymous"
-		   referrerpolicy="no-referrer"
-></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
+<script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
 <div class="p-5">
 	<div>
 		<div class="yellow center">
@@ -163,74 +158,50 @@
 			</div>
 		</div>
 	</div>
-
 	<div id="addCardM" class="modal modal-fixed-footer">
 		<div class="modal-content">
-			<h5 id="folio_modal" style="margin-top: 1px;">Método de pago</h5>
+			<h5 id="folio_modal" style="margin-top: 1px; margin-bottom: 1px">Método de pago</h5>
 			<p>Completa los datos requeridos para poder generar los pagos correspondientes al uso de la plataforma</p>
-			<div class="">
-				<div class="row" style="margin-bottom: 1px;">
-					<div class="col l7">
-						<label>
-							<span>Número de tarjeta</span>
-							<input type="text" id="cardNumber" name="cardNumber" class="validate" required  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
-						</label>
-					</div>
-					<div class="col l3" id="cardTypeImg">
-
-					</div>
+			<form method="POST" id="payment-form" style="margin-top: 1px; margin-bottom: 1px">
+				<input type="hidden" name="token_id" id="token_id">
+				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+					<label>
+						<span>Nombre del titular</span>
+						<input class="validate" type="text" placeholder="Como aparece en la tarjeta"  data-openpay-card="holder_name">
+					</label>
 				</div>
-				<label>
-					<span>Nombre en la tarjeta</span>
-					<input type="text" id="nameHolder" name="nameHolder" class="validate" required oninput="this.value = this.value.replace(/[^a-z. A-Z]/g, '').replace(/(\..*?)\..*/g, '$1');">
-				</label>
-				<div class="row" style="margin-bottom: 1px;">
-					<div class="col l6">
-						<span>Fecha de vencimiento</span>
-						<div class="row" style="margin-bottom: 5px;">
-							<div class="col l3">
-								<select id="expMonth" name="expMonth" class="col l6">
-									<?php
-									for ($i = 1; $i <= 12; $i++) {
-										echo '<option value="'. $i. '">'.str_pad($i, 2, "0", STR_PAD_LEFT). '</option>';
-									}
-									?>
-								</select>
-							</div>
-							<div class="col l3">
-								<select id="expYear" name="expYear" class="col l6">
-									<?php
-									for ($i = 23; $i <= 28; $i++) {
-										echo '<option value="'. $i. '">'. $i. '</option>';
-									}
-									?>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="col l6">
-						<span>cvc</span>
-						<div >
-							<label >
-								<input type="text" id="cvv" name="cvv" class="col s3 validate" placeholder="123" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-							</label>
-						</div>
-					</div>
+				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+					<label>
+						<span>Número de tarjeta</span>
+						<input class="validate" type="text"  data-openpay-card="card_number">
+					</label>
 				</div>
-				<input type="hidden" name="deviceID" id="deviceID" value=""/>
-				<input type="hidden" name="cardType" id="cardType" value=""/>
-				<input type="hidden" name="cardFlag" id="cardFlag" value="<?=$flag= empty($card) ? 1 : 2;?>"/>
-				<div class="row" style="margin-bottom: 1px;margin-top: 4px;">
-					<div class="col l3">
-						<img src="/assets/images/openpay.png" alt="taretas" height="30px">
-					</div>
-					<div class="col l6">
-						<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
-					</div>
-					<div class="col l3"><button class="btn waves-effect waves-light grey right" type="submit" id="sendCard" name="sendCard" disabled>
-							Enviar
-							<i class="material-icons right">send</i>
-						</button></div>
+			<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+				<div class="col l6"><label>Fecha de expiración</label></div>
+				<div class="col l6"><label>Código de seguridad</label></div>
+			</div>
+			<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+				<div class="col l6">
+					<div class="col s4"><input type="text" placeholder="Mes" data-openpay-card="expiration_month"></div>
+					<div class="col s1"></div>
+					<div class="col s4"><input type="text" placeholder="Año" data-openpay-card="expiration_year"></div>
+				</div>
+				<div class="col l6">
+					<div class="col s4"><input type="text" placeholder="3 dígitos" autocomplete="off" data-openpay-card="cvv2"></div>
+				</div>
+			</div>
+			</form>
+			<div class="row" style="margin-bottom: 1px;margin-top: 4px;">
+				<div class="col l3">
+					<img src="/assets/images/openpay.png" alt="taretas" height="30px">
+				</div>
+				<div class="col l6">
+					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
+				</div>
+				<div class="col l3">
+					<button class="btn waves-effect waves-light grey right" id="sendCard" name="sendCard" >
+						Enviar<i class="material-icons right">send</i>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -264,16 +235,14 @@
 		z-index: 10;
 	}
 </style>
-<script type="text/javascript" src="https://resources.openpay.mx/lib/openpay-js/1.2.38/openpay.v1.min.js"></script>
-<script type="text/javascript" src="https://resources.openpay.mx/lib/openpay-data-js/1.2.38/openpay-data.v1.min.js"></script>
 <script>
 	$(document).ready(function() {
 		var sandbox = true;
 		var deviceDataId = '';
-		OpenPay.setId('mhcmkrgyxbjfw9vb9cqc');
-		OpenPay.setApiKey('sk_10a295f448a043a9ab582aa200552647');
-		OpenPay.setSandboxMode(sandbox);
-		deviceDataId = OpenPay.deviceData.setup("subscription");
+		OpenPay.setId('mzdtln0bmtms6o3kck8f');
+		OpenPay.setApiKey('pk_f0660ad5a39f4912872e24a7a660370c');
+		OpenPay.setSandboxMode(true);
+		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
 		$('#deviceID').val(deviceDataId);
 		$('#cardNumber').on('change', function() {
 			const cardIMG = $('#cardTypeImg');
@@ -286,15 +255,27 @@
 		});
 		$('#nameHolder').on('input', function() {verifyForm();});
 		$('#cvv').on('input', function() {verifyForm();});
-		$('#sendCard').on('click', function() {
+		$('#sendCard').on('click', function(event) {
 			const flag = $('#cardFlag').val();
 			console.log(flag);
-			if (flag === 1 || flag === '1'){
-				newCard();
-			}else{
-				shiftCard();
-			}
+			// if (flag === 1 || flag === '1'){
+			//
+			// 	newCard();
+			// }else{
+			// 	shiftCard();
+			// }
+			OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
 		});
+		var sucess_callbak = function (response) {
+			var token_id = response.data.id;
+			console.log(token_id);
+			$('#token_id').val(token_id);
+		};
+
+		var error_callbak = function (response) {
+			var desc = response.data.description != undefined ? response.data.description : response.message;
+			alert("ERROR [" + response.status + "] " + desc);
+		};
 		$('#changeCard').on('click', function(){
 			$('#addCardM').modal('open');
 		});

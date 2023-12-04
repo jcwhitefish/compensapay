@@ -7,7 +7,6 @@ class Operation_model extends CI_Model {
         $this->load->database();
     }
 
-
     public function get_my_operation($user, $tipo) {
         $this->db->select('o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation,
         companies.short_name, companies.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
