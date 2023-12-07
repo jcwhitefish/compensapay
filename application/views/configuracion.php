@@ -162,7 +162,7 @@
 		<div class="modal-content">
 			<h5 id="folio_modal" style="margin-top: 1px; margin-bottom: 1px">Método de pago</h5>
 			<p>Completa los datos requeridos para poder generar los pagos correspondientes al uso de la plataforma</p>
-			<p>Se le realizara un cargo mensual por $600.00 MXN</p>
+			<p>Se le realizara un cargo mensual por $600.00 USD</p>
 			<form method="POST" id="payment-form" style="margin-top: 1px; margin-bottom: 1px;">
 				<input type="hidden" name="token_id" id="token_id">
 				<input type="hidden" name="deviceID" id="deviceID" value=""/>
