@@ -158,36 +158,45 @@
 			</div>
 		</div>
 	</div>
-	<div id="addCardM" class="modal modal-fixed-footer">
+	<div id="addCardM" class="modal modal-fixed-footer" style="max-height 90% !important;">
 		<div class="modal-content">
 			<h5 id="folio_modal" style="margin-top: 1px; margin-bottom: 1px">Método de pago</h5>
 			<p>Completa los datos requeridos para poder generar los pagos correspondientes al uso de la plataforma</p>
-			<form method="POST" id="payment-form" style="margin-top: 1px; margin-bottom: 1px">
+			<p>Se le realizara un cargo mensual por $600.00 MXN</p>
+			<form method="POST" id="payment-form" style="margin-top: 1px; margin-bottom: 1px;">
 				<input type="hidden" name="token_id" id="token_id">
+				<input type="hidden" name="deviceID" id="deviceID" value=""/>
+				<input type="hidden" name="cardType" id="cardType" value=""/>
+				<input type="hidden" name="cardFlag" id="cardFlag" value="<?=$flag= empty($card) ? 1 : 2;?>"/>
 				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
-					<label>
-						<span>Nombre del titular</span>
-						<input class="validate" type="text" placeholder="Como aparece en la tarjeta"  data-openpay-card="holder_name">
-					</label>
+					<div class="col l12">
+						<label>
+							<span>Nombre del titular</span>
+							<input id="nameHolder" name="nameHolder" class="validate" type="text" placeholder="Como aparece en la tarjeta"  data-openpay-card="holder_name" required oninput="this.value = this.value.replace(/[^a-z. A-Z]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</label>
+					</div>
 				</div>
 				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
-					<label>
-						<span>Número de tarjeta</span>
-						<input class="validate" type="text"  data-openpay-card="card_number">
-					</label>
+					<div class="col l9">
+						<label>
+							<span>Número de tarjeta</span>
+							<input id="cardNumber" name="cardNumber" maxlength="16" class="validate" type="text"  data-openpay-card="card_number" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</label>
+					</div>
+					<div class="col l3" id="cardTypeImg"></div>
 				</div>
 			<div class="row" style="margin-bottom: 1px; margin-top: 1px">
 				<div class="col l6"><label>Fecha de expiración</label></div>
 				<div class="col l6"><label>Código de seguridad</label></div>
 			</div>
-			<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+			<div class="row" style="margin-bottom: 15px; margin-top: 1px">
 				<div class="col l6">
-					<div class="col s4"><input type="text" placeholder="Mes" data-openpay-card="expiration_month"></div>
+					<div class="col s4"><input id="expMonth" name="expMonth" maxlength="2" class="validate" type="text" placeholder="Mes" data-openpay-card="expiration_month" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"></div>
 					<div class="col s1"></div>
-					<div class="col s4"><input type="text" placeholder="Año" data-openpay-card="expiration_year"></div>
+					<div class="col s4"><input id="expYear" name="expYear" maxlength="2" class="validate" type="text" placeholder="Año" data-openpay-card="expiration_year" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"></div>
 				</div>
 				<div class="col l6">
-					<div class="col s4"><input type="text" placeholder="3 dígitos" autocomplete="off" data-openpay-card="cvv2"></div>
+					<div class="col s4"><input id="cvv" name="cvv" type="text" maxlength="3" class="validate" placeholder="3 dígitos" autocomplete="off" data-openpay-card="cvv2" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"></div>
 				</div>
 			</div>
 			</form>
@@ -212,6 +221,10 @@
 	<div id="solveLoader" ></div>
 </div>
 <style>
+	.open{
+		max-height: 90%;
+		height: 85% !important;
+	}
 	div.section{
 		padding-bottom: 1px;
 		padding-top: 8px;
@@ -236,11 +249,20 @@
 	}
 </style>
 <script>
+	const sucess_callbak = function (response) {
+		const token_id = response.data.id;
+		console.log(token_id);
+		$('#token_id').val(token_id);
+	};
+	const error_callbak = function (response) {
+		const desc = response.data.description !== undefined ? response.data.description : response.message;
+		alert("ERROR [" + response.status + "] " + desc);
+	};
 	$(document).ready(function() {
-		var sandbox = true;
-		var deviceDataId = '';
-		OpenPay.setId('mzdtln0bmtms6o3kck8f');
-		OpenPay.setApiKey('pk_f0660ad5a39f4912872e24a7a660370c');
+		const sandbox = true;
+		let deviceDataId;
+		OpenPay.setId('mhcmkrgyxbjfw9vb9cqc');
+		OpenPay.setApiKey('pk_e09cd1f4b4c542e6adbf1f132d8d9ebb');
 		OpenPay.setSandboxMode(true);
 		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
 		$('#deviceID').val(deviceDataId);
@@ -257,25 +279,13 @@
 		$('#cvv').on('input', function() {verifyForm();});
 		$('#sendCard').on('click', function(event) {
 			const flag = $('#cardFlag').val();
-			console.log(flag);
-			// if (flag === 1 || flag === '1'){
-			//
-			// 	newCard();
-			// }else{
-			// 	shiftCard();
-			// }
-			OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
+			if (flag === 1 || flag === '1'){
+				OpenPay.token.extractFormAndCreate('payment-form', newCard, error_callbak);
+			}else{
+				OpenPay.token.extractFormAndCreate('payment-form', shiftCard, error_callbak);
+			}
 		});
-		var sucess_callbak = function (response) {
-			var token_id = response.data.id;
-			console.log(token_id);
-			$('#token_id').val(token_id);
-		};
 
-		var error_callbak = function (response) {
-			var desc = response.data.description != undefined ? response.data.description : response.message;
-			alert("ERROR [" + response.status + "] " + desc);
-		};
 		$('#changeCard').on('click', function(){
 			$('#addCardM').modal('open');
 		});
@@ -337,6 +347,7 @@
 			});
 		});
 	});
+
 	function verifyForm(){
 		var card = $('#cardNumber').val();
 		var name = $('#nameHolder').val();
@@ -347,7 +358,7 @@
 			$('#sendCard').prop('disabled', true)
 		}
 	}
-	function newCard(){
+	function newCard(response){
 		let cardNumber = $('#cardNumber').val();
 		let cardType = OpenPay.card.cardType(cardNumber);
 		let device = $('#deviceID').val();
@@ -355,6 +366,8 @@
 		let month = $('#expMonth').val();
 		let year = $('#expYear').val();
 		let name = $('#nameHolder').val();
+		let tokenCard = response.data.id;
+		$('#token_id').val(tokenCard);
 		$.ajax({
 			url: 'Configuracion/newSubscription',
 			data: {
@@ -365,6 +378,7 @@
 				cvv:cvv,
 				sessionID:device,
 				cardType:cardType,
+				tokenCard:tokenCard
 			},
 			dataType: 'json',
 			method: 'post',
@@ -419,7 +433,7 @@
 			}
 		});
 	}
-	function shiftCard(){
+	function shiftCard(response){
 		var cardNumber = $('#cardNumber').val();
 		var cardType = OpenPay.card.cardType(cardNumber);
 		var device = $('#deviceID').val();
@@ -428,6 +442,7 @@
 		var year = $('#expYear').val();
 		var name = $('#nameHolder').val();
 		var newSubscription = '';
+		let tokenCard = response.data.id;
 		$.ajax({
 			url: 'Configuracion/changeCard',
 			data: {
@@ -438,10 +453,21 @@
 				cvv:cvv,
 				sessionID:device,
 				cardType:cardType,
+				tokenCard:tokenCard
 			},
 			dataType: 'json',
 			method: 'post',
 			beforeSend: function () {
+				const left = $('#addCardM').offset().left;
+				const top = $('#addCardM').offset().top;
+				const width = $('#addCardM').width();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top + 59,
+					width: width,
+					zIndex: 999999
+				}).focus();
 			},
 			success: function (data) {
 				if(data.code === 502){
@@ -471,6 +497,9 @@
 				}
 			},
 			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
 			}
 		});
 	}
