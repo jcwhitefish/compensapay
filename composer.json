@@ -20,7 +20,8 @@
       "ext-curl": "*",
 		"mpdf/mpdf": "*",
       "ext-mcrypt": "*",
-		"phpoffice/phpspreadsheet": "*"
+		"phpoffice/phpspreadsheet": "*",
+      "ext-fileinfo": "*"
     },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

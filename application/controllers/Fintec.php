@@ -7,8 +7,8 @@
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message): void
 	{
-		$logDir = '/home/compensatest/logs/';
-//		$logDir = 'C:\web\logs\\';
+//		$logDir = '/home/compensatest/logs/';
+		$logDir = 'C:\web\logs\\';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
@@ -305,9 +305,14 @@ class Fintec extends MY_Loggedout{
 			'cuenta' => $args['receiverClabe'],
 			'monto' => $args['amount'],
 		];
-//        var_dump($data);
-		$res = $this->dataArt->DownloadCEP($data, 'SANDBOX');
-//		if ($res){$this->dataArt->insertCEP($args, $res, 'SANDBOX');}
+		$res = $this->dataArt->DownloadCEP($data,0, 'SANDBOX');
+//		var_dump($res);
+//		var_dump($res < 1);
+		if ($res < 1){
+			$this->createLog('CEP','No se pudo descargar '.$data['criterio']);
+		}else{
+			$this->dataArt->insertCEP($args, $res, 'SANDBOX');
+		}
 		return $res;
 	}
 	function checkTracking($id){
@@ -325,10 +330,10 @@ class Fintec extends MY_Loggedout{
 				'receiverBank' => substr($item['receiver_clabe'], 0, 3),
 				'receiverClabe' => $item['receiver_clabe'],
 				'amount' => $item['amount'],
+				'arteriaId' => $item['arteriaD_id'],
 			];
 //			var_dump($cep1);
 			$this->getCEP($cep1);
-
 		}
 	}
 	/**

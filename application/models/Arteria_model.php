@@ -139,8 +139,9 @@ class Arteria_model extends CI_Model{
 			}
 		}
 	}
-	public function DownloadCEP (array $args, string $env){
-		if (($ch = curl_init())) {
+	public function DownloadCEP (array $args, int $try, string $env){
+		sleep(rand(5,10));
+		if ($ch = curl_init()) {
 			curl_setopt($ch, CURLOPT_URL, "https://www.banxico.org.mx/cep/valida.do");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 200);
@@ -154,25 +155,28 @@ class Arteria_model extends CI_Model{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
-			curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+			$cookieFile = fopen("cookie.txt", "w+");
+			curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
 			$response = curl_exec($ch);
-			$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			var_dump($code, $response);
+//			var_dump($response);
 			if ($response === false) {
 				$error = 500;
 				curl_close($ch);
 				$resp = ['error' => 500, 'error_description' => 'SAPLocalTransport'];
 				$response = json_encode($resp);
 			}
-			curl_setopt($ch, CURLOPT_URL, "https://www.banxico.org.mx/cep/descarga.do?formato=PDF");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 200);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
+			curl_setopt_array($ch, array(
+				CURLOPT_URL => 'http://www.banxico.org.mx/cep/descarga.do?formato=PDF',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'GET',
+				CURLOPT_COOKIEFILE => $cookieFile,
+			));
+			set_time_limit(180);
 			$pdf_content = curl_exec($ch);
 
 			if (curl_errno($ch)) {
@@ -182,17 +186,43 @@ class Arteria_model extends CI_Model{
 			}
 			curl_close($ch);
 
-			$filename = $args['criterio'].'.pdf';
+			$filename = strtotime('now').$args['criterio'].'.pdf';
 			$ruta_destino = './boveda/CEP/'.$filename;
 			file_put_contents($ruta_destino, $pdf_content);
-            return $filename;
+			$tipoMIME = mime_content_type($ruta_destino);
 
+			if($tipoMIME === 'application/pdf'){
+//				var_dump($filename);
+				if(file_exists("cookie.txt")){
+					unlink("cookie.txt");
+				}
+				array_map('unlink', glob("Resource id #"));
+				return $filename;
+			}else{
+				if($try<=3){
+					$try++;
+//					var_dump('Reintentando '.$filename);
+//					var_dump( 'Intento '.$try);
+					$this->DownloadCEP($args, $try,$env);
+				}
+//				var_dump('No se logro descargar '.$filename);
+				if (file_exists($ruta_destino)) {
+					unlink($ruta_destino);
+				} else {
+					echo "El archivo no existe o no es un archivo.";
+				}
+				if(file_exists("cookie.txt")){
+					unlink("cookie.txt");
+				}
+				array_map('unlink', glob("Resource id #"));
+				return -1;
 
+			}
 		}else {
 			$resp['reason'] = 'No se pudo inicializar cURL';
 			$response = json_encode($resp);
 		}
-		return $response;
+		return -2;
 	}
     public function insertCEP (array $args, $cep, string $env){
         $query = "UPDATE compensatest_base.balance SET url_cep = '{$cep}' 
@@ -203,9 +233,9 @@ class Arteria_model extends CI_Model{
         return false;
     }
 	public function getAllBalanceCEP(){
-		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount 
-					FROM compensatest_base.balance where traking_key like '%CUENCA%' 
-				   	ORDER BY transaction_date DESC limit 2";
+		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount, arteriaD_id
+					FROM compensatest_base.balance 
+				   	ORDER BY transaction_date DESC";
 //		var_dump($query);
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
