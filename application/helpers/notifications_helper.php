@@ -9,7 +9,7 @@ function notificationBody(array $args, int $cat): array
 	$body = $title = '';
 	switch ($cat){
 		case 1:
-			$body = "No se pudo procesar el pago por la operaci&oacute;n <strong>#%name</strong> debido a que ingres&oacute; un monto diferente 
+			$body = "No se pudo procesar el pago por la operaci&oacute;n <strong>{$args['operationNumber']}</strong> debido a que ingres&oacute; un monto diferente 
 al de la factura: <br><table><tr><td>Monto pagado</td><td>Monto factura</td></tr><tr><td>".($args['data']['amount']/100)."</td>
 <td>{$args['OpEntrty']}</td></tr></table><br>Por este motivo se le ha realizado un reembolso total de su pago, realize nuevamente la 
 tranferencia por el monto correcto con el siguiente n&uacute;mero de referencia y descripci&oacute;n: <br><table><tr><td>Monto</td><td>N&uacute;mero 

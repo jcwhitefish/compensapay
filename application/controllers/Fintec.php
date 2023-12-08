@@ -82,7 +82,7 @@ class Fintec extends MY_Loggedout{
 							$newOPNumber = $this->dataArt->GetNewOperationNumber($op['operationId'],'SANDBOX');
 							$this->load->helper('sendmail_helper');
 							$this->load->helper('notifications_helper');
-							$data['OpEntrty'] = ($args['entry']/100);
+							$data['OpEntrty'] = ($op['entry']/100);
 							$data['NewOpNumber'] = $newOPNumber;
 							$notification = notificationBody($data,1);
 							$notification2 = notificationBody($data,7);
@@ -212,7 +212,7 @@ class Fintec extends MY_Loggedout{
 						$this->load->helper('sendmail_helper');
 						$this->load->helper('notifications_helper');
 
-						$data['OpEntrty'] = ($args['entry']/100);
+						$data['OpEntrty'] = ($op['entry']/100);
 						$notification = notificationBody($args,1);
 
 						$data = [
@@ -348,5 +348,8 @@ class Fintec extends MY_Loggedout{
 	function desencriptar(string $texto, string $key){
 		return base64_decode($texto.$key);
 		//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+	}
+	public function ini(){
+		phpinfo();
 	}
 }

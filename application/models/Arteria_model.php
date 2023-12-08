@@ -234,7 +234,7 @@ class Arteria_model extends CI_Model{
     }
 	public function getAllBalanceCEP(){
 		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount, arteriaD_id
-					FROM compensatest_base.balance 
+					FROM compensatest_base.balance where url_cep IS NULL
 				   	ORDER BY transaction_date DESC";
 //		var_dump($query);
 		if ($result = $this->db->query($query)) {
