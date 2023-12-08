@@ -7,8 +7,8 @@
 class Fintec extends MY_Loggedout{
 	public function createLog ($logname, $message): void
 	{
-//		$logDir = '/home/compensatest/logs/';
-		$logDir = 'C:\web\logs\\';
+		$logDir = '/home/compensatest/logs/';
+//		$logDir = 'C:\web\logs\\';
 		$this->logFile = fopen($logDir . $logname.'.log', 'a+');
 		if ($this->logFile !== FALSE) {
 			fwrite($this->logFile, '|'.date('Y-m-d H:i:s').'|   '.$message. "\r\n");
