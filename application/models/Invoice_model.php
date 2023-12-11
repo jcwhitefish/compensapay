@@ -113,7 +113,7 @@ class Invoice_model extends CI_Model {
         $this->db->join('cat_bancos t4', 't4.bnk_code = balance.receiver_bank ', 'LEFT');
         $this->db->where('operations.id_provider', $company);
         $this->db->or_where('operations.id_client', $company);
-		$this->db->order_by('created_at', 'DESC');
+		$this->db->order_by('balance.created_at', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }
