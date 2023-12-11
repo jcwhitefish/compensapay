@@ -218,7 +218,7 @@
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
 		</div>
 	</div>
-	<div id="solveLoader" ></div>
+
 </div>
 <style>
 	.open{
@@ -232,20 +232,6 @@
 	p{
 		margin-top: 4px;
 		margin-bottom: 4px;
-	}
-	#solveLoader{
-		display: none;
-		position: absolute;
-		/*float: left;*/
-		background-color: rgba(255, 255, 255, .8);
-		background-image: url('/assets/images/loader.gif') !important;
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: 150px 150px;
-		top: 0;
-		width: 90%;
-		height: 100vh;
-		z-index: 10;
 	}
 </style>
 <script>

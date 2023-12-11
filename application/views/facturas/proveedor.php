@@ -4,8 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $factura = base_url('assets/factura/factura.php?idfactura=');
 ?>
 <div class="p-5" id="app">
-
-    <!-- head con el calendario -->
     <div class="row">
         <p class="px-3">Periodo:</p>
         <div class="col l3">
@@ -89,7 +87,6 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                         </tr>
                     </tbody>
                 </table>
-                <!-- TABLA DE OPERACIONES -->
                 <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">
                     <thead>
                         <tr>

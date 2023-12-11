@@ -1,11 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 /**
  * @property Fiscal_model $fData
  */
-class ModeloFiscal extends MY_Loggedin {
-
+class Documentos extends MY_Loggedin{
 	public function index(){
 //		$isClient = $this->session->userdata('vista');
 //		if ($isClient == 1) {
@@ -28,5 +25,4 @@ class ModeloFiscal extends MY_Loggedin {
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($dato));
 	}
-
 }

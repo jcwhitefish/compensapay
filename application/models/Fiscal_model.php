@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Class Fiscal_model model
+ * @property Fiscal_model $fData Fiscal_model module
+ */
 class Fiscal_model extends CI_Model
 {
 
