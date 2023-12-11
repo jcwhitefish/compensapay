@@ -224,21 +224,30 @@ input[type="number"] {
     border-radius: 10px;
 }
 
+.button-orange {
+    transition-duration: 0.4s;
+    background-color: #ff6624 !important;
+    color: white !important;
+    padding: 8px 30px;
+    border: 2px solid #af3a11 !important;
+    border-radius: 10px !important;
+}
+
+.button-orange:hover {
+    transition-duration: 0.4s;
+    background-color: #af3a11 !important; 
+    color: white !important;
+}
+
 /* images */
 
 .custom-image{
-    max-width: 100%; 
-    max-height: 100%; 
-    width: auto; 
-    height: auto;
+    /*max-width: 80%; 
+    max-height: 80%; 
+    width: auto; */
+    height: 350px;
 }
 
-.custom-logo{
-    max-width: 85%; 
-    max-height: 85%; 
-    width: auto; 
-    height: auto;
-}
 
 .d-flex{
     display: flex;
@@ -265,7 +274,7 @@ input[type="number"] {
 
 /* Estilos para las tablas */
 tbody tr:hover{
-    background-color: #fffeb1 !important;
+    background-color: #f0ddf5 !important;
 }
 
 thead, thead tr,thead tr th{
@@ -276,14 +285,19 @@ thead, thead tr,thead tr th{
     
 }
 
-/* Estos estilos son para el navegador */
-.navegador{
-    background-color: #F7F6F6;
+th, td {
+    padding: 20px 25px;
 }
+
+/* Estos estilos son para el navegador */
 .small{
  font-size: 20px!important;
 }
-
+.main-nav{
+    position: sticky!important;
+    top: 0!important;
+    z-index: 2!important;
+}
 /* Indicador de provedores-clientes */
 .button-indicador {
     background-color: white;

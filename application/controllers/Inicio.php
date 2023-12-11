@@ -19,11 +19,21 @@ class Inicio extends MY_Loggedin
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+	function __construct()
+ 	{
+
+ 	  parent:: __construct();
+ 	  $this->load->model('Inicio_model'); 
+ 	}
+
 	public function index()
 	{
-
+		$datos = array(
+			"dashboard" => $this->Inicio_model->dashboard(),
+			"dump" => 0
+		);
 		//mostramos en pantalla welcome_message.php
-		$data['main'] = $this->load->view('inicio', '', true);
+		$data['main'] = $this->load->view('inicio', $datos, true);
 		$this->load->view('plantilla', $data);
 	}
 }

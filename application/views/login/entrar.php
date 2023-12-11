@@ -3,7 +3,7 @@
         <div class="card-content">
             <div class="row">
                 <div class="col l6 center-align">
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+                    <img src="<?= base_url('assets/images/logo_solve_1.svg'); ?>" alt="Logo" class="custom-image">
                 </div>
                 <div class="col l6 p-5">
                     <form @submit.prevent="submitForm" method="get" action="<?= base_url('login'); ?>">
@@ -137,7 +137,3 @@
         position: relative;
     }
 </style>
-
-<!-- cadena_validar = '{"Usuario":"DemoUser","Llave":"Pasrd"}';
-$validar_acceso=$this->Interaccionbd->ValidarAcceso($cadena_validar);
-echo $validar_acceso; -->

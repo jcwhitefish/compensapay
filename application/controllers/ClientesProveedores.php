@@ -18,21 +18,26 @@ class ClientesProveedores extends MY_Loggedin {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+
+	function __construct()
+ 	{
+
+ 	  parent:: __construct();
+ 	  $this->load->model('Clientesproveedores_model'); 
+ 	}
+	
 	public function index(){
 
-		//Se verifica si esta en la pantalla de cliente
-		$isClient = $this->session->userdata('vista');
-		$user = 6;
+		$dato = array(
+			"clipro" => $this->Clientesproveedores_model->clientes(),
+			"dump" => 0
+		);
 
-		//1 si es cliente o  si es proveedor
-		if($isClient == 1){
-			$data['main'] = $this->load->view('clientesproveedores/cliente', '' , true);
-			$this->load->view('plantilla', $data);
-		}else{
-			$data['main'] = $this->load->view('clientesproveedores/proveedor', '' , true);
-			$this->load->view('plantilla', $data);
-		}
 
-	}					
+		$data['main'] = $this->load->view('clientesproveedores/clientesprovedores', $dato, true);
+		$this->load->view('plantilla', $data);
+		
+
+	}				
 
 }

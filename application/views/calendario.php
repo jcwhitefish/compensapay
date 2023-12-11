@@ -1,4 +1,5 @@
 <div class="p-5" id="app">
+    <!-- Filtros de vista -->
     <div class="row valign-wrapper">
         <div class="col l6">
             <div class="row valign-wrapper">
@@ -14,175 +15,136 @@
                     <a @click="cambiaModelo(2)" :class="`btn btnMDA ${modeloTabla != 2 ? 'transparent black-text' : 'black'}  waves-effect waves-light`">Mes</a>
                 </div>
                 <div class="input-field col l6">
-                    <input v-model="fecha" class="fechas datepicker" type="text" id="date">
+                    <!-- TODO:La etiqueta no-autoinit te ayuda a avitar que el autoinit lo haga en automatico -->
+                    <input @change="crearCalendario" class="fechas datepicker no-autoinit" type="text" id="date" value="<?= date('m/d/Y'); ?>">
                     <i class="material-icons prefix">arrow_drop_down</i>
                 </div>
 
             </div>
         </div>
-        <div class="col l4">{{fecha}}</div>
         <div class="col l2 center-align">
             <div class="row">
-                <div class="col s12"><a class="btnLeyenda btn-small cyan accent-3">Programadas</a></div>
+                <div class="col s12"><a @click="cambiarSatusBoton('p')" :class="`btnLeyenda btn-small  ${vProgramed == false ? 'transparent black-text' : 'programed'}`">Programadas</a></div>
             </div>
             <div class="row">
-                <div class="col s12"><a class="btnLeyenda btn-small green  accent-3">Realizadas</a></div>
+                <div class="col s12"><a @click="cambiarSatusBoton('v')" :class="`btnLeyenda btn-small  ${vOverdue == false ? 'transparent black-text' : 'overdue'}`">Vencidas</a></div>
             </div>
-            <div class="row">
-                <div class="col s12"><a class="btnLeyenda btn-small red accent-3">Vencidas</a></div>
-            </div>
-
-
         </div>
     </div>
-    <!-- Aqui va lo de mes -->
-    <div class="row tablas" v-if="modeloTabla == 2">
+
+    <!-- Calendario -->
+    <div class="row tablas">
         <table>
             <thead>
                 <tr>
-                    <th>Domingo</th>
-                    <th>Lunes</th>
-                    <th>Martes</th>
-                    <th>Miercoles</th>
-                    <th>Jueves</th>
-                    <th>Viernes</th>
-                    <th>Sabado</th>
+                    <template v-for="(day,index) in daysString" :key="index">
+                        <th if="(modeloTabla == 2)||(modeloTabla == 1)||(modeloTabla == 0 && datosDia['diaSemana'] == index)"> {{daysString[index]}}</th>
+                    </template>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><span>
-                            <p>1</p>
-                            
-                            <a class="btnLeyenda btn-small red accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>2</p>
-                        </span></td>
-                    <td><span>
-                            <p>3</p>
-                        </span></td>
-                </tr>
-                <tr>
-                    <td><span>
-                            <p>4</p>
-                        </span></td>
-                    <td><span>
-                            <p>5</p>
-                        </span></td>
-                    <td><span>
-                            <p>6</p>
-                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>7</p>
-                        </span></td>
-                    <td><span>
-                            <p>8</p>
-                        </span></td>
-                    <td><span>
-                            <p>9</p>
-                        </span></td>
-                    <td><span>
-                            <p>10</p>
-                        </span></td>
-                </tr>
-                <tr>
-                    <td><span>
-                            <p>11</p>
-                        </span></td>
-                    <td><span>
-                            <p>12</p>
-                            
-                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>13</p>
-                        </span></td>
-                    <td><span>
-                            <p>14</p>
-
-                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>15</p>
-                        </span></td>
-                    <td><span>
-                            <p>16</p>
-                        </span></td>
-                    <td>
-                        <span>
-                            <p>17</p>
-                            <a class="btnLeyenda btn-small red accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td><span>
-                            <p>18</p>
-                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>19</p>
-
-                        </span></td>
-                    <td><span>
-                            <p>20</p>
-                        </span></td>
-                    <td><span>
-                            <p>21</p>
-                        </span></td>
-                    <td><span>
-                            <p>22</p>
-                            
-                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <td><span>
-                            <p>23</p>
-                        </span></td>
-                    <td><span>
-                            <p>24</p>
-                        </span></td>
-                </tr>
-                <tr>
-                    <td><span>
-                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                            <p>25</p>
-                        </span></td>
-                    <td><span>
-                            <p>26</p>
-                        </span></td>
-                    <td><span>
-                            <p>27</p>
-                        </span></td>
-                    <td><span>
-                            <p>28</p>
-                        </span></td>
-                    <td><span>
-                            <p>29</p>
-                        </span></td>
-                    <td><span>
-                            <p>30</p>
-                            
-                            <a class="btnLeyenda btn-small cyan accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                            
-                            <a class="btnLeyenda btn-small green accent-3" style="font-size:11px;">Frontier - A404 - $120,0</a>
-                        </span></td>
-                    <!-- Puedes añadir más días si es necesario -->
-                </tr>
+                <template v-for="(semana,indiceSemana) in calendario" :key="indiceSemana">
+                    <tr v-if="(modeloTabla == 2)||(modeloTabla == 1 && datosDia['semana'] == indiceSemana)|| (modeloTabla == 0)">
+                        <template v-for="(celda,indiceCelda) in 7" :key="indiceCelda">
+                            <td v-if="(modeloTabla == 2)||(modeloTabla == 1)||(modeloTabla == 0 && datosDia['semana'] == indiceSemana && datosDia['diaSemana'] == indiceCelda)">
+                                <p class="numeroDia">{{`${typeof semana[indiceCelda] == 'object' ? semana[indiceCelda]['numero'] : ''}`}}</p>
+                                <p v-if="typeof semana[indiceCelda] == 'object'" :id="semana[indiceCelda]['numero']">
+                                    <div v-for="op in opeToView">
+                                        <a v-if="op.dia === semana[indiceCelda]?.numero" class="modal-trigger no-link" href="#modal-vista-operacion" @click="viewOperation(op.indexOp)">
+                                            <p class="opeCalendar" :class="op.estado">{{op.numberOp}}</p>
+                                        </a>
+                                    </div>
+                                </p>
+                            </td>
+                        </template>
+                    </tr>
+                </template>
             </tbody>
         </table>
+    </div>
+
+    <!-- Visualizar información de operación -->
+    <div id="modal-vista-operacion" class="modal">
+        <div class="modal-content" v-for="ope in operationsView">
+            <h5>ID Operacion: {{ope.operation_number}}</h5>
+            <div class="card esquinasRedondas">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Estatus Operación: </p>
+                                <h6 v-if="ope.status == '0' " >Por autorizar</h6>
+                                <h6 v-if="ope.status == '1' " >Autorizada</h6>
+                                <h6 v-if="ope.status == '2' " >Rechazada</h6>
+                                <h6 v-if="ope.status == '3' " >Realizada</h6>
+                                <h6 v-if="ope.status == '4' " >Vencida</h6>
+                            </div>
+                            <div class="col l4">
+                                <p class="font_head_op_info" for="invoiceDisabled">Proveedor: </p>
+                                <h6 v-if="ope.short_name != null && ope.short_name != ''">{{ope.short_name}}</h6>
+                                <h6 v-if="ope.short_name == null || ope.short_name == ''">{{ope.legal_name}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha factura: </p>
+                                <h6>{{ope.payment_date}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Alta: </p>
+                                <h6>{{ope.created_at}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Fecha Transacción: </p>
+                                <h6>{{ope.transaction_date}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Factura Proveedor: </p>
+                                <h6><a :href="'assets/factura/factura.php?idfactura='+ope.urlid" target="_blank">{{ope.uuid}}</a></h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Mi Factura: </p>
+                                <h6 v-if="ope.uuid_relation != null"><a :href="'assets/factura/factura.php?idfactura='+ope.urlidrel" target="_blank">{{ope.uuid_relation}}</a></h6>
+                                <h6 v-if="ope.uuid_relation == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">UUID Nota: </p>
+                                <h6 v-if="ope.uuid_nota != null"><a :href="'assets/factura/nota.php?idnota='+ope.urldeb" target="_blank">{{ope.uuid_nota}}</a></h6>
+                                <h6 v-if="ope.uuid_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Factura Proveedor: </p>
+                                <h6>${{ope.money_prov}}</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Mi Factura: </p>
+                                <h6 v-if="ope.money_clie != null">${{ope.money_clie}}</h6>
+                                <h6 v-if="ope.money_clie == null">N.A.</h6>
+                            </div>
+                            <div class="col l4 h6-border">
+                                <p class="font_head_op_info" for="invoiceDisabled">Monto Nota: </p>
+                                <h6 v-if="ope.money_nota != null">${{ope.money_nota}}</h6>
+                                <h6 v-if="ope.money_nota == null">N.A.</h6>
+                            </div>
+                        </div>
+                        <!--div class="col l12">
+                            <div class="col l8">
+                                <a class="button-gray modal-close">Cerrar</a>
+                            </div>
+                        </div-->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     const {
-
         createApp,
         ref,
         onMounted,
@@ -192,39 +154,180 @@
     const app = createApp({
         setup() {
             const modeloTabla = ref(2);
-            const fecha = ref(null);
+            const fecha = ref('');
+            const operationsView = Vue.ref([]);
+            const opeToView = Vue.ref([]);
             const cambiaModelo = (modelo) => {
                 modeloTabla.value = modelo;
             }
+            const datosDia = ref([]);
+            const calendario = ref([]);
+            const operaciones = Vue.ref([]);
+            const daysString = ref(['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']);
+            const vProgramed = ref(true);
+            const vOverdue = ref(true);
             const formatearDate = () => {
-                var options = {
+                let options = {
                     format: 'dd/mm/yyyy', // Formato de fecha
+                    setDefaultDate: true, // Inicializar con la fecha actual
                     autoClose: true, // Cerrar automáticamente después de seleccionar la fecha
-                    // Puedes agregar más opciones según tus necesidades
                 };
-                nextTick(() => {
-                    // M.Datepicker.init(document.getElementById('date'),options);
-                    M.AutoInit();
-                });
+
+                let datepicker = document.getElementById('date');
+
+                let instance = M.Datepicker.init(datepicker, options);
+
 
             }
+
+            //tabla de get operaciones
+            const getOperations = () => {
+                    const formData = new FormData();
+                    formData.append('mesSelected',fecha.value.slice(3, -5));
+                var requestOptions = {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/operacionesCalendario") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        operaciones.value = result.operaciones;
+                        operaciones.value.reverse();
+
+                        colocarOperaciones();
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
+            const cambiarSatusBoton = (boton) => {
+                if(boton == 'p'){
+                    vProgramed.value = !vProgramed.value;
+                }else{
+                    vOverdue.value = !vOverdue.value;
+                }
+                colocarOperaciones();
+            }
+
+            const colocarOperaciones = () => {
+                const op = operaciones.value;
+                if (op.length > 0) {
+                    opeToView.value = [];
+                    for (let i = 0; i < op.length; i++) {
+                        const dia = op[i]['transaction_date'].slice(8);
+                        const estado = op[i]['status'] == '0' ? 'programed' : 'overdue';
+                        const dt = {
+                            'dia': parseInt(dia),
+                            'estado': estado,
+                            'indexOp': i,
+                            'numberOp': op[i]['operation_number']
+                        };
+                        if(vProgramed.value && !vOverdue.value && estado == 'programed'){
+                            opeToView.value.push(dt);
+                        }else if(!vProgramed.value && vOverdue.value && estado == 'overdue'){
+                            opeToView.value.push(dt);
+                        }else if(vProgramed.value && vOverdue.value){
+                            opeToView.value.push(dt);
+                        }else if(!vProgramed.value && !vOverdue.value){
+                            opeToView.value.push(dt);
+                        }
+                    }
+                    console.log(opeToView.value);
+                }
+            }
+
+            const crearCalendario = () => {
+                let datepicker = document.getElementById('date');
+                fecha.value = datepicker.value;
+                //obtenermos el dia mes y año de la variable fecha y los metemos en distintas variables separando el string por /
+                let [day, month, year] = fecha.value.split('/');
+                //obtenemos en que dia de la semana cae el primer dia del mes
+                let firstDay = new Date(year, month - 1, 1).getDay();
+
+                //console.log(firstDay);
+                //lo convertimos a letras
+
+                let firstDayString = daysString.value[firstDay];
+                //console.log(firstDayString);
+
+                //obtenemos el ultimo dia del mes
+                let lastDay = new Date(year, month, 0).getDate();
+                //console.log(lastDay);
+                //obtenemso las variables x y y
+                let x = firstDay; //x inicia en el dia de la semana que cae el primer dia del mes
+                let y = 0;
+                //creamos z que es el dia que se va a imprimir en el calendario
+                let z = 1;
+                //creamos el calendario
+                calendario.value[y] = [];
+                while (lastDay >= z) {
+                    calendario.value[y][x] = {
+                        'numero': z
+                    };
+                    if (z == day) {
+                        datosDia.value['diaSemana'] = x;
+                        datosDia.value['semana'] = y;
+                        datosDia.value['diaNumero'] = z;
+                    }
+                    if (x == 6) {
+                        x = 0;
+                        y++;
+                        calendario.value[y] = [];
+                    } else {
+                        x++;
+                    }
+                    z++;
+                }
+                getOperations();
+            }
+
+            //Llenar vista de operación seleccionada
+            const viewOperation = (operacion) => {
+                console.log(operacion);
+                operationsView.value[0] = operaciones.value[operacion];
+                console.log(operationsView.value);
+            }
+
             onMounted(
                 () => {
                     formatearDate();
+                    crearCalendario();
+                    getOperations();
                 }
             )
             // Retornar el estado y métodos
             return {
                 modeloTabla,
                 cambiaModelo,
-                fecha
+                fecha,
+                daysString,
+                calendario,
+                crearCalendario,
+                viewOperation,
+                datosDia,
+                operaciones,
+                operationsView,
+                colocarOperaciones,
+                opeToView,
+                vProgramed,
+                vOverdue,
+                cambiarSatusBoton
             };
         },
     });
 </script>
 
-
 <style>
+    th {
+        background-color: #fafafa !important;
+    }
+
+    /* Seleccionamos a los elementos th que estan dentro de tables y les ponemos color red */
+    .tablas th {
+        background-color: #17a2b8 !important;
+    }
+
     .btnLeyenda {
         border-radius: 25px !important;
         width: 130px;
@@ -265,7 +368,7 @@
 
     /* Estos estilos son del datapicker */
     .datepicker-date-display {
-        background-color: #e0e51d !important;
+        background-color: #17a2b8 !important;
 
     }
 
@@ -273,26 +376,26 @@
     .datepicker-clear,
     .datepicker-today,
     .datepicker-done {
-        color: #e0e51d;
+        color: #17a2b8;
     }
 
     .datepicker-table td.is-today {
-        color: #e0e51d;
+        color: #17a2b8;
     }
 
     .datepicker-table td.is-selected {
-        background-color: #e0e51d;
+        background-color: #17a2b8;
         color: #fff;
     }
 
     .dropdown-content li>a,
     .dropdown-content li>span {
-        color: #e0e51d;
+        color: #17a2b8;
     }
 
     button:focus {
         outline: none;
-        background-color: #e0e51d;
+        background-color: #17a2b8;
     }
 
     .tablas thead {
@@ -301,30 +404,40 @@
 
     .tablas td {
         border: 1px solid #eeeeee;
-        height: 3cm;
-        width: 3cm;
-    }
-
-    .tablas td span {
-
-        flex-direction: column;
-        font-weight: bold;
-        display: flex;
-        align-items: center
-    }
-
-    .tablas td span p {
-        position: relative;
-        width: 100%;
-        text-align: right;
+        min-height: 3cm;
     }
 
     /* quitar el hover */
-    tbody tr:hover{
+    tbody tr:hover {
         background-color: white !important;
     }
-</style>
 
-<!-- cadena_validar = '{"Usuario":"DemoUser","Llave":"Pasrd"}';
-$validar_acceso=$this->Interaccionbd->ValidarAcceso($cadena_validar);
-echo $validar_acceso; -->
+    .numeroDia {
+        text-align: end;
+        font-weight: bold;
+    }
+
+    .programed {
+        background-color: #4FDBBF;
+    }
+
+    .overdue {
+        background-color: #DB544F;
+    }
+
+    .opeCalendar {
+        text-align: center;
+        color: white;
+        border-radius: 5px !important;
+        box-shadow: -3px 1px 6px 1px rgb(94 92 92 / 50%);
+    }
+
+    .opeCalendar:hover {
+        transform: scale(1.3);
+        box-shadow: -3px 1px 6px 1px rgb(94 92 92 / 50%);
+    }
+    .no-link{
+        color: white !important;
+        text-decoration: none !important;
+    }
+</style>

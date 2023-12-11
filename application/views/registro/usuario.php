@@ -14,7 +14,7 @@
                                 <label for="user">Usuario *</label>
                             </div>
                             <div class="input-border col l6">
-                                <input v-model="data['profile']" type="text" name="profile" id="profile" disabled>
+                                <input v-model="profileText" type="text" name="profile" id="profile" disabled>
                                 <label for="profile">Perfil</label>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="input-border col l12">
                                 <select v-model="data['question']" name="question" id="question" required>
-                                    <option v-for="question in listaPreguntas" :key="question.idpregunta" :value="question.idpregunta">{{ question.pregunta }}</option>
+                                    <option v-for="question in listaPreguntas" :key="question.pg_id" :value="question.pg_id">{{ question.pg_pregunta }}</option>
                                 </select>
                                 <label for="question">Pregunta *</label>
                             </div>
@@ -112,7 +112,7 @@
             ?>
             const data = reactive({
                 user: ref(''),
-                profile: ref(''),
+                profile: ref(`${typeof dataEmpresa === 'undefined' ? 0 : 1}`),
                 name: ref(''),
                 lastname: ref(''),
                 email: ref(''),
@@ -123,7 +123,7 @@
                 answer: ref(''),
                 uniqueString: ref('')
             });
-
+            const profileText = ref(`${typeof dataEmpresa === 'undefined' ? 'Usuario' : 'Administrador'}`);
             const imageUpload = ref(null);
             const imageUploadURL = ref('https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg');
             const colorsBorder = reactive({});
@@ -269,9 +269,8 @@
 
             }
             const formUsuario = (empresa = []) => {
-
-                if (typeof empresa['id'] === 'undefined') {
-                    empresa['id'] = 0;
+                if (typeof empresa['id_company'] === 'undefined') {
+                    empresa['id_company'] = 0;
                 }
                 //Aqui iria un echo con una variable de php si el usuario fue invitado
                 // Esto solo sirve en POST
@@ -283,16 +282,14 @@
                             formData.append(key, data[key]);
                         }
                     }
-                    formData.append('idEmpresa', empresa['id']);
+                    formData.append('idEmpresa', empresa['id_company']);
                     fetch('<?php echo base_url('registro/registraUsuario') ?>', {
                             method: 'POST',
                             body: formData,
                             redirect: 'follow'
                         })
                         .then((response) => {
-                            if (!response.ok) {
-                                throw new Error('La solicitud no fue exitosa');
-                            }
+
                             return response.json();
                         })
                         .then((responseData) => {
@@ -314,7 +311,7 @@
             ?>
 
                 const formEmpresa = () => {
-
+                    // console.log('hola');
                     // Esto solo sirve en POST
                     const formData = new FormData();
                     for (const key in dataEmpresa) {
@@ -322,7 +319,7 @@
                             formData.append(key, dataEmpresa[key]);
                         }
                     }
-
+                    //console.log(dataEmpresa);
                     fetch('<?php echo base_url('registro/registraEmpresa') ?>', {
                             method: 'POST',
                             body: formData,
@@ -335,7 +332,7 @@
                             return response.json();
                         })
                         .then((responseData) => {
-                            console.log(responseData);
+                            //console.log(responseData);
                             // Hacer algo con los datos, por ejemplo, retornarlos
                             formUsuario(responseData)
 
@@ -387,7 +384,7 @@
                 fetch("<?php echo base_url('herramientas/listaPreguntas'); ?>", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        listaPreguntas.value = JSON.parse(result); // Almacenar los datos en la propiedad listaEstados
+                        listaPreguntas.value = result; // Almacenar los datos en la propiedad listaEstados
                         //console.log(listaPreguntas.value);
                         nextTick(() => {
                             M.FormSelect.init(document.getElementById('question'));
@@ -409,7 +406,8 @@
                 imageUploadURL,
                 submitForm,
                 validateInput,
-                listaPreguntas
+                listaPreguntas,
+                profileText
             };
         },
     });

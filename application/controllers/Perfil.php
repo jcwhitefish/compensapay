@@ -9,6 +9,12 @@ class Perfil extends MY_Loggedin
 
 		// Cargar la biblioteca de sesión
 		$this->load->library('session');
+		//Cargamos modelo de postal
+		$this->load->model('postal_model');
+		//Cargamos modelo de state
+		$this->load->model('state_model');	
+		//Cargamos modelo de banco
+		$this->load->model('bank_model');
 	}
 
 	/**
@@ -35,14 +41,61 @@ class Perfil extends MY_Loggedin
 		$this->load->view('plantilla', $data);
 
 	}
-	public function datosEmpresa()
+	public function empresa()
 	{
-		//Esta funciona ya no se puede usar tal cual pero aqui es donde se tenian que llamar los datos
-		$dato = array();
-		$resultado = json_decode($this->Interaccionbd->consultaPersona($this->session->userdata('idPersona') - 1),true);
-		// Configura la respuesta para que sea en formato JSON
-		$this->output->set_content_type('application/json');
-		// Envía los datos en formato JSON
-		$this->output->set_output(json_encode($dato));
+		//Obtenermos los datos de datosEmpresa y los enviamos al front
+		
+		$idPostal  = $this->session->userdata('datosEmpresa')['id_postal_code'];
+		$data['postal'] = $this->postalCodebyId($idPostal);
+		$idState  = $this->session->userdata('datosEmpresa')['id_country'];
+		$data['state'] = $this->stateCodebyId($idState);
+		
+		//De clabe lo convertimos a string y solo obtenemos las primeras 3 letras para el banco 
+		$clabe  = $this->session->userdata('datosEmpresa')['account_clabe'];
+		// convertimos a string
+		$clabe = strval($clabe);
+		$data['bank'] = $this->bankCode(substr($clabe, 0, 3));
+		
+
+		
+		$data['main'] = $this->load->view('perfil/empresa', $data, true);
+		$this->load->view('plantilla', $data);
+
+
+	}
+	public function usuario()
+	{
+		//Obtenermos los datos de datosEmpresa y los enviamos al front
+		$this->load->model('user_model', 'dataUsr');
+		$id = $this->session->userdata('id');
+		$usr['usuario'] = $this->dataUsr->get_userById($id);
+		$data['usuario'] = $this->dataUsr->get_userById($id);
+		$data['main'] = $this->load->view('perfil/usuario', $usr, true);
+
+		$this->load->view('plantilla', $data);
+
+	}
+	public function postalCodebyId($idPostal)
+	{
+		// traemos el codigo postal
+		$postal = $this->postal_model->get_postal(array('zip_id' => $idPostal));
+		// enviamos el codigo postal al front
+		return $postal['zip_code'];
+
+	}
+	public function stateCodebyId($idState)
+	{
+		// traemos el codigo State
+		$state = $this->state_model->get_state($idState);
+		// enviamos el codigo State al front
+		return $state[0] -> stt_name;
+
+	}
+	public function bankCode($clabe)
+	{
+		// traemos el codigo State
+		$bank = $this->bank_model->get_bank($clabe);
+		// enviamos el codigo State al front
+		return $bank[0] -> bnk_alias;
 	}
 }

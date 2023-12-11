@@ -6,6 +6,12 @@ class Herramientas extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('type_model'); // Carga el modelo
+        $this->load->model('regimen_model'); // Carga el modelo
+        $this->load->model('postal_model'); // Carga el modelo
+        $this->load->model('state_model'); // Carga el modelo
+        $this->load->model('bank_model'); // Carga el 
+        $this->load->model('question_model'); // Carga el modelo
     }
 
     public function index()
@@ -75,20 +81,15 @@ class Herramientas extends CI_Controller
         // Envía los datos en formato JSON
         $this->output->set_output(json_encode($datos));
     }
-    public function listaEstados()
+
+    public function listaRegimenes($tipo)
     {
         $datos = array();
-        $datos =  $this->Interaccionbd->ConsutlarEstadosMX();
-        // Configura la respuesta para que sea en formato JSON
-        $this->output->set_content_type('application/json');
-        // Envía los datos en formato JSON
-        $this->output->set_output(json_encode($datos));
-    }
-    public function listaRegimen($tipo)
-    {
-        $datos = array();
-        if ($tipo == 1 || $tipo == 2) {
-            $datos =  $this->Interaccionbd->ConsutlaRegimenFiscal($tipo);
+
+        if ($tipo == 1) {
+            $datos =  $this->regimen_model->get_all_regimenes('Fisica');
+        } elseif ($tipo == 2) {
+            $datos =  $this->regimen_model->get_all_regimenes('Moral');
         }
 
         // Configura la respuesta para que sea en formato JSON
@@ -100,8 +101,20 @@ class Herramientas extends CI_Controller
     {
         $datos = array();
 
-        $datos =  $this->Interaccionbd->VerGiro();
+        $datos =  $this->type_model->get_all_types();
 
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($datos));
+    }
+    public function listaPostal($zip = '')
+    {
+        $datos = array();
+        //validamos que el codigo postal solo sea nummero y de 5 digitos con reg
+        if (preg_match('/^\d{5}$/', $zip)) {
+            $datos =  $this->postal_model->get_all_postal($zip);
+        }
 
         // Configura la respuesta para que sea en formato JSON
         $this->output->set_content_type('application/json');
@@ -112,7 +125,7 @@ class Herramientas extends CI_Controller
     {
         $datos = array();
         if (preg_match('/^\d{3}$/', $clabe)) {
-            $datos = $this->Interaccionbd->VerBanco($clabe);
+            $datos = $this->bank_model->get_bank($clabe);
         }
         // Configura la respuesta para que sea en formato JSON
         $this->output->set_content_type('application/json');
@@ -122,7 +135,20 @@ class Herramientas extends CI_Controller
     public function listaPreguntas()
     {
         $datos = array();
-        $datos = $this->Interaccionbd->ConsutlaCatPreguntas();
+        $datos = $this->question_model->get_all_questions();
+
+        // Configura la respuesta para que sea en formato JSON
+        $this->output->set_content_type('application/json');
+        // Envía los datos en formato JSON
+        $this->output->set_output(json_encode($datos));
+    }
+    public function listaEstado($id = '')
+    {
+        $datos = array();
+        //evaluamos que $id sea entero mayor a 0
+        if (is_numeric($id) && $id > 0) {
+            $datos = $this->state_model->get_state($id);
+        }
 
         // Configura la respuesta para que sea en formato JSON
         $this->output->set_content_type('application/json');

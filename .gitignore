@@ -1,6 +1,7 @@
 #carpeta temporales
 temporales/*
 boveda/*
+assets/factura/temp/*
 #carpeta ads
 /ads
 
@@ -12,6 +13,7 @@ TODO
 
 #Visual Studio Code
 .vscode/
+.well-know/
 
 #configuracion de codeigniter
 .DS_Store
@@ -31,7 +33,6 @@ user_guide_src/build/*
 user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
-/vendor/
 
 # IDE Files
 #-------------------------
@@ -46,3 +47,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+application/config/database.php
+
+##database
+db/conexion.php

@@ -1,43 +1,141 @@
+<?php
+    $factura = base_url('assets/factura/factura.php?idfactura=');
+?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+
+        $('#download').on('click', function() {
+            var resume_table = document.getElementById("activeTbl");
+            var menu = document.getElementsByClassName("selected")[0].id;
+
+            var inputCheck = resume_table.querySelectorAll('input[id="checkTbl"]');
+            var inputChecked = resume_table.querySelectorAll('input[id="checkTbl"]:checked');
+            //var menu = menu.querySelectorAll('button[class="selected"]');
+            if(inputChecked.length == 0){
+                return false;
+            }
+            var numCheck = 0;
+            var content = '';
+            var doc = new Array();
+
+            for (var i = 1, row; row = resume_table.rows[i]; i++) {
+
+              //alert(cell[i].innerText);
+                if (inputCheck[numCheck].checked){
+
+                    for (var j = 1, col; col = row.cells[j]; j++, content+= '|') {
+                        //alert(col[j].innerText);
+                        //console.log(`Txt: ${col.innerText} \tFila: ${i} \t Celda: ${j}`);
+                        content += col.innerText;
+                    }
+                    doc.push(content);
+                    content = '';
+                }
+              numCheck++;
+            }
+            //console.log(doc);
+            $.ajax({
+                    url: '/Facturas/crearExcel',
+                    data: {
+                        info: doc,
+                        menu: menu
+                    },
+                    dataType: 'json',
+                    method: 'post',
+                    beforeSend: function () {
+                        
+                    },
+                    success: function (data) {
+                        var opResult = data;
+                        var $a=$("<a>");
+                        $a.attr("href",opResult.data);
+                        //$a.html("LNK");
+                        $("body").append($a);
+                        $a.attr("download",menu+".xlsx");
+                        $a[0].click();
+                        $a.remove();
+                        //console.log(data);
+                        //var toastHTML = '<span><strong>¡ticket creado exitosamente!</strong><p>Su numero de folio es: #'+data.folio+'</span>';
+                        //M.toast({html: toastHTML});
+                    },
+                    complete: function () {
+                        //$('#descripcion').val('');
+                        //$('#asunto').val('');
+                        //getTickets();
+                    },
+                    error: function (data){
+                        alert('Ha ocurrido un problema');
+                        console.log(data)
+                        //location.reload();
+                    }
+                });
+                  
+        });
 
 
+    });
+    function hideForms(){
+        
+    }
+</script>
 <div class="p-5" id="app">
+
+    <!-- head con el calendario -->
     <div class="row">
         <p class="px-3">Periodo:</p>
         <div class="col l3">
-            <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
-            <label for="start">Inicio:</label>
+            <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
+            <label for="start">Desde:</label>
         </div>
         <div class="col l3">
-            <input type="date" id="fin" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
-            <label for="fin">Fin:</label>
+            <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
+            <label for="fin">Hasta:</label>
         </div>
-        <div class="col l6 right-align p-5">
-            <button @click="downloadFile" class="button-blue">Descargar</button>
+        <div class="col l3">
+        </div>
+        <div class="col l3">
+            <a id="download" class="button-blue" href="#" download>
+                Descargar
+            </a>
         </div>
     </div>
+
+
+    <!-- Las tablas principales que se muestran -->
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
-                <div class="col l6 p-3">
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
+                <div id="Menus" class="col l12 p-3">
+                    <button id="Facturas" class="button-table" :class="{ 'selected': selectedButton == 'Facturas' }" @click="selectButton('Facturas')">
                         Facturas
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Operaciones' }" @click="selectButton('Operaciones')">
+                    <button id="Comprobantes" class="button-table" :class="{ 'selected': selectedButton == 'Comprobantes' }" @click="selectButton('Comprobantes')">
                         Comprobantes de pago
                     </button>
                     &nbsp;
-                    <button class="button-table" :class="{ 'selected': selectedButton == 'Cuenta' }" @click="selectButton('Cuenta')">
+                    <button id="Estados" class="button-table" :class="{ 'selected': selectedButton == 'Estados' }" @click="selectButton('Estados')">
                         Estados de cuenta
-                    </button>         
+                    </button>
+                    &nbsp;
+                    <button id="Movimientos" class="button-table" :class="{ 'selected': selectedButton == 'Movimientos' }" @click="selectButton('Movimientos')">
+                        Movimientos
+                    </button>
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table v-if="selectedButton === 'Facturas'" class="visible-table striped">
+                <table id="activeTbl" v-if="selectedButton === 'Facturas'" class="visible-table striped responsive-table">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
-                            <th>Emitido por</th>
+                            <th>Proveedor</th>
                             <th>Factura</th>
                             <th>Fecha Factura</th>
                             <th>Fecha Alta</th>
@@ -48,30 +146,33 @@
                             <th>Total</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <?php $facturas = array_reverse($facturas);
-                            foreach ($facturas as $row) : ?>
-                            <tr>
-                                <td class="center-align"><input type="checkbox"></td>
-                                <td><?= $row->o_idPersona ?></td><!--aqui deberia estar usuario -->
-                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td><?= $row->o_FechaEmision ?></td><!--aqui deberia estar las fechas bien -->
-                                <td><?= $row->o_FechaUpload ?></td>
-                                <td><?= $row->o_FechaEmision ?></td>
-                                <td>Cargada</td>
-                                <td><?= $row->o_SubTotal ?></td>
-                                <td><?= $row->o_Impuesto ?></td>
-                                <td><?= $row->o_Total ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <tr v-for="factura in facturas">
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td>{{factura.sender_rfc}}</td>
+                            <td>{{factura.invoice_number}}</td>
+                            <td>{{factura.invoice_date}}</td>
+                            <td>{{factura.created_at}}</td>
+                            <td>
+                                <p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
+                                <p v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
+                            </td>
+                            <td>
+                                <p v-if="factura.status == '0' " >Por Aprobar</p>
+                                <p v-if="factura.status == '1' " >Pagado</p>
+                                <p v-if="factura.status == '2' " >Recahazada</p>
+                            </td>
+                            <td>${{factura.subtotal}}</td>
+                            <td>${{factura.iva}}</td>
+                            <td>${{factura.total}}</td>
+                        </tr>
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Operaciones'" class="visible-table striped">       
+                <table id="activeTbl" v-if="selectedButton === 'Comprobantes'" class="visible-table striped responsive-table">
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
-                            <th>Institucion emisora</th>
+                            <th>Institución Emisora</th>
                             <th>Clave de rastreo</th>
                             <th>Numero de referencia</th>
                             <th>Fecha de pago</th>
@@ -81,135 +182,81 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($facturas as $row) : ?>
-                            <tr>
-                                <td class="center-align"><input type="checkbox"></td>
-                                <td>BBVA</td><!--aqui deberia estar usuario -->
-                                <td><?= $row->o_NumOperacion ?></td><!--aqui deberia estar row -->
-                                <td>REF-<?= $row->o_UUID ?></td><!--aqui deberia estar las fechas bien -->
-                                <td><?= $row->o_FechaUpload ?></td>
-                                <td>Banregio</td>
-                                <td>$<?= $row->o_Total ?></td>
-                                <td><?= $row->o_NumOperacion ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+
                     </tbody>
                 </table>
-                <table v-if="selectedButton === 'Cuenta'" class="visible-table striped">       
+                <table id="activeTbl" v-if="selectedButton === 'Estados'" class="visible-table striped responsive-table">
                     <thead>
-                        <th>Seleccionar</th>
-                        <th>Mes</th>
-                        <th>Días del periodo</th>
-                        <th>Depósitos</th>
-                        <th>Retiros</th>
-                        <th>Depósitos</th>
-                        <th>Retiros</th>
-                        <th>Saldo inicial</th>
-                        <th>Saldo final</th>
-                        <th>Movimientos</th>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Mes</th>
+                            <th>Días del periodo</th>
+                            <th>Depósitos</th>
+                            <th>Retiros</th>
+                            <th>Saldo inicial</th>
+                            <th>Saldo Final</th>
+                            <th>Movimientos</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Noviembre</td>
-                            <td>30</td>
-                            <td>3</td>
-                            <td>1</td>
-                            <td>$3,452.16</td>
-                            <td>$25,028</td>
-                            <td>$254,339</td>
-                            <td>$21,576</td>
-                            <td><a href="#">Ver detalles</a></td>
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td><a href="<?php echo base_url('boveda/edoscuenta/652fedab76eab-16/estado_cuenta_cliente_compania_v2-14.11.2023.pdf');?>" target="_blank">Octubre 2023</a></td>
+                            <td class="right-align">31</td>
+                            <td class="right-align">$ 143,000.21</td>
+                            <td class="right-align">$ 16.99</td>
+                            <td class="right-align">$ 142,463.81</td>
+                            <td class="right-align">$ 997 .64</td>
+                            <td class="right-align">9</td>
                         </tr>
+                    </tbody>
+                </table>
+                <table id="activeTbl" v-if="selectedButton === 'Movimientos'" class="visible-table striped responsive-table">
+                    <thead>
                         <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Octubre</td>
-                            <td>31</td>
-                            <td>5</td>
-                            <td>5</td>
-                            <td>$5,599.68</td>
-                            <td>$40,589</td>
-                            <td>$149,993</td>
-                            <td>$34,998</td>
-                            <td><a href="#">Ver detalles</a></td>
+                            <th>Seleccionar</th>
+                            <th>Monto</th>
+                            <th>Clave de rastreo</th>
+                            <th>Comprobante electrónico (CEP)</th>
+                            <th>Descripción</th>
+                            <th>Banco origen</th>
+                            <th>Banco destino</th>
+                            <th>Razón social origen</th>
+                            <th>RFC Origen</th>
+                            <th>Razón social destino</th>
+                            <th>RFC Destino</th>
+                            <th>CLABE origen</th>
+                            <th>CLABE destino</th>
+                            <th>Fecha de transacción</th>
+                            <th>CFDI correspondiente</th>
+                            <th>Fecha de Transacción</th>
                         </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Noviembre</td>
-                            <td>30</td>
-                            <td>3</td>
-                            <td>1</td>
-                            <td>$3,452.16</td>
-                            <td>$25,028</td>
-                            <td>$254,339</td>
-                            <td>$21,576</td>
-                            <td><a href="#">Ver detalles</a></td>
+                    </thead>
+                    <tbody>
+                        <tr v-for="moves in movements">
+                            <td class="center-align"><input id="checkTbl" type="checkbox"></td>
+                            <td>{{moves.ammountf}}</td>
+                            <td>{{moves.traking_key_received}}</td>
+                            <td></td>
+                            <td>{{moves.descriptor}}</td>
+                            <td>{{moves.bank_source}}</td>
+                            <td>{{moves.bank_receiver}}</td>
+                            <td>{{moves.provider}}</td>
+                            <td>{{moves.source_rfc}}</td>
+                            <td>{{moves.client}}</td>
+                            <td>{{moves.receiver_rfc}}</td>
+                            <td>{{moves.source_clabe}}</td>
+                            <td>{{moves.receiver_clabe}}</td>
+                            <td>{{moves.transaction_date}}</td>
+                            <td><a v-bind:href='moves.idurl | toCurrency' target="_blank"><p class="uuid-text">{{moves.uuid}}</p></a></td>
+                            <td>{{moves.transaction_date}}</td>
                         </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Octubre</td>
-                            <td>31</td>
-                            <td>5</td>
-                            <td>5</td>
-                            <td>$5,599.68</td>
-                            <td>$40,589</td>
-                            <td>$149,993</td>
-                            <td>$34,998</td>
-                            <td><a href="#">Ver detalles</a></td>
-                        </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Septiembre</td>
-                            <td>30</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>$15,232.16</td>
-                            <td>$110,433</td>
-                            <td>$145,990</td>
-                            <td>$95,201</td>
-                            <td><a href="#">Ver detalles</a></td>
-                        </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Agosto</td>
-                            <td>31</td>
-                            <td>8</td>
-                            <td>4</td>
-                            <td>$6,544.32</td>
-                            <td>$47,446</td>
-                            <td>$124,990</td>
-                            <td>$40,902</td>
-                            <td><a href="#">Ver detalles</a></td>
-                        </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Julio</td>
-                            <td>31</td>
-                            <td>4</td>
-                            <td>3</td>
-                            <td>$11,351.22</td>
-                            <td>$82,296</td>
-                            <td>$98,259</td>
-                            <td>$70,945</td>
-                            <td><a href="#">Ver detalles</a></td>
-                        </tr>
-                        <tr>
-                            <td class="center-align"><input type="checkbox"></td>
-                            <td>Junio</td>
-                            <td>30</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>$15,873.44</td>
-                            <td>$115,082</td>
-                            <td>$56,998</td>
-                            <td>$99,209</td>
-                            <td><a href="#">Ver detalles</a></td>
-                        </tr>
-                   </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
+
 </div>
 
 <style>
@@ -254,46 +301,65 @@
 <script>
     const app = Vue.createApp({
         setup() {
-            const invoiceUploadName = Vue.ref('');
             const selectedButton = Vue.ref('Facturas');
+            const facturas = Vue.ref([]);
+            const movements = Vue.ref([]);
+            //tabla de get facturas
+            const getFacturas = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
 
-            const checkFormatInvoice = (event) => {
-                const fileInput = event.target;
-                if (fileInput.files.length> 0) {
-                    invoiceUploadName.value = fileInput.files[0].name;
-                } else {
-                    invoiceUploadName.value = '';
-                }
+                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        facturas.value = result.facturas;
+                        facturas.value.reverse();
+                    })
+                    .catch(error => console.log('error', error));
             };
 
+            const getMovements = () => {
+                var requestOptions = {
+                    method: 'GET',
+                    redirect: 'follow'
+                };
+
+                fetch("<?= base_url("facturas/tablaMovimientos") ?>", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result)
+                        movements.value = result.movements;
+                        movements.value.reverse();
+                    
+                    })
+                    .catch(error => console.log('error', error));
+            };
+
+            //Ver que tabla vamos a ver segun el boton seleccionado
             const selectButton = (buttonName) => {
-                if (selectedButton.value == buttonName) {
-                    selectedButton.value = null;
-                } else {
+                if (selectedButton.value != buttonName) {
                     selectedButton.value = buttonName;
                 }
             };
 
-            const downloadFile = () => {
-                const archivoPrueba = "Este es el contenido del archivo de prueba.";
-                const nombreArchivo = "archivos.zip";
-                const blob = new Blob([archivoPrueba], { type: "text/plain" });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = nombreArchivo;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
+            //mandar a llamar las funciones
+            Vue.onMounted(
+                () => {
+                    getFacturas();
+                    getMovements();
+                }
+            );
 
+            //Returnar todo
             return {
-                invoiceUploadName,
                 selectedButton,
-                checkFormatInvoice,
+                movements,
                 selectButton,
-                downloadFile,
-            };
-        },
-    }).mount("#app");
+                facturas,
+             };
+        }
+        
+    });
 </script>
-
