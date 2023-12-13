@@ -64,37 +64,45 @@
 </script>
 <div class="p-5" id="app" style="margin: 0;padding: 0 !important;">
     <!-- head con el calendario -->
-    <div class="row" style="padding:0;">
-		<form id="dateFilter">
-			<fieldset>
-				<legend>Periodo</legend>
-				<div class="col l3">
-					<label for="start">
-						<span>Desde:</span>
-						<input type="date" id="start" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
-					</label>
+	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
+		<div class="row" style="margin-left: 30px; margin-bottom: 1px">
+			<h6>Periodo:</h6>
+		</div>
+		<div class="row" style="margin-bottom: 10px">
+			<div class="col l3">
+				<div class="row" style="margin-bottom: 0px;">
+					<div class="col valign-wrapper"><p>Desde:</p></div>
+					<div class="col">
+						<label for="start">
+							<input type="date" id="start" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
+						</label>
+					</div>
 				</div>
-				<div class="col l3">
-					<label for="fin">
-						<span>Hasta:</span>
-						<input type="date" id="fin" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
-					</label>
+			</div>
+			<div class="col l3">
+				<div class="row" style="margin-bottom: 0px;">
+					<div class="col valign-wrapper"><p>Hasta:</p></div>
+					<div class="col">
+						<label for="fin">
+							<input type="date" id="fin" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
+						</label>
+					</div>
 				</div>
-				<div class="col l3">
-				</div>
-				<div class="col l3">
-					<a id="download" class="button-blue" href="#" download>
-						Descargar
-					</a>
-				</div>
-			</fieldset>
-		</form>
-    </div>
+			</div>
+			<div class="col l3"></div>
+			<div class="col l3 valign-wrapper">
+				<a id="download" class="button-blue" href="#" download>
+					Descargar
+				</a>
+			</div>
+		</div>
+
+	</div>
     <!-- Las tablas principales que se muestran -->
-    <div class="card esquinasRedondas">
-        <div class="card-content">
-            <div class="row">
-                <div id="Menus" class="row l12 p-3">
+    <div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
+        <div class="card-content" style="padding: 10px; margin-right: ">
+            <div class="row" style="margin-bottom: 1px">
+                <div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
 					<div class="col l2">
 						<button id="cfdi" class="button-table" onclick="cfdi()">
 							CFDI
@@ -120,13 +128,12 @@
             <div style="overflow-x: auto;">
                 <table id="activeTbl" class="visible-table striped responsive-table">
 					<tbody>
-						<tr><td>No hay datos</td></tr>
+						<tr><td class="center-align">No hay datos</td></tr>
 					</tbody>
                 </table>
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -156,8 +163,48 @@
 			'<th>Total</th>' +
 			'<th>tipo</th>' +
 			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan=11">No hay datos</td></tr></tbody>';
+			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
+		$.ajax({
+			url: '/Facturas/DocsCFDI',
+			data: {
+				from: $('#start').val(),
+				to: $('#fin').val(),
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+				const obj = $('#tblsViewer');
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+
+			},
+			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
+			},
+			error: function (data){
+				$('#solveLoader').css({
+					display: 'none'
+				});
+				alert('Ha ocurrido un problema');
+				console.log(data)
+				//location.reload();
+			}
+		});
 	}
 	function comprobantesP(){
 		noSelect();
@@ -173,7 +220,7 @@
 			'<th>Fecha de pago</th>' +
 			'<th>Monto del pago</th>' +
 			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan="9">No hay datos</td></tr></tbody>';
+			'<tbody id="tblBody"><tr><td colspan="9" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
 	}
 	function movimientos(){
@@ -197,7 +244,7 @@
 			'<th>CFDI correspondiente</th>' +
 			'<th>Fecha de Transacción</th>' +
 			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan="16">No hay datos</td></tr></tbody>';
+			'<tbody id="tblBody"><tr><td colspan="16" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
 	}
 	function estados(){
@@ -213,7 +260,7 @@
 			'<th>Saldo Final</th>' +
 			'<th>Movimientos</th>' +
 			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan="8">No hay datos</td></tr></tbody>';
+			'<tbody id="tblBody"><tr><td colspan="8" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
 	}
 </script>

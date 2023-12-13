@@ -5,8 +5,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 //later erase this mothers
 require_once APPPATH . 'helpers/factura_helper.php';
 
-class Facturas extends MY_Loggedin
-{
+/**
+ * @property Invoice_model $invData
+ */
+class Facturas extends MY_Loggedin {
 
 	private $user;
 
@@ -316,11 +318,11 @@ class Facturas extends MY_Loggedin
 					"id_client" => $this->user,
 					"id_provider" => $factura1[0]->id_user,
 					"operation_number" => $this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $factura2[0]->total,
 					"exit_money" => $factura1[0]->total,
 					"status" => "1",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
@@ -379,11 +381,11 @@ class Facturas extends MY_Loggedin
 					"id_client" => $this->user,
 					"id_provider" => $factura1[0]->id_user,
 					"operation_number" => $this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $factura2[0]->total,
 					"exit_money" => $factura1[0]->total,
 					"status" => "1",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 				//Crea la operacion con los datos anteriores
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
@@ -457,12 +459,12 @@ class Facturas extends MY_Loggedin
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
 					"operation_number" => $this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
 					"status" => "0",
 					"commentary" => "ok",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 				//Ingresa operación
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
@@ -501,12 +503,12 @@ class Facturas extends MY_Loggedin
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
 					"operation_number" => $this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
 					"status" => "0",
 					"commentary" => "ok",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
@@ -573,12 +575,12 @@ class Facturas extends MY_Loggedin
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
 					"operation_number" => $this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
 					"status" => "0",
 					"commentary" => "ok",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 
 				//Ingresa operación
@@ -596,12 +598,12 @@ class Facturas extends MY_Loggedin
 					"id_client" => $client[0]->id,
 					"id_provider" =>  $provider[0]->id,
 					"operation_number" =>$this->MakeOperationNumber($this->user.$factura1[0]->id_user),
-					"payment_date" =>  $factura1[0]->invoice_date,
+					"payment_date" =>  strtotime($factura1[0]->invoice_date),
 					"entry_money" => $nota["total"],
 					"exit_money" => $factura1[0]->total,
 					"status" => "0",
 					"commentary" => "ok",
-					"created_at" => date('Y-m-d'),
+					"created_at" => strtotime('now'),
 				);
 
 				$dato['operacion'] = $this->Operation_model->post_my_invoice($operacion);
@@ -662,5 +664,21 @@ class Facturas extends MY_Loggedin
         $trash = '010203040506070809';
         return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
     }
+
+	public function DocsCFDI(){
+		$from = strtotime($this->input->post('from'));
+		$to = strtotime($this->input->post('to').' +1 day');
+		if ($from & $to){
+			$this->load->model('Invoice_model', 'invData');
+			$res = json_encode($this->invData->getDocs($from,$to));
+			echo $res;
+			if($res['code'] != 200){
+				return true;
+			}
+			return false;
+		}
+		echo json_encode('hola');
+		return false;
+	}
 
 }

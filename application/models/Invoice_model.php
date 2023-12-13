@@ -3,12 +3,20 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+/**
+ * Class Invoice_model model
+ * @property Invoice_model $invData invoice processing model
+ */
 class Invoice_model extends CI_Model {
-
+	private string $enviroment = 'SANDBOX';
+	private string $dbsandbox = 'compensatest_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
     public function __construct() {
         parent::__construct();
         $this->load->database();
+		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
 
     public function get_all_invoices() {
@@ -316,5 +324,13 @@ class Invoice_model extends CI_Model {
         return $query->result();
 
     }
+
+	public function getDocs(string $id, int $from, int $to, string $env = null){
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT t2.*
+FROM $this->base.operations t1 
+INNER JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id OR t1.id_invoice_relational = t2.id
+WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.invoice_date >= '$from' AND t2.invoice_date < '$to'";
+	}
 }
-?>
