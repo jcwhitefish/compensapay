@@ -247,8 +247,8 @@
 	$(document).ready(function() {
 		const sandbox = true;
 		let deviceDataId;
-		OpenPay.setId('mhcmkrgyxbjfw9vb9cqc');
-		OpenPay.setApiKey('pk_e09cd1f4b4c542e6adbf1f132d8d9ebb');
+		OpenPay.setId('mtcyupm65psrjreromun');
+		OpenPay.setApiKey('pk_88137bbfe9d94c208d6741754c9e24d4');
 		OpenPay.setSandboxMode(true);
 		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
 		$('#deviceID').val(deviceDataId);
