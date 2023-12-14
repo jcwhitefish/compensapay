@@ -665,19 +665,22 @@ class Facturas extends MY_Loggedin {
         return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
     }
 
-	public function DocsCFDI(){
+	public function DocsCFDI(): bool
+	{
 		$from = strtotime($this->input->post('from'));
 		$to = strtotime($this->input->post('to').' +1 day');
 		if ($from & $to){
 			$this->load->model('Invoice_model', 'invData');
-			$res = json_encode($this->invData->getDocs($from,$to));
-			echo $res;
-			if($res['code'] != 200){
+			$id = $this->session->userdata('datosEmpresa')["id"];
+			$res = $this->invData->getDocs($id,$from,$to);
+			if($res['code'] === 200){
+				echo( json_encode($res['result']));
 				return true;
 			}
+			echo( json_encode($res));
 			return false;
 		}
-		echo json_encode('hola');
+		echo json_encode(["code" => 500, "message" => "Error al extraer la información", "reason" => "No se envió una fecha valida"]);
 		return false;
 	}
 

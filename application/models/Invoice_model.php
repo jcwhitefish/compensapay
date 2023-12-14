@@ -328,9 +328,45 @@ class Invoice_model extends CI_Model {
 	public function getDocs(string $id, int $from, int $to, string $env = null){
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-		$query = "SELECT t2.*
+		$url = base_url('assets/factura/factura.php?idfactura=');
+		$query = "SELECT t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid, 
+       CONCAT('$url', t2.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t2.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
+DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',  
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
+t2.subtotal, t2.iva, t2.total, 'factura' AS tipo
 FROM $this->base.operations t1 
 INNER JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id OR t1.id_invoice_relational = t2.id
-WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.invoice_date >= '$from' AND t2.invoice_date < '$to'";
+LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
+LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
+WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.invoice_date >= '$from' AND t2.invoice_date < '$to'
+ORDER BY t2.invoice_date DESC";
+
+		if($invoices = $this->db->query($query)){
+			if ($invoices->num_rows() > 0){
+				$query = "SELECT t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid, 
+CONCAT('$url', t2.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCFDI',  
+DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',  
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
+t2.total, 'Nota de debito' AS tipo
+FROM $this->base.operations t1 
+INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
+LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
+LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
+WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.created_at >= '$from' AND t2.created_at < '$to'
+ORDER BY t2.created_at DESC";
+				if($debit_notes = $this->db->query($query)) {
+					$CFDI = $invoices->result_array();
+					$CFDI = array_merge($CFDI, $debit_notes->result_array());
+					return ["code" => 200,"result" => $CFDI];
+				}else{
+					return ["code" => 200,"result" => $invoices->result_array];
+				}
+			}else{
+				return ["code" => 404,"message" => "No se encontraron registros"];
+			}
+		}
+		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
 }

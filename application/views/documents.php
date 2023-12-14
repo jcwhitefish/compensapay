@@ -74,7 +74,7 @@
 					<div class="col valign-wrapper"><p>Desde:</p></div>
 					<div class="col">
 						<label for="start">
-							<input type="date" id="start" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
+							<input type="date" id="start" name="trip-start" value="2023-10-01" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
 						</label>
 					</div>
 				</div>
@@ -189,7 +189,42 @@
 				}).focus();
 			},
 			success: function (data) {
-
+				if (data.code === 500 || data.code === 404){
+					let toastHTML = '<span><strong>data.message</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>data.reason</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#tblBody').empty();
+					$.each(data, function(index, value){
+						let uuid;
+						let subtotal;
+						let iva;
+						if (value.tipo === 'factura') {
+							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
+							subtotal = '$ '+value.subtotal;
+							iva = '$ '+value.iva;
+						} else {
+							uuid = value.uuid;
+							subtotal = '---';
+							iva = '---';
+						}
+						const tr = $('<tr>' +
+							'<td class="center-align"><input id="checkTbl" type="checkbox"></td>' +
+							'<td>' + value.emisor + '</td>' +
+							'<td>' + value.receptor + '</td>' +
+							'<td>' + uuid + '</td>' +
+							'<td>' + value.dateCFDI + '</td>' +
+							'<td>' + value.dateCreate + '</td>' +
+							'<td>' + value.dateToPay + '</td>' +
+							'<td>' + subtotal + '</td>' +
+							'<td>' + iva + '</td>' +
+							'<td>$ ' + value.total + '</td>' +
+							'<td>' + value.tipo + '</td>' +
+							'</tr>');
+						$('#tblBody').append(tr);
+					});
+				}
 			},
 			complete: function () {
 				$('#solveLoader').css({
