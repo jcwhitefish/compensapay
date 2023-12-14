@@ -32,7 +32,7 @@
 
                         <div class="right-align container">
                             <button class="button-gray" type="submit">Iniciar Sesión</button>
-                            <p v-if="true" class="p-1"><a href="<?= base_url('registro/Empresa');  ?>"><u>Olvidé mi contraseña</u></a></p>
+                            <p v-if="true" class="p-1"><a href="<?= base_url('login/resetpass');  ?>"><u>Olvidé mi contraseña</u></a></p>
                             
                             <p>¿Aún no eres socio?, regístrate <a href="<?= base_url('registro/Empresa');  ?>">aquí</a></p><br>
                         </div>

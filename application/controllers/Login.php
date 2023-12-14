@@ -28,6 +28,50 @@ class Login extends MY_Loggedout
 		$data['main'] = $this->load->view('login/entrar', '', true);
 		$this->load->view('plantilla', $data);
 	}
+	public function resetpass()
+	{
+
+		if(!isset($_POST["user"]))
+		{
+			$data['main'] = $this->load->view('login/resetpass', '', true);
+			$this->load->view('plantilla', $data);
+		}	
+		else{
+			//bisca al usuario
+			$correouser = $this->user_model->reset_password($_POST["user"]);
+			
+			foreach($correouser AS $value)
+			{
+				$correo=$value["email"];
+				$name=$value["name"];
+				$lastname=$value["last_name"];
+			}
+
+			//envia el correo
+			$this->load->helper('sendmail_helper');
+
+			$data = [
+				'user' => [
+					'name' => $name,
+					'lastName' => $lastname,
+				],
+				'text' => 'Haz solicitado un cambio de contraseña',
+				'urlDetail' => ['url' => base_url('/login/crear_contrasena'), 'name' => 'cambiar contraseña'],
+				'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+			];
+
+			send_mail($correo, $data, 3, 'uriel.magallon@whitefish.mx', 'Cambiar contraseña');
+
+			$dato = array(
+				"correo" => $correo,
+				"dump" => 0
+			);
+
+			$data['main'] = $this->load->view('registro/resetpass', $dato, true);
+			$this->load->view('plantilla', $data);
+		}
+		
+	}
 	public function validarCuenta($AESEmpresa = null)
 	{
 

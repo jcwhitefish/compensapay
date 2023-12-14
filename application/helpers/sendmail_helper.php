@@ -44,6 +44,10 @@ function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null)
 		$html = $CI->load->view('email/notifications', $data, true);
 		$CI->email->set_newline("\r\n");
 	}
+	else if($view===3){
+		$CI->email->subject('Cambio de contraseña ');
+		$html = $CI->load->view('email/resetpass', $data, true);
+	}
 
 	if($cc != null){
 		$CI->email->cc($cc);
