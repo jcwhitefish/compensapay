@@ -339,8 +339,9 @@ FROM $this->base.operations t1
 INNER JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id OR t1.id_invoice_relational = t2.id
 LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
 LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
-WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.invoice_date >= '$from' AND t2.invoice_date < '$to'
+WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.invoice_date >= '$from' AND t2.invoice_date <= '$to'
 ORDER BY t2.invoice_date DESC";
+//		var_dump($query);
 
 		if($invoices = $this->db->query($query)){
 			if ($invoices->num_rows() > 0){
@@ -354,7 +355,7 @@ FROM $this->base.operations t1
 INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
 LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
 LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
-WHERE t1.id_client = $id OR t1.id_provider = $id AND t2.created_at >= '$from' AND t2.created_at < '$to'
+WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.created_at >= '$from' AND t2.created_at <= '$to'
 ORDER BY t2.created_at DESC";
 				if($debit_notes = $this->db->query($query)) {
 					$CFDI = $invoices->result_array();

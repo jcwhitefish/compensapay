@@ -74,7 +74,7 @@
 					<div class="col valign-wrapper"><p>Desde:</p></div>
 					<div class="col">
 						<label for="start">
-							<input type="date" id="start" name="trip-start" value="2023-10-01" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
+							<input type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
 						</label>
 					</div>
 				</div>
@@ -84,7 +84,7 @@
 					<div class="col valign-wrapper"><p>Hasta:</p></div>
 					<div class="col">
 						<label for="fin">
-							<input type="date" id="fin" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-11-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
+							<input type="date" id="fin" name="trip-start" value="<?=date('Y-m-d', strtotime('now'))?>" min="2023-10-01" max="<?=date('Y-m-d', strtotime('now'))?>" />
 						</label>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <div style="overflow-x: auto;">
-                <table id="activeTbl" class="visible-table striped responsive-table">
+                <table id="activeTbl" class="visible-table striped responsive-table" style="display: block; max-height: 400px">
 					<tbody>
 						<tr><td class="center-align">No hay datos</td></tr>
 					</tbody>
@@ -137,8 +137,47 @@
 </div>
 
 <script>
+	let btnActive = 0;
 	$(document).ready(function() {
 		cfdi();
+		$('#start').on('change', function (){
+			switch(btnActive) {
+				case 0:
+					cfdi();
+					break;
+				case 1:
+					comprobantesP()
+					break;
+				case 2:
+					movimientos()
+					break;
+				case 3:
+					estados()
+					break;
+				default:
+				// code block
+			}
+
+		});
+		$('#fin').on('change', function (){
+			switch(btnActive) {
+				case 0:
+					cfdi();
+					break;
+				case 1:
+					comprobantesP()
+					break;
+				case 2:
+					movimientos()
+					break;
+				case 3:
+					estados()
+					break;
+				default:
+				// code block
+			}
+
+		});
 	});
 	function noSelect(){
 		$('#cfdi').removeClass("selected");
@@ -148,19 +187,20 @@
 		$('#activeTbl').empty();
 	}
 	function cfdi(){
+		btnActive = 0;
 		noSelect();
 		$('#cfdi').addClass("selected");
-		const tableBase = '<thead><tr>' +
+		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Emisor</th>' +
 			'<th>Receptor</th>' +
-			'<th>CFDI</th>' +
+			'<th class="center-align">CFDI</th>' +
 			'<th>Fecha CFDI</th>' +
 			'<th>Fecha Alta</th>' +
-			'<th>Fecha limite de pago</th>' +
-			'<th>Subtotal</th>' +
-			'<th>IVA</th>' +
-			'<th>Total</th>' +
+			'<th style="min-width: 135px">Fecha limite de pago</th>' +
+			'<th style="min-width: 110px">Subtotal</th>' +
+			'<th style="min-width: 110px">IVA</th>' +
+			'<th style="min-width: 110px">Total</th>' +
 			'<th>tipo</th>' +
 			'</tr></thead>' +
 			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
@@ -190,9 +230,9 @@
 			},
 			success: function (data) {
 				if (data.code === 500 || data.code === 404){
-					let toastHTML = '<span><strong>data.message</strong></span>';
+					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
 					M.toast({html: toastHTML});
-					toastHTML = '<span><strong>data.reason</strong></span>';
+					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
 					M.toast({html: toastHTML});
 				}else{
 					$('#tblBody').empty();
@@ -210,7 +250,7 @@
 							iva = '---';
 						}
 						const tr = $('<tr>' +
-							'<td class="center-align"><input id="checkTbl" type="checkbox"></td>' +
+							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td>' + value.emisor + '</td>' +
 							'<td>' + value.receptor + '</td>' +
 							'<td>' + uuid + '</td>' +
@@ -336,7 +376,6 @@
         border: 2px solid black !important;
         border-radius: 10px;
     }
-    
 </style>
 
 <script>

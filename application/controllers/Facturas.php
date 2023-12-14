@@ -660,13 +660,20 @@ class Facturas extends MY_Loggedin {
 		echo json_encode($res);
 	}
 
-    private function MakeOperationNumber($operation): string{
+	/**
+	 * Esta función permite crear un número único de operación para poner en la referencia numérica o en descripción de la transferencia
+	 * @param int $operation id de la operación
+	 * @return string numero para generar la transferencia
+	 */
+    private function MakeOperationNumber(int $operation): string{
         $trash = '010203040506070809';
         return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
     }
-
-	public function DocsCFDI(): bool
-	{
+	/**
+	 * Esta función obtiene los CFDI (Facturas y Notas de debito) que estan ligadas a una operación y a la compañia del usuario que consulta
+	 * @return bool
+	 */
+	public function DocsCFDI(): bool{
 		$from = strtotime($this->input->post('from'));
 		$to = strtotime($this->input->post('to').' +1 day');
 		if ($from & $to){
