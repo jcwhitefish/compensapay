@@ -57,7 +57,7 @@ class Login extends MY_Loggedout
 					'lastName' => $lastname,
 				],
 				'text' => 'Haz solicitado un cambio de contraseña',
-				'urlDetail' => ['url' => base_url('validarCuenta/'.cifrarAES($id)), 'name' => 'cambiar contraseña'],
+				'urlDetail' => ['url' => base_url('login/validarCuenta/'.cifrarAES($id)), 'name' => 'cambiar contraseña'],
 				'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 			];
 

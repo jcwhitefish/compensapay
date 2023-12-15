@@ -5,7 +5,7 @@
                 <h6>Bienvenido <?= $nombre_d_usaurio; ?> <?= $apellido_usuario; ?>, tu cuenta ha sido verificada, por favor crea una contraseña para poder ingresar al sistema</h6>
 
                 <div class="col l6 center-align">
-                    <img src="<?= base_url('assets/images/CompensaPay_Logos-01.png'); ?>" alt="Logo" class="custom-image">
+                    <img src="<?= base_url('assets/images/SolveCapital_Branding-18.png'); ?>" alt="Logo" class="custom-image">
                     <p>¿Aún no eres socio?, regístrate <a href="<?= base_url('registro/Empresa');  ?>">aquí</a></p><br>
                 </div>
                 <div class="col l6 p-5">
