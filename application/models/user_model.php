@@ -65,6 +65,10 @@ class User_model extends CI_Model {
         if($result = $this->db->query($query))
         {
             $usermail = $result->result_array();
+
+            //resetea password en base de datos
+            $query2 = "UPDATE users SET password = NULL WHERE Id='".$usermail["id"]."' ";
+            $this->db->query($query2);
         }
         return $usermail;
     }
