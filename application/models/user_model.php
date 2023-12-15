@@ -60,7 +60,7 @@ class User_model extends CI_Model {
 		return false;
 	}
     public function reset_password($usuario){
-        $query = "SELECT email, name, last_name FROM users WHERE user LIKE '".$usuario."' OR email LIKE '".$usuario."' LIMIT 1";
+        $query = "SELECT id, email, name, last_name FROM users WHERE user LIKE '".$usuario."' OR email LIKE '".$usuario."' LIMIT 1";
 
         if($result = $this->db->query($query))
         {

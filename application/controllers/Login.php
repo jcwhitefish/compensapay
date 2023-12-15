@@ -37,14 +37,15 @@ class Login extends MY_Loggedout
 			$this->load->view('plantilla', $data);
 		}	
 		else{
-			//bisca al usuario
+			//busca al usuario
 			$correouser = $this->user_model->reset_password($_POST["user"]);
 			
 			foreach($correouser AS $value)
 			{
-				$correo=$value["email"];
-				$name=$value["name"];
-				$lastname=$value["last_name"];
+				$id = $value["id"];
+				$correo = $value["email"];
+				$name = $value["name"];
+				$lastname = $value["last_name"];
 			}
 
 			//envia el correo
@@ -56,7 +57,7 @@ class Login extends MY_Loggedout
 					'lastName' => $lastname,
 				],
 				'text' => 'Haz solicitado un cambio de contraseña',
-				'urlDetail' => ['url' => base_url('/login/crear_contrasena'), 'name' => 'cambiar contraseña'],
+				'urlDetail' => ['url' => base_url('validarCuenta/'.cifrarAES($id)), 'name' => 'cambiar contraseña'],
 				'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 			];
 
