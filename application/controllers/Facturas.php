@@ -669,26 +669,5 @@ class Facturas extends MY_Loggedin {
         $trash = '010203040506070809';
         return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
     }
-	/**
-	 * Esta función obtiene los CFDI (Facturas y Notas de debito) que estan ligadas a una operación y a la compañia del usuario que consulta
-	 * @return bool
-	 */
-	public function DocsCFDI(): bool{
-		$from = strtotime($this->input->post('from'));
-		$to = strtotime($this->input->post('to').' +1 day');
-		if ($from & $to){
-			$this->load->model('Invoice_model', 'invData');
-			$id = $this->session->userdata('datosEmpresa')["id"];
-			$res = $this->invData->getDocs($id,$from,$to);
-			if($res['code'] === 200){
-				echo( json_encode($res['result']));
-				return true;
-			}
-			echo( json_encode($res));
-			return false;
-		}
-		echo json_encode(["code" => 500, "message" => "Error al extraer la información", "reason" => "No se envió una fecha valida"]);
-		return false;
-	}
 
 }

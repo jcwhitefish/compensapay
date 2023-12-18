@@ -206,7 +206,7 @@
 			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
 		$.ajax({
-			url: '/Facturas/DocsCFDI',
+			url: '/Documentos/DocsCFDI',
 			data: {
 				from: $('#start').val(),
 				to: $('#fin').val(),
@@ -275,16 +275,19 @@
 				$('#solveLoader').css({
 					display: 'none'
 				});
-				alert('Ha ocurrido un problema');
-				console.log(data)
-				//location.reload();
+				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Por favor intente mas tarde</span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+				M.toast({html: toastHTML});
 			}
 		});
 	}
 	function comprobantesP(){
 		noSelect();
 		$('#comprobantes').addClass("selected");
-		const tableBase = '<thead><tr>' +
+		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Descargar CEP</th>' +
 			'<th>Institución emisora</th>' +
@@ -299,9 +302,10 @@
 		$('#activeTbl').append(tableBase);
 	}
 	function movimientos(){
+		btnActive = 2;
 		noSelect();
 		$('#movimientos').addClass("selected");
-		const tableBase = '<thead><tr>' +
+		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Monto</th>' +
 			'<th>Número de referencia</th>' +
@@ -315,17 +319,94 @@
 			'<th>RFC Destino</th>' +
 			'<th>CLABE origen</th>' +
 			'<th>CLABE destino</th>' +
-			'<th>Fecha de transacción</th>' +
 			'<th>CFDI correspondiente</th>' +
 			'<th>Fecha de Transacción</th>' +
 			'</tr></thead>' +
 			'<tbody id="tblBody"><tr><td colspan="16" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
+		$.ajax({
+			url: '/Documentos/DocsMovimientos',
+			data: {
+				from: $('#start').val(),
+				to: $('#fin').val(),
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+				const obj = $('#tblsViewer');
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500 || data.code === 404){
+					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#tblBody').empty();
+					$.each(data, function(index, value){
+						let uuid;
+						let urlCep;
+						if (value.cepUrl !== null || value.cepUrl !== ''){
+							urlCep = '<a href="' + value.cepUrl + '" target="_blank">Descargar CEP</a>';
+						}else{
+							urlCep = 'No disponible';
+						}
+						uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
+						const tr = $('<tr>' +
+							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
+							'<td>' + value.amount + '</td>' +
+							'<td>' + value.traking_key + '</td>' +
+							'<td>' + urlCep + '</td>' +
+							'<td>' + value.descriptor + '</td>' +
+							'<td>' + value.source_bank + '</td>' +
+							'<td>' + value.destination_bank + '</td>' +
+							'<td>' + ((value.source_name === null || value.source_name === ''  || value.source_name === 'null') ? '---': value.source_name) + '</td>' +
+							'<td>' + ((value.source_rfc === null || value.source_rfc === ''  || value.source_rfc === 'null') ? '---': value.source_rfc) + '</td>' +
+							'<td>' + ((value.destiantion_name === null || value.destiantion_name === ''  || value.destiantion_name === 'null') ? '---' : value.destiantion_name) + '</td>' +
+							'<td>' + ((value.destination_rfc === null || value.destination_rfc === ''  || value.destination_rfc === 'null') ? '---' : value.destination_rfc) + '</td>' +
+							'<td>' + value.source_clabe + '</td>' +
+							'<td>' + value.receiver_clabe + '</td>' +
+							'<td>' + uuid + '</td>' +
+							'<td>' + value.transaction_date + '</td>' +
+							'</tr>');
+						$('#tblBody').append(tr);
+					});
+				}
+			},
+			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
+			},
+			error: function (data){
+				$('#solveLoader').css({
+					display: 'none'
+				});
+				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Por favor intente mas tarde</span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+				M.toast({html: toastHTML});
+			}
+		});
 	}
 	function estados(){
 		noSelect();
 		$('#estados').addClass("selected");
-		const tableBase = '<thead><tr>' +
+		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Mes</th>' +
 			'<th>Días del periodo</th>' +
