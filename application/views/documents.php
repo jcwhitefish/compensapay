@@ -285,6 +285,7 @@
 		});
 	}
 	function comprobantesP(){
+		btnActive = 1;
 		noSelect();
 		$('#comprobantes').addClass("selected");
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
@@ -300,6 +301,76 @@
 			'</tr></thead>' +
 			'<tbody id="tblBody"><tr><td colspan="9" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
+		$.ajax({
+			url: '/Documentos/DocsCEP',
+			data: {
+				from: $('#start').val(),
+				to: $('#fin').val(),
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+				const obj = $('#tblsViewer');
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500 || data.code === 404){
+					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#tblBody').empty();
+					$.each(data, function(index, value){
+						let cepUrl;
+						if (value.cepUrl !== null || value.cepUrl !== ''){
+							cepUrl = '<a href="' + value.cepUrl + '" target="_blank">Descargar CEP</a>';
+						}else{
+							cepUrl = 'No disponible';
+						}
+						const tr = $('<tr>' +
+							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
+							'<td>' + cepUrl + '</td>' +
+							'<td>' + value.source_bank + '</td>' +
+							'<td>' + value.receiver_bank + '</td>' +
+							'<td>' + value.receiver_clabe + '</td>' +
+							'<td>' + value.traking_key + '</td>' +
+							'<td>' + value.operationNumber + '</td>' +
+							'<td>' + value.transaction_date + '</td>' +
+							'<td>' + value.amount + '</td>' +
+							'</tr>');
+						$('#tblBody').append(tr);
+					});
+				}
+			},
+			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
+			},
+			error: function (data){
+				$('#solveLoader').css({
+					display: 'none'
+				});
+				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Por favor intente mas tarde</span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+				M.toast({html: toastHTML});
+			}
+		});
 	}
 	function movimientos(){
 		btnActive = 2;

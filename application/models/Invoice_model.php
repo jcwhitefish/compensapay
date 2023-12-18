@@ -325,12 +325,12 @@ class Invoice_model extends CI_Model {
 
     }
 	/**
-	 * Función para obtener todas las facturas y notas de debito que tienen una operación ligada para mostrar en la
+	 * Función para obtener todas las facturas y notas de débito que tienen una operación ligada para mostrar en la
 	 * tabla de documentos
-	 * @param string      $id
-	 * @param int         $from
-	 * @param int         $to
-	 * @param string|null $env
+	 * @param string      $id id de la compañía de la que se quieren obtener datos
+	 * @param int         $from fecha de inicio de búsqueda
+	 * @param int         $to fecha de termino de búsqueda
+	 * @param string|null $env ambiente en el que se trabajara
 	 * @return array
 	 */
 	public function getDocsCFDI(string $id, int $from, int $to, string $env = null): array	{
@@ -388,12 +388,11 @@ ORDER BY t2.created_at DESC";
 		//En caso de error igual notifica
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
-
 	/**
-	 * Funcion para obtener todos los movimientos que tiene una cuenta.
-	 * @param string      $id Id de la coompañia
-	 * @param int         $from fecha de inicio de busqueda
-	 * @param int         $to fecha de termino de busqueda
+	 * Función para obtener todos los movimientos que tiene una cuenta.
+	 * @param string      $id id de la compañía de la que se quieren obtener datos
+	 * @param int         $from fecha de inicio de búsqueda
+	 * @param int         $to fecha de termino de búsqueda
 	 * @param string|null $env ambiente en el que se trabajara
 	 * @return array
 	 */
@@ -405,7 +404,7 @@ ORDER BY t2.created_at DESC";
 		$factura = base_url('assets/factura/factura.php?idfactura=');
 		$cep = base_url('boveda/CEP/');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT  t1.id, tf1.id, t1.amount, t1.traking_key, t1.descriptor, 
+		$query = "SELECT  t1.id, tf1.id, CONCAT('$', FORMAT(t1.amount, 2, 'es_MX')) AS 'amount', t1.traking_key, t1.descriptor, 
 t8.bnk_alias AS 'source_bank', t6.short_name AS 'source_name', t6.rfc AS 'source_rfc', t1.source_clabe, 
 t9.bnk_alias AS 'destination_bank', t7.short_name AS 'destiantion_name', t7.rfc AS 'destination_rfc', t1.receiver_clabe, 
 DATE_FORMAT(FROM_UNIXTIME(t1.transaction_date), '%d-%m-%Y') AS 'transaction_date',
