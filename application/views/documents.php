@@ -135,7 +135,6 @@
         </div>
     </div>
 </div>
-
 <script>
 	let btnActive = 0;
 	$(document).ready(function() {
@@ -491,7 +490,6 @@
 		$('#activeTbl').append(tableBase);
 	}
 </script>
-
 <style>
 
     /* Fix show checkbox and radiobuttons*/
@@ -529,69 +527,3 @@
         border-radius: 10px;
     }
 </style>
-
-<script>
-    const app = Vue.createApp({
-        setup() {
-            const selectedButton = Vue.ref('Facturas');
-            const facturas = Vue.ref([]);
-            const movements = Vue.ref([]);
-            //tabla de get facturas
-            const getFacturas = () => {
-                var requestOptions = {
-                    method: 'GET',
-                    redirect: 'follow'
-                };
-
-                fetch("<?= base_url("facturas/tablaFacturas") ?>", requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        facturas.value = result.facturas;
-                        facturas.value.reverse();
-                    })
-                    .catch(error => console.log('error', error));
-            };
-
-            const getMovements = () => {
-                var requestOptions = {
-                    method: 'GET',
-                    redirect: 'follow'
-                };
-
-                fetch("<?= base_url("facturas/tablaMovimientos") ?>", requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log(result)
-                        movements.value = result.movements;
-                        movements.value.reverse();
-                    
-                    })
-                    .catch(error => console.log('error', error));
-            };
-
-            //Ver que tabla vamos a ver segun el boton seleccionado
-            const selectButton = (buttonName) => {
-                if (selectedButton.value != buttonName) {
-                    selectedButton.value = buttonName;
-                }
-            };
-
-            //mandar a llamar las funciones
-            Vue.onMounted(
-                () => {
-                    getFacturas();
-                    getMovements();
-                }
-            );
-
-            //Returnar todo
-            return {
-                selectedButton,
-                movements,
-                selectButton,
-                facturas,
-             };
-        }
-        
-    });
-</script>

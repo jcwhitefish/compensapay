@@ -3,8 +3,7 @@
  * Class Fiscal_model model
  * @property Fiscal_model $fData Fiscal_model module
  */
-class Fiscal_model extends CI_Model
-{
+class Fiscal_model extends CI_Model {
 	private string $enviroment = 'SANDBOX';
 	private string $dbsandbox = 'compensatest_base';
 //	private string $dbprod = 'compensapay';
@@ -24,8 +23,7 @@ class Fiscal_model extends CI_Model
 	 * @param string|null $env ambiente en el que se trabajara
 	 * @return array
 	 */
-	public function getInfoCEP(int $id, int $from, int $to, string $env = null): array
-	{
+	public function getInfoCEP(int $id, int $from, int $to, string $env = null): array {
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
