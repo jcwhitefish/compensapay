@@ -1,6 +1,7 @@
 <?php
     include ('../config/conexion.php');
     include ('../empresas/f_empresas.php');
+    include ('../usuarios/f_usuarios.php');
 
     $fechai = $_POST["fechai"];
     $fechaf = $_POST["fechaf"];
@@ -81,10 +82,11 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Cuentas Usuarios</strong><i class="material-icons right">people</i></span>
-                    <p>23 Activass</p>
-                    <p>12 Nuevas</p>
-                    <p>1 Cancelada</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">Administrar</h6>
+                    <p><?php echo usuarios($fechai, $fechaf, 'T');?> Total</p>
+                    <p><?php echo usuarios($fechai, $fechaf, 'A');?> Activos</p>
+                    <p><?php echo usuarios($fechai, $fechaf, 'N');?> Nuevos</p>
+                    <p><?php echo usuarios($fechai, $fechaf, 'C');?> Cancelados</p>
+                    <h6 style="font-size: 12px; color: #bdbdbd;"><a href="#" onclick="usuarios(document.getElementById('fechai').value, document.getElementById('fechaf').value)">Administrar</a></h6>
                 </div>
             </div>
         </div>

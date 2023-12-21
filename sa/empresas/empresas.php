@@ -11,12 +11,12 @@
             <div class="row">
                 <div class="col s6">
                     <h5><strong>Periodo</strong></h5>
-                    <input type="date" id="fechai" name="fechai" value="<?php echo $fechai;?>" style="margin-bottom: 0px;" onchange="dashboard(this.value, document.getElementById('fechaf').value)">
+                    <input type="date" id="fechai" name="fechai" value="<?php echo $fechai;?>" style="margin-bottom: 0px;" onchange="empresas(this.value, document.getElementById('fechaf').value)">
                     <h6>Desde</h6>
                 </div>
                 <div class="col s6">
                     <h5>&nbsp;</h5>
-                    <input type="date" id="fechaf" name="fechaf" value="<?php echo $fechaf;?>" style="margin-bottom: 0px;" onchange="dashboard(document.getElementById('fechai').value, this.value)">
+                    <input type="date" id="fechaf" name="fechaf" value="<?php echo $fechaf;?>" style="margin-bottom: 0px;" onchange="empresas(document.getElementById('fechai').value, this.value)">
                     <h6>Hasta</h6>
                 </div>
             </div>

@@ -38,3 +38,13 @@ function empresas(fechai, fechaf){
 		$('#contenido').html(info);
 	});
 }
+
+function usuarios(fechai, fechaf){
+	$.ajax({
+				type: 'POST',
+				url : 'usuarios/usuarios.php',
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
+}
