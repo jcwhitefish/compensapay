@@ -15,6 +15,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="https://kit.fontawesome.com/a5e678cc82.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
 </head>
 

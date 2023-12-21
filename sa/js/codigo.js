@@ -27,5 +27,24 @@ function dashboard(fechai, fechaf){
 	}).done (function ( info ){
 		$('#contenido').html(info);
 	});
+}
 
+function empresas(fechai, fechaf){
+	$.ajax({
+				type: 'POST',
+				url : 'empresas/empresas.php',
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
+}
+
+function usuarios(fechai, fechaf){
+	$.ajax({
+				type: 'POST',
+				url : 'usuarios/usuarios.php',
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
 }
