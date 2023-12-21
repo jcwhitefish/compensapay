@@ -1,8 +1,19 @@
-<?php 
+<?php
+/**
+ * Class User_model model
+ * @property User_model $dataUsr User module
+ */
 class User_model extends CI_Model {
-    public function __construct() {
+	private string $enviroment = 'SANDBOX';
+	private string $dbsandbox = 'compensatest_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
+
+	public function __construct() {
         parent::__construct();
         $this->load->database();
+		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
     public function insert_user($datos) {
         // Asegurar que solo se insertan las columnas deseadas
@@ -77,4 +88,30 @@ class User_model extends CI_Model {
         }
         return $usermail;
     }
+
+	/**
+	 * Función para obtener los datos de la/s fintech de una compañía
+	 * @param int         $id Id de compañía a obtener datos
+	 * @param string|NULL $env Ambiente en el cúal se va a trabajar
+	 * @return array arreglo con los resultados de la consulta
+	 */
+	public function getFintechInfo(int $id, string $env=NULL): array
+	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Se crea el query para obtener las facturas
+		$query = "SELECT * FROM compensatest_base.fintech WHERE companie_id = '$id'";
+		//Verífica que se ejecute bien el query
+		if($res = $this->db->query($query)){
+			//Verífica que haya resultados
+			if ($res->num_rows() > 0) {
+				//se crea un único arreglo con la información de los movimientos y se envía
+				return ["code" => 200,"result" => $res->result_array()];
+			}
+			//Se devuelve una respuesta de que la compañía no cuenta con registro de una FINTECH
+			return ["code" => 404, "message" => "No se encontraron resultados", "reason" => "La compañía no se encuentra registrada a una FINTECH"];
+		}
+		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
+	}
 }

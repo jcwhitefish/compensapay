@@ -62,7 +62,7 @@
     function hideForms(){
     }
 </script>
-<div class="p-5" id="app" style="margin: 0;padding: 0 !important;">
+<div class="p-5" style="margin: 0;padding: 0 !important;">
     <!-- head con el calendario -->
 	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
 		<div class="row" style="margin-left: 30px; margin-bottom: 1px">

@@ -1,15 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-
-//later erase this mothers
-require_once APPPATH . 'helpers/factura_helper.php';
-
 /**
  * @property Invoice_model $invData
+ * @property User_model $dataUsr
  */
 class Facturas extends MY_Loggedin {
-
+	private string $enviroment = 'SANDBOX';
 	private $user;
 
 	public function __construct(){
@@ -49,6 +46,139 @@ class Facturas extends MY_Loggedin {
 			$data['main'] = $this->load->view('facturas/proveedor', '', true);
 			$this->load->view('plantilla', $data);
 		}
+	}
+
+	public function uploadFacturas(){
+		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
+			$uploadedFile = $_FILES['invoiceUpload'];
+			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
+				$zip = new ZipArchive;
+				if ($zip->open($uploadedFile['tmp_name']) === TRUE) {
+					$extractedDir = './temporales/xml/';
+					$zip->extractTo($extractedDir);
+					$zip->close();
+					$xmlFiles = glob($extractedDir . '*.xml');
+					$filesErr = [];
+					foreach ($xmlFiles as $file) {
+						$xml = simplexml_load_file($file);
+						$this->load->helper('factura_helper');
+						$factura = XmlProcess($xml);
+
+						$xml = $factura["uuid"];
+						$dato['error'] = "facturas";
+						if (!$this->Invoice_model->uuid_exists($xml)) {
+							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+						} else{
+							$dato['error'] = "uuids";
+						}
+						unlink($xmlFile);
+					};
+					rmdir($extractedDir);
+				} else {
+					$dato['error'] = "zip";
+				}
+			} else {
+				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
+				$xml = new DOMDocument();
+				$xml->loadXML($xmlContent);
+				$this->load->helper('factura_helper');
+				$factura = procesar_xml($xml, $this->user);
+				$rfc = $factura["sender_rfc"];
+				$xml = $factura["uuid"];
+				if (!$this->Invoice_model->uuid_exists($xml)) {
+					$dato['error'] = "rfc";
+					if ($this->Invoice_model->is_your_rfc($this->user, $rfc)) {
+						$dato['error'] = "factura";
+						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
+					}
+				} else{
+					$dato['error'] = "uuid";
+				}
+			}
+		}
+
+		$dato['status'] = "ok";
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($dato));
+	}
+
+	/**
+	 * Función para validar el tipo de comprobante (Factura, Nora de débito)
+	 * de acuerdo a las reglas de recepción para conciliaciones
+	 * @param array       $factura Arreglo con los datos extraídos de factura_helper|XmlProcess
+	 * @param int         $tipo    Tipo de comprobante que se validara: 1 = Factura | 2 = Nota de debito
+	 * @param string|NULL $env     Ambiente en el que se trabajará “SANDBOX” | “LIVE”
+	 * @param float|null  $monto   En caso de escoger tipo de documento 2 poner el monto de la factura a conciliar para su comparación
+	 * @return array Devuelve el resultado de la validación con la descripcion caso de erro.
+	 */
+	public function validaComprobante(array $factura, int $tipo, string $env = NULL, float $monto = NULL): array
+	{
+		//Se selecciona el ambiente a trabajar
+		$env = $env === NULL ? $this->enviroment : $env;
+		//se obtienen los datos de la compañia que tienen iniciada sesión
+		$company = $this->session->userdata('datosEmpresa');
+		//Se verífica que el emisor de la factura sea el mismo que la compañia del usuario activo
+		if($factura['emisor']['rfc'] === $company['rfc']){
+			//Si es factura
+			if ($tipo === 1) {
+				//Valida que sea de tipo Ingreso
+				if($factura['tipo'] === 'I'){
+					return [
+						'code' => 200,
+						'reason' => 'Comprobante valido',
+						'message'=> ''
+					];
+				}
+				return [
+					'code' => 500,
+					'reason' => 'Tipo de comprobante invalido',
+					'message'=> 'Ingrese un comprobante de ingresp'
+				];
+			}else if ($tipo === 2){ //Si es nota de debito
+				//Valida que sea de tipo Egreso
+				if($factura['tipo'] === 'E'){
+					//Se carga el modelo para obtener información del usuario
+					$this->load->model('User_model', 'dataUsr');
+					$id = $company["id"];
+					//Se obtiene la información de fintech del usuario
+					$fintech = $this->dataUsr->getFintechInfo($id, $env);
+					if ($fintech['code'] === 200){
+						if ($factura['monto']<$monto){
+							return [
+								'code' => 200,
+								'reason' => 'Comprobante valido',
+								'message'=> ''
+							];
+						}
+						return [
+							'code' => 500,
+							'reason' => 'Monto incorrecto',
+							'message'=> 'El total del comprobante es mayor al de la factura a conciliar'
+						];
+					}
+					return [
+						'code' => 500,
+						'reason' => 'No tiene cuenta "FINTECH"',
+						'message'=> 'La compañía no tiene una cuenta con la "FINTECH" para realizar conciliaciones'
+					];
+				}
+				return [
+					'code' => 500,
+					'reason' => 'Tipo de comprobante invalido',
+					'message'=> 'Ingrese un comprobante de "Egreso"'
+				];
+			}
+			return [
+				'code' => 500,
+				'reason' => 'Tipo de comprobante no reconocido',
+				'message'=> 'No hay validación para ese tipo de comprobante',
+			];
+		}
+		return [
+			'code' => 500,
+			'reason' => 'RFC incorrecto',
+			'message'=> 'El RFC del emisor es diferente al que se registro para la empresa actual'
+		];
 	}
 
 	public function tablaFacturas(){
@@ -208,10 +338,8 @@ class Facturas extends MY_Loggedin {
 
 	public function subidaFactura(){
 		$dato = array();
-
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$uploadedFile = $_FILES['invoiceUpload'];
-
 			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
 				$zip = new ZipArchive;
 				if ($zip->open($uploadedFile['tmp_name']) === TRUE) {

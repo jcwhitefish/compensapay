@@ -441,6 +441,7 @@ ORDER BY t1.created_at DESC";
 			return ["code" => 404,"message" => "No se encontraron registros",
 				"reason" => "No hay resultados con los criterios de busqueda utilizados"];
 		}
+		//en caso de que no se logre ejecutar el
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
 }

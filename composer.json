@@ -21,8 +21,10 @@
 		"mpdf/mpdf": "*",
       "ext-mcrypt": "*",
 		"phpoffice/phpspreadsheet": "*",
-      "ext-fileinfo": "*"
-    },
+      "ext-fileinfo": "*",
+      "ext-simplexml": "*",
+		"ext-zip": "*"
+	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
