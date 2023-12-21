@@ -1,14 +1,9 @@
 <?php
     include ('../config/conexion.php');
+    include ('../empresas/f_empresas.php');
 
     $fechai = $_POST["fechai"];
     $fechaf = $_POST["fechaf"];
-
-    //Empresas
-    $ResTotEmp=mysqli_num_rows(mysqli_query($conn, "SELECT id FROM companies WHERE created_at <= '".strtotime($fechaf)."'")); //total de empresas
-    $ResTotEmpA=mysqli_num_rows(mysqli_query($conn, "SELECT id FROM companies WHERE cancel_at IS NULL or cancel_at >'".strtotime($fechaf)."'")); //empresas activas
-    $ResTotEmpN=mysqli_num_rows(mysqli_query($conn, "SELECT id FROM companies WHERE created_at >='".strtotime($fechai)."' AND created_at <= '".strtotime($fechaf)."'")); //empresas nuevas
-    $ResTotEmpC=mysqli_num_rows(mysqli_query($conn, "SELECT id FROM companies WHERE cancel_at >='".strtotime($fechai)."' AND created_at <='".strtotime($fechaf)."'"));//empresas canceladas
 ?>
 <div class="container">    
     <div class="row">
@@ -74,11 +69,11 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Cuentas Empresas</strong><i class="material-icons right">business</i></span>
-                    <p><?php echo $ResTotEmp;?> Total</p>
-                    <p><?php echo $ResTotEmpA;?> Activas</p>
-                    <p><?php echo $ResTotEmpN;?> Nuevas</p>
-                    <p><?php echo $ResTotEmpC;?> Cancelada</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;"><a href="#">Administrar</a></h6>
+                    <p><?php echo empresas($fechai, $fechaf, 'T');?> Total</p>
+                    <p><?php echo empresas($fechai, $fechaf, 'A');?> Activas</p>
+                    <p><?php echo empresas($fechai, $fechaf, 'N');?> Nuevas</p>
+                    <p><?php echo empresas($fechai, $fechaf, 'C');?> Cancelada</p>
+                    <h6 style="font-size: 12px; color: #bdbdbd;"><a href="#" onclick="empresas(document.getElementById('fechai').value, document.getElementById('fechaf').value)">Administrar</a></h6>
                 </div>
             </div>
         </div>
