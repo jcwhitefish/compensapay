@@ -48,7 +48,7 @@ class Facturas extends MY_Loggedin {
 		}
 	}
 
-	public function uploadFacturas(){
+	public function cargarComprobantes(){
 		if ($_FILES['invoiceUpload']['error'] == UPLOAD_ERR_OK) {
 			$uploadedFile = $_FILES['invoiceUpload'];
 			if (pathinfo($uploadedFile['name'], PATHINFO_EXTENSION) === 'zip') {
@@ -62,16 +62,15 @@ class Facturas extends MY_Loggedin {
 					foreach ($xmlFiles as $file) {
 						$xml = simplexml_load_file($file);
 						$this->load->helper('factura_helper');
-						$factura = XmlProcess($xml);
+						$doc = XmlProcess($xml);
+						$validation = $this->validaComprobante($doc,1);
+						if($validation['code'] === 200 ){
 
-						$xml = $factura["uuid"];
-						$dato['error'] = "facturas";
-						if (!$this->Invoice_model->uuid_exists($xml)) {
-							$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-						} else{
-							$dato['error'] = "uuids";
+						}else{
+							$errItem = [];
 						}
-						unlink($xmlFile);
+
+						unlink($file);
 					};
 					rmdir($extractedDir);
 				} else {
@@ -96,7 +95,6 @@ class Facturas extends MY_Loggedin {
 				}
 			}
 		}
-
 		$dato['status'] = "ok";
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($dato));

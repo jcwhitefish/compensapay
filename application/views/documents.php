@@ -197,8 +197,6 @@
 			'<th>Fecha CFDI</th>' +
 			'<th>Fecha Alta</th>' +
 			'<th style="min-width: 135px">Fecha limite de pago</th>' +
-			'<th style="min-width: 110px">Subtotal</th>' +
-			'<th style="min-width: 110px">IVA</th>' +
 			'<th style="min-width: 110px">Total</th>' +
 			'<th>tipo</th>' +
 			'</tr></thead>' +
@@ -241,12 +239,8 @@
 						let iva;
 						if (value.tipo === 'factura') {
 							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
-							subtotal = '$ '+value.subtotal;
-							iva = '$ '+value.iva;
 						} else {
 							uuid = value.uuid;
-							subtotal = '---';
-							iva = '---';
 						}
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
@@ -256,8 +250,6 @@
 							'<td>' + value.dateCFDI + '</td>' +
 							'<td>' + value.dateCreate + '</td>' +
 							'<td>' + value.dateToPay + '</td>' +
-							'<td>' + subtotal + '</td>' +
-							'<td>' + iva + '</td>' +
 							'<td>$ ' + value.total + '</td>' +
 							'<td>' + value.tipo + '</td>' +
 							'</tr>');

@@ -345,7 +345,7 @@ class Invoice_model extends CI_Model {
 DATE_FORMAT(FROM_UNIXTIME(t2.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
 DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',  
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t2.subtotal, t2.iva, t2.total, 'factura' AS tipo
+t2.total, 'factura' AS tipo
 FROM $this->base.operations t1 
 INNER JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id OR t1.id_invoice_relational = t2.id
 LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
@@ -442,6 +442,60 @@ ORDER BY t1.created_at DESC";
 				"reason" => "No hay resultados con los criterios de busqueda utilizados"];
 		}
 		//en caso de que no se logre ejecutar el
+		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
+	}
+	public function getCFDIByCompany(string $id, int $from, int $to, string $env = null): array	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//se crea la variable url de las facturas para concatenarlo
+		$url = base_url('assets/factura/factura.php?idfactura=');
+		//Se crea el query para obtener las facturas
+		$query = "SELECT t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid, 
+       CONCAT('$url', t1.id) AS 'idurl', 
+DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
+DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
+t2.total, 'factura' AS tipo
+FROM $this->base.invoices t1
+LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
+LEFT JOIN $this->base.companies t3 ON t3.receiver_rfc = t3.rfc
+WHERE (t2.id = $id) AND t1.invoice_date >= '$from' AND t1.invoice_date <= '$to'
+ORDER BY t1.invoice_date DESC";
+		//se verifica que la consulta se ejecute bien
+		if($invoices = $this->db->query($query)){
+			//se verifica que haya informacion
+			if ($invoices->num_rows() > 0){
+				//Se crea query para obtener notas de debito
+				$query = "SELECT t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid, 
+CONCAT('$url', t1.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',  
+DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
+DATE_FORMAT(FROM_UNIXTIME(t2.payment_date), '%d-%m-%Y') AS 'dateToPay', 
+t2.total, 'Nota de debito' AS tipo
+FROM $this->base.operations t1 
+INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
+LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
+LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
+WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.created_at >= '$from' AND t2.created_at <= '$to'
+ORDER BY t2.created_at DESC";
+				//Se verifica que se ejecute bien el segundo query
+				if($debit_notes = $this->db->query($query)) {
+					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia
+					$CFDI = $invoices->result_array();
+					$CFDI = array_merge($CFDI, $debit_notes->result_array());
+					return ["code" => 200,"result" => $CFDI];
+				}else{
+					//si no hay datos de notas de debito solo se envian las facturas
+					return ["code" => 200,"result" => $invoices->result_array()];
+				}
+			}else{
+				//En caso de que no hay informacion lo notifica para que se ingrese otro valor de busqueda
+				return ["code" => 404,"message" => "No se encontraron registros",
+					"reason" => "No hay resultados con los criterios de busqueda utilizados"];
+			}
+		}
+		//En caso de error igual notifica
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
 }
