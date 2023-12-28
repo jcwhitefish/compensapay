@@ -456,11 +456,11 @@ ORDER BY t1.created_at DESC";
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t2.total, 'factura' AS tipo
+t1.total, 'factura' AS tipo
 FROM $this->base.invoices t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
-LEFT JOIN $this->base.companies t3 ON t3.receiver_rfc = t3.rfc
-WHERE (t2.id = $id) AND t1.invoice_date >= '$from' AND t1.invoice_date <= '$to'
+LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
+WHERE (t1.id_company = $id) AND t1.invoice_date >= '$from' AND t1.invoice_date <= '$to'
 ORDER BY t1.invoice_date DESC";
 		//se verifica que la consulta se ejecute bien
 		if($invoices = $this->db->query($query)){
@@ -469,16 +469,15 @@ ORDER BY t1.invoice_date DESC";
 				//Se crea query para obtener notas de debito
 				$query = "SELECT t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid, 
 CONCAT('$url', t1.id) AS 'idurl',
-DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',  
-DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
-DATE_FORMAT(FROM_UNIXTIME(t2.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t2.total, 'Nota de debito' AS tipo
-FROM $this->base.operations t1 
-INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
-LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
-LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
-WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.created_at >= '$from' AND t2.created_at <= '$to'
-ORDER BY t2.created_at DESC";
+DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI', 
+DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate', 
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
+t1.total, 'Nota de debito' AS tipo  
+FROM $this->base.debit_notes t1
+LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc 
+LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
+WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to'
+ORDER BY t1.created_at DESC";
 				//Se verifica que se ejecute bien el segundo query
 				if($debit_notes = $this->db->query($query)) {
 					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia

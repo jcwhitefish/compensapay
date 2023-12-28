@@ -509,7 +509,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
 		$.ajax({
-			url: '/Documentos/DocsCFDI',
+			url: '/Conciliaciones/CFDI',
 			data: {
 				from: $('#start').val(),
 				to: $('#fin').val(),
