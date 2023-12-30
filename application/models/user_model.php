@@ -63,13 +63,6 @@ class User_model extends CI_Model {
     public function imprimir()  {
         echo 'Hola mundo';
     }
-	public function setInitialConf($id){
-		$query = "INSERT INTO compensatest_base.notifications (user_id) VALUES ('{$id}')";
-		if($this->db->query($query)){
-			return true;
-		}
-		return false;
-	}
     public function reset_password($usuario){
         $query = "SELECT id, email, name, last_name FROM users WHERE user LIKE '".$usuario."' OR email LIKE '".$usuario."' LIMIT 1";
 
@@ -89,6 +82,19 @@ class User_model extends CI_Model {
         return $usermail;
     }
 
+	/**
+	 * Función para generar la configuración inicial de una empresa
+	 * @param int $id ID de la empresa a la que se le añade la información
+	 * @return bool
+	 */
+	public function setInitialConf(int $id): bool
+	{
+		$query = "INSERT INTO compensatest_base.notifications (user_id) VALUES ('{$id}')";
+		if($this->db->query($query)){
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Función para obtener los datos de la/s fintech de una compañía
 	 * @param int         $id Id de compañía a obtener datos

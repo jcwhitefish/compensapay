@@ -1,7 +1,7 @@
 <?php
 /**
- * @property Fiscal_model  $fData
  * @property Invoice_model $invData
+ * @property Operation_model $OpData
  */
 class Conciliaciones extends MY_Loggedin
 {
@@ -36,7 +36,7 @@ class Conciliaciones extends MY_Loggedin
 		return false;
 	}
 
-	public function Conciliaciones()
+	public function conciliation()
 	{
 		//Se obtienen la fecha mínima y máxima para filtrar las facturas
 		$from = strtotime($this->input->post('from'));
@@ -44,10 +44,10 @@ class Conciliaciones extends MY_Loggedin
 		//Se verifican que sean fechas válidas
 		if ($from & $to) {
 			//Se carga el modelo de donde se obtendran los datos y se obtiene el id de compañia de la sesión
-			$this->load->model('Invoice_model', 'invData');
+			$this->load->model('Operation_model', 'OpData');
 			$id = $this->session->userdata('datosEmpresa')["id"];
 			//Se buscan las facturas que coincidan con los criterios enviados
-			$res = $this->invData->getDocsCFDI($id, $from, $to);
+			$res = $this->OpData->getConciliacionesByCompany($id, $from, $to);
 			//Si encuentra resultados el arreglo lo envia como JSON
 			if ($res['code'] === 200) {
 				echo(json_encode($res['result']));

@@ -324,6 +324,7 @@ class Invoice_model extends CI_Model {
         return $query->result();
 
     }
+
 	/**
 	 * Función para obtener todas las facturas y notas de débito que tienen una operación ligada para mostrar en la
 	 * tabla de documentos
@@ -444,6 +445,15 @@ ORDER BY t1.created_at DESC";
 		//en caso de que no se logre ejecutar el
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
+
+	/**
+	 * Función para obtener todas las facturas y notas de débito que ha emitido una empresa.
+	 * @param string      $id   ID de compañía
+	 * @param int         $from fecha de inicio de búsqueda
+	 * @param int         $to   fecha de termino de búsqueda
+	 * @param string|null $env  ambiente en el que se trabajara
+	 * @return array
+	 */
 	public function getCFDIByCompany(string $id, int $from, int $to, string $env = null): array	{
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;

@@ -113,7 +113,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 			<div style="overflow-x: auto;">
 				<table id="activeTbl" class="visible-table striped responsive-table" style="display: block; max-height: 400px">
 					<tbody>
-					<tr><td class="center-align">No hay datos</td></tr>
+					<tr><td class="center-align" colspan="14">No hay datos</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -454,47 +454,102 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 		btnAction.attr('href', '#modal-conciliation');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
+			'<th>Autorización</th>' +
+			'<th class="center-align">Estatus conciliación</th>' +
+			'<th style="min-width: 130px; text-align: center">Numero de referencia</th>' +
 			'<th>Emisor</th>' +
 			'<th>Receptor</th>' +
-			'<th class="center-align">CFDI</th>' +
-			'<th>Fecha CFDI</th>' +
-			'<th>Fecha Alta</th>' +
-			'<th style="min-width: 135px">Fecha limite de pago</th>' +
-			'<th style="min-width: 110px">Subtotal</th>' +
-			'<th style="min-width: 110px">IVA</th>' +
-			'<th style="min-width: 110px">Total</th>' +
-			'<th>tipo</th>' +
+			'<th style="min-width: 340px; text-align: center">CFDI Inicial</th>' +
+			'<th>Monto</th>' +
+			'<th>Fecha Alta CFDI</th>' +
+			'<th style="min-width: 340px; text-align: center">CFDI Conciliación</th>' +
+			'<th>Monto</th>' +
+			'<th>Fecha Alta CFDI</th>' +
+			'<th>Fecha limite de pago</th>' +
+			'<th>Fecha de conciliación</th>' +
 			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
+			'<tbody id="tblBody"><tr><td colspan="14" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
-	}
-	function cfdi(){
-		btnActive = 1;
-		noSelect();
-		$('#btnInvoice').addClass("selected");
-		let btnAction = $('#btnAction').append('Añadir facturas');
-		btnAction.attr('href', '#modal-factura');
-		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
-			'<th>Seleccionar</th>' +
-			'<th>Emisor</th>' +
-			'<th>Receptor</th>' +
-			'<th class="center-align">CFDI</th>' +
-			'<th>Fecha CFDI</th>' +
-			'<th>Fecha Alta</th>' +
-			'<th style="min-width: 135px">Fecha limite de pago</th>' +
-			'<th style="min-width: 110px">Subtotal</th>' +
-			'<th style="min-width: 110px">IVA</th>' +
-			'<th style="min-width: 110px">Total</th>' +
-			'<th>tipo</th>' +
-			'</tr></thead>' +
-			'<tbody id="tblBody"><tr><td colspan=11" class="center-align">No hay datos</td></tr></tbody>';
-		$('#activeTbl').append(tableBase);
-	}
+		$.ajax({
+			url: '/Conciliaciones/conciliation',
+			data: {
+				from: $('#start').val(),
+				to: $('#fin').val(),
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+				const obj = $('#tblsViewer');
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500 || data.code === 404){
+					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+					$('#tblBody').empty();
+					$.each(data, function(index, value){
+						let uuid;
+						if(value.role === 'emisor'){
 
+						}
+						if (value.tipo === 'factura') {
+							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
+						} else {
+							uuid = value.uuid;
+						}
+						const tr = $('<tr>' +
+							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
+							'<td>' + value.emisor + '</td>' +
+							'<td>' + value.receptor + '</td>' +
+							'<td>' + uuid + '</td>' +
+							'<td>' + value.dateCFDI + '</td>' +
+							'<td>' + value.dateCreate + '</td>' +
+							'<td>' + value.dateToPay + '</td>' +
+							'<td>$ ' + value.total + '</td>' +
+							'<td>' + value.tipo + '</td>' +
+							'</tr>');
+						$('#tblBody').append(tr);
+					});
+				}
+			},
+			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
+			},
+			error: function (data){
+				$('#solveLoader').css({
+					display: 'none'
+				});
+				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Por favor intente mas tarde</span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+				M.toast({html: toastHTML});
+			}
+		});
+	}
 	function cfdi(){
 		btnActive = 0;
 		noSelect();
 		$('#cfdi').addClass("selected");
+		let btnAction = $('#btnAction').append('Subir CFDI');
+		btnAction.attr('href', '#modal-conciliation');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Emisor</th>' +
