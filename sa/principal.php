@@ -66,7 +66,7 @@
 	</div>
 
 	<!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal_1">
 
         <!-- Modal content -->
         <div class="modal-content">

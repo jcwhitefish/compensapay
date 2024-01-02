@@ -2,8 +2,25 @@
     include ('../config/conexion.php');
     include('f_empresas.php');
 
-    $fechai = $_POST["fechai"];
-    $fechaf = $_POST["fechaf"];
+    $fechai = isset($_POST["fechai"]) ? $_POST["fechai"] : '2023-01-01';
+    $fechaf = isset($_POST["fechaf"]) ? $_POST["fechaf"] : date("Y-m-d");
+
+    if(isset($_POST["hacer"]))
+    {
+        if($_POST["hacer"]=='editempresa')
+        {
+            $ResIdCP=mysqli_fetch_array(mysqli_query($conn, "SELECT zip_id FROM cat_zipcode WHERE zip_code='".$_POST["cp"]."' LIMIT 1"));
+
+            mysqli_query($conn, "UPDATE companies SET legal_name='".$_POST["bussinesName"]."', 
+                                                        short_name='".$_POST["nameComercial"]."', 
+                                                        rfc='".$_POST["rfc"]."', 
+                                                        id_postal_code='".$ResIdCP["zip_id"]."', 
+                                                        address='".$_POST["direccion"]."',
+                                                        telephone='".$_POST["telefono"]."', 
+                                                        updated_at='".time()."'
+                                                WHERE id='".$_POST["idempresa"]."'") or die(mysqli_error($conn));
+        }
+    }
 ?>
 <div class="container">   
     <div class="row">
@@ -55,7 +72,7 @@
                     if($RResE["cancel_at"]==NULL){$estatus='Activa';}else{$estatus='Cancelada';}
 
                     echo '<tr>
-                            <td>'.$RResE["id"].'</td>
+                            <td><a href="#" onclick="edit_empresa(\''.$RResE["id"].'\')">'.$RResE["id"].'</a></td>
                             <td>'.$RResE["legal_name"].'</td>
                             <td>'.$RResE["short_name"].'</td>
                             <td>'.$RResE["rfc"].'</td>

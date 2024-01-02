@@ -29,6 +29,7 @@ function dashboard(fechai, fechaf){
 	});
 }
 
+//empresas
 function empresas(fechai, fechaf){
 	$.ajax({
 				type: 'POST',
@@ -39,6 +40,19 @@ function empresas(fechai, fechaf){
 	});
 }
 
+function edit_empresa(idempresa){
+	limpiar(); abrirmodal();
+	$.ajax({
+		type: 'POST',
+		url : 'empresas/empresa.php',
+		data: 'idempresa=' + idempresa
+}).done (function ( info ){
+$('#modal-body').html(info);
+});
+}
+
+
+//usuarios
 function usuarios(fechai, fechaf){
 	$.ajax({
 				type: 'POST',
