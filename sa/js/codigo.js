@@ -69,7 +69,29 @@ function edit_usuario(idusuario){
 		type: 'POST',
 		url : 'usuarios/usuario.php',
 		data: 'idusuario=' + idusuario
-}).done (function ( info ){
-$('#modal-body').html(info);
-});
+	}).done (function ( info ){
+		$('#modal-body').html(info);
+	});
+}
+
+//tickets
+function tickets(fechai, fechaf){
+	$.ajax({
+				type: 'POST',
+				url : 'soporte/tickets.php',
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
+}
+
+function ticket(idticket){
+	limpiar(); abrirmodal();
+	$.ajax({
+		type: 'POST',
+		url : 'soporte/ticket.php',
+		data: 'idticket=' + idticket
+	}).done (function ( info ){
+		$('#modal-body').html(info);
+	});
 }

@@ -2,6 +2,7 @@
     include ('../config/conexion.php');
     include ('../empresas/f_empresas.php');
     include ('../usuarios/f_usuarios.php');
+    include ('../soporte/f_soporte.php');
 
     $fechai = $_POST["fechai"];
     $fechaf = $_POST["fechaf"];
@@ -59,10 +60,11 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Soporte</strong><i class="material-icons right">headset_mic</i></span>
-                    <p>19 Tkts Abiertos</p>
-                    <p>12 Tkts En Proceso</p>
-                    <p>10 Tkts Cerrados</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">Administrar</h6>
+                    <p><?php echo tickets($fechai, $fechaf, 'T'); ?> Tickets Totales</p>
+                    <p><?php echo tickets($fechai, $fechaf, 'A'); ?> Tickets Abiertos</p>
+                    <p><?php echo tickets($fechai, $fechaf, 'P'); ?> Tickets En Proceso</p>
+                    <p><?php echo tickets($fechai, $fechaf, 'C'); ?> Tickets Cerrados</p>
+                    <h6 style="font-size: 12px; color: #bdbdbd;"><a href="#" onclick="tickets(document.getElementById('fechai').value, document.getElementById('fechaf').value)">Administrar</a></h6>
                 </div>
             </div>
         </div>
