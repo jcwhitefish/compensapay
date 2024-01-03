@@ -94,12 +94,12 @@ class Operation_model extends CI_Model {
     	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
     	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role'
-		FROM compensatest_base.operations t1 
-		    INNER JOIN compensatest_base.companies t2 ON t2.id = t1.id_client 
-		    INNER JOIN compensatest_base.companies t3 ON t3.id = t1.id_provider 
-		    INNER JOIN compensatest_base.invoices t4 ON t1.id_invoice = t4.id
-		    LEFT JOIN compensatest_base.invoices t5 ON t1.id_invoice_relational = t5.id
-		    LEFT JOIN compensatest_base.debit_notes t6 ON t1.id_debit_note = t6.id
+		FROM $this->base.operations t1 
+		    INNER JOIN $this->base.companies t2 ON t2.id = t1.id_client 
+		    INNER JOIN $this->base.companies t3 ON t3.id = t1.id_provider 
+		    INNER JOIN $this->base.invoices t4 ON t1.id_invoice = t4.id
+		    LEFT JOIN $this->base.invoices t5 ON t1.id_invoice_relational = t5.id
+		    LEFT JOIN $this->base.debit_notes t6 ON t1.id_debit_note = t6.id
 		WHERE (t1.id_client = $id OR t1.id_provider = $id) 
 		  AND t1.created_at >= '$from' AND t1.created_at <= '$to'
 		ORDER BY t1.created_at DESC";
@@ -118,4 +118,82 @@ class Operation_model extends CI_Model {
 		//En caso de error igual notifica
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
+	/**
+	 * Función para obtener los datos de una operación de conciliación
+	 * @param string      $id
+	 * @param string|null $env
+	 * @return array
+	 */
+	public function getConciliacionesByID (string $id, string $env = null): array	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//se crea la variable url de las facturas para concatenarlo
+		$url = base_url('assets/factura/factura.php?idfactura=');
+		//Se crea el query para obtener las facturas
+		$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
+       CONCAT('$url', t4.id) AS 'idurl', t3.account_clabe, t7.arteria_clabe, 
+       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1', 
+       (case WHEN t5.id IS NULL THEN t6.uuid ELSE t5.uuid END) AS 'uuid2',
+       (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
+       (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2', 
+       (case WHEN t5.id IS NULL 
+           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y') 
+           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y') END) AS 'dateCFDI2', 
+    	(case WHEN t5.id IS NULL 
+    	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y') 
+    	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
+    	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
+    	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
+    	t3.id as 'idEmisor', t2.id as 'idReceptor'
+		FROM $this->base.operations t1 
+		    INNER JOIN $this->base.companies t2 ON t2.id = t1.id_client 
+		    INNER JOIN $this->base.companies t3 ON t3.id = t1.id_provider 
+		    INNER JOIN $this->base.invoices t4 ON t1.id_invoice = t4.id
+		    LEFT JOIN $this->base.invoices t5 ON t1.id_invoice_relational = t5.id
+		    LEFT JOIN $this->base.debit_notes t6 ON t1.id_debit_note = t6.id
+			INNER JOIN $this->base.fintech t7 ON t7.companie_id = t3.id
+		WHERE (t1.id = $id)";
+		//Se verífica que la consulta se ejecute bien
+		if($res = $this->db->query($query)){
+			//se verífica que haya información
+			if ($res->num_rows() > 0){
+				//si no hay datos de notas de debito solo se envían las facturas
+				return ["code" => 200,"result" => $res->result_array()[0]];
+			}else{
+				//En caso de que no hay información lo notifica para que se ingrese otro valor de búsqueda
+				return ["code" => 404,"message" => "No se encontraron registros",
+					"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+			}
+		}
+		//En caso de error igual notifica
+		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
+	}
+	/**
+	 * Función para aceptar una conciliación
+	 * @param int         $id        ID de la conciliación que es aceptada
+	 * @param int         $idCompany ID de la compañía que realiza el proceso
+	 * @param string|NULL $env       Ambiente en el que se va a trabajar
+	 * @return array Resultado de la operación
+	 */
+	public function acceptConciliation(int $id, int $idCompany, string $env = NULL): array
+	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Creamos el query para actualizar la }}BD
+		$query = "UPDATE $this->base.operations SET status = 1 WHERE id = '$id'";
+		//Sé verífica que la consulta se ejecute bien
+		if($res = $this->db->query($query)){
+			//Sé verífica que haya una actualización
+			if ($this->db->affected_rows() > 0){
+				//Devolvemos que la operación se realizo con éxito
+				return ["code" => 200, "result" => $this->db->affected_rows()];
+			}
+			//Devolvemos que no hubo una actualización
+			return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "No se realizo ninguna actualización"];
+		}
+		//Devolvemos el error de la operación
+		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
+    }
 }

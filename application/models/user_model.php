@@ -120,4 +120,33 @@ class User_model extends CI_Model {
 		}
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
+	/**
+	 * Función para obtener los datos del usuario principal de una compañía
+	 * @param int         $company ID de la compañía
+	 * @param string|null $env     Ambiente en el que se va a trabajar
+	 * @return array
+	 */
+	public function getInfoFromCompanyPrimary (int $company, string $env = NULL): array	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Se genera el query para obtener datos
+		$query = "SELECT t1.id, t1.email, t1.name, t1.last_name, t2.short_name
+              FROM $this->base.users t1
+              INNER JOIN $this->base.companies t2 ON t2.id = t1.id_company 
+              WHERE t2.id = '$company' AND t1.profile = 0";
+		//Sé verífica que se pueda ejecutar la consulta
+		if($res = $this->db->query($query)){
+			//Sé verífica que si haya resultados
+			if ($res->num_rows() > 0){
+				//Se devuelve la información resultante
+				return ["code" => 200,"result" => $res->result_array()[0]];
+			}
+			//En caso de que no hay información lo notifica para que se ingrese otro valor de búsqueda
+			return ["code" => 404,"message" => "No se encontraron registros",
+				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+		}
+		//En caso de error igual notifica
+		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
+	}
 }

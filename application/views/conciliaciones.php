@@ -715,7 +715,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	}
 	function aceptOp(id){
 		$.ajax({
-			url: '/Conciliaciones/aceptar',
+			url: '/Conciliaciones/accept',
 			data: {
 				id:id,
 			},
