@@ -15,7 +15,7 @@ class Notification_model extends CI_Model
 	/**
 	 * Inserta las notificaciones en la base de datos para que pueda visualizarse en el apartado de notificaciones.
 	 * @param array  $args Arreglo con ID de usuario, título y cuerpo de la notificación.
-	 * @param string $env
+	 * @param string $env Ambiente en el que se va trabajar
 	 * @return mixed
 	 */
 	public function insertNotification(array $args, string $env): mixed
