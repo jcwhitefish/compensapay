@@ -80,9 +80,10 @@ class Operation_model extends CI_Model {
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor',
-       CONCAT('$url', t4.id) AS 'idurl', 
+		$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
+       CONCAT('$url', t4.id) AS 'idurl', t3.account_clabe, 
        t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1', 
+       (case WHEN t5.id IS NULL THEN t6.uuid ELSE t5.uuid END) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
        (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2', 
        (case WHEN t5.id IS NULL 

@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$factura = base_url('assets/factura/factura.php?idfactura=');
 ?>
 <style>
 	input:disabled::placeholder {
@@ -59,7 +58,7 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 		border-radius: 10px;
 	}
 </style>
-<div class="p-5" id="app" style="margin: 0;padding: 0 !important;">
+<div class="p-5" style="margin: 0;padding: 0 !important;">
 	<!-- head con el calendario -->
 	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
 		<div class="row" style="margin-left: 30px; margin-bottom: 1px">
@@ -326,68 +325,64 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 	</div>
 
 	<!-- darle aceptar a una factura (el feo) -->
-	<div id="modal-cargar-factura" class="modal">
-		<div class="modal-content">
-			<h5>Por favor, autoriza la transacción</h5>
+	<div id="modal-aut-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
+		<div class="modal-content" style="padding-top:10px;">
+			<h5 >Por favor, autoriza la transacción</h5>
 			<div class="card esquinasRedondas">
-				<div class="card-content">
-					<h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-					<form @submit.prevent="actualizacion()" id="uploadForm" enctype="multipart/form-data">
-
-						<div class="row">
-
-							<div class="row">
-								<div class="col l4 input-border">
-									<input type="text" placeholder="Frontier" disabled />
-									<label for="invoiceDisabled">Proveedor</label>
-								</div>
-								<div class="col l4 input-border">
-									<input type="text" placeholder="XYZ832HS" disabled />
-									<label for="invoiceDisabled">Factura</label>
-								</div>
-								<div class="col l4 input-border">
-									<input type="text" placeholder="XYZ832HS" disabled />
-									<label for="invoiceDisabled">Nota de Crédito</label>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col l4 input-border">
-									<input type="text" placeholder="TRA10035904" disabled />
-									<label for="invoiceDisabled">ID Transacción</label>
-								</div>
-								<div class="col l4 input-border">
-									<input type="text" placeholder="$ 21,576.00" disabled />
-									<label for="invoiceDisabled">Monto Factura</label>
-								</div>
-								<div class="col l4 input-border">
-									<input type="text" placeholder="$10,501.00" disabled />
-									<label for="invoiceDisabled">Monto Nota de Débito (ingreso):</label>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col l4 input-border">
-									<input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-									<label for="start">Inicio:</label>
-								</div>
-								<div class="col l4 input-border p-1">
-									<input type="text" placeholder="123456789098745612" disabled />
-									<label for="invoiceDisabled">Cuenta CLABE del proveedor</label>
-								</div>
-							</div>
-							<div class="col l12">
-								<div class="col l8">
-									<a class="button-gray modal-close">Cancelar</a>
-								</div>
-								<div class="col l4 center-align">
-									<a onclick="M.toast({html: 'Se rechazo'})" class="button-white modal-close">Rechazar</a>
-									&nbsp;
-									<button class="button-blue modal-close" type="submit">Autorizar</button>
-								</div>
+				<div class="card-content" style="padding-top:0">
+					<div class="row" style="margin-bottom: 0">
+						<div class="row" style="margin-bottom: 0">
+							<div class="col l2"><h6>Emisor:</h6></div>
+							<div class="col l5"><h6>CFDI:</h6></div>
+							<div class="col l5"><h6>Nota de debito/Factura</h6></div>
+						</div>
+						<div class="row" style="font-size: 22px;">
+							<div class="col l2" id="autEmisor">Emisor:</div>
+							<div class="col l5" id="autCFDI" >Factura:</div>
+							<div class="col l5" id="autConciliador">Nota de debito/Factura</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 0">
+						<div class="row" style="margin-bottom: 0">
+							<div class="col l4"><h6>Referencia:</h6></div>
+							<div class="col l4"><h6>Monto inicial:</h6></div>
+							<div class="col l4"><h6>Monto conciliador</h6></div>
+						</div>
+						<div class="row" style="font-size: 22px;">
+							<div class="col l4" id="autReferencia">Emisor:</div>
+							<div class="col l4" id="autMonto1">Factura:</div>
+							<div class="col l4" id="autMonto2">Nota de debito/Factura</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 0">
+						<div class="row" style="margin-bottom: 0">
+							<div class="col l4"><h6>Cuenta clabe del proveedor:</h6></div>
+							<div class="col l4">
+								<h6>Fecha de pago:
+									<i class="small material-icons" title="Fecha maxima para realizar el pago" style="cursor: help">help</i>
+								</h6>
 							</div>
 						</div>
-					</form>
+						<div class="row" style="font-size: 22px;">
+							<div class="col l4" id="autClabe">Emisor:</div>
+							<div class="col l4">
+								<label>
+									<input type="date" id="autPayDate" min = "<?=date('Y-m-d',strtotime('now'))?>"
+										   max = "<?=date('Y-m-d',strtotime('now +3 month'))?>"
+										   value = "<?=date('Y-m-d',strtotime('now'))?>" />
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 0; align-content: center; text-align: center;">
+						<div class="col l6" id="autCancel"></div>
+						<div class="col l6" id="autAceptar"></div>
+					</div>
 				</div>
 			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
 		</div>
 	</div>
 
@@ -457,16 +452,16 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 			'<th>Autorización</th>' +
 			'<th class="center-align">Estatus conciliación</th>' +
 			'<th style="min-width: 130px; text-align: center">Numero de referencia</th>' +
-			'<th>Emisor</th>' +
-			'<th>Receptor</th>' +
-			'<th style="min-width: 340px; text-align: center">CFDI Inicial</th>' +
-			'<th>Monto</th>' +
-			'<th>Fecha Alta CFDI</th>' +
-			'<th style="min-width: 340px; text-align: center">CFDI Conciliación</th>' +
-			'<th>Monto</th>' +
-			'<th>Fecha Alta CFDI</th>' +
-			'<th>Fecha limite de pago</th>' +
-			'<th>Fecha de conciliación</th>' +
+			'<th class="center-align">Emisor</th>' +
+			'<th class="center-align">Receptor</th>' +
+			'<th style="min-width: 345px; text-align: center" class="center-align">CFDI Inicial</th>' +
+			'<th class="center-align">Monto</th>' +
+			'<th class="center-align">Fecha Alta CFDI</th>' +
+			'<th style="min-width: 346px; text-align: center">CFDI Conciliación</th>' +
+			'<th class="center-align">Monto</th>' +
+			'<th class="center-align">Fecha Alta CFDI</th>' +
+			'<th class="center-align">Fecha limite de pago</th>' +
+			'<th class="center-align">Fecha de conciliación</th>' +
 			'</tr></thead>' +
 			'<tbody id="tblBody"><tr><td colspan="14" class="center-align">No hay datos</td></tr></tbody>';
 		$('#activeTbl').append(tableBase);
@@ -502,27 +497,109 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
-						let uuid;
-						if(value.role === 'emisor'){
+						let uuid, status, uuid2;
+						let aut,cancel,acept;
+						uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid1 + '</a>';
+						uuid2 = '<a href="' + value.idur2 + '" target="_blank">' + value.uuid2 + '</a>';
+						if(value.role === 'receptor'){
+							switch (value.status){
+								case '0':
+									aut = $('<a class="modal-trigger" href="#modal-aut-conciliation">Autorizar</a>');
+									cancel = $('<a class="modal-trigger button-orange modal-close" href="#modal-rechazo">Rechazar</a>');
+									acept = $('<a class="modal-trigger button-blue modal-close" href="#!">Aceptar</a>');
+									cancel.click(function (){
 
+									});
+									acept.click(function (){
+										aceptOp(value.id);
+									});
+									aut.click(function (){
+										let autEmisor = $('#autEmisor');
+										let autCFDI = $('#autCFDI');
+										let autConciliador = $('#autConciliador');
+										let autReferencia = $('#autReferencia');
+										let autMonto1 = $('#autMonto1');
+										let autMonto2 = $('#autMonto2');
+										let autClabe = $('#autClabe');
+										let autPayDate = $('#autPayDate');
+										autEmisor.empty();
+										autCFDI.empty();
+										autConciliador.empty();
+										autReferencia.empty();
+										autMonto1.empty();
+										autMonto2.empty();
+										autClabe.empty();
+										autEmisor.append(value.emisor);
+										autCFDI.append(uuid);
+										autConciliador.append(uuid2);
+										autReferencia.append(value.operation_number);
+										autMonto1.append('$'+value.total1);
+										autMonto2.append('$'+value.total2);
+										autClabe.append(value.account_clabe);
+										let dateS = (value.datePago);
+										dateS = dateS.split('-');
+										autPayDate.attr('value', dateS[2]+'-'+dateS[1]+'-'+dateS[0]);
+										$('#autAceptar').empty();
+										$('#autCancel').empty();
+										$('#autAceptar').append(acept);
+										$('#autCancel').append(cancel);
+									});
+									break;
+								case '1':
+									aut = '<i class="small material-icons" style="color: green;">check_circle</i>';
+									break;
+								case '2':
+									aut = '<i class="small material-icons" style="color: red;">cancel</i>';
+									break;
+							}
+						}else{
+							switch (value.status){
+								case '0':
+									aut = '<i class="small material-icons">panorama_fish_eye</i>';
+									break;
+								case '1':
+									aut = '<i class="small material-icons" style="color: green;">check_circle</i>';
+									break;
+								case '2':
+									aut = '<i class="small material-icons" style="color: red;">cancel</i>';
+									break;
+							}
 						}
-						if (value.tipo === 'factura') {
-							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
-						} else {
-							uuid = value.uuid;
+						switch (value.status){
+							case '0':
+								status = '<p>Pendiente de autorización</p>';
+								break;
+							case '1':
+								status = '<p>Autorizada</p>';
+								break;
+							case '2':
+								status = '<p>Rechazada</p>';
+								break;
+							case '3':
+								status = '<p>Realizada</p>';
+								break;
+							case '4':
+								status = '<p>Vencida</p>';
+								break;
 						}
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
+							'<td class="tabla-celda center-align" id="aut'+value.id+'"></td>' +
+							'<td class="tabla-celda center-align">' + status + '</td>' +
+							'<td>' + value.operation_number + '</td>' +
 							'<td>' + value.emisor + '</td>' +
 							'<td>' + value.receptor + '</td>' +
 							'<td>' + uuid + '</td>' +
-							'<td>' + value.dateCFDI + '</td>' +
-							'<td>' + value.dateCreate + '</td>' +
-							'<td>' + value.dateToPay + '</td>' +
-							'<td>$ ' + value.total + '</td>' +
-							'<td>' + value.tipo + '</td>' +
+							'<td>$ ' + value.total1 + '</td>' +
+							'<td>' + value.dateCFDI1 + '</td>' +
+							'<td>' + uuid2 + '</td>' +
+							'<td>$ ' + value.total2 + '</td>' +
+							'<td>' + value.dateCFDI2 + '</td>' +
+							'<td>' + value.datePago + '</td>' +
+							'<td>' + value.conciliationDate + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
+						$('#aut'+value.id).append(aut);
 					});
 				}
 			},
@@ -616,6 +693,57 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
 							'</tr>');
 						$('#tblBody').append(tr);
 					});
+				}
+			},
+			complete: function () {
+				$('#solveLoader').css({
+					display: 'none'
+				});
+			},
+			error: function (data){
+				$('#solveLoader').css({
+					display: 'none'
+				});
+				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Por favor intente mas tarde</span>';
+				M.toast({html: toastHTML});
+				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+				M.toast({html: toastHTML});
+			}
+		});
+	}
+	function aceptOp(id){
+		$.ajax({
+			url: '/Conciliaciones/aceptar',
+			data: {
+				id:id,
+			},
+			dataType: 'json',
+			method: 'post',
+			beforeSend: function () {
+				const obj = $('#tblsViewer');
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$('#solveLoader').css({
+					display: 'block',
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500 || data.code === 404){
+					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+					M.toast({html: toastHTML});
+				}else{
+
 				}
 			},
 			complete: function () {
