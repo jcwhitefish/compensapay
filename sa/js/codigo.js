@@ -62,3 +62,14 @@ function usuarios(fechai, fechaf){
 		$('#contenido').html(info);
 	});
 }
+
+function edit_usuario(idusuario){
+	limpiar(); abrirmodal();
+	$.ajax({
+		type: 'POST',
+		url : 'usuarios/usuario.php',
+		data: 'idusuario=' + idusuario
+}).done (function ( info ){
+$('#modal-body').html(info);
+});
+}

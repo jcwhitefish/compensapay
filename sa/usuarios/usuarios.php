@@ -2,8 +2,23 @@
     include ('../config/conexion.php');
     include('f_usuarios.php');
 
-    $fechai = $_POST["fechai"];
-    $fechaf = $_POST["fechaf"];
+    $fechai = isset($_POST["fechai"]) ? $_POST["fechai"] : '2023-01-01';
+    $fechaf = isset($_POST["fechaf"]) ? $_POST["fechaf"] : date("Y-m-d");
+
+    if(isset($_POST["hacer"]))
+    {
+        if($_POST["hacer"]=='editusuario')
+        {
+            mysqli_query($conn, "UPDATE users SET user='".$_POST["username"]."', 
+                                                    name='".$_POST["nombre"]."', 
+                                                    last_name='".$_POST["apellidos"]."', 
+                                                    email='".$_POST["correoe"]."', 
+                                                    telephone='".$_POST["telefono"]."',
+                                                    id_company='".$_POST["empresa"]."', 
+                                                    updated_at='".time()."'
+                                                WHERE id='".$_POST["idusuario"]."'") or die(mysqli_error($conn));
+        }
+    }
 ?>
 <div class="container">   
     <div class="row">
@@ -52,7 +67,7 @@
                     if($RResU["cancel_at"]==NULL){$estatus='Activo';}else{$estatus='Cancelado';}
 
                     echo '<tr>
-                            <td>'.$RResU["id"].'</td>
+                            <td><a href="#" onclick="edit_usuario(\''.$RResU["id"].'\')">'.$RResU["id"].'</a></td>
                             <td>'.$RResU["user"].'</td>
                             <td>'.$RResU["legal_name"].'</td>
                             <td>'.$RResU["name"].' '.$RResU["last_name"].'</td>
@@ -70,23 +85,22 @@
 </div>
 
 <script>
-  const ctx = document.getElementById('myChart_usuarios');
+    const ctx = document.getElementById('myChart_usuarios');
 
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['Activos', 'Nuevos', 'Cancelados'],
-      datasets: [{
-        label: 'Usuarios: ',
-        data: [<?php echo usuarios($fechai, $fechaf, 'A');?>, <?php echo usuarios($fechai, $fechaf, 'N');?>, <?php echo usuarios($fechai, $fechaf, 'C');?>],
-        borderWidth: 1,
-        backgroundColor: ["#9118bd", "#5c96db", "#ff0000"]
-      }]
-    },
-    options: {
-      scales: {
-        
-      }
-    }
-  });
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Activos', 'Nuevos', 'Cancelados'],
+            datasets: [{
+                label: 'Usuarios: ',
+                data: [<?php echo usuarios($fechai, $fechaf, 'A');?>, <?php echo usuarios($fechai, $fechaf, 'N');?>, <?php echo usuarios($fechai, $fechaf, 'C');?>],
+                borderWidth: 1,
+                backgroundColor: ["#9118bd", "#5c96db", "#ff0000"]
+            }]
+        },
+        options: {
+            scales: {
+            }
+        }
+    });
 </script>
