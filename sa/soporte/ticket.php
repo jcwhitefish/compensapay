@@ -1,5 +1,24 @@
 <?php
     include ('../config/conexion.php');
+    
+    if(isset($_POST["hacer"]))
+    {
+        if($_POST["hacer"]=='adseguimiento')
+        {
+            mysqli_query($conn, "INSERT INTO tck_tracking (id_ticket, tcs_status, tcs_message, tcs_flow, tcs_created_at)
+                                                VALUES ('".$_POST["idticket"]."', '1', '".$_POST["mensaje"]."', '1', '".time()."')");
+
+            if(mysqli_num_rows(mysqli_query($conn, "SELECT tcs_id FROM tck_tracking WHERE id_ticket='".$_POST["idticket"]."'"))>0)
+            {
+                mysqli_query($conn, "UPDATE tck_ticket SET tck_status='2' WHERE tck_id='".$_POST["idticket"]."'");
+            }
+
+            if(isset($_POST["cerrarticket"]))
+            {
+                mysqli_query($conn, "UPDATE tck_ticket SET tck_status='3' WHERE tck_id='".$_POST["idticket"]."'");
+            }
+        }
+    }
 
     $ResTi=mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM tck_ticket WHERE tck_id='".$_POST["idticket"]."' Limit 1"));
     $ResE=mysqli_fetch_array(mysqli_query($conn, "SELECT legal_name, short_name FROM companies WHERE id='".$ResTi["id_companie"]."' LIMIT 1"));
@@ -11,7 +30,6 @@
         case 2: $status='<span style="color: #fffc00">En proceso</span>'; break;
         case 3: $status='<span style="color: #26b719">Cerrado</span>'; break;
     }
-
 ?>
 
 <div class="container">  
@@ -65,13 +83,13 @@
                 if($ResTi["tck_status"]<3)
                 {
                     echo '<div class="container">
-                            <form>
+                            <form name="fadseguimientot" id="fadseguimientot">
                                 <div class="row">
                                     <div class="input-field col s3">
                                         <input type="date" id="fechas" name="fechas" value="'.date('Y-m-d').'">
                                     </div>
                                     <div class="input-field col s6">
-                                        <textarea id="textarea1" class="materialize-textarea"></textarea>
+                                        <textarea id="mensaje" name="mensaje" class="materialize-textarea"></textarea>
                                     </div>
                                     <div class="input-field col s3">
                                         <div class="switch col s12">
@@ -85,6 +103,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col s12 right-align">
+                                        <input type="hidden" name="idticket" id="idticket" value="'.$ResTi["tck_id"].'">
+                                        <input type="hidden" name="hacer" id="hacer" value="adseguimiento">
                                         <input class="btn waves-effect waves-light" type="submit" name="botadseguimiento" id="botadseguimiento" value="Guardar">
                                     </div>
                                 </div>
@@ -115,6 +135,23 @@
             </table>
         </div>
     </div>
-
-
 </div>
+
+<script>
+    $("#fadseguimientot").on("submit", function(e){
+	e.preventDefault();
+	var formData = new FormData(document.getElementById("fadseguimientot"));
+
+	$.ajax({
+		url: "soporte/ticket.php",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#modal-body").html(echo);
+	});
+});
+</script>
