@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+
 <style>
 	input:disabled::placeholder {
 		color: black !important;
@@ -58,6 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		border-radius: 10px;
 	}
 </style>
+
 <div class="p-5" style="margin: 0;padding: 0 !important;">
 	<!-- head con el calendario -->
 	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
@@ -115,49 +114,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<tr><td class="center-align" colspan="14">No hay datos</td></tr>
 					</tbody>
 				</table>
-			</div>
-		</div>
-	</div>
-
-	<!-- Subir una factura -->
-	<div id="modal-factura" class="modal">
-		<div class="modal-content">
-			<h5>Carga tus facturas</h5>
-			<div class="card esquinasRedondas">
-				<div class="card-content">
-					<h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
-					<form id="uploadForm" enctype="multipart/form-data">
-						<div class="row">
-
-							<div class="row">
-								<div class="col l9 input-border">
-									<input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
-									<label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
-								</div>
-								<div class="col l3 center-align p-5">
-									<label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-									<input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
-								</div>
-							</div>
-							<div class="row">
-								<div class="col l12 d-flex">
-									<div class="p-5">
-										<input class="p-5" type="checkbox" v-model="checkboxChecked" required>
-									</div>
-									<p class="text-modal">
-										El Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha factura en favor del Cliente.
-										Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los <a href="terminosycondiciones">Términos y Condiciones</a>.
-									</p><br>
-								</div>
-							</div>
-							<div class="col l12 center-align">
-								<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
-								&nbsp;
-								<button class="button-blue modal-close" type="button" name="action" @click="uploadFile">Siguiente</button>
-							</div>
-						</div>
-					</form>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -234,7 +190,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</div>
 		</div>
 	</div>
-
 	<!-- Desde cliente creara operacion especifica a factura -->
 	<div id="modal-operacion-unica" class="modal">
 		<div class="modal-content">
@@ -301,8 +256,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</div>
 		</div>
 	</div>
-
-	<!-- solicitar factura -->
+	<!-- solicitar facturas -->
 	<div id="modal-solicitar-factura" class="modal p-5">
 		<h5>Solicitar Factura</h5>
 		<div class="card esquinasRedondas">
@@ -324,7 +278,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		</div>
 	</div>
 
-	<!-- darle aceptar a una factura (el feo) -->
+	<!-- darle rechazar una factura -->
+	<div id="modal-rechazo" class="modal p-5">
+		<h5>Operación rechazada</h5>
+		<div class="card esquinasRedondas">
+			<form>
+				<div class="card-content ">
+					<div class="row">
+						<div class="col l12">
+							<label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operacion.</label>
+							<textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+						</div>
+						<div class="col l12 d-flex justify-content-flex-end">
+							<a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
+							&nbsp;
+							<button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('2')">Enviar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- darle aceptar a una factura -->
 	<div id="modal-aut-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
 		<div class="modal-content" style="padding-top:10px;">
 			<h5 >Por favor, autoriza la transacción</h5>
@@ -385,26 +360,93 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
 		</div>
 	</div>
-
-	<!-- darle rechazar una factura -->
-	<div id="modal-rechazo" class="modal p-5">
-		<h5>Operación rechazada</h5>
-		<div class="card esquinasRedondas">
-			<form>
-				<div class="card-content ">
-					<div class="row">
-						<div class="col l12">
-							<label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operacion.</label>
-							<textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
+	<!-- Subir los CFDI -->
+	<div id="modal-CFDI" class="modal modal" style="max-height 98% !important; height: 95%; width: 90% !important">
+		<div class="modal-content">
+			<h5>Carga tus CFDI</h5>
+			<div class="card esquinasRedondas">
+				<div class="card-content">
+					<h6 class="p-3">Carga tu CFDI en formato .xml o múltiples .xml en un archivo .zip</h6>
+					<form id="uploadCFDI" enctype="multipart/form-data">
+						<div class="file-field input-field" >
+							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">
+								<input class="file-path validate" type="text" placeholder="Una factura en xml o múltiples en .zip" disabled >
+							</div>
+							<div style="width: 25%;margin-left: auto;">
+								<label for="containerCFDI" class="custom-file-upload button-blue">Seleccionar</label>
+								<input name="containerCFDI" id="containerCFDI" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
+							</div>
 						</div>
-						<div class="col l12 d-flex justify-content-flex-end">
-							<a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
-							&nbsp;
-							<button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('2')">Enviar</button>
+						<div class="row">
+							<div class="row">
+								<div class="col l12 d-flex">
+									<div class="p-5">
+										<input class="p-5" type="checkbox" required>
+									</div>
+									<p class="text-modal" style="text-align: justify;">
+										Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
+										factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
+										debido por el Proveedor en relación con dicha factura en favor del Cliente.
+										Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
+										<a href="terminosycondiciones">Términos y Condiciones</a>.
+									</p><br>
+								</div>
+							</div>
+							<div class="col l12 center-align">
+								<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
+								&nbsp;
+								<input class="button-blue" type="submit" value="Siguiente" </input>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
-			</form>
+			</div>
+		</div>
+	</div>
+	<!-- crear conciliacion -->
+	<div id="modal-new-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
+		<div class="modal-content">
+			<h5>Crear concilicación</h5>
+			<div class="card esquinasRedondas">
+				<div class="card-content">
+					<h6 class="p-3">Carga tu CFDI en formato .xml o múltiples .xml en un archivo .zip</h6>
+					<form id="uploadCFDI" enctype="multipart/form-data">
+						<div class="file-field input-field" >
+							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">
+								<input class="file-path validate" type="text" placeholder="Una factura en xml o múltiples en .zip" disabled >
+							</div>
+							<div style="width: 25%;margin-left: auto;">
+								<label for="containerCFDI" class="custom-file-upload button-blue">Seleccionar</label>
+								<input name="containerCFDI" id="containerCFDI" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
+							</div>
+						</div>
+						<div class="row">
+							<div class="row">
+								<div class="col l12 d-flex">
+									<div class="p-5">
+										<input class="p-5" type="checkbox" required>
+									</div>
+									<p class="text-modal" style="text-align: justify;">
+										Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
+										factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
+										debido por el Proveedor en relación con dicha factura en favor del Cliente.
+										Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
+										<a href="terminosycondiciones">Términos y Condiciones</a>.
+									</p><br>
+								</div>
+							</div>
+							<div class="col l12 center-align">
+								<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
+								&nbsp;
+								<input class="button-blue" type="submit" value="Siguiente" </input>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
 		</div>
 	</div>
 </div>
@@ -434,6 +476,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			}
 
 		});
+		$('#uploadCFDI').on('submit', function (e) {
+			e.preventDefault();
+			const formData = new FormData();
+			const files = $('#containerCFDI')[0].files[0];
+			formData.append('file',files);
+			$.ajax({
+				url: '/Conciliaciones/cargarComprobantes',
+				data: formData	,
+				dataType: 'json',
+				contentType: false,
+				processData: false,
+				method: 'post',
+				beforeSend: function () {
+					const obj = $('#modal-CFDI');
+					const left = obj.offset().left;
+					const top = obj.offset().top;
+					const width = obj.width();
+					const height = obj.height();
+					$('#solveLoader').css({
+						display: 'block',
+						left: left,
+						top: top,
+						width: width,
+						height: height,
+						zIndex: 999999
+					}).focus();
+				},
+				success: function (data) {
+					let toastHTML;
+					if (data.code === 500 || data.code === 404) {
+						let toastHTML = '<span><strong>' + data.message + '</strong></span>';
+						M.toast({html: toastHTML});
+						toastHTML = '<span><strong>' + data.reason + '</strong></span>';
+						M.toast({html: toastHTML});
+						// location.reload()
+					} else {
+						$('#modal-CFDI').modal('close');
+						toastHTML = '<span>' + data.message + '</span>';
+						M.toast({html: toastHTML});
+					}
+				},
+				complete: function () {
+					$('#solveLoader').css({
+						display: 'none'
+					}).delay(2000);
+					cfdi();
+				},
+				error: function (data){
+					$('#solveLoader').css({
+						display: 'none'
+					});
+					let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span>Por favor intente mas tarde</span>';
+					M.toast({html: toastHTML});
+					toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+					M.toast({html: toastHTML});
+				}
+			});
+		})
 	});
 	function noSelect(){
 		$('#btnConciliation').removeClass("selected");
@@ -445,8 +547,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		btnActive = 0;
 		noSelect();
 		$('#btnConciliation').addClass("selected");
-		let btnAction = $('#btnAction').append('Crear conciliación');
-		btnAction.attr('href', '#modal-conciliation');
+		let btnAction = $('#btnAction').append('Subir CFDI');
+		btnAction.attr('href', '#modal-CFDI');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Autorización</th>' +
@@ -506,12 +608,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								case '0':
 									aut = $('<a class="modal-trigger" href="#modal-aut-conciliation">Autorizar</a>');
 									cancel = $('<a class="modal-trigger button-orange modal-close" href="#modal-rechazo">Rechazar</a>');
-									acept = $('<a class="modal-trigger button-blue modal-close" href="#!">Aceptar</a>');
+									acept = $('<a class="button-blue ">Aceptar</a>');
 									cancel.click(function (){
 
 									});
 									acept.click(function (){
-										aceptOp(value.id);
+										aceptOp(value.id, $('#autPayDate').val());
 									});
 									aut.click(function (){
 										let autEmisor = $('#autEmisor');
@@ -595,7 +697,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 							'<td>' + uuid2 + '</td>' +
 							'<td>$ ' + value.total2 + '</td>' +
 							'<td>' + value.dateCFDI2 + '</td>' +
-							'<td>' + value.datePago + '</td>' +
+							'<td id="tblPayD'+value.id+'">' + value.datePago + '</td>' +
 							'<td>' + value.conciliationDate + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
@@ -626,9 +728,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		noSelect();
 		$('#cfdi').addClass("selected");
 		let btnAction = $('#btnAction').append('Subir CFDI');
-		btnAction.attr('href', '#modal-conciliation');
+		btnAction.attr('href', '#modal-CFDI');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
+			'<th>Concilición</th>' +
 			'<th>Emisor</th>' +
 			'<th>Receptor</th>' +
 			'<th class="center-align">CFDI</th>' +
@@ -680,8 +783,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						} else {
 							uuid = value.uuid;
 						}
+						let initC = $('<a class="modal-trigger" href="#modal-new-conciliation">Crear conciliación</a>');
+						switch (value.status){
+							case '0':
+								initC.click(function(){
+
+								});
+								break;
+							case '1':
+								initC = '<i class="small material-icons" style="color: green;">check_circle</i>';
+								break;
+							case '2':
+								initC = '<i class="small material-icons" style="color: red;">cancel</i>';
+								break;
+						}
+
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
+							'<td id="initC'+value.id+'"></td>' +
 							'<td>' + value.emisor + '</td>' +
 							'<td>' + value.receptor + '</td>' +
 							'<td>' + uuid + '</td>' +
@@ -692,6 +811,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 							'<td>' + value.tipo + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
+						$('#initC'+value.id).append(initC);
 					});
 				}
 			},
@@ -713,16 +833,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			}
 		});
 	}
-	function aceptOp(id){
+	function aceptOp(id, payDate){
 		$.ajax({
 			url: '/Conciliaciones/accept',
 			data: {
 				id:id,
+				payDate: payDate,
 			},
 			dataType: 'json',
 			method: 'post',
 			beforeSend: function () {
-				const obj = $('#tblsViewer');
+				const obj = $('#modal-aut-conciliation');
 				const left = obj.offset().left;
 				const top = obj.offset().top;
 				const width = obj.width();
@@ -737,13 +858,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				}).focus();
 			},
 			success: function (data) {
-				if (data.code === 500 || data.code === 404){
-					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+				let toastHTML;
+				if (data.code === 500 || data.code === 404) {
+					let toastHTML = '<span><strong>' + data.message + '</strong></span>';
 					M.toast({html: toastHTML});
-					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+					toastHTML = '<span><strong>' + data.reason + '</strong></span>';
 					M.toast({html: toastHTML});
-				}else{
-
+					// location.reload()
+				} else {
+					$('#modal-aut-conciliation').modal('close');
+					toastHTML = '<span>' + data.message + '</span>';
+					M.toast({html: toastHTML});
+					$('#aut'+id).empty();
+					$('#tblPayD'+id).empty()
+					let aut = '<i class="small material-icons" style="color: green;">check_circle</i>';
+					$('#aut'+id).append(aut);
+					let dateS = (payDate);
+					dateS = dateS.split('-');
+					$('#tblPayD'+id).append(dateS[2]+'-'+dateS[1]+'-'+dateS[0]);
 				}
 			},
 			complete: function () {

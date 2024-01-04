@@ -19,7 +19,6 @@ function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null)
             'newline'       => "\r\n",
             'charset'       => 'UTF-8',
         );
-
 	$CI =& get_instance();
 	$CI->load->library('email', $config);
 	$CI->email->set_newline("\r\n");

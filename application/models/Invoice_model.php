@@ -18,12 +18,10 @@ class Invoice_model extends CI_Model {
         $this->load->database();
 		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
-
     public function get_all_invoices() {
         $query = $this->db->get('invoices');
         return $query->result();
     }
-
     public function get_provider_invoices($user, $rfc_emi) {
         $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
 		$this->db->from('users as u');
@@ -36,7 +34,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_available_invoices($user) {
         $this->db->select('c.short_name AS name_client, c2.short_name AS name_provee, i.*');
 		$this->db->from('users as u');
@@ -48,7 +45,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_invoices_client($user) {
         $this->db->select('c1.short_name AS name_client, c2.short_name AS name_provee, i.*');
 		$this->db->from('users as u');
@@ -60,7 +56,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_inv_prov_send_by_rfc($rfc) {
         $this->db->select('c2.short_name AS name_client, c1.short_name AS name_provee, i.*');
 		$this->db->from('users as u');
@@ -72,7 +67,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_provider_invoices_tabla($user) {
         $this->db->select('c.short_name AS name_provee, c2.short_name AS name_client, i.*');
 		$this->db->from('users as u');
@@ -84,7 +78,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_client_invoices($user) {
         $this->db->select('c.short_name AS name_client, c2.short_name AS name_provee, i.*');
 		$this->db->from('users as u');
@@ -96,7 +89,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_movements($user) {
         $this->db->select('*');
         $this->db->from('users');
@@ -125,7 +117,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function crearExcel($args, $menu) {
         $letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $spread = new Spreadsheet();
@@ -236,7 +227,6 @@ class Invoice_model extends CI_Model {
 
         //$writer->save('./doc_exportados/reporte_de_excel.xlsx');
     }
-
     public function get_invoices_by_id($id) {
         $this->db->select('i.*');
 		$this->db->from('invoices as i');
@@ -244,7 +234,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function get_invoices_by_client($user) {
         $this->db->select('*');
         $this->db->from('users');
@@ -264,12 +253,10 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
-
     public function post_my_invoice($xml) {
         $this->db->insert('invoices', $xml);
         return $this->db->insert_id();
     }
-
     public function uuid_exists($xml) {
         $this->db->select('*');
         $this->db->from('invoices');
@@ -277,7 +264,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows() > 0; 
     }
-
     public function is_your_rfc($id, $rfc) {
         $this->db->select('*');
         $this->db->from('users');
@@ -290,7 +276,6 @@ class Invoice_model extends CI_Model {
         $query = $this->db->get();
         return ((($query->result())[0]->rfc) === $rfc);
     }
-
     public function update_status($id, $status) {
         $factura = array(
 			"status" => $status,
@@ -302,7 +287,6 @@ class Invoice_model extends CI_Model {
 
         return;
     }
-
     public function update_status_invoice($id, $status) {
         $factura = array(
 			"status" => $status,
@@ -314,7 +298,6 @@ class Invoice_model extends CI_Model {
 
         return;
     }
-
     public function company($rfc) {
 
         $this->db->select('*');
@@ -324,7 +307,6 @@ class Invoice_model extends CI_Model {
         return $query->result();
 
     }
-
 	/**
 	 * Función para obtener todas las facturas y notas de débito que tienen una operación ligada para mostrar en la
 	 * tabla de documentos
@@ -445,7 +427,6 @@ ORDER BY t1.created_at DESC";
 		//en caso de que no se logre ejecutar el
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
-
 	/**
 	 * Función para obtener todas las facturas y notas de débito que ha emitido una empresa.
 	 * @param string      $id   ID de compañía
@@ -466,7 +447,7 @@ ORDER BY t1.created_at DESC";
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'factura' AS tipo
+t1.total, 'factura' AS tipo, t1.status
 FROM $this->base.invoices t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
@@ -506,5 +487,89 @@ ORDER BY t1.created_at DESC";
 		}
 		//En caso de error igual notifica
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
+	}
+
+	/**
+	 * Función para guardar los CFDI de tipo ingreso
+	 * @param array       $cfdi      Cadena con el xml del CFDI
+	 * @param int         $companyID ID de la compañía emisora
+	 * @param int         $userID    ID del usuario que hizo la carga del archivo
+	 * @param string|null $env       Ambiente en el que se trabajara
+	 * @return array Resultado de la operación
+	 */
+	public function saveCFDI_I(array $cfdi, int $companyID, int $userID, string $env = null): array {
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Se obtienen y transforman fechas
+		$invoiceDate = strtotime($cfdi['fecha']);
+		$idReceptor = $this->getReceptorByRFC($cfdi['receptor']['rfc'], $env);
+		if (isset($idReceptor['code'])){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "No esta registrada la empresa receptora"];
+		}
+		$paymentDate = $this->getPaymentDate($companyID,$idReceptor,$env);
+		$paymentDate = strtotime($cfdi['fecha'].' +'.$paymentDate.' days');
+		//Se crea el query para guardar el archivo en BD
+		$query = "INSERT INTO $this->base.invoices 
+    (id_company, id_user, sender_rfc, receiver_rfc, uuid, invoice_date, payment_date, status, total, xml_document)
+    VALUES ('$companyID','$userID','{$cfdi['emisor']['rfc']}','{$cfdi['receptor']['rfc']}', '{$cfdi['uuid']}', '$invoiceDate',
+            '$paymentDate',0,'{$cfdi['monto']}','{$cfdi['xml']}')";
+		$this->db->db_debug = FALSE;
+		if(!@$this->db->query($query)){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
+			// do something in error case
+		}else{
+			return ["code" => 200, "message" => "CFDI guardado con éxito"];
+			// do something in success case
+		}
+		return ["code" => 500, "message" => "Error al guardar información", "reason" => "Error con la fuente de información"];
+	}
+	public function getPaymentDate(int $companyID_1, int $companyID_2, string $env = null){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Se crea el query para obtener la información
+		$query = "SELECT (IF(t2.paydays IS NULL, t1.dias_pago, t2.paydays)) AS 'payDay',
+(IF(t2.paydays IS NULL, 'company', 'relation')) AS 'table'
+FROM $this->base.companies t1
+LEFT JOIN $this->base.clientprovider t2 ON t2.provider_id = t1.id
+WHERE IF(t2.paydays IS NOT NULL, t2.provider_id = '$companyID_1' AND t2.client_id = '$companyID_2', t1.id = '$companyID_1')";
+		//Se verífica que la consulta se ejecute
+		if($res = $this->db->query($query)){
+			//Se verífica que haya información
+			if ($res->num_rows() > 0){
+				$res = $res->result_array()[0];
+				if ($res['table'] === 'relation'){
+					return $res['payDay'];
+				}
+				$query = "INSERT INTO compensatest_base.clientprovider (provider_id, client_id, paydays) 
+VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
+				if ($this->db->query($query)){
+					return $res['payDay'];
+				}
+				return ["code" => 500,"message" => "Error al obtener fecha de pago",
+					"reason" => "No se pudo generar la relación entre emisor y receptor de CFDI"];
+			}else{
+				//En caso de que no hay informacion lo notifica para que se ingrese otro valor de busqueda
+				return ["code" => 404,"message" => "No se encontraron registros",
+					"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+			}
+		}
+		return ["code" => 500,"message" => "Error al obtener fecha de pago",
+			"reason" => "Error con la fuente de información"];
+	}
+
+	public function getReceptorByRFC(string $rfc, string$env= null)
+	{
+		$query = "SELECT id FROM compensatest_base.companies WHERE rfc = '$rfc'";
+		if($res = $this->db->query($query)){
+			if ($res->num_rows() > 0){
+				return $res->result_array()[0]['id'];
+			}
+			return ["code" => 404,"message" => "No se encontraron registros",
+				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+		}
+		return ["code" => 500,"message" => "Error al obtener fecha de pago",
+			"reason" => "Error con la fuente de información"];
 	}
 }

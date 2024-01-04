@@ -245,15 +245,14 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     <h6 class="p-3">Carga tu factura en formato .xml o múltiples facturas en un archivo .zip</h6>
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="row">
-
                             <div class="row">
                                 <div class="col l9 input-border">
-                                    <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled v-model="invoiceUploadName" />
+                                    <input type="text" name="invoiceDisabled" id="invoiceDisabled" disabled/>
                                     <label for="invoiceDisabled">Una factura en xml o múltiples en .zip</label>
                                 </div>
                                 <div class="col l3 center-align p-5">
                                     <label for="invoiceUpload" class="custom-file-upload button-blue">Seleccionar</label>
-                                    <input @change="checkFormatInvoice" name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
+                                    <input name="invoiceUpload" ref="invoiceUpload" id="invoiceUpload" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
                                 </div>
                             </div>
                             <div class="row">

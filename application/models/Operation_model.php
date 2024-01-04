@@ -93,7 +93,8 @@ class Operation_model extends CI_Model {
     	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y') 
     	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
-    	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role'
+    	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
+    	(CASE WHEN t5.id IS NULL THEN 'nota' ELSE 'cfdi' END) AS 'role'
 		FROM $this->base.operations t1 
 		    INNER JOIN $this->base.companies t2 ON t2.id = t1.id_client 
 		    INNER JOIN $this->base.companies t3 ON t3.id = t1.id_provider 
@@ -176,13 +177,14 @@ class Operation_model extends CI_Model {
 	 * @param string|NULL $env       Ambiente en el que se va a trabajar
 	 * @return array Resultado de la operación
 	 */
-	public function acceptConciliation(int $id, int $idCompany, string $env = NULL): array
+	public function acceptConciliation(int $id, string $payDate,int $idCompany, string $env = NULL): array
 	{
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$payDate = strtotime($payDate);
 		//Creamos el query para actualizar la }}BD
-		$query = "UPDATE $this->base.operations SET status = 1 WHERE id = '$id'";
+		$query = "UPDATE $this->base.operations SET status = 1, payment_date = '$payDate' WHERE id = '$id'";
 		//Sé verífica que la consulta se ejecute bien
 		if($res = $this->db->query($query)){
 			//Sé verífica que haya una actualización
