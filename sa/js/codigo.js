@@ -95,3 +95,14 @@ function ticket(idticket){
 		$('#modal-body').html(info);
 	});
 }
+
+//operaciones
+function operaciones(fechai, fechaf){
+	$.ajax({
+				type: 'POST',
+				url : 'operaciones/operaciones.php',
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
+}

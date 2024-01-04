@@ -3,6 +3,7 @@
     include ('../empresas/f_empresas.php');
     include ('../usuarios/f_usuarios.php');
     include ('../soporte/f_soporte.php');
+    include ('../operaciones/f_operaciones.php');
 
     $fechai = $_POST["fechai"];
     $fechaf = $_POST["fechaf"];
@@ -98,10 +99,13 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Operaciones</strong><i class="material-icons right">swap_horiz</i></span>
-                    <p>19 Tkts Abiertos</p>
-                    <p>12 Tkts En Proceso</p>
-                    <p>10 Tkts Cerrados</p>
-                    <h6 style="font-size: 12px; color: #bdbdbd;">Administrar</h6>
+                    <p><?php echo operaciones($fechai, $fechaf, 'T');?> Totales</p>
+                    <p><?php echo operaciones($fechai, $fechaf, 'P');?> Por autorizar</p>
+                    <p><?php echo operaciones($fechai, $fechaf, 'A');?> Autorizadas</p>
+                    <p><?php echo operaciones($fechai, $fechaf, 'R');?> Rechazadas</p>
+                    <p><?php echo operaciones($fechai, $fechaf, 'E');?> Realizadas</p>
+                    <p><?php echo operaciones($fechai, $fechaf, 'V');?> Vencidas</p>
+                    <h6 style="font-size: 12px; color: #bdbdbd;"><a href="#" onclick="operaciones(document.getElementById('fechai').value, document.getElementById('fechaf').value)">Administrar</a></h6>
                 </div>
             </div>
         </div>

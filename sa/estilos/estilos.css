@@ -6,6 +6,10 @@ a:hover{
     text-decoration: underline;
 }
 
+td{
+    text-wrap: nowrap;
+}
+
 .nav-max {
     height: 40px !important;
     position: relative;
