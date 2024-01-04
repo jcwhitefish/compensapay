@@ -13,6 +13,7 @@
 
             mysqli_query($conn, "UPDATE companies SET legal_name='".$_POST["bussinesName"]."', 
                                                         short_name='".$_POST["nameComercial"]."', 
+                                                        id_type='".$_POST["giro"]."', 
                                                         rfc='".$_POST["rfc"]."', 
                                                         id_postal_code='".$ResIdCP["zip_id"]."', 
                                                         address='".$_POST["direccion"]."',

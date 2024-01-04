@@ -27,7 +27,7 @@
                     $ResGiro=mysqli_query($conn, "SELECT * FROM cat_giro ORDER BY gro_giro ASC");
                     while($RResG=mysqli_fetch_array($ResGiro))
                     {
-                        echo '<option value="'.$RResG["gro_id"].'">'.$RResG["gro_giro"].'</option>';
+                        echo '<option value="'.$RResG["gro_id"].'"';if($RResG["gro_id"]==$ResE["id_type"]){echo ' selected';}echo '>'.$RResG["gro_giro"].'</option>';
                     }
                 ?>
             </select>
