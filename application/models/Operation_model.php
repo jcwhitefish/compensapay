@@ -177,8 +177,7 @@ class Operation_model extends CI_Model {
 	 * @param string|NULL $env       Ambiente en el que se va a trabajar
 	 * @return array Resultado de la operación
 	 */
-	public function acceptConciliation(int $id, string $payDate,int $idCompany, string $env = NULL): array
-	{
+	public function acceptConciliation(int $id, string $payDate,int $idCompany, string $env = NULL): array {
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
@@ -217,5 +216,26 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 			// do something in success case
 		}
 		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
+	}
+	public function getConciliationByID (int $id, string $env) {
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT * FROM $this->base.invoices WHERE id = '$id'";
+		if ($res = $this->db->query($query)){
+			if ($res->num_rows() > 0){
+				return $res->result_array();
+			}
+		}
+	}
+
+	public function acceptCFDI(int $id, string $env){
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "UPDATE $this->base.invoices set status=1 WHERE id = '$id'";
+		if ($res =  $this->db->query($query)){
+			return $res;
+		}
+		return false;
 	}
 }
