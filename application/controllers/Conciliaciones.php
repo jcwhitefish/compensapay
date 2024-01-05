@@ -81,7 +81,7 @@ class Conciliaciones extends MY_Loggedin
 					"code" => 200,
 					"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia"
 				]);
-//				$this->adviseAuthorized($id);
+				$this->adviseAuthorized($id);
 
 				return true;
 			}
@@ -254,7 +254,7 @@ class Conciliaciones extends MY_Loggedin
 						if ($op['code'] === 200){
 //							var_dump($op);
 							echo json_encode($op);
-//							$this->adviseCreated($data, $env);
+							$this->adviseCreated($data, $env);
 							return true;
 						}
 						echo json_encode($op);
