@@ -33,3 +33,13 @@ function operaciones($fechai, $fechaf, $tipo)
     
     return $T;
 }
+
+function costos_operacion($fechai, $fechaf)
+{
+    include ('../config/conexion.php');
+
+    $ResTotOp=mysqli_num_rows(mysqli_query($conn, "SELECT id FROM balance WHERE transaction_date >= '".strtotime($fechai)."' AND transaction_date <= '".strtotime($fechaf)."'")); //total de transacciones
+    $costo = $ResTotOp * 0.15;
+
+    return $costo;
+}
