@@ -2,7 +2,7 @@
 /**
  * @property Invoice_model 		$invData
  * @property Operation_model 	$OpData
- * @property User_model         $dataUsr
+ * @property user_model         $dataUsr
  * @property Notification_model $nt
  */
 class Conciliaciones extends MY_Loggedin
@@ -97,7 +97,7 @@ class Conciliaciones extends MY_Loggedin
 	public function adviseAuthorized (int $id, string $env = 'SANDBOX')
 	{
 		//Se cargan los helpers y modelos necesarios
-		$this->load->model('User_model', 'dataUsr');
+		$this->load->model('user_model', 'dataUsr');
 		$this->load->model('Notification_model' , 'nt');
 		$this->load->helper('sendmail_helper');
 		$this->load->helper('notifications_helper');
@@ -142,7 +142,7 @@ class Conciliaciones extends MY_Loggedin
 	}
 	public function adviseCreated(array $args, string $env = 'SANDBOX'){
 		//Se cargan los helpers y modelos necesarios
-		$this->load->model('User_model', 'dataUsr');
+		$this->load->model('user_model', 'dataUsr');
 		$this->load->model('Notification_model' , 'nt');
 		$this->load->helper('sendmail_helper');
 		$this->load->helper('notifications_helper');
@@ -303,7 +303,7 @@ class Conciliaciones extends MY_Loggedin
 				//Valida que sea de tipo Egreso
 				if($factura['tipo'] === 'E'){
 					//Se carga el modelo para obtener información del usuario
-					$this->load->model('User_model', 'dataUsr');
+					$this->load->model('user_model', 'dataUsr');
 					$id = $company["id"];
 					//Se obtiene la información de fintech del usuario
 					$fintech = $this->dataUsr->getFintechInfo($id, $env);
