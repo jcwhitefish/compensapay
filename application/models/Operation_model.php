@@ -198,4 +198,21 @@ class Operation_model extends CI_Model {
 		//Devolvemos el error de la operación
 		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
     }
+	public function newConciliation_E (array $args, string $env): array
+	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Query para insertar la nueva conciliacion
+		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
+VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['userId']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
+		if(!@$this->db->query($query)){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
+			// do something in error case
+		}else{
+			return ["code" => 200, "message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora'];
+			// do something in success case
+		}
+		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
+	}
 }

@@ -186,28 +186,53 @@ class Conciliaciones extends MY_Loggedin
 					echo json_encode($validation);
 				}
 				return false;
-
-				$xmlContent = file_get_contents($uploadedFile['tmp_name']);
-				$xml = new DOMDocument();
-				$xml->loadXML($xmlContent);
-				$this->load->helper('factura_helper');
-				$factura = procesar_xml($xml, $this->user);
-				$rfc = $factura["sender_rfc"];
-				$xml = $factura["uuid"];
-				if (!$this->Invoice_model->uuid_exists($xml)) {
-					$dato['error'] = "rfc";
-					if ($this->Invoice_model->is_your_rfc($this->user, $rfc)) {
-						$dato['error'] = "factura";
-						$id_insertado = $this->Invoice_model->post_my_invoice($factura);
-					}
-				} else{
-					$dato['error'] = "uuid";
-				}
 			}
 		}
-		$dato['status'] = "ok";
-		$this->output->set_content_type('application/json');
-		$this->output->set_output(json_encode($dato));
+		echo json_encode(["code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento"]);
+		return false;
+	}
+	public function cargarNote(){
+		if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
+			$env = 'SANDBOX';
+			$amount = $this->input->post('OriginAmount');
+			$invoiceId = $this->input->post('OriginCFDI');
+			$conciliaDate = $this->input->post('conciliaDate');
+			$uploadedFile = $_FILES['file'];
+				$xml = simplexml_load_file($uploadedFile['tmp_name']);
+				$this->load->helper('factura_helper');
+				$doc = XmlProcess($xml);
+//				var_dump($doc);
+				$validation = $this->validaComprobante($doc,2,$env, $amount);
+				if($validation['code'] === 200 ){
+					$this->load->model('Invoice_model','invData');
+					$companyId = $this->session->userdata('datosEmpresa')['id'];
+					$userId = $this->session->userdata('datosUsuario')['id'];
+					$res = $this->invData->saveCFDI_E($doc, $companyId, $userId, $invoiceId, $conciliaDate, $env);
+					if ($res['code'] === 200){
+						$this->load->model('Operation_model', 'OpData');
+						$receiver = $this->invData->getReceptorByRFC($doc['receptor']['rfc'], $env);
+						$data = [
+							'invoiceId' => $invoiceId,
+							'noteId' => $res['id'],
+							'userId' => $userId,
+							'receiver' => $receiver,
+							'opNumber' => $this->MakeOperationNumber($invoiceId),
+							'paymentDate' =>  strtotime($conciliaDate),
+							'inCash' => $amount,
+							'outCash' => $doc['monto'],
+						];
+						$op = $this->OpData->newConciliation_E($data,'SANDBOX');
+						echo json_encode($op);
+						return true;
+					}
+					echo json_encode($res);
+				}else{
+					echo json_encode($validation);
+				}
+				return false;
+		}
+		echo json_encode(["code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento"]);
+		return false;
 	}
 
 	/**
@@ -287,5 +312,14 @@ class Conciliaciones extends MY_Loggedin
 			'reason' => 'RFC incorrecto',
 			'message'=> 'El RFC del emisor es diferente al que se registro para la empresa actual'
 		];
+	}
+	/**
+	 * Esta función permite crear un número único de operación para poner en la referencia numérica o en descripción de la transferencia
+	 * @param int $operation id de la operación
+	 * @return string numero para generar la transferencia
+	 */
+	private function MakeOperationNumber(int $operation): string{
+		$trash = '010203040506070809';
+		return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
 	}
 }

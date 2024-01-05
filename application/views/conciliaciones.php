@@ -1,4 +1,3 @@
-
 <style>
 	input:disabled::placeholder {
 		color: black !important;
@@ -56,7 +55,6 @@
 		border-radius: 10px;
 	}
 </style>
-
 <div class="p-5" style="margin: 0;padding: 0 !important;">
 	<!-- head con el calendario -->
 	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
@@ -409,51 +407,80 @@
 			<h5>Crear concilicación</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
-					<h6 class="p-3">Carga tu CFDI en formato .xml o múltiples .xml en un archivo .zip</h6>
-					<form id="uploadCFDI" enctype="multipart/form-data">
-						<div class="file-field input-field" >
-							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">
-								<input class="file-path validate" type="text" placeholder="Una factura en xml o múltiples en .zip" disabled >
-							</div>
-							<div style="width: 25%;margin-left: auto;">
-								<label for="containerCFDI" class="custom-file-upload button-blue">Seleccionar</label>
-								<input name="containerCFDI" id="containerCFDI" type="file" accept=".zip, .xml" maxFileSize="5242880" required />
+					<form id="uploadNoteForm" enctype="multipart/form-data">
+						<div class="row">
+							<p>
+								<label>
+									<input name="typeConcilia" id="receptorWay" type="radio" checked />
+									<span>Selecciona CFDI de pago inicial</span>
+								</label>
+							</p>
+							<p>
+								<label>
+									<input name="typeConcilia" id="issuingWay" type="radio"/>
+									<span>Cargar nota de debito</span>
+								</label>
+							</p>
+						</div>
+						<div class="row" id="contentVariable"></div>
+						<div class="row">
+							<div class="row" style="margin-bottom: 0">
+								<div class="row" style="margin-bottom: 0">
+									<div class="col l4">
+										<h6>Fecha de pago:
+											<i class="small material-icons" title="Fecha maxima para realizar el pago" style="cursor: help">help</i>
+										</h6>
+									</div>
+								</div>
+								<div class="row" style="font-size: 22px;">
+									<div class="col l4">
+										<label>
+											<input type="date" id="conciliaDate" min = "<?=date('Y-m-d',strtotime('now'))?>"
+												   max = "<?=date('Y-m-d',strtotime('now +3 month'))?>"
+												   value = "<?=date('Y-m-d',strtotime('now'))?>" />
+										</label>
+										<input type="hidden" id="OriginCFDI">
+										<input type="hidden" id="OriginAmount">
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="row">
-								<div class="col l12 d-flex">
-									<div class="p-5">
-										<input class="p-5" type="checkbox" required>
-									</div>
-									<p class="text-modal" style="text-align: justify;">
-										Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
-										factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
-										debido por el Proveedor en relación con dicha factura en favor del Cliente.
-										Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
-										<a href="terminosycondiciones">Términos y Condiciones</a>.
-									</p><br>
+						<div class="row">
+							<div class="col l12 d-flex">
+								<div class="p-5">
+									<input class="p-5" type="checkbox" required>
 								</div>
-							</div>
-							<div class="col l12 center-align">
-								<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
-								&nbsp;
-								<input class="button-blue" type="submit" value="Siguiente" </input>
+								<p class="text-modal" style="text-align: justify;">
+									Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
+									factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
+									debido por el Proveedor en relación con dicha factura en favor del Cliente.
+									Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
+									<a href="terminosycondiciones">Términos y Condiciones</a>.
+								</p><br>
 							</div>
 						</div>
+						<div class="col l12 center-align">
+							<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
+							&nbsp;
+							<input class="button-blue" type="submit" value="Siguiente" </input>
+						</div>
+					</div>
 					</form>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+			<a href="#!" class="modal-close button-gray">Cancelar</a>
 		</div>
 	</div>
 </div>
 <script>
 	let btnActive = 0;
+	let conciliateWay = 0;
 	$(document).ready(function() {
 		conciliation();
+		// $('#modal-new-conciliation').modal('open');/
 		$('#start').on('change', function (){
 			switch(btnActive) {
 				case 0:
@@ -536,6 +563,89 @@
 				}
 			});
 		})
+		$('#uploadNoteForm').on('submit', function (e) {
+			e.preventDefault();
+			if (conciliateWay === 0){
+				const formData = new FormData();
+				const files = $('#containerNote')[0].files[0];
+				formData.append('file', files);
+				formData.append('conciliaDate', $('#conciliaDate').val());
+				formData.append('OriginCFDI', $('#OriginCFDI').val());
+				formData.append('OriginAmount', $('#OriginAmount').val());
+				$.ajax({
+					url: '/Conciliaciones/cargarNote',
+					data: formData	,
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					method: 'post',
+					beforeSend: function () {
+						const obj = $('#modal-CFDI');
+						const left = obj.offset().left;
+						const top = obj.offset().top;
+						const width = obj.width();
+						const height = obj.height();
+						$('#solveLoader').css({
+							display: 'block',
+							left: left,
+							top: top,
+							width: width,
+							height: height,
+							zIndex: 999999
+						}).focus();
+					},
+					success: function (data) {
+						let toastHTML;
+						if (data.code === 500 || data.code === 404) {
+							let toastHTML = '<span><strong>' + data.message + '</strong></span>';
+							M.toast({html: toastHTML});
+							toastHTML = '<span><strong>' + data.reason + '</strong></span>';
+							M.toast({html: toastHTML});
+							// location.reload()
+						} else {
+							$('#modal-CFDI').modal('close');
+							toastHTML = '<span>' + data.message + '</span>';
+							M.toast({html: toastHTML});
+						}
+					},
+					complete: function () {
+						$('#solveLoader').css({
+							display: 'none'
+						}).delay(2000);
+						cfdi();
+					},
+					error: function (data){
+						$('#solveLoader').css({
+							display: 'none'
+						});
+						let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+						M.toast({html: toastHTML});
+						toastHTML = '<span>Por favor intente mas tarde</span>';
+						M.toast({html: toastHTML});
+						toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+						M.toast({html: toastHTML});
+					}
+				});
+			}else{
+
+			}
+		})
+		document.querySelectorAll("input[name='typeConcilia']").forEach((input) => {
+			input.addEventListener('change', function (e){
+				if (e.target.id === 'issuingWay'){
+					conciliateWay = 0;
+					let debit = '<div class="file-field input-field" ><div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">' +
+						'<input class="file-path validate" type="text" placeholder="Sube tu nota de debito en formato .xml" disabled ></div>' +
+						'<div style="width: 25%;margin-left: auto;"><label for="containerNote" class="custom-file-upload button-blue">Seleccionar</label>' +
+						'<input name="containerNote" id="containerNote" type="file" accept=".xml" maxFileSize="5242880" required /></div></div>'
+					$('#contentVariable').empty();
+					$('#contentVariable').append(debit);
+				}else{
+					$('#contentVariable').empty();
+				}
+
+			});
+		});
 	});
 	function noSelect(){
 		$('#btnConciliation').removeClass("selected");
@@ -787,7 +897,12 @@
 						switch (value.status){
 							case '0':
 								initC.click(function(){
-
+									let dateS = (value.dateToPay);
+									dateS = dateS.split('-');
+									console.log(dateS);
+									$('#conciliaDate').attr('value', dateS[2]+'-'+dateS[1]+'-'+dateS[0]);
+									$('#OriginCFDI').val(value.id)
+									$('#OriginAmount').val(value.total)
 								});
 								break;
 							case '1':
@@ -797,7 +912,6 @@
 								initC = '<i class="small material-icons" style="color: red;">cancel</i>';
 								break;
 						}
-
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td id="initC'+value.id+'"></td>' +

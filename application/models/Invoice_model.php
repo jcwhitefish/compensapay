@@ -524,6 +524,32 @@ ORDER BY t1.created_at DESC";
 		}
 		return ["code" => 500, "message" => "Error al guardar información", "reason" => "Error con la fuente de información"];
 	}
+	public function saveCFDI_E(array $cfdi, int $companyID, int $userID, int $id_invoice, string $conciliaDate, string $env = null): array {
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Se obtienen y transforman fechas
+		$invoiceDate = strtotime($cfdi['fecha']);
+		$idReceptor = $this->getReceptorByRFC($cfdi['receptor']['rfc'], $env);
+		if (isset($idReceptor['code'])){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "No esta registrada la empresa receptora"];
+		}
+		$paymentDate = strtotime($conciliaDate);
+		//Se crea el query para guardar el archivo en BD
+		$query = "INSERT INTO $this->base.debit_notes 
+    (id_invoice, id_company, sender_rfc, receiver_rfc, uuid, debitnote_date, payment_date, total, xml_document)
+    VALUES ('$id_invoice','$companyID','{$cfdi['emisor']['rfc']}','{$cfdi['receptor']['rfc']}', '{$cfdi['uuid']}', '$invoiceDate',
+            '$paymentDate','{$cfdi['monto']}','{$cfdi['xml']}')";
+		$this->db->db_debug = FALSE;
+		if(!@$this->db->query($query)){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
+			// do something in error case
+		}else{
+			return ["code" => 200, "id" => $this->db->insert_id()];
+			// do something in success case
+		}
+		return ["code" => 500, "message" => "Error al guardar información", "reason" => "Error con la fuente de información"];
+	}
 	public function getPaymentDate(int $companyID_1, int $companyID_2, string $env = null){
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
@@ -558,7 +584,6 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 		return ["code" => 500,"message" => "Error al obtener fecha de pago",
 			"reason" => "Error con la fuente de información"];
 	}
-
 	public function getReceptorByRFC(string $rfc, string$env= null)
 	{
 		$query = "SELECT id FROM compensatest_base.companies WHERE rfc = '$rfc'";
