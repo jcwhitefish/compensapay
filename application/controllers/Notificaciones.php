@@ -18,8 +18,20 @@ class Notificaciones extends MY_Loggedin{
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+	function __construct()
+	{
+
+	  parent:: __construct();
+	  $this->load->model('Notification_model'); 
+	}
+
 	public function index(){
-		$data['main'] = $this->load->view('notificaciones','', true);
+		$dato = array(
+			"noti" => $this->Notification_model->verNotificaciones(),
+			"dump" => 0
+		);
+
+		$data['main'] = $this->load->view('notificaciones', $dato, true);
 		$this->load->view('plantilla', $data);
 	}				
 
