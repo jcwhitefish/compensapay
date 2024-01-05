@@ -106,3 +106,13 @@ function operaciones(fechai, fechaf){
 		$('#contenido').html(info);
 	});
 }
+
+function costos_operacion(fechai, fechaf){
+	$.ajax({
+		type: 'POST',
+		url : 'operaciones/costos_operacion.php',
+		data: 'fechai=' + fechai + '&fechaf=' + fechaf
+	}).done (function ( info ){
+		$('#contenido').html(info);
+	});
+}

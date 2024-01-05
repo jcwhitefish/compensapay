@@ -35,7 +35,7 @@
                     <tr>
                         <th>Estatus</th>
                         <th>Id<br />Operación</th>
-                        <th>Proovedor</th>
+                        <th>Proveedor</th>
                         <th>Cliente</th>
                         <th>Fecha<br />Factura</th>
                         <th>Fecha<br />Alta</th>
