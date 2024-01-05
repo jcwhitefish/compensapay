@@ -27,4 +27,21 @@ VALUES ('{$args['id']}', '{$args['title']}',  \"".$args['body']."\", 0)";
 		}
 		return false;
 	}
+
+	public function verNotificaciones(){
+		$iduser =  $this->session->userdata('datosUsuario')["id"];
+
+		$querynot = "SELECT * FROM notifications WHERE user_id='".$iduser."' ORDER BY create_at DESC";
+
+		if ($result = $this->db->query($querynot)) {
+			if ($result->num_rows() > 0){
+                $rresult = $result->result_array();
+            }
+            else {
+                $rresultc = NULL;
+            }
+		}
+
+		return $rresult;
+	}
 }

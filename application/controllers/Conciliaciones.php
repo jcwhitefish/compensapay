@@ -126,7 +126,7 @@ class Conciliaciones extends MY_Loggedin
 		$notification = notificationBody($data,17);
 		$data = [
 			'user' => [
-				'name' => $this->session->userdata('datosUsuario')["name"],
+				'name' =>$this->session->userdata('datosUsuario')["name"],
 				'lastName' => $this->session->userdata('datosUsuario')["last_name"],
 				'company' => $this->session->userdata('datosEmpresa')["short_name"],
 			],
