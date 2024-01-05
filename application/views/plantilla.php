@@ -78,21 +78,6 @@ if ($this->session->userdata('logged_in')) {
                     </div>-->
                     <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
                         <p class="nav-max" style="padding-left: 10px;top:-15px"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
-
-                        <?php 
-                        $vista=$this->uri->segment(1);
-
-                        if($vista=='facturas' )
-                        {
-                        ?>   
-                        <select onchange="cambiarVista(this.value)" name="type" id="type" class="nav-max browser-default input-nav" style="top: -2px;">
-                            <!-- cliente 1 provedor 2 -->
-                            <option value="1" <?= $this->session->userdata('vista') == 1 ? 'selected' : '' ?>>Vista Cliente</option>
-                            <option value="2" <?= $this->session->userdata('vista') == 2 ? 'selected' : '' ?>>Vista Proveedor</option>
-                        </select>
-                        <?php
-                        }
-                        ?>
                     </div>
                     <div class="d-flex justificarVertical alinearVertical">
                         <a class="d-flex justificarVertical alinearVertical" href="<?= base_url('perfil/usuario') ?>" target="_self" rel="noopener noreferrer">
@@ -114,8 +99,8 @@ if ($this->session->userdata('logged_in')) {
             <ul>
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'facturas', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">swap_horiz</i></a></li>', base_url('facturas'), (strpos(current_url(), 'facturas') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'Conciliaciones', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">swap_horiz</i></a></li>', base_url('Conciliaciones'), (strpos(current_url(), 'Conciliaciones') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('reportes'), (strpos(current_url(), ' ')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('Documentos'), (strpos(current_url(), 'Documentos')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
