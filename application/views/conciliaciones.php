@@ -603,9 +603,10 @@
 							M.toast({html: toastHTML});
 							// location.reload()
 						} else {
-							$('#modal-CFDI').modal('close');
+							$('#modal-new-conciliation').modal('close');
 							toastHTML = '<span>' + data.message + '</span>';
 							M.toast({html: toastHTML});
+							conciliation();
 						}
 					},
 					complete: function () {

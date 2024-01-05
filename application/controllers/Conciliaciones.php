@@ -13,7 +13,6 @@ class Conciliaciones extends MY_Loggedin
 		$data['main'] = $this->load->view('conciliaciones', '', true);
 		$this->load->view('plantilla', $data);
 	}
-
 	public function CFDI()
 	{
 		//Se obtienen la fecha mínima y máxima para filtrar las facturas
@@ -38,7 +37,6 @@ class Conciliaciones extends MY_Loggedin
 		echo json_encode(["code" => 500, "message" => "Error al extraer la información", "reason" => "No se envió una fecha valida"]);
 		return false;
 	}
-
 	public function conciliation()
 	{
 		//Se obtienen la fecha mínima y máxima para filtrar las facturas
@@ -73,8 +71,12 @@ class Conciliaciones extends MY_Loggedin
 			//Se carga el modelo de donde se obtendrán los datos y se obtiene el ID de compañía de la sesión
 			$this->load->model('Operation_model', 'OpData');
 			$idCompany = $this->session->userdata('datosEmpresa')["id"];
+
 			//Se envía la instrucción para aceptar la conciliación
-			if($this->OpData->acceptConciliation($id, $payDate,$idCompany,'SANDBOX')['code'] === 200){
+			$res = $this->OpData->acceptConciliation($id, $payDate, $idCompany,'SANDBOX');
+			if( $res['code'] === 200){
+				$conciliation = $this->OpData->getConciliationByID($id,'SANDBOX');
+				$add = $this->OpData->acceptCFDI($conciliation[0]['id'],'SANDBOX');
 				$this->adviseAuthorized($id);
 				echo json_encode([
 					"code" => 200,
@@ -163,7 +165,6 @@ class Conciliaciones extends MY_Loggedin
 			'title' =>$notification['title'],
 			'body' =>$notification['body']];
 		$res = $this->nt->insertNotification($arr,$env);
-		var_dump($res);
 	}
 	public function cargarComprobantes(){
 		if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
@@ -266,7 +267,6 @@ class Conciliaciones extends MY_Loggedin
 		echo json_encode(["code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento"]);
 		return false;
 	}
-
 	/**
 	 * Función para validar el tipo de comprobante (Factura, Nora de débito)
 	 * de acuerdo a las reglas de recepción para conciliaciones
