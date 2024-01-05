@@ -508,7 +508,7 @@ ORDER BY t1.created_at DESC";
 			return ["code" => 500, "message" => "Error al guardar información", "reason" => "No esta registrada la empresa receptora"];
 		}
 		$paymentDate = $this->getPaymentDate($companyID,$idReceptor,$env);
-		$paymentDate = strtotime($cfdi['fecha'].' +'.$paymentDate.' days');
+		$paymentDate = strtotime('now +'.$paymentDate.' days');
 		//Se crea el query para guardar el archivo en BD
 		$query = "INSERT INTO $this->base.invoices 
     (id_company, id_user, sender_rfc, receiver_rfc, uuid, invoice_date, payment_date, status, total, xml_document)

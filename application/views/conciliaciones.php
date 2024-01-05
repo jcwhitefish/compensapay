@@ -404,7 +404,7 @@
 	<!-- crear conciliacion -->
 	<div id="modal-new-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
 		<div class="modal-content">
-			<h5>Crear concilicación</h5>
+			<h5>Crear conciliación</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
 					<form id="uploadNoteForm" enctype="multipart/form-data">
@@ -648,7 +648,12 @@
 					$('#contentVariable').empty();
 					$('#contentVariable').append(debit);
 				}else{
+					conciliateWay = 1;
+					let contra = '<div class="collection"><a href="#!" class="collection-item">Alvin</a>' +
+						'<a href="#!" class="collection-item active">Alvin</a><a href="#!" class="collection-item">Alvin</a>' +
+						'<a href="#!" class="collection-item">Alvin</a></div>';
 					$('#contentVariable').empty();
+					$('#contentVariable').append(contra);
 				}
 
 			});
