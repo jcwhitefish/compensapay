@@ -21,9 +21,9 @@ class Notification_model extends CI_Model
 	public function insertNotification(array $args, string $env): mixed
 	{
 		$query = "INSERT INTO compensatest_base.notifications (user_id, title, body, readed) 
-VALUES ('{$args['id']}', '{$args['title']}','{$args['body']}', 0)";
-		if ($this->db->query($query)){
-			return $this->db->insert_id();
+VALUES ('{$args['id']}', '{$args['title']}',  \"".$args['body']."\", 0)";
+		if ($res=$this->db->query($query)){
+			return($this->db->insert_id());
 		}
 		return false;
 	}

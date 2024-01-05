@@ -76,9 +76,9 @@ como su proveedor en la plataforma Solve.";
 			$title = "Facturas cargadas";
 			break;
 		case 13:
-			$url = base_url('/facturas');
+			$url = base_url('/Conciliaciones');
 			$body = "Te informamos que la operaci&oacute;n #<strong>{$args['operationNumber']}</strong> ha sido creada por tu proveedor, 
-es necesario validarla ingresando en el m&oacute;dulo de <strong>operaciones</strong> dando clic <a href='$url'>aquí</a>";
+es necesario validarla ingresando en el m&oacute;dulo de <strong>conciliaciones</strong> dando clic <a href='$url'>aquí</a>";
 			$title = "Operación creada";
 			break;
 		case 14:

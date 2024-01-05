@@ -210,7 +210,10 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
 			// do something in error case
 		}else{
-			return ["code" => 200, "message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora'];
+			return [
+				"code" => 200,
+				"message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora',
+				'id' =>$this->db->insert_id()];
 			// do something in success case
 		}
 		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];

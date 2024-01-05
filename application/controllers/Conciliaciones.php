@@ -115,7 +115,7 @@ class Conciliaciones extends MY_Loggedin
 			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
 			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 		];
-//		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
 		$this->nt->insertNotification(
 			['id'=>$provider['result']['id'], 'title' =>$notification['title'], 'body' =>$notification['body'],],$env);
 		$data=[
@@ -134,9 +134,36 @@ class Conciliaciones extends MY_Loggedin
 			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
 			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 		];
-//		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
 		$this->nt->insertNotification(
 			['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],$env);
+	}
+	public function adviseCreated(array $args, string $env = 'SANDBOX'){
+		//Se cargan los helpers y modelos necesarios
+		$this->load->model('User_model', 'dataUsr');
+		$this->load->model('Notification_model' , 'nt');
+		$this->load->helper('sendmail_helper');
+		$this->load->helper('notifications_helper');
+		$data = ['operationNumber'=>$args['opNumber']];
+		$notification = notificationBody($data,13);
+		$provider = $this->dataUsr->getInfoFromCompanyPrimary($args['receiver'], $env);
+		$data = [
+			'user' => [
+				'name' => $provider['result']['name'],
+				'lastName' => $provider['result']['last_name'],
+				'company' => $provider['result']['short_name'],
+			],
+			'text' => $notification['body'],
+			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
+			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
+		];
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		$arr =[
+			'id'=>$args['receiver'],
+			'title' =>$notification['title'],
+			'body' =>$notification['body']];
+		$res = $this->nt->insertNotification($arr,$env);
+		var_dump($res);
 	}
 	public function cargarComprobantes(){
 		if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
@@ -223,10 +250,12 @@ class Conciliaciones extends MY_Loggedin
 						];
 						$op = $this->OpData->newConciliation_E($data,'SANDBOX');
 						if ($op['code']===200){
-
+							$this->adviseCreated($data, $env);
+							echo json_encode($op);
+							return true;
 						}
 						echo json_encode($op);
-						return true;
+						return false;
 					}
 					echo json_encode($res);
 				}else{
