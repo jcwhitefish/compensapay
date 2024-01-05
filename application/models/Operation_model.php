@@ -222,6 +222,7 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT * FROM $this->base.invoices WHERE id = '$id'";
+//		var_dump($query);
 		if ($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){
 				return $res->result_array();

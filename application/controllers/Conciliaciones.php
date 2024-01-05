@@ -2,7 +2,7 @@
 /**
  * @property Invoice_model 		$invData
  * @property Operation_model 	$OpData
- * @property user_model         $dataUsr
+ * @property User_model         $dataUsr
  * @property Notification_model $nt
  */
 class Conciliaciones extends MY_Loggedin
@@ -77,11 +77,12 @@ class Conciliaciones extends MY_Loggedin
 			if( $res['code'] === 200){
 				$conciliation = $this->OpData->getConciliationByID($id,'SANDBOX');
 				$add = $this->OpData->acceptCFDI($conciliation[0]['id'],'SANDBOX');
-				$this->adviseAuthorized($id);
 				echo json_encode([
 					"code" => 200,
 					"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia"
 				]);
+//				$this->adviseAuthorized($id);
+
 				return true;
 			}
 		}
@@ -97,14 +98,13 @@ class Conciliaciones extends MY_Loggedin
 	public function adviseAuthorized (int $id, string $env = 'SANDBOX')
 	{
 		//Se cargan los helpers y modelos necesarios
-		$this->load->model('user_model', 'dataUsr');
+		$this->load->model('User_model', 'dataUsr');
 		$this->load->model('Notification_model' , 'nt');
 		$this->load->helper('sendmail_helper');
 		$this->load->helper('notifications_helper');
 
 		$conciliation = $this->OpData->getConciliacionesByID($id, $env);
 		$provider = $this->dataUsr->getInfoFromCompanyPrimary($conciliation['result']['idEmisor'], $env);
-//		var_dump($provider);
 		$data = ['operationNumber'=>$conciliation['result']['operation_number']];
 		$notification = notificationBody($data,4);
 		$data = [
@@ -117,7 +117,7 @@ class Conciliaciones extends MY_Loggedin
 			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
 			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 		];
-		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,['alejandro@whitefish.mx','juan.carreno@whitefish.mx'] , $notification['title']);
 		$this->nt->insertNotification(
 			['id'=>$provider['result']['id'], 'title' =>$notification['title'], 'body' =>$notification['body'],],$env);
 		$data=[
@@ -136,13 +136,13 @@ class Conciliaciones extends MY_Loggedin
 			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
 			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 		];
-		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,['alejandro@whitefish.mx','juan.carreno@whitefish.mx'] , $notification['title']);
 		$this->nt->insertNotification(
 			['id'=>$this->session->userdata('datosUsuario')["id"], 'title' =>$notification['title'], 'body' =>$notification['body'],],$env);
 	}
 	public function adviseCreated(array $args, string $env = 'SANDBOX'){
 		//Se cargan los helpers y modelos necesarios
-		$this->load->model('user_model', 'dataUsr');
+		$this->load->model('User_model', 'dataUsr');
 		$this->load->model('Notification_model' , 'nt');
 		$this->load->helper('sendmail_helper');
 		$this->load->helper('notifications_helper');
@@ -159,7 +159,7 @@ class Conciliaciones extends MY_Loggedin
 			'urlDetail' => ['url' => base_url('/Conciliaciones'), 'name' => 'Conciliaciones'],
 			'urlSoporte' => ['url' => base_url('/soporte'), 'name' => base_url('/soporte')],
 		];
-		send_mail('uriel.magallon@whitefish.mx', $data, 2,null , $notification['title']);
+		send_mail('uriel.magallon@whitefish.mx', $data, 2,['alejandro@whitefish.mx','juan.carreno@whitefish.mx'] , $notification['title']);
 		$arr =[
 			'id'=>$args['receiver'],
 			'title' =>$notification['title'],
@@ -250,9 +250,11 @@ class Conciliaciones extends MY_Loggedin
 							'outCash' => $doc['monto'],
 						];
 						$op = $this->OpData->newConciliation_E($data,'SANDBOX');
-						if ($op['code']===200){
-							$this->adviseCreated($data, $env);
+
+						if ($op['code'] === 200){
+//							var_dump($op);
 							echo json_encode($op);
+//							$this->adviseCreated($data, $env);
 							return true;
 						}
 						echo json_encode($op);
@@ -303,7 +305,7 @@ class Conciliaciones extends MY_Loggedin
 				//Valida que sea de tipo Egreso
 				if($factura['tipo'] === 'E'){
 					//Se carga el modelo para obtener información del usuario
-					$this->load->model('user_model', 'dataUsr');
+					$this->load->model('User_model', 'dataUsr');
 					$id = $company["id"];
 					//Se obtiene la información de fintech del usuario
 					$fintech = $this->dataUsr->getFintechInfo($id, $env);
