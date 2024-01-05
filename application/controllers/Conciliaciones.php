@@ -222,6 +222,9 @@ class Conciliaciones extends MY_Loggedin
 							'outCash' => $doc['monto'],
 						];
 						$op = $this->OpData->newConciliation_E($data,'SANDBOX');
+						if ($op['code']===200){
+
+						}
 						echo json_encode($op);
 						return true;
 					}

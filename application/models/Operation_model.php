@@ -94,7 +94,7 @@ class Operation_model extends CI_Model {
     	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
     	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
-    	(CASE WHEN t5.id IS NULL THEN 'nota' ELSE 'cfdi' END) AS 'role'
+    	(CASE WHEN t5.id IS NULL THEN 'nota' ELSE 'cfdi' END) AS 'tipoCFDI'
 		FROM $this->base.operations t1 
 		    INNER JOIN $this->base.companies t2 ON t2.id = t1.id_client 
 		    INNER JOIN $this->base.companies t3 ON t3.id = t1.id_provider 
