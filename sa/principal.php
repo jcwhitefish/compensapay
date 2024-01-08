@@ -47,14 +47,14 @@
         <!--<hr class="line-side">-->
         <ul>
             <ul class="icon-list">
-                <li><a href="%s"><i class="material-icons">dashboard</i></a></li>
+                <li><a href="#" onclick="dashboard(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">dashboard</i></a></li>
                 <li><a href="%s"><i class="material-icons">warning</i></a></li>
-                <li><a href="%s"><i class="material-icons">monetization_on</i></a></li>
+                <li><a href="#" onclick="costos_operacion(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">monetization_on</i></a></li>
                 <li><a href="%s"><i class="fa-solid fa-cash-register"></i></a></li>
-                <li><a href="%s"><i class="material-icons">headset_mic</i></a></li>
-                <li><a href="%s"><i class="material-icons">business</i></a></li>
-                <li><a href="%s"><i class="material-icons">people</i></a></li>
-                <li><a href="%s"><i class="material-icons">swap_horiz</i></a></li>
+                <li><a href="#" onclick="tickets(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">headset_mic</i></a></li>
+                <li><a href="#" onclick="empresas(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">business</i></a></li>
+                <li><a href="#" onclick="usuarios(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">people</i></a></li>
+                <li><a href="#" onclick="operaciones(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">swap_horiz</i></a></li>
                 <li><a href="%s"><i class="fa-solid fa-clipboard-list"></i></a></li>
                 <li><a href=""><i class="material-icons">exit_to_app</i></a></li>
             </ul>
