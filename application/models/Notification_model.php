@@ -38,8 +38,28 @@ VALUES ('{$args['id']}', '{$args['title']}',  \"".$args['body']."\", 0)";
                 $rresult = $result->result_array();
             }
             else {
-                $rresultc = NULL;
+                $rresult = NULL;
             }
+		}
+
+		return $rresult;
+	}
+
+	public function updateNoti($idnoti){
+		$q_update = "UPDATE notifications SET readed='1' WHERE id='".$idnoti."'";
+
+		if($result = $this->db->query($q_update)) {
+
+			$querynot = "SELECT * FROM notifications WHERE id='".$idnoti."' LIMIT 1";
+
+			if ($result2 = $this->db->query($querynot)) {
+				if ($result2->num_rows() > 0){
+					$rresult = $result2->result_array();
+				}
+				else {
+					$rresult = NULL;
+				}
+			}
 		}
 
 		return $rresult;

@@ -33,6 +33,14 @@ class Notificaciones extends MY_Loggedin{
 
 		$data['main'] = $this->load->view('notificaciones', $dato, true);
 		$this->load->view('plantilla', $data);
-	}				
+	}
+	
+	public function updatenot($idnoti){
+		$dato = array(
+			"noti" => $this->Notification_model->updateNoti($idnoti)
+		);
+		
+		$this->load->view('notificacion', $dato);
+	}
 
 }
