@@ -16,7 +16,7 @@
 		width: 80% !important;
 	}
 
-	/* Fix show checkbox and radiobuttons*/
+	/* Fix show checkbox and radiobutton*/
 
 	[type="checkbox"]:not(:checked),
 	[type="checkbox"]:checked {
@@ -31,21 +31,6 @@
 		position: relative;
 		pointer-events: auto;
 	}
-
-	/* Puntos suspensivos a fila donde se muestrael UUID */
-	.uuid-text{
-		width: 105px;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-
-	/* Estilo vista de operacion */
-	.font_head_op_info{
-		font-weight: bold;
-		font-size: 20px;
-	}
-
 	/* Fix button selected but all class selected afect */
 	.selected {
 		background-color: black !important;
@@ -63,7 +48,7 @@
 		</div>
 		<div class="row" style="margin-bottom: 10px">
 			<div class="col l3">
-				<div class="row" style="margin-bottom: 0px;">
+				<div class="row" style="margin-bottom: 0;">
 					<div class="col valign-wrapper"><p>Desde:</p></div>
 					<div class="col">
 						<label for="start">
@@ -73,7 +58,7 @@
 				</div>
 			</div>
 			<div class="col l3">
-				<div class="row" style="margin-bottom: 0px;">
+				<div class="row" style="margin-bottom: 0;">
 					<div class="col valign-wrapper"><p>Hasta:</p></div>
 					<div class="col">
 						<label for="fin">
@@ -84,13 +69,13 @@
 			</div>
 			<div class="col l3"></div>
 			<div class="col l3 valign-wrapper">
-				<a id="btnAction" class="modal-trigger button-blue" href="#modal-factura">Crear conciliación</a>
+				<a id="btnAction" class="modal-trigger button-blue" href="#modal-CFDI">Subir CFDI</a>
 			</div>
 		</div>
 	</div>
 	<!-- Las tablas principales que se muestran Facturas-->
 	<div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
-		<div class="card-content" style="padding: 10px; margin-right: ">
+		<div class="card-content" style="padding: 10px; ">
 			<div class="row" style="margin-bottom: 1px">
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
 					<div class="col l3">
@@ -115,167 +100,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Crear una conciliacion -->
-	<div id="modal-conciliation" class="modal">
-		<div class="modal-content">
-			<h5>Crear Operación</h5>
-			<div class="card esquinasRedondas">
-				<div class="card-content">
-					<h6 class="p-3">Carga tu nota xml relacionada a una factura</h6>
-					<form id="uploadForm" enctype="multipart/form-data">
-						<div class="row">
-							<div class="col l3 input-border">
-								<input type="text" name="operationDisabled" id="operationDisabled" disabled v-model="operationUploadName">
-								<label for="operationDisabled">Tu Nota de Crédito XML</label>
-							</div>
-							<div class="col l4 left-align p-5">
-								<label for="operationUpload" class="custom-file-upload button-blue">Seleccionar</label>
-								<input @change="checkFormatOperation" name="operationUpload" ref="operationUpload" id="operationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
-							</div>
-							<div class="col l5 input-border select-white">
-								<input type="text" name="providerDisabled" id="providerDisabled" disabled v-model="clientUploadName">
-								<label for="providerDisabled">Cliente</label>
-							</div>
-							<div class="col l12" style="overflow: scroll">
-								<table class="visible-table striped">
-									<thead>
-									<tr>
-										<th>Crear Operación</th>
-										<th>Cliente</th>
-										<th>RFC Cliente</th>
-										<th>UUID Factura</th>
-										<th>Fecha Factura</th>
-										<th>Fecha Alta</th>
-										<th>Fecha Transacción</th>
-										<th>Subtotal</th>
-										<th>IVA</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr v-for="facturaClient in facturasProveedor">
-										<td class="tabla-celda center-align">
-											<input type="radio" name="grupoRadio" :value="facturaClient.id" ref="grupoRadio" id="grupoRadio" v-model="radioChecked" required></i>
-										</td>
-										<td>{{facturaClient.name_client}}</td>
-										<td>{{facturaClient.sender_rfc}}</td>
-										<td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+facturaClient.id" target="_blank">{{facturaClient.uuid}}</a></p></td>
-										<td class="uuid-text">{{facturaClient.invoice_date}}</td>
-										<td class="uuid-text">{{facturaClient.created_at}}</td>
-										<td>
-											<p v-if="facturaClient.transaction_date == '0000-00-00' " >Pendiente</p>
-											<p class="uuid-text" v-if="facturaClient.transaction_date != '0000-00-00' " >{{facturaClient.transaction_date}}</p>
-										</td>
-										<td>${{facturaClient.subtotal}}</td>
-										<td>${{facturaClient.iva}}</td>
-										<td>${{facturaClient.total}}</td>
-									</tr>
-									</tbody>
-								</table>
-							</div><br>
-							<div class="col l8">
-								<a class="modal-trigger modal-close button-blue" href="#modal-solicitar-factura" v-if="clientUploadName != ''">Solicitar otra factura</a>
-							</div>
-							<div class="col l4 center-align">
-								<a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-								&nbsp;
-								<button class="button-blue" :class="{ 'modal-close': radioChecked }" name="action" type="reset" @click="uploadOperation">Siguiente</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Desde cliente creara operacion especifica a factura -->
-	<div id="modal-operacion-unica" class="modal">
-		<div class="modal-content">
-			<h5>Crear Operación</h5>
-			<div class="card esquinasRedondas">
-				<div class="card-content">
-					<h6 class="p-3">Carga tu xml relacionada a una factura</h6>
-					<form id="uploadForm" enctype="multipart/form-data">
-						<div class="row">
-							<div class="col l3 input-border">
-								<input type="text" name="operationDisabledUnique" id="operationDisabledUnique" disabled v-model="operationUploadNameUnique">
-								<label for="operationDisabledUnique">Tu Nota de Crédito XML</label>
-							</div>
-							<div class="col l0 left-align p-5">
-								<label for="uniqueOperationUpload" class="custom-file-upload button-blue">Seleccionar</label>
-								<input @change="checkFormatOperationUnique" name="uniqueOperationUpload" ref="uniqueOperationUpload" id="uniqueOperationUpload" type="file" accept="application/xml" maxFileSize="5242880" required/>
-							</div>
-							<div class="col l5 input-border select-white">
-								<input type="text" name="providerDisabledUnique" id="providerDisabledUnique" disabled v-model="clientUploadNameUnique">
-								<label for="providerDisabledUnique">Cliente</label>
-							</div>
-							<div class="col l12" style="overflow: scroll">
-								<table class="visible-table striped">
-									<thead>
-									<tr>
-										<th>Cliente</th>
-										<th>RFC Cliente</th>
-										<th>UUID Factura</th>
-										<th>Fecha Factura</th>
-										<th>Fecha Alta</th>
-										<th>Fecha Transacción</th>
-										<th>Subtotal</th>
-										<th>IVA</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr v-for="factura in facturasUnique">
-										<td>{{factura.name_client }}</td>
-										<td>{{factura.receiver_rfc }}</td>
-										<td><p class="uuid-text"><a :href="'assets/factura/factura.php?idfactura='+factura.id" target="_blank">{{factura.uuid}}</a></p></td>
-										<td class="uuid-text">{{factura.invoice_date}}</td>
-										<td class="uuid-text">{{factura.created_at}}</td>
-										<td>
-											<p v-if="factura.transaction_date == '0000-00-00' " >Pendiente</p>
-											<p class="uuid-text" v-if="factura.transaction_date != '0000-00-00' " >{{factura.transaction_date}}</p>
-										</td>
-										<td>${{factura.subtotal}}</td>
-										<td>${{factura.iva}}</td>
-										<td>${{factura.total}}</td>
-									</tr>
-									</tbody>
-								</table>
-							</div><br>
-							<div class="col l8"></div>
-							<div class="col l4 center-align">
-								<a class="modal-close button-gray" style="color:#fff; color:hover:#">Cancelar</a>
-								&nbsp;
-								<button class="button-blue modal-close" name="action" type="reset" @click="uploadOperationUnica">Siguiente</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- solicitar facturas -->
-	<div id="modal-solicitar-factura" class="modal p-5">
-		<h5>Solicitar Factura</h5>
-		<div class="card esquinasRedondas">
-			<form>
-				<div class="card-content ">
-					<div class="row">
-						<div class="col l12">
-							<label style="top: 0!important;" for="descripcion">Mensaje para Solicitar</label>
-							<textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
-						</div>
-						<div class="col l12 d-flex justify-content-flex-end">
-							<a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
-							&nbsp;
-							<button class="button-blue modal-close" onclick="M.toast({html: 'Se solicito Factura'})">Solicitar</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-
 	<!-- darle rechazar una factura -->
 	<div id="modal-rechazo" class="modal p-5">
 		<h5>Operación rechazada</h5>
@@ -284,13 +108,12 @@
 				<div class="card-content ">
 					<div class="row">
 						<div class="col l12">
-							<label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operacion.</label>
+							<label style="top: 0!important;" for="descripcion">Indique la razón específica de la cancelación de la operación.</label>
 							<textarea style="min-height: 30vh;" id="descripcion" name="descripcion" class="materialize-textarea validate" required></textarea>
 						</div>
 						<div class="col l12 d-flex justify-content-flex-end">
-							<a class="button-gray modal-close " style="color:#fff; color:hover:#">Cancelar</a>
-							&nbsp;
-							<button class="button-blue modal-close" name="action" type="reset"  @click="changeStatus('2')">Enviar</button>
+							<a class="button-gray modal-close ">Cancelar</a>
+							<button class="button-blue modal-close" name="action" type="reset">Enviar</button>
 						</div>
 					</div>
 				</div>
@@ -298,7 +121,7 @@
 		</div>
 	</div>
 	<!-- darle aceptar a una factura -->
-	<div id="modal-aut-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
+	<div id="modal-aut-conciliation" class="modal modal-fixed-footer" style="max-height: 98% !important; height: 95%; width: 90% !important">
 		<div class="modal-content" style="padding-top:10px;">
 			<h5 >Por favor, autoriza la transacción</h5>
 			<div class="card esquinasRedondas">
@@ -307,12 +130,12 @@
 						<div class="row" style="margin-bottom: 0">
 							<div class="col l2"><h6>Emisor:</h6></div>
 							<div class="col l5"><h6>CFDI:</h6></div>
-							<div class="col l5"><h6>Nota de debito/Factura</h6></div>
+							<div class="col l5"><h6>Nota de crédito/Factura</h6></div>
 						</div>
 						<div class="row" style="font-size: 22px;">
 							<div class="col l2" id="autEmisor">Emisor:</div>
 							<div class="col l5" id="autCFDI" >Factura:</div>
-							<div class="col l5" id="autConciliador">Nota de debito/Factura</div>
+							<div class="col l5" id="autConciliador">Nota de crédito/Factura</div>
 						</div>
 					</div>
 					<div class="row" style="margin-bottom: 0">
@@ -324,7 +147,7 @@
 						<div class="row" style="font-size: 22px;">
 							<div class="col l4" id="autReferencia">Emisor:</div>
 							<div class="col l4" id="autMonto1">Factura:</div>
-							<div class="col l4" id="autMonto2">Nota de debito/Factura</div>
+							<div class="col l4" id="autMonto2">Nota de crédito/Factura</div>
 						</div>
 					</div>
 					<div class="row" style="margin-bottom: 0">
@@ -359,7 +182,7 @@
 		</div>
 	</div>
 	<!-- Subir los CFDI -->
-	<div id="modal-CFDI" class="modal modal" style="max-height 98% !important; height: 95%; width: 90% !important">
+	<div id="modal-CFDI" class="modal modal" style="max-height: 98% !important; height: 95%; width: 90% !important">
 		<div class="modal-content">
 			<h5>Carga tus CFDI</h5>
 			<div class="card esquinasRedondas">
@@ -391,8 +214,7 @@
 								</div>
 							</div>
 							<div class="col l12 center-align">
-								<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
-								&nbsp;
+								<a class="modal-close button-gray" >Cancelar</a>
 								<input class="button-blue" type="submit" value="Siguiente" </input>
 							</div>
 						</div>
@@ -401,8 +223,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- crear conciliacion -->
-	<div id="modal-new-conciliation" class="modal modal-fixed-footer" style="max-height 98% !important; height: 95%; width: 90% !important">
+	<!-- crear conciliación -->
+	<div id="modal-new-conciliation" class="modal modal-fixed-footer" style="max-height: 98% !important; height: 95%; width: 90% !important">
 		<div class="modal-content">
 			<h5>Crear conciliación</h5>
 			<div class="card esquinasRedondas">
@@ -410,15 +232,15 @@
 					<form id="uploadNoteForm" enctype="multipart/form-data">
 						<div class="row">
 							<p>
-								<label>
-									<input name="typeConcilia" id="receptorWay" type="radio" checked />
+								<input name="typeConcilia" id="receptorWay" type="radio"/>
+								<label for="receptorWay">
 									<span>Selecciona CFDI de pago inicial</span>
 								</label>
 							</p>
 							<p>
-								<label>
-									<input name="typeConcilia" id="issuingWay" type="radio"/>
-									<span>Cargar nota de debito</span>
+								<input name="typeConcilia" id="issuingWay" type="radio"/>
+								<label for="issuingWay">
+									<span>Cargar nota de crédito</span>
 								</label>
 							</p>
 						</div>
@@ -441,6 +263,7 @@
 										</label>
 										<input type="hidden" id="OriginCFDI">
 										<input type="hidden" id="OriginAmount">
+										<input type="hidden" id="ReceiverId">
 									</div>
 								</div>
 							</div>
@@ -461,7 +284,7 @@
 							</div>
 						</div>
 						<div class="col l12 center-align">
-							<a class="modal-close button-gray" style="color: #fff; color:hover: #">Cancelar</a>
+							<a class="modal-close button-gray">Cancelar</a>
 							&nbsp;
 							<input class="button-blue" type="submit" value="Siguiente" </input>
 						</div>
@@ -639,21 +462,79 @@
 		})
 		document.querySelectorAll("input[name='typeConcilia']").forEach((input) => {
 			input.addEventListener('change', function (e){
+				let contenVar = $('#contentVariable');
 				if (e.target.id === 'issuingWay'){
 					conciliateWay = 0;
 					let debit = '<div class="file-field input-field" ><div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">' +
-						'<input class="file-path validate" type="text" placeholder="Sube tu nota de debito en formato .xml" disabled ></div>' +
+						'<input class="file-path validate" type="text" placeholder="Sube tu nota de crédito en formato .xml" disabled ></div>' +
 						'<div style="width: 25%;margin-left: auto;"><label for="containerNote" class="custom-file-upload button-blue">Seleccionar</label>' +
 						'<input name="containerNote" id="containerNote" type="file" accept=".xml" maxFileSize="5242880" required /></div></div>'
-					$('#contentVariable').empty();
-					$('#contentVariable').append(debit);
+					contenVar.empty();
+					contenVar.append(debit);
 				}else{
 					conciliateWay = 1;
-					let contra = '<div class="collection"><a href="#!" class="collection-item">Alvin</a>' +
-						'<a href="#!" class="collection-item active">Alvin</a><a href="#!" class="collection-item">Alvin</a>' +
-						'<a href="#!" class="collection-item">Alvin</a></div>';
-					$('#contentVariable').empty();
-					$('#contentVariable').append(contra);
+					contenVar.empty();
+					$.ajax({
+						url: '/Conciliaciones/ContraCFDI',
+						data: {
+							amount: $('#OriginAmount').val(),
+							receiverId: $('#ReceiverId').val(),
+						},
+						dataType: 'json',
+						method: 'post',
+						beforeSend: function () {
+							const obj = $('#modal-new-conciliation');
+							const left = obj.offset().left;
+							const top = obj.offset().top;
+							const width = obj.width();
+							const height = obj.height();
+							$('#solveLoader').css({
+								display: 'block',
+								left: left,
+								top: top,
+								width: width,
+								height: height,
+								zIndex: 999999
+							}).focus();
+						},
+						success: function (data) {
+							let contra = '<ul class="collection" id="contraCFDI"></ul>';
+							contenVar.append(contra);
+							if (data.code === 500 || data.code === 404){
+								let toastHTML = '<span><strong>'+data.message+'</strong></span>';
+								M.toast({html: toastHTML},2000,100,100);
+								toastHTML = '<span><strong>'+data.reason+'</strong></span>';
+								M.toast({html: toastHTML},2000,100,100);
+
+							}else{
+								$.each(data, function(index, value){
+									let li = $('<li class="collection-item avatar">' +
+										'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
+										'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
+										'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>' +
+										'</li>');
+									$('#contraCFDI').append(li);
+								});
+							}
+						},
+						complete: function () {
+							$('#solveLoader').css({
+								display: 'none'
+							});
+						},
+						error: function (data){
+							$('#solveLoader').css({
+								display: 'none'
+							});
+							let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+							M.toast({html: toastHTML},2000,100,100);
+							toastHTML = '<span>Por favor intente mas tarde</span>';
+							M.toast({html: toastHTML},2000,100,100);
+							toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+							M.toast({html: toastHTML},2000,100,100);
+
+						}
+					});
 				}
 
 			});
@@ -901,8 +782,6 @@
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
 						let uuid;
-						let subtotal;
-						let iva;
 						if (value.tipo === 'factura') {
 							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
 						} else {
@@ -914,10 +793,12 @@
 								initC.click(function(){
 									let dateS = (value.dateToPay);
 									dateS = dateS.split('-');
-									console.log(dateS);
 									$('#conciliaDate').attr('value', dateS[2]+'-'+dateS[1]+'-'+dateS[0]);
-									$('#OriginCFDI').val(value.id)
-									$('#OriginAmount').val(value.total)
+									$('#OriginCFDI').val(value.id);
+									$('#OriginAmount').val(value.total);
+									$('#ReceiverId').val(value.receptorId);
+									$('#receptorWay').trigger('change');
+									$('#receptorWay').trigger('click');
 								});
 								break;
 							case '1':

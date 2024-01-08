@@ -40,7 +40,7 @@ if ($this->session->userdata('logged_in')) {
 		background-color: rgba(255, 255, 255, .8);
 		background-image: url('/assets/images/loader.gif') !important;
 		background-repeat: no-repeat;
-		background-position: center center;
+		background-position: center;
 		background-size: 200px 200px;
 		top: 0;
 		width: 100%;

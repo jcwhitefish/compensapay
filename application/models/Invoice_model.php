@@ -447,7 +447,7 @@ ORDER BY t1.created_at DESC";
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'factura' AS tipo, t1.status
+t1.total, 'factura' AS tipo, t1.status, t2.id AS 'senderId', t3.id AS 'receptorId'
 FROM $this->base.invoices t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
@@ -488,7 +488,6 @@ ORDER BY t1.created_at DESC";
 		//En caso de error igual notifica
 		return ["code" => 500, "message" => "Error al extraer la información", "reason" => "Error con la fuente de información"];
 	}
-
 	/**
 	 * Función para guardar los CFDI de tipo ingreso
 	 * @param array       $cfdi      Cadena con el xml del CFDI
@@ -590,6 +589,32 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 		if($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){
 				return $res->result_array()[0]['id'];
+			}
+			return ["code" => 404,"message" => "No se encontraron registros",
+				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+		}
+		return ["code" => 500,"message" => "Error al obtener fecha de pago",
+			"reason" => "Error con la fuente de información"];
+	}
+	public function getContraCFDI(int $provider, int $receiver, float $total, string$env= null){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//se crea la variable url de las facturas para concatenarlo
+		$url = base_url('assets/factura/factura.php?idfactura=');
+		//Se crea el query para obtener la información
+		$query = "SELECT t1.id, t2.short_name AS 'sender', t3.short_name AS 'receiver', t1.total, t1.status, t1.uuid, 
+DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',
+CONCAT('$url', t1.id) AS 'idurl'
+FROM compensatest_base.invoices t1
+INNER JOIN compensatest_base.companies t2 ON t1.sender_rfc = t2.rfc
+INNER JOIN compensatest_base.companies t3 ON t1.receiver_rfc = t3.rfc
+INNER JOIN compensatest_base.fintech t4 ON t4.id = t2.id
+WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.status = 0";
+//		var_dump($query);
+		if($res = $this->db->query($query)){
+			if ($res->num_rows() > 0){
+				return $res->result_array();
 			}
 			return ["code" => 404,"message" => "No se encontraron registros",
 				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];

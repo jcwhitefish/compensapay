@@ -81,7 +81,6 @@ class User_model extends CI_Model {
         }
         return $usermail;
     }
-
 	/**
 	 * Función para generar la configuración inicial de una empresa
 	 * @param int $id ID de la empresa a la que se le añade la información

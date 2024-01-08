@@ -269,6 +269,21 @@ class Conciliaciones extends MY_Loggedin
 		echo json_encode(["code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento"]);
 		return false;
 	}
+	public function ContraCFDI()
+	{
+		$amount = $this->input->post('amount');
+		$receiver = $this->input->post('receiverId');
+		$userId = $this->session->userdata('datosEmpresa')['id'];
+//		var_dump($amount, $receiver,$userId);
+		if($amount && $receiver){
+			$this->load->model('Invoice_model', 'invData');
+			$res = $this->invData->getContraCFDI($receiver, $userId, $amount,'SANDBOX');
+			echo json_encode($res);
+			return true;
+		}
+		echo json_encode(["code" => 500, "message" => "Error al obtener información", "reason" => "No se logro obtener los registros"]);
+		return false;
+	}
 	/**
 	 * Función para validar el tipo de comprobante (Factura, Nora de débito)
 	 * de acuerdo a las reglas de recepción para conciliaciones
