@@ -19,8 +19,8 @@ class Fiscal_model extends CI_Model
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$cepUrl = base_url('boveda/CEP/');
-		$query = "SELECT t1.operationNumber, t1.traking_key, FROM_UNIXTIME(t1.created_at, '%m/%d/%Y %H:%i:%s') AS 'created_at', t5.bnk_alias AS 'source_bank', t1.receiver_clabe, 
-					t6.bnk_alias AS 'receiver_bank', FROM_UNIXTIME(t1.transaction_date, '%m/%d/%Y %H:%i:%s') AS 'transaction_date',
+		$query = "SELECT t1.operationNumber, t1.traking_key, FROM_UNIXTIME(t1.created_at, '%m/%d/%Y') AS 'created_at', t5.bnk_alias AS 'source_bank', t1.receiver_clabe, 
+					t6.bnk_alias AS 'receiver_bank', FROM_UNIXTIME(t1.transaction_date, '%m/%d/%Y') AS 'transaction_date',
 					CONCAT('$', FORMAT(t1.amount, 2, 'es_MX')) AS 'amount', 
 					CONCAT('{$cepUrl}', t1.url_cep) AS'cepUrl' 
 					FROM $this->base.balance t1 
