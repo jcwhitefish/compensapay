@@ -102,6 +102,8 @@ class Invoice_model extends CI_Model {
         $rfc = $query->result()[0]->rfc;
         $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t1.legal_name as "client", 
         t2.legal_name as "provider", t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
+        FROM_UNIXTIME(balance.created_at, "%m/%d/%Y %H:%i:%s") AS "created_at",
+        FROM_UNIXTIME(balance.transaction_date, "%m/%d/%Y %H:%i:%s") AS "transaction_date",
         CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl", 
         CONCAT("'.base_url('boveda/CEP/').'",balance.url_cep) AS "cepUrl"');
         $this->db->from('balance as balance');
