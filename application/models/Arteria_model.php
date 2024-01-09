@@ -14,9 +14,16 @@ class Arteria_model extends CI_Model{
 	private $usernameProd = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
 	private $passwordProd = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $headers = [];
+	private string $dbsandbox = 'appsolve_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
+	private string $enviroment = 'SANDBOX';
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
+		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 	}
 	public function CreateClabe(array $args, string $env){
 		$data = [
@@ -40,11 +47,14 @@ class Arteria_model extends CI_Model{
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
 	}
 	public function AddMovement(array $args, string $env){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
         $sourceBank = $this->getBankByClabe($args['sourceBank']);
         $receiverBank = $this->getBankByClabe($args['receiverBank']);
         $fecha = strtotime($args['transactionDate']);
 
-		$query = "INSERT INTO compensatest_base.balance (operationNumber, traking_key, arteriaD_id, amount, descriptor, 
+		$query = "INSERT INTO $this->base.balance (operationNumber, traking_key, arteriaD_id, amount, descriptor, 
                                  source_bank, receiver_bank, source_rfc, receiver_rfc, 
                                  source_clabe, receiver_clabe, transaction_date) 
 					VALUES (";
@@ -60,8 +70,11 @@ class Arteria_model extends CI_Model{
 		}
 		return false;
 	}
-    public function getBankByClabe (string $clabe){
-        $query = "SELECT * FROM compensatest_base.cat_bancos WHERE bnk_clave = '{$clabe}'";
+    public function getBankByClabe (string $clabe, string $env = NULL){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+        $query = "SELECT * FROM $this->base.cat_bancos WHERE bnk_clave = '{$clabe}'";
 //        var_dump($query);
         if ($result = $this->db->query($query)) {
             if ($result->num_rows() > 0){
@@ -70,30 +83,33 @@ class Arteria_model extends CI_Model{
         }
     }
 	public function SearchOperations(array $args, string $env){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT t1.id, t1.operation_number, t1.id_client, t2.legal_name as 'cname', t2.rfc as 'crfc', t2.account_clabe as 'cclabe', 
 					t1.id_provider, t3.legal_name as 'pname', t3.rfc as 'prfc', t3.account_clabe as 'pclabe', 
 					t4.arteria_clabe, (t5.total*100) AS 'entry_money', (t6.total*100) AS 'exit_money_d', (t8.total*100) as 'exit_money_f', 
 					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid,
 					t9.name AS 'provName', t9.last_name AS 'provLast', t9.email AS 'provEmail', t2.legal_name AS 'provCompany',
 					t10.name AS 'clientName', t10.last_name AS 'clientLast', t10.email AS 'clientEmail', t3.legal_name AS 'clientCompany'
-					FROM compensatest_base.operations t1
-					LEFT JOIN compensatest_base.companies t2
+					FROM $this->base.operations t1
+					LEFT JOIN $this->base.companies t2
 					ON t1.id_client = t2.id
-					LEFT JOIN compensatest_base.companies t3
+					LEFT JOIN $this->base.companies t3
 					ON t1.id_provider = t3.id
-					INNER JOIN compensatest_base.fintech t4
+					INNER JOIN $this->base.fintech t4
 					ON t4.companie_id = t1.id_provider
-					INNER JOIN compensatest_base.invoices t5
+					INNER JOIN $this->base.invoices t5
 					ON t1.id_invoice = t5.id
-					LEFT JOIN compensatest_base.debit_notes t6
+					LEFT JOIN $this->base.debit_notes t6
 					ON t1.id_debit_note = t6.id
-					INNER JOIN compensatest_base.cat_bancos t7
+					INNER JOIN $this->base.cat_bancos t7
 					ON t2.id_broadcast_bank = t7.bnk_id
-					LEFT JOIN compensatest_base.invoices t8
+					LEFT JOIN $this->base.invoices t8
 					ON t1.id_invoice_relational = t8.id
-					INNER JOIN compensatest_base.users t9 
+					INNER JOIN $this->base.users t9 
 					ON t9.id_company = t3.id
-					INNER JOIN compensatest_base.users t10
+					INNER JOIN $this->base.users t10
 					ON t10.id_company = t2.id
 					WHERE t4.arteria_clabe = '{$args['receiverClabe']}' and t1.status = 1 
 					and (t1.operation_number = '{$args['operationNumber']}' OR t1.operation_number = '{$args['descriptor']}')";
@@ -225,16 +241,22 @@ class Arteria_model extends CI_Model{
 		return -2;
 	}
     public function insertCEP (array $args, $cep, string $env){
-        $query = "UPDATE compensatest_base.balance SET url_cep = '{$cep}' 
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+        $query = "UPDATE $this->base.balance SET url_cep = '{$cep}' 
                                  WHERE traking_key = '{$args['trakingKey']}' and arteriaD_id = '{$args['arteriaId']}'";
         if($result = $this->db->query($query)){
             return $this->db->insert_id();
         }
         return false;
     }
-	public function getAllBalanceCEP(){
+	public function getAllBalanceCEP(string $env = NULL){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT transaction_date, traking_key, receiver_clabe, source_clabe, amount, arteriaD_id
-					FROM compensatest_base.balance where url_cep IS NULL
+					FROM $this->base.balance where url_cep IS NULL
 				   	ORDER BY transaction_date DESC";
 //		var_dump($query);
 		if ($result = $this->db->query($query)) {
@@ -251,16 +273,19 @@ class Arteria_model extends CI_Model{
 	 * @param string $env
 	 * @return bool|string
 	 */
-	public function GetNewOperationNumber(string $idOperation, string $env): bool|string
+	public function GetNewOperationNumber(string $idOperation, string $env = NULL): bool|string
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$opNumber =$this->MakeOperationNumber($idOperation);
-		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_invoice_relational, id_debit_note, id_uploaded_by, id_client, 
+		$query = "INSERT INTO $this->base.operations (id_invoice, id_invoice_relational, id_debit_note, id_uploaded_by, id_client, 
                                           id_provider, operation_number, payment_date, entry_money, exit_money, status, commentary) 
                                           SELECT id_invoice, id_invoice_relational, id_debit_note, id_uploaded_by, id_client, 
                                           id_provider, '$opNumber', payment_date, entry_money, exit_money, status, commentary 
-                                          FROM compensatest_base.operations WHERE id = '$idOperation'";
+                                          FROM $this->base.operations WHERE id = '$idOperation'";
 		if($this->db->query($query)){
-			$query = "UPDATE compensatest_base.operations SET status = 5 WHERE id = '{$idOperation}'";
+			$query = "UPDATE $this->base.operations SET status = 5 WHERE id = '{$idOperation}'";
 			if($this->db->query($query)){
 				return $opNumber;
 			}
