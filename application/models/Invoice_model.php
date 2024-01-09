@@ -100,9 +100,9 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid,
-        t2.legal_name as "provider", t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
-        (CASE WHEN balance.receiver_clabe = t2.account_clabe THEN t2.legal_name ELSE t1.legal_name END) as "client", 
+        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
+(CASE WHEN (balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe) THEN t2.legal_name ELSE t1.legal_name END) as "client", 
+(CASE WHEN (balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe)  THEN t2.legal_name ELSE t1.legal_name END) as "provider",  
         FROM_UNIXTIME(balance.created_at, "%m/%d/%Y") AS "created_at",
         FROM_UNIXTIME(balance.transaction_date, "%m/%d/%Y") AS "transaction_date",
         CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl", 
@@ -114,6 +114,7 @@ class Invoice_model extends CI_Model {
         $this->db->join('companies t2', 't2.id = operations.id_provider', 'LEFT');
         $this->db->join('cat_bancos t3', 't3.bnk_code = balance.source_bank ', 'LEFT');
         $this->db->join('cat_bancos t4', 't4.bnk_code = balance.receiver_bank ', 'LEFT');
+		$this->db->join('fintech t5', 't5.companie_id = operations.id_provider ', 'LEFT');
         $this->db->where('operations.id_provider', $company);
         $this->db->or_where('operations.id_client', $company);
 		$this->db->order_by('balance.created_at', 'DESC');
