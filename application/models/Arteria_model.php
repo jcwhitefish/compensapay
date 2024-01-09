@@ -357,11 +357,11 @@ class Arteria_model extends CI_Model{
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-		$query = "UPDATE compensatest_base.operations SET status = 3 WHERE id = '{$args['idOP']}'";
+		$query = "UPDATE $this->base.operations SET status = 3 WHERE id = '{$args['idOP']}'";
 		if ($this->db->query($query)){
 			if ($this->db->affected_rows() > 0){
 				if ($args['tipoComprobante'] != 'nota'){
-					$query = "UPDATE compensatest_base.invoices SET status = 2 
+					$query = "UPDATE $this->base.invoices SET status = 2 
                                   WHERE id IN ('{$args['idComprobante1']}', '{$args['idComprobante2']}')";
 					if ($this->db->query($query)){
 						if ($this->db->affected_rows() > 0){
@@ -370,8 +370,8 @@ class Arteria_model extends CI_Model{
 					}
 					return -3;
 				}else{
-					$query = "UPDATE compensatest_base.invoices SET status = 2 WHERE id = '{$args['idComprobante1']}'";
-					$query2 = "UPDATE compensatest_base.debit_notes SET status = 2 WHERE id = '{$args['idComprobante2']}'";
+					$query = "UPDATE $this->base.invoices SET status = 2 WHERE id = '{$args['idComprobante1']}'";
+					$query2 = "UPDATE $this->base.debit_notes SET status = 2 WHERE id = '{$args['idComprobante2']}'";
 					if ($this->db->query($query)){
 						if ($this->db->affected_rows() > 0){
 							if ($this->db->query($query2)){
