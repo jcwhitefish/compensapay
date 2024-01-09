@@ -509,6 +509,7 @@
 							}else{
 								$.each(data, function(index, value){
 									let li = $('<li class="collection-item avatar">' +
+										'<i class="material-icons circle">description</i>' +
 										'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
 										'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
 										'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>' +
