@@ -172,7 +172,7 @@
 							<th>Institución receptora</th>
 							<th>Cuenta beneficiaria</th>
                             <th>Clave de rastreo</th>
-                            <th>Numero de referencia</th>
+                            <th>Numero de operación</th>
                             <th>Fecha de pago</th>
                             <th>Monto del pago</th>
 
@@ -197,7 +197,7 @@
                         <tr>
                             <th>Seleccionar</th>
                             <th>Monto</th>
-                            <th>Numero de Referencia</th>
+                            <th>Clave de rastreo</th>
                             <th>Comprobante electrónico (CEP)</th>
                             <th>Descripción</th>
                             <th>Banco origen</th>
@@ -208,7 +208,6 @@
                             <th>RFC Destino</th>
                             <th>CLABE origen</th>
                             <th>CLABE destino</th>
-                            <th>Fecha de transacción</th>
                             <th>CFDI correspondiente</th>
                             <th>Fecha de Transacción</th>
                         </tr>
@@ -228,7 +227,6 @@
                             <td>{{moves.receiver_rfc}}</td>
                             <td>{{moves.source_clabe}}</td>
                             <td>{{moves.receiver_clabe}}</td>
-                            <td>{{moves.transaction_date}}</td>
                             <td><a v-bind:href='moves.idurl' target="_blank"><p class="uuid-text">{{moves.uuid}}</p></a></td>
                             <td>{{moves.transaction_date}}</td>
                         </tr>
