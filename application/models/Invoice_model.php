@@ -100,12 +100,13 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t1.legal_name as "client", 
+        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid,
         t2.legal_name as "provider", t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
+        (CASE WHEN balance.receiver_clabe = t2.account_clabe THEN t2.legal_name ELSE t1.legal_name END) as "client"
         FROM_UNIXTIME(balance.created_at, "%m/%d/%Y") AS "created_at",
         FROM_UNIXTIME(balance.transaction_date, "%m/%d/%Y") AS "transaction_date",
         CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl", 
-        CONCAT("'.base_url('boveda/CEP/').'",balance.url_cep) AS "cepUrl"');
+        CONCAT("'.base_url('boveda/CEP/').'",balance.url_cepd) AS "cepUrl"');
         $this->db->from('balance as balance');
         $this->db->join('operations', 'balance.operationNumber = operations.operation_number', 'LEFT');
         $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'LEFT');
