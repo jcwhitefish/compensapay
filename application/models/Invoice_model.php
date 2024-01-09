@@ -220,11 +220,11 @@ class Invoice_model extends CI_Model {
 					$i++;
 					$arr = explode(',', $value);
 					foreach($arr as $key){
-						if ($j == 7 || $j == 8 || $j == 9){
+						if ($j == 7 || $j == 8 || $j == 9 || $j == 10){
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
-						if ($j == 10){
+						if ($j == 11){
 							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
