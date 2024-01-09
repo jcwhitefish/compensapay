@@ -48,7 +48,7 @@ if ($this->session->userdata('logged_in')) {
                         <a class="nav-max" style="top:-25px;" href="">$200.000</a>
                     </div>-->
                     <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
-                        <p class="nav-max" style="padding-left: 10px;top:-15px"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
+                        <p class="nav-max" style="padding-left: 10px;top:-15px;padding-right: 20px;"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
 
                         <?php 
                         $vista=$this->uri->segment(1);
