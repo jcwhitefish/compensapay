@@ -25,7 +25,7 @@ class Arteria_model extends CI_Model{
 		$this->load->database();
 		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 	}
-	public function CreateClabe(array $args, string $env){
+	public function CreateClabe(array $args, string $env = NULL){
 		$data = [
 			'names' => $args['name'],
 			'first_surname' => $args['lastname'],
@@ -33,7 +33,7 @@ class Arteria_model extends CI_Model{
 		$endpoint = 'clabes';
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
 	}
-	public function CreateTransfer(array $args, string $env){
+	public function CreateTransfer(array $args, string $env = NULL){
 		$data = [
 			'account_number' => $args['clabe'],
 			'amount' => $args['amount'],
@@ -46,7 +46,7 @@ class Arteria_model extends CI_Model{
 		$endpoint = 'transfers';
 		return $this->SendRequest($endpoint, $data, $env, 'POST', 'JSON');
 	}
-	public function AddMovement(array $args, string $env){
+	public function AddMovement(array $args, string $env = NULL){
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
@@ -82,7 +82,7 @@ class Arteria_model extends CI_Model{
             }
         }
     }
-	public function SearchOperations(array $args, string $env){
+	public function SearchOperations(array $args, string $env = NULL){
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
@@ -292,7 +292,7 @@ class Arteria_model extends CI_Model{
 		}
 		return false;
 	}
-    public function getIdRastreo (string $id, string $env) {
+    public function getIdRastreo (string $id, string $env = NULL) {
         $this->headers = [];
         $endpoint = 'transfers/'.$id;
         return $this->SendRequest($endpoint, [], $env, 'GET', 'JSON');

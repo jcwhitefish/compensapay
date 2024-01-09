@@ -16,17 +16,26 @@ class Openpay_model extends CI_Model
 	private string $passwordSandbox = '';
 	private string $passwordProd = '';
 	private array $headers = [];
+	private string $dbsandbox = 'appsolve_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
+	private string $enviroment = 'SANDBOX';
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->database();
+		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 	}
 
-	public function NewClient($id, string $env = 'SANDBOX')
+	public function NewClient($id, string $env = NULL)
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$data = [];
-		$query = "SELECT name, last_name, email FROM compensatest_base.users WHERE id = '{$id}'";
+		$query = "SELECT name, last_name, email FROM $this->base.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row) {
@@ -41,7 +50,7 @@ class Openpay_model extends CI_Model
 		return false;
 	}
 
-	public function SendNewClient(array $args, string $env)
+	public function SendNewClient(array $args, string $env = NULL)
 	{
 		$request = [
 			'name' => $args['name'],
@@ -54,17 +63,20 @@ class Openpay_model extends CI_Model
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
 
-	public function SuccessfulSubscription(array $args, $company, string $env = 'SANDBOX')
+	public function SuccessfulSubscription(array $args, $company, string $env = NULL)
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$prevPay = strtotime("now");
 		$nextPay = strtotime('+1 month');
-		$query = "INSERT INTO compensatest_base.subscription (company_id, card_id, customer_id, subscriptionOp_id, prevPay, nextPay, 
+		$query = "INSERT INTO $this->base.subscription (company_id, card_id, customer_id, subscriptionOp_id, prevPay, nextPay, 
                                       dealings, extraDealing, statusSupplier, active) 
 				VALUES ('{$company}', '{$args['cardRecordID']}', '{$args['customer_id']}', '{$args['payment']['id']}', '{$prevPay}', '{$nextPay}',
 				        300, 0, 1, 1)";
 		if ($this->db->query($query)) {
 			$subs = $this->db->insert_id();
-			$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) 
+			$query = "INSERT INTO $this->base.payments (subscription_id, card_id, amount) 
 						VALUES ('{$subs}', '{$args['cardRecordID']}', 300)";
 			if ($this->db->query($query)) {
 				$endCard = substr($args['card_number'], -4);
@@ -78,17 +90,20 @@ class Openpay_model extends CI_Model
 			}
 		}
 	}
-	public function SuccessfulSubscription2(array $args, $company, string $env = 'SANDBOX')
+	public function SuccessfulSubscription2(array $args, $company, string $env = NULL)
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$prevPay = strtotime("now");
 		$nextPay = strtotime('+1 month');
-		$query = "INSERT INTO compensatest_base.subscription (company_id, card_id, customer_id, subscriptionOp_id, prevPay, nextPay, 
+		$query = "INSERT INTO $this->base.subscription (company_id, card_id, customer_id, subscriptionOp_id, prevPay, nextPay, 
                                       dealings, extraDealing, statusSupplier, active) 
 				VALUES ('{$company}', '{$args['cardRecordID']}', '{$args['customer_id']}', '{$args['payment']['id']}', '{$prevPay}', '{$nextPay}',
 				        300, 0, 1, 1)";
 		if ($this->db->query($query)) {
 			$subs = $this->db->insert_id();
-			$query = "INSERT INTO compensatest_base.payments (subscription_id, card_id, amount) 
+			$query = "INSERT INTO $this->base.payments (subscription_id, card_id, amount) 
 						VALUES ('{$subs}', '{$args['cardRecordID']}', 300)";
 			if ($this->db->query($query)) {
 				$endCard = substr($args['card_number'], -4);
@@ -103,7 +118,7 @@ class Openpay_model extends CI_Model
 		}
 	}
 
-	public function SendNewSubscription(array $args, string $env)
+	public function SendNewSubscription(array $args, string $env = NULL)
 	{
 		$request = [
 			'source_id' => $args['OpId'],
@@ -115,11 +130,14 @@ class Openpay_model extends CI_Model
 		return json_decode($this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON'), true);
 	}
 
-	public function ChangeSubscription(array $args, array $prevSubs, int $id)
+	public function ChangeSubscription(array $args, array $prevSubs, int $id, string $env = NULL)
 	{
-		$query = "UPDATE compensatest_base.subscription SET active = 0 WHERE id = '{$prevSubs['id']}'";
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "UPDATE $this->base.subscription SET active = 0 WHERE id = '{$prevSubs['id']}'";
 		if ($this->db->query($query)) {
-			$query = "INSERT INTO compensatest_base.subscription (company_id, card_id, customer_id, prevPay, nextPay, dealings, statusSupplier, active)
+			$query = "INSERT INTO $this->base.subscription (company_id, card_id, customer_id, prevPay, nextPay, dealings, statusSupplier, active)
 VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prevSubs['prevPay']}', '{$prevSubs['nextPay']}',300,1,1)";
 			if ($this->db->query($query)) {
 				$endCard = substr($args['card_number'], -4);
@@ -134,8 +152,11 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		}
 	}
 
-	public function NewCard(array $args, string $env = 'SANDBOX')
+	public function NewCard(array $args, string $env = NULL)
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$res = json_decode($this->SendNewCard($args, $env), true);
 		if (!empty($res['http_code'])) {
 			return ['code' => 502, 'error' => 'Error: No se pudo agregar el método de pago.',
@@ -143,8 +164,8 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		}
 		if (!empty($res['id'])) {
 			$endCard = substr($args['card_number'], -4);
-			$query = "INSERT INTO compensatest_base.cards (cardType_id, openpay_id, openpay_token, year, month, endCard, active) 
-					VALUES ((SELECT id FROM compensatest_base.cat_cardtype 
+			$query = "INSERT INTO $this->base.cards (cardType_id, openpay_id, openpay_token, year, month, endCard, active) 
+					VALUES ((SELECT id FROM $this->base.cat_cardtype 
 				   	WHERE type = '{$args['cardType']}'), '{$res['id']}', '{$args['tokenCard']}', '{$args['expiration_year']}', 
 					        '{$args['expiration_month']}', 
 					'{$endCard}', 1)";
@@ -158,7 +179,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return $res;
 	}
 
-	public function SendNewCard(array $args, string $env)
+	public function SendNewCard(array $args, string $env = NULL)
 	{
 		$request = [
 			'token_id' => $args['tokenCard'],
@@ -170,14 +191,17 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return $this->sendRequest($endpoint, $request, 'SANDBOX', 'POST', 'JSON');
 	}
 
-	public function DeleteCard(array $args, int $id, string $env = 'SANDBOX'): bool|array|int
+	public function DeleteCard(array $args, int $id, string $env = NULL): bool|array|int
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$card = $this->getActiveCard($id);
 		$args['card_id'] = $card['openpay_id'];
 		$res = $this->SendDeleteCard($args, $env);
 //		var_dump($res);
 		if ($res === '') {
-			$query = "UPDATE compensatest_base.cards SET active = 0 WHERE id ='{$card['record_id']}'";
+			$query = "UPDATE $this->base.cards SET active = 0 WHERE id ='{$card['record_id']}'";
 //			var_dump($query);
 			if ($this->db->query($query)) {
 				return true;
@@ -191,7 +215,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 	 * @param string $env  Environment
 	 * @return mixed|string
 	 */
-	public function SendDeleteCard(array $args, string $env = 'SANDBOX'): mixed
+	public function SendDeleteCard(array $args, string $env = NULL): mixed
 	{
 		$this->headers = [];
 		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
@@ -199,13 +223,16 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return $this->sendRequest($endpoint, '', 'SANDBOX', 'DELETE', NULL);
 	}
 
-	public function getActiveCard(int $id): bool|array
+	public function getActiveCard(int $id, string $env = NULL): bool|array
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$card = [];
 		$query = "SELECT t2.id, t2.endCard, t2.month, t2.year, t2.openpay_id, t3.type, t3.img_url
-			FROM compensatest_base.subscription t1
-			    INNER JOIN compensatest_base.cards t2 ON t1.card_id= t2.id
-			    INNER JOIN compensatest_base.cat_cardtype t3 ON t2.cardType_id = t3.id
+			FROM $this->base.subscription t1
+			    INNER JOIN $this->base.cards t2 ON t1.card_id= t2.id
+			    INNER JOIN $this->base.cat_cardtype t3 ON t2.cardType_id = t3.id
 			    WHERE t1.company_id = '{$id}' AND t2.active = 1 LIMIT 1";
 //		var_dump($query);
 		if ($result = $this->db->query($query)) {
@@ -228,10 +255,13 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return false;
 	}
 
-	public function getSubscription($company, $env = 'SANDBOX')
+	public function getSubscription($company, string $env = NULL)
 	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$subs = [];
-		$query = "SELECT * FROM compensatest_base.subscription WHERE company_id = '{$company}' and active = 1";
+		$query = "SELECT * FROM $this->base.subscription WHERE company_id = '{$company}' and active = 1";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				return $result->result_array();
@@ -240,15 +270,18 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return false;
 	}
 
-	public function NewCharge(array $args, int $id, string $env = 'SANDBOX')
+	public function NewCharge(array $args, int $id, string $env = NULL)
 	{
-		$query = "SELECT openpay_id FROM compensatest_base.cards WHERE id = '{$args['cardRecordID']}'";
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT openpay_id FROM $this->base.cards WHERE id = '{$args['cardRecordID']}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				foreach ($result->result_array() as $row) {
 					$args['openCardId'] = $row['openpay_id'];
 				}
-				$query = "SELECT name, last_name, email FROM compensatest_base.users WHERE id = '{$id}'";
+				$query = "SELECT name, last_name, email FROM $this->base.users WHERE id = '{$id}'";
 				if ($result = $this->db->query($query)) {
 					if ($result->num_rows() > 0) {
 						foreach ($result->result_array() as $row) {
@@ -264,7 +297,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 		return false;
 	}
 
-	public function SendCharges(array $args, $env)
+	public function SendCharges(array $args, string $env = NULL)
 	{
 		$data = [
 			'source_id' => $args['openCardId'],
