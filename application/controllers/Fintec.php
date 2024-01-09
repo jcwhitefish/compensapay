@@ -213,7 +213,7 @@ class Fintec extends MY_Loggedout{
 						$this->load->helper('notifications_helper');
 
 						$data['OpEntrty'] = ($op['entry']/100);
-						$notification = notificationBody($args,1);
+						$notification = notificationBody($args,2);
 
 						$data = [
 							'user' => [
@@ -232,6 +232,11 @@ class Fintec extends MY_Loggedout{
 							'company' => $op['clientPerson']['company'],
 						];
 						send_mail($op['clientPerson']['mail'], $data, 2, 'uriel.magallon@whitefish.mx', $notification['titulo']);
+						$args['tipoComprobante']=$op['tipoComprobante'];
+						$args['idComprobante2']=$op['idComprobante2'];
+						$args['idComprobante1']=$op['idComprobante1'];
+						$args['idOP'] = $op['id'];
+						$this->dataArt->succesConciliation($args,'SANDBOX');
 						return $this->response->sendResponse(["response" => 'Operación correcta'], $error);
 					}
 				}else{

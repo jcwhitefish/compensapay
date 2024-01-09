@@ -91,7 +91,9 @@ class Arteria_model extends CI_Model{
 					t4.arteria_clabe, (t5.total*100) AS 'entry_money', (t6.total*100) AS 'exit_money_d', (t8.total*100) as 'exit_money_f', 
 					t3.account_clabe as 'companyClabe', t3.legal_name, t7.bnk_clave, t5.uuid,
 					t9.name AS 'provName', t9.last_name AS 'provLast', t9.email AS 'provEmail', t2.legal_name AS 'provCompany',
-					t10.name AS 'clientName', t10.last_name AS 'clientLast', t10.email AS 'clientEmail', t3.legal_name AS 'clientCompany'
+					t10.name AS 'clientName', t10.last_name AS 'clientLast', t10.email AS 'clientEmail', t3.legal_name AS 'clientCompany',
+					(IF(t6.id IS NULL, t8.id, t6.id)) AS 'idComprobante2', (IF(t6.id IS NULL, 'cfdi', 'note')) AS 'tipoComprobante', 
+					t5.id as 'idComprobante1'
 					FROM $this->base.operations t1
 					LEFT JOIN $this->base.companies t2
 					ON t1.id_client = t2.id
@@ -265,7 +267,6 @@ class Arteria_model extends CI_Model{
 			}
 		}
 	}
-
 	/**
 	 * Permite crear una nueva operación a partir de una anterior ($id) y genera un nuevo número de operación para que sea utilizado en las
 	 * transferencias entre cliente y proveedor
@@ -352,6 +353,39 @@ class Arteria_model extends CI_Model{
 		}
 		return $response;
 	}
-
-
+	public function succesConciliation(array $args, string $env = NULL){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "UPDATE compensatest_base.operations SET status = 3 WHERE id = '{$args['idOP']}'";
+		if ($this->db->query($query)){
+			if ($this->db->affected_rows() > 0){
+				if ($args['tipoComprobante'] != 'nota'){
+					$query = "UPDATE compensatest_base.invoices SET status = 2 
+                                  WHERE id IN ('{$args['idComprobante1']}', '{$args['idComprobante2']}')";
+					if ($this->db->query($query)){
+						if ($this->db->affected_rows() > 0){
+							return 1;
+						}
+					}
+					return -3;
+				}else{
+					$query = "UPDATE compensatest_base.invoices SET status = 2 WHERE id = '{$args['idComprobante1']}'";
+					$query2 = "UPDATE compensatest_base.debit_notes SET status = 2 WHERE id = '{$args['idComprobante2']}'";
+					if ($this->db->query($query)){
+						if ($this->db->affected_rows() > 0){
+							if ($this->db->query($query2)){
+								if ($this->db->affected_rows() > 0){
+									return 1;
+								}
+							}
+						}
+					}
+					return -3;
+				}
+			}
+			return -2;
+		}
+		return -1;
+	}
 }
