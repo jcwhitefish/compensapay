@@ -53,7 +53,7 @@ if ($this->session->userdata('logged_in')) {
                         <?php 
                         $vista=$this->uri->segment(1);
 
-                        if($vista=='facturas' OR $vista=='ModeloFiscal')
+                        if($vista=='facturas')
                         {
                         ?>   
                         <select onchange="cambiarVista(this.value)" name="type" id="type" class="nav-max browser-default input-nav" style="top: -2px;">
