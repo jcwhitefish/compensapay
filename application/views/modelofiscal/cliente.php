@@ -203,9 +203,9 @@
                             <th>Banco origen</th>
                             <th>Banco destino</th>
                             <th>Razón social origen</th>
-                            <th>RFC Origen</th>
+<!--                            <th>RFC Origen</th>-->
                             <th>Razón social destino</th>
-                            <th>RFC Destino</th>
+<!--                            <th>RFC Destino</th>-->
                             <th>CLABE origen</th>
                             <th>CLABE destino</th>
                             <th>CFDI correspondiente</th>
@@ -222,9 +222,9 @@
                             <td>{{moves.bank_source}}</td>
                             <td>{{moves.bank_receiver}}</td>
                             <td>{{moves.provider}}</td>
-                            <td>{{moves.source_rfc}}</td>
+<!--                            <td>{{moves.source_rfc}}</td>-->
                             <td>{{moves.client}}</td>
-                            <td>{{moves.receiver_rfc}}</td>
+<!--                            <td>{{moves.receiver_rfc}}</td>-->
                             <td>{{moves.source_clabe}}</td>
                             <td>{{moves.receiver_clabe}}</td>
                             <td><a v-bind:href='moves.idurl' target="_blank"><p class="uuid-text">{{moves.uuid}}</p></a></td>
