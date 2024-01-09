@@ -243,7 +243,7 @@ class Invoice_model extends CI_Model {
 				$sheet->setCellValue('C1', 'Institución receptora');
 				$sheet->setCellValue('D1', 'Cuenta beneficiaria');
 				$sheet->setCellValue('E1', 'Clave de rastreo');
-				$sheet->setCellValue('F1', 'Numero de operación');
+				$sheet->setCellValue('F1', 'ID de operación');
 				$sheet->setCellValue('G1', 'Fecha de pago');
 				$sheet->setCellValue('H1', 'Monto del pago');
 				$sheet->getStyle('A1:H1')->applyFromArray(

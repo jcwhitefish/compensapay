@@ -172,7 +172,7 @@
 							<th>Institución receptora</th>
 							<th>Cuenta beneficiaria</th>
                             <th>Clave de rastreo</th>
-                            <th>Numero de operación</th>
+                            <th>ID de operación</th>
                             <th>Fecha de pago</th>
                             <th>Monto del pago</th>
 
