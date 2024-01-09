@@ -202,7 +202,7 @@ class Invoice_model extends CI_Model {
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
 						if ($j == 12 || $j == 14){
-							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', $key) );
+							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
 						}
