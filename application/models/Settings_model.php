@@ -4,6 +4,11 @@
  * @property Settings_model $conf Settings module
  */
 class Settings_model extends \CI_Model {
+	private string $dbsandbox = 'appsolve_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
+	private string $enviroment = 'SANDBOX';
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
@@ -13,9 +18,12 @@ class Settings_model extends \CI_Model {
 	 * @param $id
 	 * @return mixed
 	 */
-	public function getNotificationsSettings($id): mixed
+	public function getNotificationsSettings($id, string $env = NULL): mixed
 	{
-		$query = "SELECT * FROM compensatest_base.conf_notifications WHERE user_id = '{$id}'";
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT * FROM $this->base.conf_notifications WHERE user_id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				return $result->result_array();

@@ -1,8 +1,14 @@
 <?php 
 class User_model extends CI_Model {
+	private string $dbsandbox = 'appsolve_base';
+//	private string $dbprod = 'compensapay';
+	private string $dbprod = 'compensatest_base';
+	public string $base = '';
+	private string $enviroment = 'SANDBOX';
     public function __construct() {
         parent::__construct();
         $this->load->database();
+		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
     public function insert_user($datos) {
         // Asegurar que solo se insertan las columnas deseadas
@@ -22,11 +28,13 @@ class User_model extends CI_Model {
         $query = $this->db->get_where('users', $condiciones);
         return $query->row_array();
     }
-	public function get_userById(int $id) {
-		
+	public function get_userById(int $id, string $env = NULL){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
         $usuario = array();
 
-		$query = "SELECT * FROM compensatest_base.users WHERE id = '{$id}'";
+		$query = "SELECT * FROM $this->base.users WHERE id = '{$id}'";
 		if ($result = $this->db->query($query)) {
 			if ($result->num_rows() > 0) {
 				$usuario = $result->result_array();
@@ -52,8 +60,11 @@ class User_model extends CI_Model {
     public function imprimir()  {
         echo 'Hola mundo';
     }
-	public function setInitialConf($id){
-		$query = "INSERT INTO compensatest_base.notifications (user_id) VALUES ('{$id}')";
+	public function setInitialConf($id, string $env = NULL){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "INSERT INTO $this->base.notifications (user_id) VALUES ('{$id}')";
 		if($this->db->query($query)){
 			return true;
 		}
