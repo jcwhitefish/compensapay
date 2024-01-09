@@ -198,15 +198,12 @@ class Invoice_model extends CI_Model {
 				$sheet->setCellValue('E1', 'Banco origen');
 				$sheet->setCellValue('F1', 'Banco destino');
 				$sheet->setCellValue('G1', 'Razón social origen');
-				$sheet->setCellValue('H1', 'RFC origen');
-				$sheet->setCellValue('I1', 'Razón social destino');
-				$sheet->setCellValue('J1', 'RFC destino');
-				$sheet->setCellValue('K1', 'CLABE origen');
-				$sheet->setCellValue('L1', 'CLABE destino');
-				$sheet->setCellValue('M1', 'Fecha de transacción');
-				$sheet->setCellValue('N1', 'CFDI correspondiente');
-				$sheet->setCellValue('O1', 'Fecha de Transacción');
-				$sheet->getStyle('A1:O1')->applyFromArray(
+				$sheet->setCellValue('H1', 'Razón social destino');
+				$sheet->setCellValue('I1', 'CLABE origen');
+				$sheet->setCellValue('J1', 'CLABE destino');
+				$sheet->setCellValue('K1', 'CFDI correspondiente');
+				$sheet->setCellValue('L1', 'Fecha de Transacción');
+				$sheet->getStyle('A1:L1')->applyFromArray(
 					array(
 						'font'  => array(
 							'bold'  => true,
@@ -223,11 +220,11 @@ class Invoice_model extends CI_Model {
 					$i++;
 					$arr = explode(',', $value);
 					foreach($arr as $key){
-						if ($j == 10 || $j == 11){
+						if ($j == 5 || $j == 6){
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
-						if ($j == 12 || $j == 14){
+						if ($j == 8 || $j == 8){
 							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
@@ -241,7 +238,44 @@ class Invoice_model extends CI_Model {
                 break;
 			case 'Estados':
 			case 'Comprobantes':
-                $sheet->setCellValue('A1', $key);
+				$sheet->setCellValue('A1', 'Institución Emisora');
+				$sheet->setCellValue('B1', 'Institución receptora');
+				$sheet->setCellValue('C1', 'Cuenta beneficiaria');
+				$sheet->setCellValue('D1', 'Clave de rastreo');
+				$sheet->setCellValue('E1', 'Numero de operación');
+				$sheet->setCellValue('F1', 'Fecha de pago');
+				$sheet->setCellValue('G1', 'Monto del pago');
+				$sheet->getStyle('A1:G1')->applyFromArray(
+				array(
+					'font'  => array(
+						'bold'  => true,
+						'color' => array('rgb' => 'FFFFFF'),
+						'size'  => 12,
+					),
+					'fill' => array(
+						'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+						'color' => array('rgb' => '128293')
+					),
+				)
+			);
+				foreach($args as $value){
+				$i++;
+				$arr = explode(',', $value);
+				foreach($arr as $key){
+					if ($j == 2 ){
+						$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+						$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+					}
+					if ($j == 5){
+						$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
+					}else{
+						$sheet->setCellValue( $letter[$j].$i, $key);
+					}
+					$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
+					$j++;
+				}
+				$j = 0;
+			}
                 break;
 		}
         $writer = new Xlsx($spread);
