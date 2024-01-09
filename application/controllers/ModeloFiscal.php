@@ -6,13 +6,13 @@ class ModeloFiscal extends MY_Loggedin {
 	public function index(){
 		$isClient = $this->session->userdata('vista');
 		// If is client
-		if ($isClient == 1) {
+		//if ($isClient == 1) {
 			$data['main'] = $this->load->view('modelofiscal/cliente', '', true);
 			$this->load->view('plantilla', $data);
-		} else {
-			$data['main'] = $this->load->view('modelofiscal/proveedor', '', true);
-			$this->load->view('plantilla', $data);
-		}
+		//} else {
+		//	$data['main'] = $this->load->view('modelofiscal/proveedor', '', true);
+		//	$this->load->view('plantilla', $data);
+		//}
 	}
 
 	public function tablaCEP(){
