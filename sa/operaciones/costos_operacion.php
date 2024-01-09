@@ -10,18 +10,47 @@
     <div class="row">
         <div class="col s4">
             <h5><strong>Periodo</strong></h5>
-            <input type="date" id="fechai" name="fechai" value="<?php echo $fechai;?>" style="margin-bottom: 0px;" onchange="empresas(this.value, document.getElementById('fechaf').value)">
+            <input type="date" id="fechai" name="fechai" value="<?php echo $fechai;?>" style="margin-bottom: 0px;" onchange="costos_operacion(this.value, document.getElementById('fechaf').value)">
             <h6>Desde</h6>
         </div>
         <div class="col s4">
             <h5>&nbsp;</h5>
-            <input type="date" id="fechaf" name="fechaf" value="<?php echo $fechaf;?>" style="margin-bottom: 0px;" onchange="empresas(document.getElementById('fechai').value, this.value)">
+            <input type="date" id="fechaf" name="fechaf" value="<?php echo $fechaf;?>" style="margin-bottom: 0px;" onchange="costos_operacion(document.getElementById('fechai').value, this.value)">
             <h6>Hasta</h6>
         </div>
         <div class="col s4">
             <h5>&nbsp;</h5>
             <input type="text" id="costo" name="costo" value="$ <?php echo number_format(costos_operacion($fechai, $fechaf), 2);?>" style="margin-bottom: 0px;">
             <h6>Costo</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s4 input-border">
+            <label for="empresa">Empresa</label>
+            <select name="empresa" id="empresa" class="browser-default">
+                <option value="%">Todas</option>
+                <?php
+                    $ResEmpresas=mysqli_query($conn, "SELECT id, legal_name, short_name FROM companies ORDER BY legal_name ASC");
+                    while($RResE=mysqli_fetch_array($ResEmpresas))
+                    {
+                        echo '<option value="'.$RResE["id"].'">'.$RResE["legal_name"].' ('.$RResE["short_name"].')</option>';
+                    }
+                ?>
+            </select>
+        </div>
+        <div class="col s4 input-border">
+            <label for="bancos">Banco</label>
+            <select name="banco" id="banco" class="browser-default">
+                <option value="%">Todos</option>
+                <?php
+                    $ResBancos=mysqli_query($conn, "SELECT bnk_alias, bnk_code FROM cat_bancos ORDER BY bnk_alias ASC");
+                    while($RResB=mysqli_fetch_array($ResBancos))
+                    {
+                        echo '<option value="'.$RResB["bnk_code"].'">'.$RResB["bnk_alias"].'</option>';
+                    }
+                ?>
+            </select>
         </div>
     </div>
 
@@ -52,6 +81,8 @@
                                                         INNER JOIN cat_bancos AS sban ON sban.bnk_code = b.source_bank 
                                                         INNER JOIN cat_bancos AS dban ON dban.bnk_code = b.receiver_bank
                                                         WHERE transaction_date >= '".strtotime($fechai)."' AND transaction_date <= '".strtotime($fechaf)."' 
+                                                        AND (prov.id LIKE '".$_POST["empresa"]."' OR clie.id LIKE '".$_POST["empresa"]."') 
+                                                        AND (b.source_bank LIKE '".$_POST["banco"]."' OR b.receiver_bank LIKE '".$_POST["banco"]."') 
                                                         ORDER BY operationNumber DESC, transaction_date DESC");
 
                         while($RResT=mysqli_fetch_array($ResTrans))

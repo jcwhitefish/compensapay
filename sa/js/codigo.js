@@ -107,11 +107,11 @@ function operaciones(fechai, fechaf){
 	});
 }
 
-function costos_operacion(fechai, fechaf){
+function costos_operacion(fechai, fechaf, empresa='%', banco='%'){
 	$.ajax({
 		type: 'POST',
 		url : 'operaciones/costos_operacion.php',
-		data: 'fechai=' + fechai + '&fechaf=' + fechaf
+		data: 'fechai=' + fechai + '&fechaf=' + fechaf + '&empresa=' + empresa + '&banco=' + banco
 	}).done (function ( info ){
 		$('#contenido').html(info);
 	});
