@@ -100,26 +100,52 @@ class Invoice_model extends CI_Model {
         $this->db->where('id', $company);
         $query = $this->db->get();
         $rfc = $query->result()[0]->rfc;
-        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver", 
-(CASE WHEN (balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe) THEN t2.legal_name ELSE t1.legal_name END) as "client", 
-(CASE WHEN (balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe)  THEN t2.legal_name ELSE t1.legal_name END) as "provider",  
-        FROM_UNIXTIME(balance.created_at, "%m/%d/%Y") AS "created_at",
-        FROM_UNIXTIME(balance.transaction_date, "%m/%d/%Y") AS "transaction_date",
-        CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl", 
-        CONCAT("'.base_url('boveda/CEP/').'",balance.url_cep) AS "cepUrl"');
-        $this->db->from('balance as balance');
-        $this->db->join('operations', 'balance.operationNumber = operations.operation_number', 'LEFT');
-        $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'LEFT');
-        $this->db->join('companies t1', 't1.id = operations.id_client ', 'LEFT');
-        $this->db->join('companies t2', 't2.id = operations.id_provider', 'LEFT');
-        $this->db->join('cat_bancos t3', 't3.bnk_code = balance.source_bank ', 'LEFT');
-        $this->db->join('cat_bancos t4', 't4.bnk_code = balance.receiver_bank ', 'LEFT');
-		$this->db->join('fintech t5', 't5.companie_id = operations.id_provider ', 'LEFT');
-        $this->db->where('operations.id_provider', $company);
-        $this->db->or_where('operations.id_client', $company);
-		$this->db->order_by('balance.created_at', 'DESC');
-        $query = $this->db->get();
-        return $query->result();
+		$url= base_url('assets/factura/factura.php?idfactura=');
+		$url2 = base_url('boveda/CEP/');
+		$query = "SELECT * FROM ( SELECT balance.*, CONCAT('$', FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, 
+                       t3.bnk_alias as 'bank_source', t4.bnk_alias as 'bank_receiver', 
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.legal_name, t1.legal_name)) as 'client', 
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.legal_name, t1.legal_name)) as 'provider', 
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.id, t1.id)) as 'clientId', 
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.id, t1.id)) as 'providerId', 
+                    FROM_UNIXTIME(balance.created_at, '%d/%m/%Y') AS 'created_atb',
+                    FROM_UNIXTIME(balance.transaction_date, '%d/%m/%Y') AS 'transaction_dateb',
+                    CONCAT('$url',invoices.id) AS 'idurl', 
+                    CONCAT('$url2',balance.url_cep) AS 'cepUrl'
+                FROM balance as balance 
+                    LEFT JOIN operations ON balance.operationNumber = operations.operation_number 
+                    LEFT JOIN invoices ON invoices.id = operations.id_invoice 
+                    LEFT JOIN companies t1 ON t1.id = operations.id_client 
+                    LEFT JOIN companies t2 ON t2.id = operations.id_provider 
+                    LEFT JOIN cat_bancos t3 ON t3.bnk_code = balance.source_bank 
+                    LEFT JOIN cat_bancos t4 ON t4.bnk_code = balance.receiver_bank 
+                    LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b 
+         WHERE  clientId = '$company' OR providerId = '$company' 
+         ORDER BY balance.created_at DESC";
+//        $this->db->select('balance.*, CONCAT("$", FORMAT(balance.amount, 2)) as ammountf, invoices.uuid, t3.bnk_alias as "bank_source", t4.bnk_alias as "bank_receiver",
+//(CASE WHEN (balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe) THEN t2.legal_name ELSE t1.legal_name END) as "client",
+//(CASE WHEN (balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe)  THEN t2.legal_name ELSE t1.legal_name END) as "provider",
+//        FROM_UNIXTIME(balance.created_at, "%m/%d/%Y") AS "created_at",
+//        FROM_UNIXTIME(balance.transaction_date, "%m/%d/%Y") AS "transaction_date",
+//        CONCAT("'.base_url('assets/factura/factura.php?idfactura=').'",invoices.id) AS "idurl",
+//        CONCAT("'.base_url('boveda/CEP/').'",balance.url_cep) AS "cepUrl"');
+//        $this->db->from('balance as balance');
+//        $this->db->join('operations', 'balance.operationNumber = operations.operation_number', 'LEFT');
+//        $this->db->join('invoices', 'invoices.id = operations.id_invoice', 'LEFT');
+//        $this->db->join('companies t1', 't1.id = operations.id_client ', 'LEFT');
+//        $this->db->join('companies t2', 't2.id = operations.id_provider', 'LEFT');
+//        $this->db->join('cat_bancos t3', 't3.bnk_code = balance.source_bank ', 'LEFT');
+//        $this->db->join('cat_bancos t4', 't4.bnk_code = balance.receiver_bank ', 'LEFT');
+//		$this->db->join('fintech t5', 't5.companie_id = operations.id_provider ', 'LEFT');
+//        $this->db->where('operations.id_provider', $company);
+//        $this->db->or_where('operations.id_client', $company);
+//		$this->db->order_by('balance.created_at', 'DESC');
+//        $query = $this->db->get();
+		if ($result = $this->db->query($query)) {
+			if ($result->num_rows() > 0)
+				return $result->result_array();
+		}
+        return false;
     }
 
     public function crearExcel($args, $menu) {

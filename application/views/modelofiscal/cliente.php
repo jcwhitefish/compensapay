@@ -228,7 +228,7 @@
                             <td>{{moves.source_clabe}}</td>
                             <td>{{moves.receiver_clabe}}</td>
                             <td><a v-bind:href='moves.idurl' target="_blank"><p class="uuid-text">{{moves.uuid}}</p></a></td>
-                            <td>{{moves.transaction_date}}</td>
+                            <td>{{moves.transaction_dateb}}</td>
                         </tr>
                     </tbody>
                 </table>
