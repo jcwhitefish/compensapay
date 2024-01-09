@@ -67,8 +67,8 @@ $factura = base_url('assets/factura/factura.php?idfactura=');
                     <tbody>
                         <tr v-for="factura in facturas">
                             <td class="tabla-celda center-align">
-                                <i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>
-                                <a v-if="factura.status != '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaProveedor(factura)">Crear Operacion</a>
+                                <!--<i v-if="factura.status == '1' " class="small material-icons" style="color: green;">check_circle</i>-->
+                                <a v-if="factura.status == '1'" class="modal-trigger " href="#modal-operacion-unica" @click="operacionUnicaProveedor(factura)">Crear Operacion</a>
                             </td>
                             <td>
                                 <p v-if="factura.status == '0' " >Libre</p>
