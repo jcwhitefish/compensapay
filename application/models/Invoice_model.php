@@ -220,11 +220,11 @@ class Invoice_model extends CI_Model {
 					$i++;
 					$arr = explode(',', $value);
 					foreach($arr as $key){
-						if ($j == 5 || $j == 6){
+						if ($j == 7 || $j == 8){
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
-						if ($j == 8 || $j == 8){
+						if ($j ==  9|| $j == 10){
 							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
@@ -238,6 +238,7 @@ class Invoice_model extends CI_Model {
                 break;
 			case 'Estados':
 			case 'Comprobantes':
+			$sheet->setCellValue('A1', 'descargar CEP');
 				$sheet->setCellValue('A1', 'Institución Emisora');
 				$sheet->setCellValue('B1', 'Institución receptora');
 				$sheet->setCellValue('C1', 'Cuenta beneficiaria');
@@ -259,23 +260,24 @@ class Invoice_model extends CI_Model {
 				)
 			);
 				foreach($args as $value){
-				$i++;
-				$arr = explode(',', $value);
-				foreach($arr as $key){
-					if ($j == 2 ){
-						$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
-						$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+					$i++;
+					$arr = explode(',', $value);
+					foreach($arr as $key){
+						if ($j == 4 || $j == 5 ){
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+						}
+						if ($j == 6){
+							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
+						}else{
+							$sheet->setCellValue( $letter[$j].$i, $key);
+						}
+						$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
+						$j++;
 					}
-					if ($j == 5){
-						$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
-					}else{
-						$sheet->setCellValue( $letter[$j].$i, $key);
-					}
-					$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
-					$j++;
+					$j = 0;
 				}
-				$j = 0;
-			}
+				$sheet->removeColumn('A', $i);
                 break;
 		}
         $writer = new Xlsx($spread);
