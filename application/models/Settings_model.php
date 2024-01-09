@@ -3,7 +3,7 @@
  * Class Settings model
  * @property Settings_model $conf Settings module
  */
-class Settings_model extends \CI_Model {
+class Settings_model extends CI_Model {
 	private string $dbsandbox = 'appsolve_base';
 //	private string $dbprod = 'compensapay';
 	private string $dbprod = 'compensatest_base';
