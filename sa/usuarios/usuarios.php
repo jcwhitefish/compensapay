@@ -85,7 +85,7 @@
 </div>
 
 <script>
-    const ctx = document.getElementById('myChart_usuarios');
+    var ctx = document.getElementById('myChart_usuarios');
 
     new Chart(ctx, {
         type: 'pie',
