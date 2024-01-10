@@ -75,11 +75,11 @@ function edit_usuario(idusuario){
 }
 
 //tickets
-function tickets(fechai, fechaf){
+function tickets(fechai, fechaf, empresa='%', topico='%', estatus='%'){
 	$.ajax({
 				type: 'POST',
 				url : 'soporte/tickets.php',
-                data: 'fechai=' + fechai + '&fechaf=' + fechaf
+                data: 'fechai=' + fechai + '&fechaf=' + fechaf + '&empresa=' + empresa + '&topico=' + topico + '&estatus=' + estatus
 	}).done (function ( info ){
 		$('#contenido').html(info);
 	});
