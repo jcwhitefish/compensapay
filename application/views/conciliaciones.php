@@ -932,9 +932,9 @@
 					// location.reload()
 				} else {
 					$('#modal-aut-conciliation').modal('close');
+					conciliation();
 					toastHTML = '<span>' + data.message + '</span>';
 					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
-					
 					$('#aut'+id).empty();
 					$('#tblPayD'+id).empty()
 					let aut = '<i class="small material-icons" style="color: green;">check_circle</i>';
