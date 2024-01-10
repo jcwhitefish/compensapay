@@ -327,7 +327,7 @@ class Conciliaciones extends MY_Loggedin
 	 * @param float|null  $monto   En caso de escoger tipo de documento 2 poner el monto de la factura a conciliar para su comparación
 	 * @return array Devuelve el resultado de la validación con la descripcion caso de erro.
 	 */
-	public function validaComprobant(array $factura, int $tipo, string $env = NULL, float $monto = NULL): array
+	public function validaComprobante(array $factura, int $tipo, string $env = NULL, float $monto = NULL): array
 	{
 		//Se selecciona el ambiente a trabajar
 		$env = $env === NULL ? $this->enviroment : $env;
