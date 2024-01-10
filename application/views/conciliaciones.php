@@ -4,27 +4,21 @@
 		/* Cambia el color según tus preferencias */
 		/* Otros estilos que desees aplicar al marcador de posición */
 	}
-
 	/* Modal */
-
 	.text-modal {
 		font-size: 13px;
 	}
-
 	.modal {
 		max-height: 83% !important;
 		width: 80% !important;
 	}
-
 	/* Fix show checkbox and radiobutton*/
-
 	[type="checkbox"]:not(:checked),
 	[type="checkbox"]:checked {
 		opacity: 1;
 		position: relative;
 		pointer-events: auto;
 	}
-
 	[type="radio"]:not(:checked),
 	[type="radio"]:checked {
 		opacity: 1;
@@ -38,6 +32,12 @@
 		height: 50px;
 		border: 2px solid black !important;
 		border-radius: 10px;
+	}
+	#toast-container {
+		min-width: 10%;
+		top: 50%;
+		right: 50%;
+		transform: translateX(50%) translateY(50%);
 	}
 </style>
 <div class="p-5" style="margin: 0;padding: 0 !important;">
@@ -324,7 +324,6 @@
 					cfdi()
 					break;
 			}
-
 		});
 		$('#uploadCFDI').on('submit', function (e) {
 			e.preventDefault();
@@ -357,15 +356,15 @@
 					let toastHTML;
 					if (data.code === 500 || data.code === 404) {
 						let toastHTML = '<span><strong>' + data.message + '</strong></span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 						toastHTML = '<span><strong>' + data.reason + '</strong></span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 						
 						// location.reload()
 					} else {
 						$('#modal-CFDI').modal('close');
 						toastHTML = '<span>' + data.message + '</span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 						
 					}
 				},
@@ -380,11 +379,11 @@
 						display: 'none'
 					});
 					let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					toastHTML = '<span>Por favor intente mas tarde</span>';
-					M.toast({html: toastHTML},2000,100,100);
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-					M.toast({html: toastHTML},2000,100,100);
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					
 				}
 			});
@@ -424,15 +423,15 @@
 						let toastHTML;
 						if (data.code === 500 || data.code === 404) {
 							let toastHTML = '<span><strong>' + data.message + '</strong></span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 							toastHTML = '<span><strong>' + data.reason + '</strong></span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 							
 							// location.reload()
 						} else {
 							$('#modal-new-conciliation').modal('close');
 							toastHTML = '<span>' + data.message + '</span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 							
 							conciliation();
 						}
@@ -448,11 +447,11 @@
 							display: 'none'
 						});
 						let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 						toastHTML = '<span>Por favor intente mas tarde</span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 						toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-						M.toast({html: toastHTML},2000,100,100);
+						M.toast({html: toastHTM, displayLength:1000, duration: 1000, edge: 'rigth'});
 						
 					}
 				});
@@ -502,18 +501,30 @@
 							contenVar.append(contra);
 							if (data.code === 500 || data.code === 404){
 								let toastHTML = '<span><strong>'+data.message+'</strong></span>';
-								M.toast({html: toastHTML},2000,100,100);
+								M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 								toastHTML = '<span><strong>'+data.reason+'</strong></span>';
-								M.toast({html: toastHTML},2000,100,100);
+								M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 
 							}else{
 								$.each(data, function(index, value){
-									let li = $('<li class="collection-item avatar">' +
-										'<i class="material-icons circle">description</i>' +
-										'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
-										'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
-										'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>' +
-										'</li>');
+									let li = $('<select  class="browser-default" multiple style="height:250px">' +
+										'<option value="0">' +
+											'<li class="collection-item avatar">' +
+											'<i class="material-icons circle">description</i>' +
+											'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
+											'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
+											'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></li>' +
+										'</option>' +
+										'<option value="1">Option 1</option>' +
+										'<option value="2">Option 2</option>' +
+										'<option value="3">Option 3</option>' +
+										'</select><label>Seleccione el CFDI para hacer conciliación.</label>');
+									// let li = $('<li class="collection-item avatar">' +
+									// 	'<i class="material-icons circle">description</i>' +
+									// 	'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
+									// 	'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
+									// 	'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>' +
+									// 	'</li>');
 									$('#contraCFDI').append(li);
 								});
 							}
@@ -528,11 +539,11 @@
 								display: 'none'
 							});
 							let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 							toastHTML = '<span>Por favor intente mas tarde</span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 							toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-							M.toast({html: toastHTML},2000,100,100);
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 
 						}
 					});
@@ -596,11 +607,8 @@
 			},
 			success: function (data) {
 				if (data.code === 500 || data.code === 404){
-					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
-					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
-					
+					let toastHTML = '<span><strong>'+data.message+' </strong> </span>&nbsp;<br><p><span><strong>' +data.reason+'</strong></span>';
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
@@ -720,11 +728,11 @@
 					display: 'none'
 				});
 				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000});
 				toastHTML = '<span>Por favor intente mas tarde</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000});
 				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000});
 				
 			}
 		});
@@ -774,10 +782,8 @@
 			},
 			success: function (data) {
 				if (data.code === 500 || data.code === 404){
-					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
-					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
+					let toastHTML = '<span><strong>'+data.message+' </strong> </span>&nbsp;<br><p><span><strong>' +data.reason+'</strong></span>';
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					
 				}else{
 					$('#tblBody').empty();
@@ -836,11 +842,11 @@
 					display: 'none'
 				});
 				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				toastHTML = '<span>Por favor intente mas tarde</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				
 			}
 		});
@@ -872,16 +878,14 @@
 			success: function (data) {
 				let toastHTML;
 				if (data.code === 500 || data.code === 404) {
-					let toastHTML = '<span><strong>' + data.message + '</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
-					toastHTML = '<span><strong>' + data.reason + '</strong></span>';
-					M.toast({html: toastHTML},2000,100,100);
+					let toastHTML = '<span><strong>'+data.message+' </strong> </span>&nbsp;<br><p><span><strong>' +data.reason+'</strong></span>';
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					
 					// location.reload()
 				} else {
 					$('#modal-aut-conciliation').modal('close');
 					toastHTML = '<span>' + data.message + '</span>';
-					M.toast({html: toastHTML},2000,100,100);
+					M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 					
 					$('#aut'+id).empty();
 					$('#tblPayD'+id).empty()
@@ -902,11 +906,11 @@
 					display: 'none'
 				});
 				let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTM, displayLength:1000, duration: 1000, edge: 'rigth'});
 				toastHTML = '<span>Por favor intente mas tarde</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
-				M.toast({html: toastHTML},2000,100,100);
+				M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
 				
 			}
 		});
