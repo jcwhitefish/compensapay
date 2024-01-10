@@ -209,10 +209,13 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
 			// do something in error case
 		}else{
-			return [
+			$res = [
 				"code" => 200,
 				"message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora',
 				'id' =>$this->db->insert_id()];
+			$this->acceptCFDI($args['invoiceId'], $env);
+			$this->acceptNote($args['noteId'], $env);
+			return $res;
 			// do something in success case
 		}
 		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
@@ -257,6 +260,15 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "UPDATE $this->base.invoices set status=1 WHERE id = '$id'";
+		if ($res =  $this->db->query($query)){
+			return $res;
+		}
+		return false;
+	}
+	public function acceptNote(int $id, string $env){
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "UPDATE $this->base.debit_notes set status=1 WHERE id = '$id'";
 		if ($res =  $this->db->query($query)){
 			return $res;
 		}
