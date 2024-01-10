@@ -318,7 +318,8 @@ class Invoice_model extends CI_Model {
 		$this->db->from('invoices');
         $this->db->join('companies', 'companies.rfc = invoices.receiver_rfc');
 		$this->db->where('sender_rfc', $rfc);
-        $this->db->where_in('invoices.status', [1,2]);
+		$this->db->or_where('receiver_rfc', $rfc);
+        $this->db->where_in('invoices.status', [2]);
         $query = $this->db->get();
         return $query->result();
     }
