@@ -217,6 +217,30 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 		}
 		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
 	}
+	public function newConciliation_I (array $args, string $env): array
+	{
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		//Query para insertar la nueva conciliacion
+		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_invoice_relational, id_uploaded_by, id_client, 
+                                          id_provider, operation_number, payment_date, entry_money, exit_money, status)
+VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$args['receiver']}', 
+        '{$args['provider']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','1')";
+		if(!@$this->db->query($query)){
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
+		}else{
+			$res = [
+				"code" => 200,
+				"message" => 'Conciliación creada correctamente,',
+				'id' =>$this->db->insert_id()];
+			$this->acceptCFDI($args['invoiceId'],$env);
+			$this->acceptCFDI($args['invoiceRelId'],$env);
+			return $res;
+			// do something in success case
+		}
+		return ["code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación"];
+	}
 	public function getConciliationByID (int $id, string $env) {
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;

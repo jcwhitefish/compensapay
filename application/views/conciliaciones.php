@@ -224,9 +224,9 @@
 		</div>
 	</div>
 	<!-- crear conciliación -->
-	<div id="modal-new-conciliation" class="modal modal-fixed-footer" style="max-height: 98% !important; height: 95%; width: 90% !important">
-		<div class="modal-content">
-			<h5>Crear conciliación</h5>
+	<div id="modal-new-conciliation" class="modal modal" style="max-height: 95% !important; height: 85%; width: 90% !important">
+		<div class="modal-content" style="padding-bottom: 10px">
+			<h5 style="margin-top:0">Crear conciliación</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
 					<form id="uploadNoteForm" enctype="multipart/form-data">
@@ -234,7 +234,7 @@
 							<p>
 								<input name="typeConcilia" id="receptorWay" type="radio"/>
 								<label for="receptorWay">
-									<span>Selecciona CFDI de pago inicial</span>
+									<span>Seleccionar CFDI</span>
 								</label>
 							</p>
 							<p>
@@ -245,7 +245,7 @@
 							</p>
 						</div>
 						<div class="row" id="contentVariable"></div>
-						<div class="row">
+						<div class="row" style="margin-bottom: 0;">
 							<div class="row" style="margin-bottom: 0">
 								<div class="row" style="margin-bottom: 0">
 									<div class="col l4">
@@ -254,7 +254,7 @@
 										</h6>
 									</div>
 								</div>
-								<div class="row" style="font-size: 22px;">
+								<div class="row" style="font-size: 22px;margin-bottom: 5px">
 									<div class="col l4">
 										<label>
 											<input type="date" id="conciliaDate" min = "<?=date('Y-m-d',strtotime('now'))?>"
@@ -292,9 +292,6 @@
 					</form>
 				</div>
 			</div>
-		</div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-close button-gray">Cancelar</a>
 		</div>
 	</div>
 </div>
@@ -405,7 +402,7 @@
 					processData: false,
 					method: 'post',
 					beforeSend: function () {
-						const obj = $('#modal-CFDI');
+						const obj = $('#modal-new-conciliation');
 						const left = obj.offset().left;
 						const top = obj.offset().top;
 						const width = obj.width();
@@ -456,7 +453,66 @@
 					}
 				});
 			}else{
+				$.ajax({
+					url: '/Conciliaciones/WayContraCFDI',
+					data: {
+						OriginCFDI: $('#OriginCFDI').val(),
+						OriginAmount: $('#OriginAmount').val(),
+						ReceiverId: $('#ReceiverId').val(),
+						cfdiConciation: $('input:radio[name=cfdiConciation]:checked').val(),
+						conciliaDate: $('#conciliaDate').val()
+					}	,
+					dataType: 'json',
+					method: 'post',
+					beforeSend: function () {
+						const obj = $('#modal-new-conciliation');
+						const left = obj.offset().left;
+						const top = obj.offset().top;
+						const width = obj.width();
+						const height = obj.height();
+						$('#solveLoader').css({
+							display: 'block',
+							left: left,
+							top: top,
+							width: width,
+							height: height,
+							zIndex: 999999
+						}).focus();
+					},
+					success: function (data) {
+						let toastHTML;
+						if (data.code === 500 || data.code === 404) {
+							let toastHTML = '<span><strong>' + data.message + '</strong></span>';
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
+							toastHTML = '<span><strong>' + data.reason + '</strong></span>';
+							M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
+							// location.reload()
+						} else {
+							$('#modal-new-conciliation').modal('close');
+							toastHTML = '<span>' + data.message + '</span>';
+							M.toast({html: toastHTML, displayLength:2000, duration: 2000, edge: 'rigth'});
+							conciliation();
+						}
+					},
+					complete: function () {
+						$('#solveLoader').css({
+							display: 'none'
+						}).delay(2000);
+						cfdi();
+					},
+					error: function (data){
+						$('#solveLoader').css({
+							display: 'none'
+						});
+						let toastHTML = '<span><strong>Ha ocurrido un problema</strong></span>';
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
+						toastHTML = '<span>Por favor intente mas tarde</span>';
+						M.toast({html: toastHTML, displayLength:1000, duration: 1000, edge: 'rigth'});
+						toastHTML = '<span>Si el problema persiste levante ticket en el apartado de soporte</span>';
+						M.toast({html: toastHTM, displayLength:1000, duration: 1000, edge: 'rigth'});
 
+					}
+				});
 			}
 		})
 		document.querySelectorAll("input[name='typeConcilia']").forEach((input) => {
@@ -497,7 +553,15 @@
 							}).focus();
 						},
 						success: function (data) {
-							let contra = '<ul class="collection" id="contraCFDI"></ul>';
+							let contra = '<table class="striped">' +
+								'<thead><tr>' +
+									'<th>Crear conciliciaón</th>' +
+									'<th>UUID</th>' +
+									'<th>Emisor</th>' +
+									'<th>Monto</th>' +
+								'</tr></thead>' +
+								'<tbody id="contraCFDI"></tbody>' +
+								'</table>';
 							contenVar.append(contra);
 							if (data.code === 500 || data.code === 404){
 								let toastHTML = '<span><strong>'+data.message+'</strong></span>';
@@ -507,24 +571,17 @@
 
 							}else{
 								$.each(data, function(index, value){
-									let li = $('<select  class="browser-default" multiple style="height:250px">' +
-										'<option value="0">' +
-											'<li class="collection-item avatar">' +
-											'<i class="material-icons circle">description</i>' +
-											'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
-											'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
-											'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></li>' +
-										'</option>' +
-										'<option value="1">Option 1</option>' +
-										'<option value="2">Option 2</option>' +
-										'<option value="3">Option 3</option>' +
-										'</select><label>Seleccione el CFDI para hacer conciliación.</label>');
-									// let li = $('<li class="collection-item avatar">' +
-									// 	'<i class="material-icons circle">description</i>' +
-									// 	'<span class="title"><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></span>' +
-									// 	'<p><strong>Emisor: </strong>'+value.sender+'<br><strong>Total: </strong>$'+value.total+'</p>' +
-									// 	'<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>' +
-									// 	'</li>');
+									let li = $('<tr><td>' +
+												'<p><input required name="cfdiConciation" id="cfdiConciation'+value.id+'" type="radio" ' +
+													'value = "' +value.id+'"/>'+
+													'<label for="opCFDI'+value.id+'">' +
+													'<span> Seleccionar</span>' +
+												'</label></p>' +
+											'</td>' +
+											'<td><a href="'+value.idurl+'" target="_blank">'+value.uuid+'</a></td>' +
+											'<td>'+value.sender+'</td>' +
+											'<td>$'+value.total+'</td>' +
+										'</tr>');
 									$('#contraCFDI').append(li);
 								});
 							}

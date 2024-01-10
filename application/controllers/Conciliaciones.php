@@ -269,6 +269,40 @@ class Conciliaciones extends MY_Loggedin
 		echo json_encode(["code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento"]);
 		return false;
 	}
+	public function WayContraCFDI(){
+		$OriginCFDI = $this->input->post('OriginCFDI');
+		$OriginAmount = $this->input->post('OriginAmount');
+		$ReceiverId = $this->input->post('ReceiverId');
+		$cfdiConciation = $this->input->post('cfdiConciation');
+		$conciliaDate = $this->input->post('conciliaDate');
+		$companyId = $this->session->userdata('datosEmpresa')['id'];
+		$userId = $this->session->userdata('datosUsuario')['id'];
+		if ($OriginCFDI && $OriginAmount && $ReceiverId && $cfdiConciation && $conciliaDate){
+			$this->load->model('Operation_model', 'OpData');
+			$this->load->model('Invoice_model', 'invData');
+			$cfdi0 = $this->invData->getCFDIById($cfdiConciation,'SANDBOX');
+			$data = [
+				'invoiceId' => $cfdiConciation,
+				'invoiceRelId' => $OriginCFDI,
+				'userId' => $userId,
+				'receiver' => $companyId,
+				'provider' => $cfdi0['id_company'],
+				'opNumber' => $this->MakeOperationNumber($cfdiConciation),
+				'paymentDate' =>  strtotime($conciliaDate),
+				'inCash' =>  $cfdi0['total'],
+				'outCash' => $OriginAmount,
+			];
+			$op = $this->OpData->newConciliation_I($data,'SANDBOX');
+			echo json_encode([
+				"code" => 200,
+				"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia"
+			]);
+			$this->adviseAuthorized($op['id']);
+			return true;
+		}
+		echo json_encode(["code" => 500, "message" => "Error al obtener información", "reason" => "No se logro obtener los registros"]);
+		return false;
+	}
 	public function ContraCFDI()
 	{
 		$amount = $this->input->post('amount');
@@ -293,7 +327,7 @@ class Conciliaciones extends MY_Loggedin
 	 * @param float|null  $monto   En caso de escoger tipo de documento 2 poner el monto de la factura a conciliar para su comparación
 	 * @return array Devuelve el resultado de la validación con la descripcion caso de erro.
 	 */
-	public function validaComprobante(array $factura, int $tipo, string $env = NULL, float $monto = NULL): array
+	public function validaComprobant(array $factura, int $tipo, string $env = NULL, float $monto = NULL): array
 	{
 		//Se selecciona el ambiente a trabajar
 		$env = $env === NULL ? $this->enviroment : $env;
@@ -371,4 +405,5 @@ class Conciliaciones extends MY_Loggedin
 		$trash = '010203040506070809';
 		return str_pad($operation, 7, substr(str_shuffle($trash), 0, 10), STR_PAD_LEFT);
 	}
+
 }

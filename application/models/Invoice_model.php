@@ -622,4 +622,23 @@ WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.statu
 		return ["code" => 500,"message" => "Error al obtener fecha de pago",
 			"reason" => "Error con la fuente de información"];
 	}
+	public function getCFDIById(int $id, string$env= null){
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT t1.*, t2.short_name AS 'receiver', t2.rfc AS 'receiverRfc', t3.short_name AS 'provider', t3.short_name AS 'providerRfc' 
+FROM compensatest_base.invoices t1
+    INNER JOIN compensatest_base.companies t2 ON t1.receiver_rfc = t2.rfc
+    INNER JOIN compensatest_base.companies t3 ON t1.sender_rfc = t3.rfc
+WHERE t1.id = '$id'";
+		if($res = $this->db->query($query)){
+			if ($res->num_rows() > 0){
+				return $res->result_array()[0];
+			}
+			return ["code" => 404,"message" => "No se encontraron registros",
+				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
+		}
+		return ["code" => 500,"message" => "Error al obtener datos",
+			"reason" => "Error con la fuente de información"];
+	}
 }
