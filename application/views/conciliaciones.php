@@ -622,7 +622,6 @@
 		let btnAction = $('#btnAction').append('Subir CFDI');
 		btnAction.attr('href', '#modal-CFDI');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
-			'<th>Seleccionar</th>' +
 			'<th>Autorización</th>' +
 			'<th class="center-align">Estatus conciliación</th>' +
 			'<th style="min-width: 130px; text-align: center">Numero de referencia</th>' +
@@ -755,7 +754,6 @@
 								break;
 						}
 						const tr = $('<tr>' +
-							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td class="tabla-celda center-align" id="aut'+value.id+'"></td>' +
 							'<td class="tabla-celda center-align">' + status + '</td>' +
 							'<td>' + value.operation_number + '</td>' +
@@ -801,7 +799,6 @@
 		let btnAction = $('#btnAction').append('Subir CFDI');
 		btnAction.attr('href', '#modal-CFDI');
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
-			'<th>Seleccionar</th>' +
 			'<th>Concilición</th>' +
 			'<th>Emisor</th>' +
 			'<th>Receptor</th>' +
@@ -845,12 +842,7 @@
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
-						let uuid;
-						if (value.tipo === 'factura') {
-							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
-						} else {
-							uuid = value.uuid;
-						}
+						let uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
 						let initC = $('<a class="modal-trigger" href="#modal-new-conciliation">Crear conciliación</a>');
 						switch (value.status){
 							case '0':
@@ -873,7 +865,6 @@
 								break;
 						}
 						const tr = $('<tr>' +
-							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td id="initC'+value.id+'"></td>' +
 							'<td>' + value.emisor + '</td>' +
 							'<td>' + value.receptor + '</td>' +
