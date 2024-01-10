@@ -220,11 +220,11 @@ class Invoice_model extends CI_Model {
 					$i++;
 					$arr = explode(',', $value);
 					foreach($arr as $key){
-						if ($j == 7 || $j == 8){
+						if ($j == 7 || $j == 8 || $j == 9 || $j == 10){
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
-						if ($j ==  9|| $j == 10){
+						if ($j == 11){
 							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
@@ -239,14 +239,14 @@ class Invoice_model extends CI_Model {
 			case 'Estados':
 			case 'Comprobantes':
 			$sheet->setCellValue('A1', 'descargar CEP');
-				$sheet->setCellValue('A1', 'Institución Emisora');
-				$sheet->setCellValue('B1', 'Institución receptora');
-				$sheet->setCellValue('C1', 'Cuenta beneficiaria');
-				$sheet->setCellValue('D1', 'Clave de rastreo');
-				$sheet->setCellValue('E1', 'Numero de operación');
-				$sheet->setCellValue('F1', 'Fecha de pago');
-				$sheet->setCellValue('G1', 'Monto del pago');
-				$sheet->getStyle('A1:G1')->applyFromArray(
+				$sheet->setCellValue('B1', 'Institución Emisora');
+				$sheet->setCellValue('C1', 'Institución receptora');
+				$sheet->setCellValue('D1', 'Cuenta beneficiaria');
+				$sheet->setCellValue('E1', 'Clave de rastreo');
+				$sheet->setCellValue('F1', 'ID de operación');
+				$sheet->setCellValue('G1', 'Fecha de pago');
+				$sheet->setCellValue('H1', 'Monto del pago');
+				$sheet->getStyle('A1:H1')->applyFromArray(
 				array(
 					'font'  => array(
 						'bold'  => true,
