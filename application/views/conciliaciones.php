@@ -236,14 +236,14 @@
 							<p style="margin-left: 10px;">
 								<input name="typeConcilia" id="receptorWay" type="radio"/>
 								<label for="receptorWay">
-									<span style="font-size: 1.15rem;font-weight: 400;">
+									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">
 										Conciliar contra un CFDI de tu proveedor</span>
 								</label>
 							</p>
 							<p style="margin-left: 10px;">
 								<input name="typeConcilia" id="issuingWay" type="radio"/>
 								<label for="issuingWay">
-									<span style="font-size: 1.15rem;font-weight: 400;">
+									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">
 										Conciliar con tu cliente utilizando nota de crédito propia</span>
 								</label>
 							</p>

@@ -30,7 +30,7 @@ if ($this->session->userdata('logged_in')) {
 	<script>
 		function ready() {
 			$('#solveLoader').css({
-				display: 'block',});
+				display: 'none',});
 		}
 	</script>
 <style>
