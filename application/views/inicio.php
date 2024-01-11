@@ -8,7 +8,7 @@
             <h5 style="margin: 1.0933333333rem 0 -1rem 0;"><strong>Total por Cobrar</strong></h5>
             <p style="font-size: 12px">(Monto Facturas)</p>
             <h6>$ <?php 
-                    $Stpoc = $dashboard["TotalPorCobrar"]["facturas"][0]["TTotal"] + $dashboard["TotalPorCobrar"]["notas"][0]["TTotal"];
+                    $Stpoc = $dashboard["TotalPorCobrar"]["facturas"][0]["TTotal"];
                     echo number_format($Stpoc,2);
             ?></h6>
         </div>
@@ -40,7 +40,7 @@
         <div class="col s6">
             <h5>&nbsp;</h5>
             <select>
-                <option value="0">Todos los proveedores</option>
+                <option value="0">Socios de Negocios</option>
                 <?php
                 if(is_array($dashboard["Proveedores"]))
                 {

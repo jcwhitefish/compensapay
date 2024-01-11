@@ -302,7 +302,7 @@ class Inicio_model extends CI_Model {
                     LEFT JOIN invoices as ip ON ip.id = o.id_invoice 
                     LEFT JOIN invoices as ic ON ic.id = o.id_invoice_relational 
                     INNER JOIN companies ON companies.id = o.id_provider 
-                    WHERE o.id_client = '".$idCompanie."' 
+                    WHERE o.id_client = '".$idCompanie."' OR o.id_provider = '".$idCompanie."'
                     ORDER BY o.id DESC LIMIT 10";
 
         if($RResOper = $this->db->query($ResOper)){
