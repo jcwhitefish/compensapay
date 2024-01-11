@@ -234,14 +234,9 @@
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
-						let uuid;
+						let uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
 						let subtotal;
 						let iva;
-						if (value.tipo === 'factura') {
-							uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
-						} else {
-							uuid = value.uuid;
-						}
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td>' + value.emisor + '</td>' +

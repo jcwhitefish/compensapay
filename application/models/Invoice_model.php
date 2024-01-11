@@ -125,17 +125,16 @@ class Invoice_model extends CI_Model {
         $i = 1;
         $j = 0;
         switch($menu){
-            case 'Facturas':
-				$sheet->setCellValue('A1', 'Proveedor');
-				$sheet->setCellValue('B1', 'Factura');
-				$sheet->setCellValue('C1', 'Fecha Factura');
-				$sheet->setCellValue('D1', 'Fecha Alta');
-				$sheet->setCellValue('E1', 'Fecha Transacción');
-				$sheet->setCellValue('F1', 'Estatus');
-				$sheet->setCellValue('G1', 'Subtotal');
-				$sheet->setCellValue('H1', 'IVA');
-				$sheet->setCellValue('I1', 'Total');
-				$sheet->getStyle('A1:I1')->applyFromArray(
+            case 'cfdi':
+				$sheet->setCellValue('A1', 'Emisor');
+				$sheet->setCellValue('B1', 'Receptor');
+				$sheet->setCellValue('C1', 'CFDI');
+				$sheet->setCellValue('D1', 'Fecha CFDI');
+				$sheet->setCellValue('E1', 'Fecha Alta');
+				$sheet->setCellValue('F1', 'Fecha limite de pago');
+				$sheet->setCellValue('G1', 'Total');
+				$sheet->setCellValue('H1', 'tipo');
+				$sheet->getStyle('A1:H1')->applyFromArray(
 					array(
 						'font'  => array(
 							'bold'  => true,
@@ -150,7 +149,7 @@ class Invoice_model extends CI_Model {
 				);
 				foreach($args as $value){
 					$i++;
-					$arr = explode(',', $value);
+					$arr = explode('|', $value);
 					foreach($arr as $key){
 						$sheet->setCellValue( $letter[$j].$i, $key);
 						$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
@@ -159,9 +158,9 @@ class Invoice_model extends CI_Model {
 					$j = 0;
 				}
                 break;
-            case 'Movimientos':
+            case 'movimientos':
 				$sheet->setCellValue('A1', 'Monto');
-				$sheet->setCellValue('B1', 'Clave de rastreo');
+				$sheet->setCellValue('B1', 'Número de referencia');
 				$sheet->setCellValue('C1', 'Comprobante electrónico (CEP)');
 				$sheet->setCellValue('D1', 'Descripción');
 				$sheet->setCellValue('E1', 'Banco origen');
@@ -172,10 +171,9 @@ class Invoice_model extends CI_Model {
 				$sheet->setCellValue('J1', 'RFC destino');
 				$sheet->setCellValue('K1', 'CLABE origen');
 				$sheet->setCellValue('L1', 'CLABE destino');
-				$sheet->setCellValue('M1', 'Fecha de transacción');
-				$sheet->setCellValue('N1', 'CFDI correspondiente');
-				$sheet->setCellValue('O1', 'Fecha de Transacción');
-				$sheet->getStyle('A1:O1')->applyFromArray(
+				$sheet->setCellValue('M1', 'CFDI correspondiente');
+				$sheet->setCellValue('N1', 'Fecha de Transacción');
+				$sheet->getStyle('A1:N1')->applyFromArray(
 					array(
 						'font'  => array(
 							'bold'  => true,
@@ -190,14 +188,14 @@ class Invoice_model extends CI_Model {
 				);
 				foreach($args as $value){
 					$i++;
-					$arr = explode(',', $value);
+					$arr = explode('|', $value);
 					foreach($arr as $key){
-						if ($j == 10 || $j == 11){
+						if ($j == 10 || $j == 11 || $j == 12){
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
 						}
-						if ($j == 12 || $j == 14){
-							$sheet->setCellValue( $letter[$j].$i, date('Y-m-d', $key) );
+						if ($j == 13){
+							$sheet->setCellValue( $letter[$j].$i, date('d-m-Y', strtotime($key)) );
 						}else{
 							$sheet->setCellValue( $letter[$j].$i, $key);
 						}
@@ -206,12 +204,51 @@ class Invoice_model extends CI_Model {
 					}
 					$j = 0;
 				}
-				$sheet->removeColumn('C', $i);
+				$sheet->removeColumn('C', 1);
                 break;
 			case 'Estados':
-			case 'Comprobantes':
-                $sheet->setCellValue('A1', $key);
-                break;
+			case 'comprobantes':
+				$sheet->setCellValue('A1', 'Descargar CEP');
+				$sheet->setCellValue('B1', 'Institución emisora');
+				$sheet->setCellValue('C1', 'Institución receptora');
+				$sheet->setCellValue('D1', 'Cuenta beneficiaria');
+				$sheet->setCellValue('E1', 'Clave de rastreo');
+				$sheet->setCellValue('F1', 'Numero de referencia');
+				$sheet->setCellValue('G1', 'Fecha de pago');
+				$sheet->setCellValue('H1', 'Monto del pago');
+				$sheet->getStyle('A1:H1')->applyFromArray(
+					array(
+						'font'  => array(
+							'bold'  => true,
+							'color' => array('rgb' => 'FFFFFF'),
+							'size'  => 12,
+						),
+						'fill' => array(
+							'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+							'color' => array('rgb' => '128293')
+						),
+					)
+				);
+				foreach($args as $value){
+					$i++;
+					$arr = explode('|', $value);
+					foreach($arr as $key){
+						if ($j ==3){
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+							$sheet->getStyle($letter[$j].$i)->getNumberFormat()->setFormatCode('####');
+						}
+						if ($j == 6){
+							$sheet->setCellValue( $letter[$j].$i, date('d-m-Y', strtotime($key)) );
+						}else{
+							$sheet->setCellValue( $letter[$j].$i, $key);
+						}
+						$sheet->getColumnDimension($letter[$j])->setAutoSize(true);
+						$j++;
+					}
+					$j = 0;
+				}
+				$sheet->removeColumn('A',1);
+				break;
 		}
         $writer = new Xlsx($spread);
         ob_start();
@@ -463,7 +500,7 @@ CONCAT('$url', t1.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI', 
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate', 
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'Nota de debito' AS tipo  
+t1.total, 'Nota de credito' AS tipo  
 FROM $this->base.debit_notes t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc 
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
