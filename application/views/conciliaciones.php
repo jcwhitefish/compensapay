@@ -154,7 +154,7 @@
 						<div class="row" style="margin-bottom: 0">
 							<div class="col l4"><h6>Cuenta clabe del proveedor:</h6></div>
 							<div class="col l4">
-								<h6>Fecha de pago:
+								<h6>Fecha de pago estimada:
 									<i class="small material-icons" title="Fecha maxima para realizar el pago" style="cursor: help">help</i>
 								</h6>
 							</div>
@@ -165,7 +165,7 @@
 								<label>
 									<input type="date" id="autPayDate" min = "<?=date('Y-m-d',strtotime('now'))?>"
 										   max = "<?=date('Y-m-d',strtotime('now +3 month'))?>"
-										   value = "<?=date('Y-m-d',strtotime('now'))?>" />
+										   value = "<?=date('Y-m-d',strtotime('now'))?>" disabled/>
 								</label>
 							</div>
 						</div>
@@ -199,23 +199,25 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="row">
-								<div class="col l12 d-flex">
-									<div class="p-5">
-										<input class="p-5" type="checkbox" required>
-									</div>
-									<p class="text-modal" style="text-align: justify;">
-										Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
-										factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
-										debido por el Proveedor en relación con dicha factura en favor del Cliente.
-										Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
-										<a href="terminosycondiciones">Términos y Condiciones</a>.
-									</p><br>
-								</div>
-							</div>
 							<div class="col l12 center-align">
 								<a class="modal-close button-gray" >Cancelar</a>
 								<input class="button-blue" type="submit" value="Siguiente" </input>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col l12 d-flex">
+								<div class="p-5">
+									<input class="p-5" type="checkbox" required>
+								</div>
+								<p class="text-modal" style="text-align: justify;">
+									En caso de utilizar la presente factura para conciliar con una nota de crédito, el Proveedor acepta y otorga su
+									consentimiento en este momento para que, una vez recibido el pago por la misma, Solve descuente y transfiere
+									de manera automática a nombre y cuenta del Proveedor, el monto debido por el Proveedor en relación con dicha
+									factura en favor del Cliente. Los términos utilizados en mayúscula tendrán el significado que se le atribuye
+									dicho término en los Términos y Condiciones.  En caso de utilizar esta factura para conciliar con una factura
+									de un Proveedor, al momento de dar clic en “Aceptar” el Cliente acuerda que la factura en cuestión será utilizada
+									para efectos de las operaciones en la Plataforma conforme a los <a href="terminosycondiciones">Términos y Condiciones</a>.
+								</p><br>
 							</div>
 						</div>
 					</form>
@@ -231,16 +233,18 @@
 				<div class="card-content">
 					<form id="uploadNoteForm" enctype="multipart/form-data">
 						<div class="row">
-							<p>
+							<p style="margin-left: 10px;">
 								<input name="typeConcilia" id="receptorWay" type="radio"/>
 								<label for="receptorWay">
-									<span>Seleccionar CFDI</span>
+									<span style="font-size: 1.15rem;font-weight: 400; color: white;">
+										Conciliar contra un CFDI de tu proveedor</span>
 								</label>
 							</p>
-							<p>
+							<p style="margin-left: 10px;">
 								<input name="typeConcilia" id="issuingWay" type="radio"/>
 								<label for="issuingWay">
-									<span>Cargar nota de crédito</span>
+									<span style="font-size: 1.15rem;font-weight: 400; color: white;">
+										Conciliar con tu cliente utilizando nota de crédito propia</span>
 								</label>
 							</p>
 						</div>
@@ -249,7 +253,7 @@
 							<div class="row" style="margin-bottom: 0">
 								<div class="row" style="margin-bottom: 0">
 									<div class="col l4">
-										<h6>Fecha de pago:
+										<h6>Fecha de pago estimada:
 											<i class="small material-icons" title="Fecha maxima para realizar el pago" style="cursor: help">help</i>
 										</h6>
 									</div>
@@ -269,20 +273,6 @@
 							</div>
 						</div>
 						<div class="row">
-						<div class="row">
-							<div class="col l12 d-flex">
-								<div class="p-5">
-									<input class="p-5" type="checkbox" required>
-								</div>
-								<p class="text-modal" style="text-align: justify;">
-									Proveedor acepta y otorga su consentimiento en este momento para que una vez recibido el pago por la presente
-									factura, Compensa Pay descuente y transfiere de manera automática a nombre y cuenta del Proveedor, el monto
-									debido por el Proveedor en relación con dicha factura en favor del Cliente.
-									Los términos utilizados en mayúscula tendrán el significado que se le atribuye dicho término en los
-									<a href="terminosycondiciones">Términos y Condiciones</a>.
-								</p><br>
-							</div>
-						</div>
 						<div class="col l12 center-align">
 							<a class="modal-close button-gray">Cancelar</a>
 							&nbsp;
@@ -519,6 +509,7 @@
 			input.addEventListener('change', function (e){
 				let contenVar = $('#contentVariable');
 				if (e.target.id === 'issuingWay'){
+					$('#conciliaDate').attr('disabled', true);
 					conciliateWay = 0;
 					let debit = '<div class="file-field input-field" ><div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">' +
 						'<input class="file-path validate" type="text" placeholder="Sube tu nota de crédito en formato .xml" disabled ></div>' +
@@ -527,6 +518,7 @@
 					contenVar.empty();
 					contenVar.append(debit);
 				}else{
+					$('#conciliaDate').attr('disabled', false);
 					conciliateWay = 1;
 					contenVar.empty();
 					$.ajax({
