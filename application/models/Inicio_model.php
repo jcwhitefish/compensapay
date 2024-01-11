@@ -49,9 +49,9 @@ class Inicio_model extends CI_Model {
 
         //total por pagar
         $Qtpp = "SELECT SUM(total) AS TTotal FROM invoices WHERE receiver_rfc = '".$rfcEmpresa."'"; 
-        $Qtpp2 = "SELECT SUM(dn.total) AS TTotal FROM debit_notes AS dn
-                        INNER JOIN invoices AS i ON dn.id_invoice = i.id
-                        WHERE i.receiver_rfc = '".$rfcEmpresa."'";
+        $Qtpp2 = "SELECT SUM(dn.total) AS TTotal FROM debit_notes AS dn 
+                    INNER JOIN operations AS o ON dn.id = o.id_debit_note
+                    WHERE dn.sender_rfc = '".$rfcEmpresa."' AND o.status = 1";
         
         if($restpp = $this->db->query($Qtpp))
         {

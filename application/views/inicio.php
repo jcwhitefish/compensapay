@@ -149,7 +149,7 @@
                         <td>'.$value["created_at"].'</td>
                         <td><a href="'.base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice"]).'" target="_blank">'.$value["uuid"].'</a></td>
                         <td class="right-align">$'.number_format($value["money_prov"], 2).'</td>
-                        <td><a href="';if($value["uuid_nota"]!=NULL){echo base_url('/assets/factura/nota.php?idnota='.$value["uudi_nota"]).'" target="_blank">'.$value["uudi_nota"];}else{echo base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice_relational"]).'" target="_blank">'.$value["uuid_relation"];}echo '</a></td>
+                        <td><a href="';if($value["uuid_nota"]!=NULL){echo base_url('/assets/factura/nota.php?idnota='.$value["uuid_nota"]).'" target="_blank">'.$value["uuid_nota"];}else{echo base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice_relational"]).'" target="_blank">'.$value["uuid_relation"];}echo '</a></td>
                         <td class="right-align">$'.number_format($value["money_clie"], 2).'</td>
                         <td>';
                     switch ($value["status"]) {
