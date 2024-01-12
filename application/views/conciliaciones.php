@@ -668,7 +668,7 @@
 			"<th class=\"center-align\">CFDI Inicial</th>" +
 			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto CFDI Inicial </th>" +
 			"<th style='min-width: 128px;' class=\"center-align\">Fecha Alta CFDI Inicial</th>" +
-			"<th style='min-width: 162px;' class=\"center-align\">Fecha Límite de Pago CFDI Inicial (si aplica)</th>" +
+			"<th style='min-width: 162px;' class=\"center-align\">Fecha Límite de Pago CFDI Inicial</th>" +
 			"<th style=\"text-align: center\">Emisor CFDI Conciliación</th>" +
 			"<th style=\"text-align: center\" class=\"center-align\">Receptor CFDI Conciliación</th>" +
 			"<th class=\"center-align\">CFDI Conciliación</th>" +
@@ -757,6 +757,7 @@
 									});
 									break;
 								case "1":
+								case "3":
 									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
 									break;
 								case "2":
@@ -768,6 +769,7 @@
 								case "0":
 									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
 									break;
+								case "3":
 								case "1":
 									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
 									break;
@@ -842,7 +844,7 @@
 		let btnAction = $("#btnAction").append("Subir CFDI");
 		btnAction.attr("href", "#modal-CFDI");
 		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
-			"<th class='center-align'>Concilición</th>" +
+			"<th class='center-align'>Conciliación</th>" +
 			"<th class='center-align'>Estatus Factura</th>" +
 			"<th class='center-align'>UUID del CFDI</th>" +
 			"<th class=\"center-align\">Emisor</th>" +
@@ -925,7 +927,7 @@
 								status = "<p>Rechazada</p>";
 								break;
 							case "3":
-								status = "<p>Realizada</p>";
+								status = "<p>Pagada</p>";
 								break;
 							case "4":
 								status = "<p>Vencida</p>";

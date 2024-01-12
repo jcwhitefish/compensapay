@@ -226,13 +226,12 @@
 				}).focus();
 			},
 			success: function (data) {
-				if (data.code === 404){
+				if (data.code === 500){
 					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
 					M.toast({html: toastHTML});
 					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
 					M.toast({html: toastHTML});
-				}else if (){
-
+				}else if (data.code === 404){
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){
