@@ -352,4 +352,13 @@ class Fintec extends MY_Loggedout{
 	public function ini(){
 		phpinfo();
 	}
+	public function testNotifications(){
+		$this->load->model('Notification_model', 'nt');
+		$data = [
+			'id' => 1,
+			'title' => 'prueba',
+			'body' => 'Esto es una pruebaaa'
+		];
+		var_dump($this->nt->insertNotification($data, 'SANDBOX'));
+	}
 }

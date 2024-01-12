@@ -8,14 +8,15 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
  * @property Invoice_model $invData invoice processing model
  */
 class Invoice_model extends CI_Model {
-	private string $enviroment = 'SANDBOX';
-	private string $dbsandbox = 'compensatest_base';
+	private string $enviroment = '';
+	private string $dbsandbox = '';
 //	private string $dbprod = 'compensapay';
-	private string $dbprod = 'compensatest_base';
+	private string $dbprod = '';
 	public string $base = '';
     public function __construct() {
         parent::__construct();
         $this->load->database();
+		require 'conf.php';
 		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
     public function get_all_invoices() {
@@ -500,7 +501,7 @@ CONCAT('$url', t1.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI', 
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate', 
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'Nota de credito' AS tipo  
+t1.total, 'Nota de credito' AS tipo, t1.status
 FROM $this->base.debit_notes t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc 
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc

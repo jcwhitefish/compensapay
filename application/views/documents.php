@@ -91,9 +91,9 @@
 			</div>
 			<div class="col l3"></div>
 			<div class="col l3 valign-wrapper">
-				<a id="download" class="button-blue" href="#" download>
-					Descargar
-				</a>
+				<a id="download" class="waves-effect btn " download
+				   style="background-color:#1565c0 !important; border: 2px solid #0d47a1 !important;
+				   border-radius:10px !important">Descargar</a>
 			</div>
 		</div>
 
@@ -226,11 +226,13 @@
 				}).focus();
 			},
 			success: function (data) {
-				if (data.code === 500 || data.code === 404){
+				if (data.code === 404){
 					let toastHTML = '<span><strong>'+data.message+'</strong></span>';
 					M.toast({html: toastHTML});
 					toastHTML = '<span><strong>'+data.reason+'</strong></span>';
 					M.toast({html: toastHTML});
+				}else if (){
+
 				}else{
 					$('#tblBody').empty();
 					$.each(data, function(index, value){

@@ -82,16 +82,23 @@ class Operation_model extends CI_Model {
 		//Se crea el query para obtener las facturas
 		$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
        CONCAT('$url', t4.id) AS 'idurl', t3.account_clabe, 
-       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1', 
+       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1',
+       DATE_FORMAT(FROM_UNIXTIME(t4.payment_date), '%d-%m-%Y') AS 'datePago1',
        (case WHEN t5.id IS NULL THEN t6.uuid ELSE t5.uuid END) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
-       (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2', 
-       (case WHEN t5.id IS NULL 
-           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y') 
-           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y') END) AS 'dateCFDI2', 
-    	(case WHEN t5.id IS NULL 
-    	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y') 
-    	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
+       (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2',
+       (case WHEN t5.id IS NULL
+           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y')
+           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y') END) AS 'dateCFDI2',
+    	(case WHEN t5.id IS NULL
+    	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y')
+    	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago',
+        (case WHEN t5.id IS NULL
+           THEN (SELECT short_name FROM compensatest_base.companies where rfc= t6.sender_rfc)
+           ELSE (SELECT short_name FROM compensatest_base.companies where rfc= t5.sender_rfc) END) AS 'senderConciliation',
+    	(case WHEN t5.id IS NULL
+           THEN (SELECT short_name FROM compensatest_base.companies where rfc= t6.receiver_rfc)
+           ELSE (SELECT short_name FROM compensatest_base.companies where rfc= t5.receiver_rfc) END) AS 'receiverConciliation',
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
     	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
     	(CASE WHEN t5.id IS NULL THEN 'nota' ELSE 'cfdi' END) AS 'tipoCFDI'

@@ -5,6 +5,7 @@ ini_set("xdebug.var_display_max_depth", '-1');
 /**
  * Class Arteria_model model
  * @property Arteria_model $dataArt Arteria module
+
  */
 class Arteria_model extends CI_Model{
 	private $ArteriaSandbox = 'https://api.arteria.xyz';
@@ -14,9 +15,16 @@ class Arteria_model extends CI_Model{
 	private $usernameProd = 'AKJa__kN9gQ2WTRWg8Vx6ycw';
 	private $passwordProd = 'ElPZBMlRrohxumQJkL6QrLLayjrowxk53I4LLFKy_lUDAFHxBxpGm1Xq-80nkIU-o1sxn-JFxzw1loBKtwZNQA';
 	private $headers = [];
+	private $base = '';
+	private $environment;
+	private $dbsandbox;
+	private $dbprod;
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->database();
+		require 'conf.php';
+		$this->base = $this->environment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 	}
 	public function CreateClabe(array $args, string $env){
 		$data = [
