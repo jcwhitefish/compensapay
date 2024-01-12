@@ -485,7 +485,7 @@ ORDER BY t1.created_at DESC";
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'factura' AS tipo, t1.status, t2.id AS 'senderId', t3.id AS 'receptorId'
+t1.total, 'Factura' AS tipo, t1.status, t2.id AS 'senderId', t3.id AS 'receptorId'
 FROM $this->base.invoices t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
@@ -501,7 +501,7 @@ CONCAT('$url', t1.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI', 
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate', 
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'Nota de credito' AS tipo, t1.status
+t1.total, 'Nota de crédito' AS tipo, t1.status
 FROM $this->base.debit_notes t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc 
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
