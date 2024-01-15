@@ -98,7 +98,7 @@
 <div class="container">
     <div class="row section">
         <div class="col s8">
-            <div class="card" style="border-radius: 15px; height:600px;">
+            <div class="card large" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Ingresos vs. Egresos</strong></span>
                     <div>
@@ -108,9 +108,10 @@
             </div>
         </div>
         <div class="col s4">
-            <div class="card" style="border-radius: 15px; height:600px;">
+            <div class="card large" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Proveedores Principales</strong></span>
+                    <span class="card-title"><strong>Operaciones</strong></span>
+                    <p style="font-size: 12px">Socios con mayor numero de operaciones</p>
                     <div>
                         <canvas id="myChart2"></canvas>
                     </div>
@@ -188,10 +189,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const ctx = document.getElementById('myChart');
-  const ctx2 = document.getElementById('myChart2');
+var ctx = document.getElementById('myChart');
+var ctx2 = document.getElementById('myChart2');
 
-  var myLineChart = new Chart(ctx, {
+var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: [<?php echo $dashboard["GraficoMovimientos"]["meses"];?>],
@@ -214,7 +215,7 @@
         ]}
 });
 
-  var myLineChart2 = new Chart(ctx2, {
+var myLineChart2 = new Chart(ctx2, {
     type: 'doughnut',
     data: {
         labels: [<?php echo $dashboard["GraficoProveedores"]["Proveedores"];?>],
@@ -234,5 +235,4 @@
             }
         ]}
 });
-
 </script>

@@ -67,7 +67,16 @@ if ($this->session->userdata('logged_in')) {
                 <div class="d-flex justificarVertical">
                     <!-- If the user has a photo show that if not show the name -->
                     <div class="logoEmpresa d-flex justificarVertical">
-                        <img id="logoValidar" src="<?= $urlEmpresa . 'logo.jpeg'; ?>" alt="Logo" class="logoEmpresa image-center hide-on-med-and-down">
+                        <?php if(file_exists($urlEmpresa.'logo.jpg'))
+                        {
+                            echo '<img id="logoValidar" src="'.$urlEmpresa . 'logo.jpg" alt="Logo" class="logoEmpresa image-center hide-on-med-and-down">';
+                        }
+                        else
+                        {
+                            echo '<h6 class="nombreEmpresa hide-on-med-and-down">'.$this->session->userdata('datosEmpresa')['short_name'].'</h6>';
+                        }
+                        ?>
+                       
 
                     </div>
                 </div>
@@ -146,7 +155,7 @@ if ($this->session->userdata('logged_in')) {
 
         }
 
-        <?php if ($this->session->userdata('logged_in')) : ?>
+        <?php if ($this->session->userdata('logged_in')) { ?>
             let miImagen = document.getElementById('logoValidar');
             miImagen.onload = function() {
                 //console.log('La imagen se ha cargado correctamente.');
@@ -166,7 +175,7 @@ if ($this->session->userdata('logged_in')) {
                 miImagen.parentNode.replaceChild(nuevoH4, miImagen);
                 console.log(miImagen);
             };
-        <?php endif; ?>
+        <?php } ?>
 		$(document).ready(function() {
 			$('#solveLoader').css({
 				display: 'none'
