@@ -223,13 +223,13 @@ var myLineChart2 = new Chart(ctx2, {
                 label: 'Operaciones',
                 data: [<?php echo $dashboard["GraficoProveedores"]["NumeroOperaciones"];?>],
                 fill: false,
-                borderColor: ['rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'
+                borderColor: ['rgb(92,150,219)',
+                                'rgb(38,183,25',
+                                'rgb(0,151,159)'
                 ],
-                backgroundColor: ['rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'
+                backgroundColor: ['rgb(92,150,219)',
+                                'rgb(38,183,25)',
+                                'rgb(0,151,159)'
                 ],
                 hoverOffset: 4
             }
