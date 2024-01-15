@@ -677,6 +677,6 @@ WHERE t1.id = '$id'";
 				"reason" => "No hay resultados con los criterios de búsqueda utilizados"];
 		}
 		return ["code" => 500,"message" => "Error al obtener datos",
-			"reason" => "Error con la fuente de información"];
+			"reason" => "Error con la fuente de información"]; //
 	}
 }

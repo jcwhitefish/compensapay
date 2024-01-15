@@ -66,4 +66,51 @@ VALUES ('{$args['id']}', '{$args['title']}',  \"" . $args[ 'body' ] . "\", 0)";
 			}
 			return $rresult;
 		}
+		
+		/**
+		 * Inserta las Alertas en la base de datos para que pueda visualizarse en el apartado de notificaciones.
+		 *
+		 * @param array       $args Arreglo con ID de usuario, título y cuerpo de la notificación.
+		 * @param string|null $env  Ambiente en el que se va a trabajar
+		 *
+		 * @return array
+		 */
+		public function insertAlert ( array $args, string $env = NULL ): array {
+			//Se declara el ambiente a utilizar
+			$this->environment = $env === NULL ? $this->environment : $env;
+			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+			//Crear el query para insertar las notificaciones en la Base de Datos
+			$query = "INSERT INTO $this->base.alerts (user_id, title, body, readed)
+VALUES ('{$args['id']}', '{$args['title']}',  \"" . $args[ 'body' ] . "\", 0)";
+			//Revisa que sea correcta la conexión y ejecución con la BD
+			$this->db->db_debug = FALSE;
+			if ( !@$this->db->query ( $query ) ) {
+				return [ "code" => 500, "message" => "Error al extraer la información", "reason" => $this->db->error ()[ 'message' ] ];
+			}
+			return [ "code" => 200, "message" => "Notificación insertada correctamente",
+				"id" => $this->db->insert_id () ];
+		}
+		/**
+		 * Inserta las Alertas en la base de datos para que pueda visualizarse en el apartado de notificaciones.
+		 *
+		 * @param array       $args Arreglo con ID de usuario, título y cuerpo de la notificación.
+		 * @param string|null $env  Ambiente en el que se va a trabajar
+		 *
+		 * @return array
+		 */
+		public function insertLogs ( array $args, string $env = NULL ): array {
+			//Se declara el ambiente a utilizar
+			$this->environment = $env === NULL ? $this->environment : $env;
+			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+			//Crear el query para insertar las notificaciones en la Base de Datos
+			$query = "INSERT INTO $this->base.alerts (user_id, title, body, readed)
+VALUES ('{$args['id']}', '{$args['title']}',  \"" . $args[ 'body' ] . "\", 0)";
+			//Revisa que sea correcta la conexión y ejecución con la BD
+			$this->db->db_debug = FALSE;
+			if ( !@$this->db->query ( $query ) ) {
+				return [ "code" => 500, "message" => "Error al extraer la información", "reason" => $this->db->error ()[ 'message' ] ];
+			}
+			return [ "code" => 200, "message" => "Notificación insertada correctamente",
+				"id" => $this->db->insert_id () ];
+		}
 	}

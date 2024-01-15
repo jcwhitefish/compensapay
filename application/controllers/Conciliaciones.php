@@ -23,7 +23,7 @@
 				$id = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				//Se buscan las facturas que coincidan con los criterios enviados
 				$res = $this->invData->getCFDIByCompany ( $id, $from, $to );
-				//Si encuentra resultados el arreglo lo envia como JSON
+				//Sí encuentra resultados el arreglo lo envia como JSON
 				if ( $res[ 'code' ] === 200 ) {
 					echo ( json_encode ( $res[ 'result' ] ) );
 					return TRUE;
