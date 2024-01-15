@@ -11,7 +11,11 @@ class Inicio_model extends CI_Model {
         $rfcEmpresa = $this->session->userdata('datosEmpresa')["rfc"];
 
         //total de operaciones
-        $querytop = "SELECT COUNT(id) AS TotOper FROM operations WHERE id_client = ".$idCompanie." OR id_provider = ".$idCompanie." LIMIT 1";
+        $querytop = "SELECT count(*) AS facturas FROM invoices AS i
+        INNER JOIN operations AS o ON o.id_invoice != i.id 
+        INNER JOIN operations AS op ON op.id_invoice_relational != i.id
+        WHERE i.id_company = ".$idCompanie." AND (o.id_client = ".$idCompanie." OR o.id_provider = ".$idCompanie.") 
+        AND (op.id_client = ".$idCompanie." OR op.id_provider = ".$idCompanie.");";
 
         if ($restop = $this->db->query($querytop)) {
 			if ($restop->num_rows() > 0){
@@ -74,10 +78,9 @@ class Inicio_model extends CI_Model {
 
         //filtro proveedores
         $Qprov = "SELECT com.id AS Id, com.legal_name AS Proveedor FROM clientprovider AS c
-                    INNER JOIN companies AS com On c.provider_id=com.id
-                    INNER JOIN cat_zipcode AS cp on com.id_postal_code=cp.zip_id 
-                    WHERE client_id='".$idCompanie."' 
-                    ORDER BY com.legal_name;";
+                    INNER JOIN companies AS com ON (c.provider_id=com.id OR c.client_id=com.id) AND com.id!='".$idCompanie."' 
+                    WHERE client_id='".$idCompanie."'  OR provider_id='".$idCompanie."' 
+                    ORDER BY com.legal_name";
 
         if($resprov = $this->db->query($Qprov)) {
             if($resprov->num_rows() > 0){
@@ -319,7 +322,7 @@ class Inicio_model extends CI_Model {
         //creamos la respuesta
 
         $ResDash = array (
-            "TotalOperaciones" => $rrestop,
+            "Fpconciliar" => $rrestop,
             "TotalPorCobrar" => array(
                 "facturas" => $rrestpc,
                 "notas" => $rrestpc2

@@ -1,8 +1,8 @@
 <div class="container section">
     <div class="row section black" style="border-radius: 15px">
         <div class="col s3 white-text">
-            <h5><strong>Oper. Totales</strong></h5>
-            <h6><?php echo $dashboard["TotalOperaciones"][0]["TotOper"];?></h6>
+            <h5><strong>Facturas por conciliar</strong></h5>
+            <h6><?php echo $dashboard["Fpconciliar"][0]["facturas"];?></h6>
         </div>
         <div class="col s3 white-text">
             <h5 style="margin: 1.0933333333rem 0 -1rem 0;"><strong>Total por Cobrar</strong></h5>
