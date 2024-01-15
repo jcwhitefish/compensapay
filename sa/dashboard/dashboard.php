@@ -4,6 +4,7 @@
     include ('../usuarios/f_usuarios.php');
     include ('../soporte/f_soporte.php');
     include ('../operaciones/f_operaciones.php');
+    include ('../logs/f_logs.php');
 
     $fechai = $_POST["fechai"];
     $fechaf = $_POST["fechaf"];
@@ -113,9 +114,7 @@
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Logs</strong><i class="fa-solid fa-clipboard-list right"></i></span>
-                    <p>23 Activass</p>
-                    <p>12 Nuevas</p>
-                    <p>1 Cancelada</p>
+                    <p><?php echo logs($fechai, $fechaf, 'T');?> logs</p>
                     <h6 style="font-size: 12px; color: #bdbdbd;">Administrar</h6>
                 </div>
             </div>
