@@ -329,13 +329,13 @@
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
 							'<td>' + cepUrl + '</td>' +
-							'<td>' + value.source_bank + '</td>' +
-							'<td>' + value.receiver_bank + '</td>' +
+							'<td>' + value.bank_source + '</td>' +
+							'<td>' + value.bank_receiver + '</td>' +
 							'<td>' + value.receiver_clabe + '</td>' +
 							'<td>' + value.traking_key + '</td>' +
 							'<td>' + value.operationNumber + '</td>' +
-							'<td>' + value.transaction_date + '</td>' +
-							'<td>' + value.amount + '</td>' +
+							'<td>' + value.transaction_dateb + '</td>' +
+							'<td>' + value.ammountf + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
 					});
@@ -424,20 +424,20 @@
 						uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
-							'<td>' + value.amount + '</td>' +
+							'<td>' + value.ammountf + '</td>' +
 							'<td>' + value.traking_key + '</td>' +
 							'<td>' + urlCep + '</td>' +
 							'<td>' + value.descriptor + '</td>' +
-							'<td>' + value.source_bank + '</td>' +
-							'<td>' + value.destination_bank + '</td>' +
-							'<td>' + ((value.source_name === null || value.source_name === ''  || value.source_name === 'null') ? '---': value.source_name) + '</td>' +
-							'<td>' + ((value.source_rfc === null || value.source_rfc === ''  || value.source_rfc === 'null') ? '---': value.source_rfc) + '</td>' +
-							'<td>' + ((value.destiantion_name === null || value.destiantion_name === ''  || value.destiantion_name === 'null') ? '---' : value.destiantion_name) + '</td>' +
-							'<td>' + ((value.destination_rfc === null || value.destination_rfc === ''  || value.destination_rfc === 'null') ? '---' : value.destination_rfc) + '</td>' +
+							'<td>' + value.bank_source + '</td>' +
+							'<td>' + value.bank_receiver + '</td>' +
+							'<td>' + value.provider + '</td>' +
+							'<td>' + value.providerRFC + '</td>' +
+							'<td>' + value.client + '</td>' +
+							'<td>' + value.clientRFC + '</td>' +
 							'<td>' + value.source_clabe + '</td>' +
 							'<td>' + value.receiver_clabe + '</td>' +
 							'<td>' + uuid + '</td>' +
-							'<td>' + value.transaction_date + '</td>' +
+							'<td>' + value.created_atb + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
 					});

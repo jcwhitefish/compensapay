@@ -439,32 +439,27 @@ WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.crea
 		$factura = base_url('assets/factura/factura.php?idfactura=');
 		$cep = base_url('boveda/CEP/');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT  t1.id, tf1.id, CONCAT('$', FORMAT(t1.amount, 2, 'es_MX')) AS 'amount', t1.traking_key, t1.descriptor, 
-t8.bnk_alias AS 'source_bank', t6.short_name AS 'source_name', t6.rfc AS 'source_rfc', t1.source_clabe, 
-t9.bnk_alias AS 'destination_bank', t7.short_name AS 'destiantion_name', t7.rfc AS 'destination_rfc', t1.receiver_clabe, 
-DATE_FORMAT(FROM_UNIXTIME(t1.transaction_date), '%d-%m-%Y') AS 'transaction_date',
-(CASE WHEN t1.amount = t3.total THEN t3.uuid
-WHEN t5.uuid IS NOT NULL THEN t5.uuid
-ELSE t4.uuid END) AS 'uuid',
-(CASE WHEN t1.amount = t3.total THEN CONCAT('$factura',t3.id) 
-WHEN t5.uuid IS NOT NULL THEN CONCAT('$factura',t5.id)
-ELSE CONCAT('$factura',t4.id) END) AS 'idurl',
-CONCAT('$cep',t1.url_cep) AS 'cepUrl'
-FROM $this->base.balance t1
-LEFT JOIN $this->base.operations t2 ON t1.operationNumber = t2.operation_number
-LEFT JOIN $this->base.invoices t3 ON t2.id_invoice = t3.id 
-LEFT JOIN $this->base.invoices t4 ON t2.id_invoice_relational = t4.id
-LEFT JOIN $this->base.debit_notes t5 ON t2.id_debit_note = t5.id
-LEFT JOIN $this->base.fintech tf1 ON tf1.arteria_clabe = t1.source_clabe
-LEFT JOIN $this->base.fintech tf2 ON tf2.arteria_clabe = t1.receiver_clabe
-LEFT JOIN $this->base.companies t6 
-ON (t1.source_rfc = t6.rfc) OR (t1.source_clabe = t6.account_clabe) OR (t6.id = tf1.companie_id)
-LEFT JOIN $this->base.companies t7 
-ON (t1.receiver_rfc = t7.rfc) OR (t1.receiver_clabe = t7.account_clabe) OR (t7.id = tf2.companie_id)
-INNER JOIN $this->base.cat_bancos t8 ON t1.source_bank = t8.bnk_code
-INNER JOIN $this->base.cat_bancos t9 ON t1.receiver_bank = t9.bnk_code
-WHERE (t2.id_provider = '$id' OR t2.id_client = '$id') AND t1.transaction_date >= '$from' AND t1.transaction_date <= '$to'
-ORDER BY t1.created_at DESC";
+		$query = "SELECT * FROM ( SELECT balance.*, CONCAT('$', FORMAT(balance.amount, 2)) as ammountf, invoices.uuid,
+                       t3.bnk_alias as 'bank_source', t4.bnk_alias as 'bank_receiver',
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.legal_name, t1.legal_name)) as 'client',
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.legal_name, t1.legal_name)) as 'provider',
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.id, t1.id)) as 'clientId',
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.id, t1.id)) as 'providerId',
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.rfc, t1.rfc)) as 'clientRFC',
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.rfc, t1.rfc)) as 'providerRFC',
+                    FROM_UNIXTIME(balance.created_at, '%d/%m/%Y') AS 'created_atb',
+                    FROM_UNIXTIME(balance.transaction_date, '%d/%m/%Y') AS 'transaction_dateb',
+                    CONCAT('$cep',balance.url_cep) AS 'cepUrl'
+                FROM balance as balance
+                    LEFT JOIN operations ON balance.operationNumber = operations.operation_number
+                    LEFT JOIN invoices ON invoices.id = operations.id_invoice
+                    LEFT JOIN companies t1 ON t1.id = operations.id_client
+                    LEFT JOIN companies t2 ON t2.id = operations.id_provider
+                    LEFT JOIN cat_bancos t3 ON t3.bnk_code = balance.source_bank
+                    LEFT JOIN cat_bancos t4 ON t4.bnk_code = balance.receiver_bank
+                    LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b
+         WHERE  clientId = '$id' OR providerId = '$id'
+         ORDER BY balance.created_at DESC";
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){
 			//Verífica que haya resultados

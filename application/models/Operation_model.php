@@ -264,6 +264,7 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 		}
 	}
 	public function acceptCFDI(int $id, string $env){
+		
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "UPDATE $this->base.invoices set status=1 WHERE id = '$id'";

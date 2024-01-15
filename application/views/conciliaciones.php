@@ -192,7 +192,7 @@
 									<input
 										type="date" id="autPayDate" min="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>"
 										max="<?= date ( 'Y-m-d', strtotime ( 'now +3 month' ) ) ?>"
-										value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" disabled />
+										value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>"/>
 								</label>
 							</div>
 						</div>
@@ -553,7 +553,7 @@
 			input.addEventListener("change", function (e) {
 				let contenVar = $("#contentVariable");
 				if (e.target.id === "issuingWay") {
-					$("#conciliaDate").attr("disabled", true);
+					$("#conciliaDate").attr("disabled", false);
 					conciliateWay = 0;
 					let debit = "<div class=\"file-field input-field\" ><div class=\"file-path-wrapper\" style=\"width: 75%;margin-left: auto;float: left;\">" +
 						"<input class=\"file-path validate\" type=\"text\" placeholder=\"Sube tu nota de crédito en formato .xml\" disabled ></div>" +
@@ -562,7 +562,7 @@
 					contenVar.empty();
 					contenVar.append(debit);
 				} else {
-					$("#conciliaDate").attr("disabled", false);
+					$("#conciliaDate").attr("disabled", true);
 					conciliateWay = 1;
 					contenVar.empty();
 					$.ajax({
