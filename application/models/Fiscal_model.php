@@ -30,25 +30,27 @@ class Fiscal_model extends CI_Model {
 		//se crea la variable url de las facturas para concatenarlo
 		$cep = base_url('boveda/CEP/');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT * FROM ( SELECT t1.operationNumber, t1.traking_key,
-                       FROM_UNIXTIME(t1.created_at, '%m/%d/%Y') AS 'created_at', t5.bnk_alias AS 'source_bank', t1.receiver_clabe,
-					t6.bnk_alias AS 'receiver_bank',
-					FROM_UNIXTIME(t1.transaction_date, '%m/%d/%Y') AS 'transaction_date',
-					CONCAT('$', FORMAT(t1.amount, 2, 'es_MX')) AS 'amount',
-					CONCAT('{$cep}', t1.url_cep) AS'cepUrl',
-					(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.legal_name, t1.legal_name)) as 'client',
+		$query = "SELECT * FROM ( SELECT balance.*, CONCAT('$', FORMAT(balance.amount, 2)) as ammountf, invoices.uuid,
+                       t3.bnk_alias as 'bank_source', t4.bnk_alias as 'bank_receiver',
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.legal_name, t1.legal_name)) as 'client',
 (IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.legal_name, t1.legal_name)) as 'provider',
 (IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.id, t1.id)) as 'clientId',
 (IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.id, t1.id)) as 'providerId',
-					FROM $this->base.balance t1
-					LEFT JOIN $this->base.operations t2 ON t2.operation_number = t1.operationNumber
-					LEFT JOIN $this->base.companies t3 ON t3.id = t2.id_client
-                    LEFT JOIN $this->base.companies t4 ON t4.id = t2.id_provider
-					LEFT JOIN $this->base.cat_bancos t6 ON t6.bnk_code = t1.source_bank
-					LEFT JOIN $this->base.cat_bancos t7 ON t7.bnk_code = t1.receiver_bank
-					LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b
-            clientId = '$id' OR providerId = '$id' ORDER BY created_at DESC";
-		var_dump($query);
+(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.rfc, t1.rfc)) as 'clientRFC',
+(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.rfc, t1.rfc)) as 'providerRFC',
+                    FROM_UNIXTIME(balance.created_at, '%d/%m/%Y') AS 'created_atb',
+                    FROM_UNIXTIME(balance.transaction_date, '%d/%m/%Y') AS 'transaction_dateb',
+                    CONCAT('$cep',balance.url_cep) AS 'cepUrl'
+FROM balance as balance
+                    LEFT JOIN operations ON balance.operationNumber = operations.operation_number
+                    LEFT JOIN invoices ON invoices.id = operations.id_invoice
+                    LEFT JOIN companies t1 ON t1.id = operations.id_client
+                    LEFT JOIN companies t2 ON t2.id = operations.id_provider
+                    LEFT JOIN cat_bancos t3 ON t3.bnk_code = balance.source_bank
+                    LEFT JOIN cat_bancos t4 ON t4.bnk_code = balance.receiver_bank
+                    LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b
+WHERE clientId = '$id' OR providerId = '$id' ORDER BY created_at DESC";
+//		var_dump($query);
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){
 			//Verífica que haya resultados
