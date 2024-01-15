@@ -71,7 +71,6 @@
 				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
 				if ( $res[ 'code' ] === 200 ) {
 					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
-					
 					$add = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id' ], 'SANDBOX' );
 					echo json_encode ( [
 						"code" => 200,

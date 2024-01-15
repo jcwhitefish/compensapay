@@ -255,8 +255,7 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 		//Se declara el ambiente a utilizar
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-		$query = "SELECT * FROM $this->base.invoices WHERE id = '$id'";
-//		var_dump($query);
+		$query = "SELECT * FROM $this->base.operations WHERE id = '$id'";
 		if ($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){
 				return $res->result_array();
