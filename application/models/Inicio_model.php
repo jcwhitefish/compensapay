@@ -276,11 +276,11 @@ class Inicio_model extends CI_Model {
         }
 
         //obtener los proveedores principales
-        $ResProvPrin = "SELECT o.id_provider, c.legal_name, c.short_name, COUNT(*) AS cuantos FROM operations AS o 
-                        INNER JOIN companies AS c ON c.id=o.id_provider 
-                        INNER JOIN clientprovider AS cp ON cp.provider_id=c.id 
-                        WHERE cp.client_id = '".$idCompanie."'
-                        GROUP BY o.id_provider ORDER BY cuantos DESC LIMIT 3";
+        $ResProvPrin = "SELECT c.id, c.legal_name, c.short_name, COUNT(*) AS cuantos 
+                        FROM operations AS o 
+                        INNER JOIN companies AS c ON (c.id = o.id_provider OR c.id = o.id_client) AND c.id != '".$idCompanie."'
+                        WHERE (o.id_client = '".$idCompanie."' OR o.id_provider = '".$idCompanie."') AND o.status='3'
+                        GROUP BY c.id ORDER BY cuantos DESC LIMIT 3;";
 
 
         $nomProv=''; $numOpe=''; $i=1;
