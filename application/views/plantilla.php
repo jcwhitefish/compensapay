@@ -156,25 +156,25 @@ if ($this->session->userdata('logged_in')) {
         }
 
         <?php if ($this->session->userdata('logged_in')) { ?>
-            let miImagen = document.getElementById('logoValidar');
-            miImagen.onload = function() {
-                //console.log('La imagen se ha cargado correctamente.');
-                // Aquí puedes realizar acciones adicionales después de que la imagen se ha cargado.
-            };
-
-            miImagen.onerror = function() {
-                // console.log('Error al cargar la imagen.');
-                // Crea un nuevo elemento 'h4'
-                var nuevoH4 = document.createElement('h6');
-                nuevoH4.className = 'nombreEmpresa hide-on-med-and-down'; // Agrega las clases necesarias
-
-                // Agrega el texto que deseas dentro del h4
-                nuevoH4.textContent = '<?= $this->session->userdata('datosEmpresa')['short_name'] ?>';
-
-                // Reemplaza la imagen con el nuevo h4
-                miImagen.parentNode.replaceChild(nuevoH4, miImagen);
-                console.log(miImagen);
-            };
+            //let miImagen = document.getElementById('logoValidar');
+            //miImagen.onload = function() {
+            //    //console.log('La imagen se ha cargado correctamente.');
+            //    // Aquí puedes realizar acciones adicionales después de que la imagen se ha cargado.
+            //};
+			//
+            //miImagen.onerror = function() {
+            //    // console.log('Error al cargar la imagen.');
+            //    // Crea un nuevo elemento 'h4'
+            //    var nuevoH4 = document.createElement('h6');
+            //    nuevoH4.className = 'nombreEmpresa hide-on-med-and-down'; // Agrega las clases necesarias
+			//
+            //    // Agrega el texto que deseas dentro del h4
+            //    nuevoH4.textContent = '<?php //= $this->session->userdata('datosEmpresa')['short_name'] ?>//';
+			//
+            //    // Reemplaza la imagen con el nuevo h4
+            //    miImagen.parentNode.replaceChild(nuevoH4, miImagen);
+            //    console.log(miImagen);
+            //};
         <?php } ?>
 		$(document).ready(function() {
 			$('#solveLoader').css({

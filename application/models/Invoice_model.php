@@ -361,45 +361,59 @@ class Invoice_model extends CI_Model {
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid, 
-       CONCAT('$url', t2.id) AS 'idurl', 
-DATE_FORMAT(FROM_UNIXTIME(t2.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
-DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',  
-DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t2.total, 'factura' AS tipo
-FROM $this->base.operations t1 
+		$query = "SELECT * FROM (
+(SELECT CONCAT(t1.id,'f') AS id2, t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid,
+       CONCAT('$url', t2.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t2.invoice_date), '%d-%m-%Y') AS 'dateCFDI',
+DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay',
+t2.total, 'Factura' AS tipo, t1.created_at
+FROM $this->base.operations t1
 INNER JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id OR t1.id_invoice_relational = t2.id
 LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
 LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
-WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.invoice_date >= '$from' AND t2.invoice_date <= '$to'
-ORDER BY t2.invoice_date DESC";
+WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.created_at >= '$from' AND t2.created_at <= '$to')
+UNION
+(SELECT CONCAT(t1.id,'n') AS id2, t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid,
+       CONCAT('$url', t2.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t2.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',
+DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay',
+t2.total, 'Nota de crédito' AS tipo, t1.created_at
+FROM $this->base.operations t1
+INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
+LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
+LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
+WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.created_at >= '$from' AND t2.created_at <= '$to')
+) AS T ORDER BY T.created_at";
 		//se verifica que la consulta se ejecute bien
 		if($invoices = $this->db->query($query)){
 			//se verifica que haya informacion
 			if ($invoices->num_rows() > 0){
 				//Se crea query para obtener notas de debito
-				$query = "SELECT t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid, 
-CONCAT('$url', t2.id) AS 'idurl',
-DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCFDI',  
-DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',  
-DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t2.total, 'Nota de debito' AS tipo
-FROM $this->base.operations t1 
-INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
-LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
-LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
-WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.created_at >= '$from' AND t2.created_at <= '$to'
-ORDER BY t2.created_at DESC";
+//				$query = "SELECT t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid,
+//CONCAT('$url', t2.id) AS 'idurl',
+//DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCFDI',
+//DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',
+//DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay',
+//t2.total, 'Nota de Crédito ' AS tipo
+//FROM $this->base.operations t1
+//INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
+//LEFT JOIN $this->base.companies t3 ON t1.id_client = t3.id
+//LEFT JOIN $this->base.companies t4 ON t1.id_provider = t4.id
+//WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.created_at >= '$from' AND t2.created_at <= '$to'
+//ORDER BY t2.created_at DESC";
+				return ["code" => 200,"result" => $invoices->result_array()];
 				//Se verifica que se ejecute bien el segundo query
-				if($debit_notes = $this->db->query($query)) {
-					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia
-					$CFDI = $invoices->result_array();
-					$CFDI = array_merge($CFDI, $debit_notes->result_array());
-					return ["code" => 200,"result" => $CFDI];
-				}else{
-					//si no hay datos de notas de debito solo se envian las facturas
-					return ["code" => 200,"result" => $invoices->result_array()];
-				}
+//				if($debit_notes = $this->db->query($query)) {
+//					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia
+//					$CFDI = $invoices->result_array();
+//					$CFDI = array_merge($CFDI, $debit_notes->result_array());
+//					return ["code" => 200,"result" => $CFDI];
+//				}else{
+//					//si no hay datos de notas de debito solo se envian las facturas
+//
+//				}
 			}else{
 				//En caso de que no hay informacion lo notifica para que se ingrese otro valor de busqueda
 				return ["code" => 404,"message" => "No se encontraron registros",
@@ -480,43 +494,58 @@ ORDER BY t1.created_at DESC";
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid, 
-       CONCAT('$url', t1.id) AS 'idurl', 
-DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',  
-DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',  
-DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'Factura' AS tipo, t1.status, t2.id AS 'senderId', t3.id AS 'receptorId'
+		$query = "SELECT * FROM (
+(SELECT CONCAT(t1.id,'f') AS id2, t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid,
+CONCAT('$url', t1.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',
+DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', t1.total, 'Factura' AS tipo,
+t1.status, t2.id AS 'senderId', t3.id AS 'receptorId', t1.created_at
 FROM $this->base.invoices t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
-WHERE (t1.id_company = $id) AND t1.invoice_date >= '$from' AND t1.invoice_date <= '$to'
-ORDER BY t1.invoice_date DESC";
+WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to')
+UNION
+(SELECT CONCAT(t1.id,'n') AS id2, t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid,
+CONCAT('$url', t1.id) AS 'idurl',
+DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',
+DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',
+DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', t1.total, 'Nota de crédito' AS tipo,
+t1.status, t2.id AS 'senderId', t3.id AS 'receptorId', t1.created_at
+FROM $this->base.debit_notes t1
+LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
+LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
+WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to')) AS T
+ORDER BY T.created_at";
+//		var_dump ($query);
 		//se verifica que la consulta se ejecute bien
 		if($invoices = $this->db->query($query)){
 			//se verifica que haya informacion
 			if ($invoices->num_rows() > 0){
 				//Se crea query para obtener notas de debito
-				$query = "SELECT t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid, 
-CONCAT('$url', t1.id) AS 'idurl',
-DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI', 
-DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate', 
-DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', 
-t1.total, 'Nota de crédito' AS tipo, t1.status
-FROM $this->base.debit_notes t1
-LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc 
-LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
-WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to'
-ORDER BY t1.created_at DESC";
+//				$query = "SELECT t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid,
+//CONCAT('$url', t1.id) AS 'idurl',
+//DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',
+//DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',
+//DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay',
+//t1.total, 'Nota de crédito' AS tipo, t1.status
+//FROM $this->base.debit_notes t1
+//LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
+//LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
+//WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to'
+//ORDER BY t1.created_at DESC";
+//				var_dump ($query);
 				//Se verifica que se ejecute bien el segundo query
-				if($debit_notes = $this->db->query($query)) {
-					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia
-					$CFDI = $invoices->result_array();
-					$CFDI = array_merge($CFDI, $debit_notes->result_array());
-					return ["code" => 200,"result" => $CFDI];
-				}else{
-					//si no hay datos de notas de debito solo se envian las facturas
-					return ["code" => 200,"result" => $invoices->result_array()];
-				}
+				return ["code" => 200,"result" => $invoices->result_array()];
+//				if($debit_notes = $this->db->query($query)) {
+//					//se crea un unico arreglo con la informacion de las facturas y notas de debito y se envia
+//					$CFDI = $invoices->result_array();
+//					$CFDI = array_merge($CFDI, $debit_notes->result_array());
+//					return ["code" => 200,"result" => $CFDI];
+//				}else{
+//					//si no hay datos de notas de debito solo se envian las facturas
+//
+//				}
 			}else{
 				//En caso de que no hay informacion lo notifica para que se ingrese otro valor de busqueda
 				return ["code" => 404,"message" => "No se encontraron registros",
@@ -605,7 +634,7 @@ WHERE IF(t2.paydays IS NOT NULL, t2.provider_id = '$companyID_1' AND t2.client_i
 				if ($res['table'] === 'relation'){
 					return $res['payDay'];
 				}
-				$query = "INSERT INTO compensatest_base.clientprovider (provider_id, client_id, paydays) 
+				$query = "INSERT INTO $this->base.clientprovider (provider_id, client_id, paydays)
 VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 				if ($this->db->query($query)){
 					return $res['payDay'];
@@ -623,7 +652,10 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 	}
 	public function getReceptorByRFC(string $rfc, string$env= null)
 	{
-		$query = "SELECT id FROM compensatest_base.companies WHERE rfc = '$rfc'";
+		//Se declara el ambiente a utilizar
+		$this->enviroment = $env === NULL ? $this->enviroment : $env;
+		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$query = "SELECT id FROM $this->base.companies WHERE rfc = '$rfc'";
 		if($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){
 				return $res->result_array()[0]['id'];
@@ -644,10 +676,10 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 		$query = "SELECT t1.id, t2.short_name AS 'sender', t3.short_name AS 'receiver', t1.total, t1.status, t1.uuid, 
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',
 CONCAT('$url', t1.id) AS 'idurl'
-FROM compensatest_base.invoices t1
-INNER JOIN compensatest_base.companies t2 ON t1.sender_rfc = t2.rfc
-INNER JOIN compensatest_base.companies t3 ON t1.receiver_rfc = t3.rfc
-INNER JOIN compensatest_base.fintech t4 ON t4.id = t2.id
+FROM $this->base.invoices t1
+INNER JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
+INNER JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
+INNER JOIN $this->base.fintech t4 ON t4.id = t2.id
 WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.status = 0";
 //		var_dump($query);
 		if($res = $this->db->query($query)){
@@ -665,9 +697,9 @@ WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.statu
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT t1.*, t2.short_name AS 'receiver', t2.rfc AS 'receiverRfc', t3.short_name AS 'provider', t3.short_name AS 'providerRfc' 
-FROM compensatest_base.invoices t1
-    INNER JOIN compensatest_base.companies t2 ON t1.receiver_rfc = t2.rfc
-    INNER JOIN compensatest_base.companies t3 ON t1.sender_rfc = t3.rfc
+FROM $this->base.invoices t1
+    INNER JOIN $this->base.companies t2 ON t1.receiver_rfc = t2.rfc
+    INNER JOIN $this->base.companies t3 ON t1.sender_rfc = t3.rfc
 WHERE t1.id = '$id'";
 		if($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){

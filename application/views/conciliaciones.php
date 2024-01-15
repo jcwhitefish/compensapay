@@ -934,7 +934,7 @@
 								break;
 						}
 						const tr = $("<tr>" +
-							"<td class='center-align' id=\"initC" + value.id + "\"></td>" +
+							"<td class='center-align' id=\"initC" + value.id2 + "\"></td>" +
 							"<td class='center-align'>" + status + "</td>" +
 							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
@@ -946,7 +946,7 @@
 							"<td class='center-align' style='min-width:105px;'>" + value.tipo + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
-						$("#initC" + value.id).append(initC);
+						$("#initC" + value.id2).append(initC);
 					});
 				}
 			},

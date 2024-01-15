@@ -93,7 +93,7 @@
 			<div class="col l3 valign-wrapper">
 				<a id="download" class="waves-effect btn " download
 				   style="background-color:#1565c0 !important; border: 2px solid #0d47a1 !important;
-				   border-radius:10px !important">Descargar</a>
+				   border-radius:10px !important">Exportar</a>
 			</div>
 		</div>
 
