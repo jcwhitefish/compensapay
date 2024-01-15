@@ -91,7 +91,7 @@ if ($this->session->userdata('logged_in')) {
                             <label for="imageUpload" class="custom-file-upload p-5">
                                 Seleccionar Imagen
                             </label>
-                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
+                            <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/*" maxFileSize="1048576" />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
