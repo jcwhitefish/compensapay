@@ -26,7 +26,7 @@
                             <th style="text-align: right;">Operaciones<br />canceladas</th>
                             <th style="text-align: right;">Operaciones<br />pendientes</th>
                             <th style="text-align: right;">Operaciones<br />autorizadas</th>
-                            <th>Fecha ultima operación</th>
+                            <th>Fecha última operación</th>
                             <th style="text-align: right;">Monto<br />ingreso</th>
                             <th style="text-align: right;">Monto<br />egreso</th>
                         </tr>
@@ -48,7 +48,7 @@
                                         <td style="text-align: right;">'.$value["canceladas"].'</td>
                                         <td style="text-align: right;">'.$value["pendientes"].'</td>
                                         <td style="text-align: right;">'.$value["autorizadas"].'</td>
-                                        <td style="white-space: nowrap;">'.$value["ultimaoperacion"].'</td>
+                                        <td style="white-space: nowrap;">'.date('d-m-Y',$value["ultimaoperacion"]).'</td>
                                         <td style="text-align: right; white-space: nowrap;">$ '.number_format($value["ingresos"],2).'</td>
                                         <td style="text-align: right; white-space: nowrap;">$ '.number_format($value["egresos"], 2).'</td>
                                     </tr>';
