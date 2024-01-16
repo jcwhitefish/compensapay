@@ -104,18 +104,22 @@ class Inicio_model extends CI_Model {
 
         //ingresos mes
         $ResIngMesP = "SELECT SUM(b.amount) AS ingreso 
-                        FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        FROM balance b 
+                        INNER JOIN operations o ON b.operationNumber = o.operation_number 
                         INNER JOIN companies c ON o.id_provider = c.id 
                         INNER JOIN fintech f ON f.companie_id = c.id 
                         WHERE c.id = ".$idCompanie." AND b.receiver_clabe = f.arteria_clabe
-                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m").'-31 23:59:59')."' 
+                        AND o.status='3'";
 
         $ResIngMesC = "SELECT b.amount AS ingreso 
-                        FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
-                        INNER JOIN companies c ON o.id_provider = c.id 
+                        FROM balance b 
+                        INNER JOIN operations o ON b.operationNumber = o.operation_number 
+                        INNER JOIN companies c ON o.id_client = c.id 
                         INNER JOIN fintech f ON f.companie_id = c.id 
-                        WHERE o.id_client = ".$idCompanie." AND b.receiver_clabe != f.arteria_clabe AND b.receiver_clabe != c.account_clabe 
-                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+                        WHERE c.id = ".$idCompanie." AND b.receiver_clabe != f.arteria_clabe AND b.receiver_clabe != c.account_clabe 
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m").'-31 23:59:59')."'
+                        AND o.status='3'";
 
         $RRResIngMesP= 0; $RRResIngMesC = 0;
 
@@ -143,16 +147,18 @@ class Inicio_model extends CI_Model {
                         INNER JOIN operations o ON b.operationNumber = o.operation_number 
                         INNER JOIN companies c ON o.id_provider = c.id 
                         INNER JOIN fintech f ON f.companie_id = c.id 
-                        WHERE c.id = ".$idCompanie." AND (b.receiver_clabe = f.arteria_clabe OR b.receiver_clabe = c.account_clabe)
-                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+                        WHERE c.id = ".$idCompanie." AND b.source_clabe = f.arteria_clabe
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m").'-31 23:59:59')."' 
+                        AND b.descriptor NOT LIKE 'Movimiento entre cuentas'";
 
         $ResEgrMesC = "SELECT SUM(b.amount) AS egreso
                         FROM balance b
                         INNER JOIN operations o ON b.operationNumber = o.operation_number
-                        INNER JOIN companies c ON o.id_provider = c.id
+                        INNER JOIN companies c ON o.id_client = c.id
                         INNER JOIN fintech f ON f.companie_id = c.id
-                        WHERE o.id_client = ".$idCompanie." AND b.source_clabe != f.arteria_clabe AND  b.source_clabe != c.account_clabe
-                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m-d").'-31 23:59:59')."'";
+                        WHERE c.id = ".$idCompanie." AND b.source_clabe != f.arteria_clabe AND  b.source_clabe != c.account_clabe
+                        AND b.created_at >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.created_at <= '".strtotime(date("Y-m").'-31 23:59:59')."'
+                        AND b.descriptor NOT LIKE 'Movimiento entre cuentas'";
 
         $RRResEgrMesP= 0; $RRResEgrMesC = 0;
             
@@ -299,7 +305,9 @@ class Inicio_model extends CI_Model {
         }
 
         //operaciones recientes
-        $ResOper = "SELECT o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation, companies.short_name, companies.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie, debit_notes.uuid AS uuid_nota, debit_notes.total as money_nota 
+        $ResOper = "SELECT o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation, companies.short_name, companies.legal_name, ip.id_user, 
+                            ip.total as money_prov, ic.total as money_clie, debit_notes.uuid AS uuid_nota, debit_notes.total as money_nota, debit_notes.id AS id_nota, 
+                            debit_notes.total AS dn_total
                     FROM operations as o 
                     LEFT JOIN debit_notes ON debit_notes.id = o.id_debit_note 
                     LEFT JOIN invoices as ip ON ip.id = o.id_invoice 
