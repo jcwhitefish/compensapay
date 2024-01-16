@@ -436,30 +436,33 @@ WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.crea
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
-		$factura = base_url('assets/factura/factura.php?idfactura=');
+		$urlF = base_url('assets/factura/factura.php?idfactura=');
+		$urlN = base_url('assets/factura/nota.php?idnota=');
 		$cep = base_url('boveda/CEP/');
 		//Se crea el query para obtener las facturas
-		$query = "SELECT * FROM ( SELECT balance.*, CONCAT('$', FORMAT(balance.amount, 2)) as ammountf, invoices.uuid,
-                       t3.bnk_alias as 'bank_source', t4.bnk_alias as 'bank_receiver',
-(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.legal_name, t1.legal_name)) as 'client',
-(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.legal_name, t1.legal_name)) as 'provider',
-(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.id, t1.id)) as 'clientId',
-(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.id, t1.id)) as 'providerId',
-(IF((balance.receiver_clabe = t2.account_clabe OR balance.receiver_clabe = t5.arteria_clabe), t2.rfc, t1.rfc)) as 'clientRFC',
-(IF((balance.source_clabe = t5.arteria_clabe OR balance.source_clabe = t2.account_clabe), t2.rfc, t1.rfc)) as 'providerRFC',
-                    FROM_UNIXTIME(balance.created_at, '%d/%m/%Y') AS 'created_atb',
-                    FROM_UNIXTIME(balance.transaction_date, '%d/%m/%Y') AS 'transaction_dateb',
-                    CONCAT('$cep',balance.url_cep) AS 'cepUrl'
-                FROM balance as balance
-                    LEFT JOIN operations ON balance.operationNumber = operations.operation_number
-                    LEFT JOIN invoices ON invoices.id = operations.id_invoice
-                    LEFT JOIN companies t1 ON t1.id = operations.id_client
-                    LEFT JOIN companies t2 ON t2.id = operations.id_provider
-                    LEFT JOIN cat_bancos t3 ON t3.bnk_code = balance.source_bank
-                    LEFT JOIN cat_bancos t4 ON t4.bnk_code = balance.receiver_bank
-                    LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b
-         WHERE  clientId = '$id' OR providerId = '$id'
-         ORDER BY balance.created_at DESC";
+		$query = "SELECT t0.amount, t0.traking_key, t0.descriptor,
+       DATE_FORMAT(FROM_UNIXTIME(t0.created_at), '%d-%m-%Y') AS 'created_at',
+       CONCAT('$cep',t0.url_cep) AS 'cepUrl',
+       t3.legal_name AS 'provider', t3.rfc AS 'providerRFC', b1.bnk_alias as 'bank_source', t0.source_clabe,
+       t4.legal_name AS 'client', t4.rfc AS 'clientRFC',  b2.bnk_alias as 'bank_receiver', t0.receiver_clabe,
+       (CASE WHEN t0.amount = t2.total THEN t2.uuid WHEN t0.amount = c1.total THEN c1.uuid ELSE c2.uuid END) AS 'uuid',
+       (CASE
+           WHEN t0.amount = t2.total THEN CONCAT('$urlF',t2.id)
+           WHEN t0.amount = c1.total THEN  CONCAT('$urlF',c1.id)
+           ELSE CONCAT('$urlN',c2.id) END) AS 'idurl'
+FROM $this->base.balance t0
+	LEFT JOIN $this->base.operations t1 ON t0.operationNumber = t1.operation_number
+	LEFT JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id
+	LEFT JOIN $this->base.invoices c1 ON t1.id_invoice_relational = c1.id
+	LEFT JOIN $this->base.debit_notes c2 ON t1.id_debit_note = c2.id
+	LEFT JOIN $this->base.fintech f1 ON f1.arteria_clabe = t0.source_clabe
+	LEFT JOIN $this->base.fintech f2 ON f2.arteria_clabe = t0.receiver_clabe
+	LEFT JOIN $this->base.companies t3 ON t3.rfc = t0.source_rfc OR t3.id = f1.companie_id OR t3.account_clabe = t0.source_clabe
+	LEFT JOIN $this->base.companies t4 ON t4.rfc = t0.receiver_rfc OR t4.id = f2.companie_id OR t4.account_clabe = t0.receiver_clabe
+	INNER JOIN $this->base.cat_bancos b1 ON t0.source_bank = b1.bnk_code
+	INNER JOIN $this->base.cat_bancos b2 ON t0.receiver_bank = b2.bnk_code
+	WHERE (t3.id = $id OR t4.id = $id) AND t0.created_at >= '$from' AND t0.created_at <= '$to'";
+//		var_dump ($query);
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){
 			//Verífica que haya resultados
@@ -487,11 +490,12 @@ WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.crea
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
-		$url = base_url('assets/factura/factura.php?idfactura=');
+		$urlF = base_url('assets/factura/factura.php?idfactura=');
+		$urlN = base_url('assets/factura/nota.php?idnota=');
 		//Se crea el query para obtener las facturas
 		$query = "SELECT * FROM (
 (SELECT CONCAT(t1.id,'f') AS id2, t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid,
-CONCAT('$url', t1.id) AS 'idurl',
+CONCAT('$urlF', t1.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t1.invoice_date), '%d-%m-%Y') AS 'dateCFDI',
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', t1.total, 'Factura' AS tipo,
@@ -502,7 +506,7 @@ LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
 WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to')
 UNION
 (SELECT CONCAT(t1.id,'n') AS id2, t1.id, t2.short_name AS 'emisor', t3.short_name AS 'receptor', t1.uuid,
-CONCAT('$url', t1.id) AS 'idurl',
+CONCAT('$urlN', t1.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t1.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',
 DATE_FORMAT(FROM_UNIXTIME(t1.created_at), '%d-%m-%Y') AS 'dateCreate',
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay', t1.total, 'Nota de crédito' AS tipo,

@@ -78,14 +78,15 @@ class Operation_model extends CI_Model {
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
-		$url = base_url('assets/factura/factura.php?idfactura=');
+		$urlF = base_url('assets/factura/factura.php?idfactura=');
+		$urlN = base_url('assets/factura/nota.php?idnota=');
 		//Se crea el query para obtener las facturas
 		$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
-       CONCAT('$url', t4.id) AS 'idurl', t3.account_clabe, 
+       CONCAT('$urlF', t4.id) AS 'idurl', t3.account_clabe,
        t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1',
        DATE_FORMAT(FROM_UNIXTIME(t4.payment_date), '%d-%m-%Y') AS 'datePago1',
-       (case WHEN t5.id IS NULL THEN t6.uuid ELSE t5.uuid END) AS 'uuid2',
-       (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
+       (IF(t5.id IS NULL, t6.uuid, t5.uuid)) AS 'uuid2',
+       (case WHEN t5.id IS NULL THEN CONCAT('$urlN', t6.id) ELSE CONCAT('$urlF', t5.id) END) AS 'idur2',
        (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2',
        (case WHEN t5.id IS NULL
            THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y')

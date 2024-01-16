@@ -127,15 +127,16 @@
 				<div class="card-content ">
 					<div class="row">
 						<div class="col l12">
-							<label style="top: 0!important;" for="descripcion">Indique la razón específica de la
-							                                                   cancelación de la operación.</label>
+							<label style="top: 0!important; color: #212121; font-size: 18px;" for="descripcion">
+								Indique la razón específica de la cancelación de la operación.</label>
 							<textarea
-								style="min-height: 30vh;" id="descripcion" name="descripcion"
+								style="min-height: 30vh;" id="rejectText" name="rejectText"
 								class="materialize-textarea validate" required></textarea>
+							<input type="hidden" id = "">
 						</div>
-						<div class="col l12 d-flex justify-content-flex-end">
-							<a class="button-gray modal-close ">Cancelar</a>
-							<button class="button-blue modal-close" name="action" type="reset">Enviar</button>
+						<div class="col l12 d-flex justify-content-flex-end" style="margin-top:10px">
+							<div class="col"><a class="button-gray modal-close ">Cancelar</a></div>
+							<div class="col"><a class="button-blue modal-close ">Enviar</a></div>
 						</div>
 					</div>
 				</div>

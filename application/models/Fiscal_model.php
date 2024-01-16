@@ -49,7 +49,7 @@ FROM balance as balance
                     LEFT JOIN cat_bancos t3 ON t3.bnk_code = balance.source_bank
                     LEFT JOIN cat_bancos t4 ON t4.bnk_code = balance.receiver_bank
                     LEFT JOIN fintech t5 ON t5.companie_id = operations.id_provider) b
-WHERE clientId = '$id' OR providerId = '$id' ORDER BY created_at DESC";
+WHERE (clientId = '$id' OR providerId = '$id') AND created_at >= '$from' AND created_at <= '$to' ORDER BY created_at DESC";
 //		var_dump($query);
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){

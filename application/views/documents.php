@@ -366,7 +366,7 @@
 		const tableBase = '<thead style="position:sticky; top: 0;"><tr>' +
 			'<th>Seleccionar</th>' +
 			'<th>Monto</th>' +
-			'<th>Número de referencia</th>' +
+			'<th>Clave de rastreo</th>' +
 			'<th>Comprobante electrónico (CEP)</th>' +
 			'<th>Descripción</th>' +
 			'<th>Banco origen</th>' +
@@ -424,7 +424,7 @@
 						uuid = '<a href="' + value.idurl + '" target="_blank">' + value.uuid + '</a>';
 						const tr = $('<tr>' +
 							'<td><input id="checkTbl" type="checkbox" style="position:static"></td>' +
-							'<td>' + value.ammountf + '</td>' +
+							'<td>$ ' + value.amount + '</td>' +
 							'<td>' + value.traking_key + '</td>' +
 							'<td>' + urlCep + '</td>' +
 							'<td>' + value.descriptor + '</td>' +
@@ -437,7 +437,7 @@
 							'<td>' + value.source_clabe + '</td>' +
 							'<td>' + value.receiver_clabe + '</td>' +
 							'<td>' + uuid + '</td>' +
-							'<td>' + value.created_atb + '</td>' +
+							'<td>' + value.created_at + '</td>' +
 							'</tr>');
 						$('#tblBody').append(tr);
 					});
