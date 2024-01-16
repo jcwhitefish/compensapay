@@ -87,22 +87,18 @@ class Operation_model extends CI_Model {
        DATE_FORMAT(FROM_UNIXTIME(t4.payment_date), '%d-%m-%Y') AS 'datePago1',
        (IF(t5.id IS NULL, t6.uuid, t5.uuid)) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$urlN', t6.id) ELSE CONCAT('$urlF', t5.id) END) AS 'idur2',
-       (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2',
-       (case WHEN t5.id IS NULL
-           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y')
-           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y') END) AS 'dateCFDI2',
-    	(case WHEN t5.id IS NULL
-    	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y')
-    	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago',
-        (case WHEN t5.id IS NULL
-           THEN (SELECT short_name FROM compensatest_base.companies where rfc= t6.sender_rfc)
-           ELSE (SELECT short_name FROM compensatest_base.companies where rfc= t5.sender_rfc) END) AS 'senderConciliation',
-    	(case WHEN t5.id IS NULL
-           THEN (SELECT short_name FROM compensatest_base.companies where rfc= t6.receiver_rfc)
-           ELSE (SELECT short_name FROM compensatest_base.companies where rfc= t5.receiver_rfc) END) AS 'receiverConciliation',
+       (IF(t5.id IS NULL, t6.total, t5.total)) AS 'total2',
+       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y'),
+       DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y'))) AS 'dateCFDI2',
+       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y'),
+       DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y'))) AS 'datePago',
+       (IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.sender_rfc),
+       (SELECT short_name FROM $this->base.companies where rfc= t5.sender_rfc))) AS 'senderConciliation',
+    	(IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.receiver_rfc),
+    	(SELECT short_name FROM $this->base.companies where rfc= t5.receiver_rfc))) AS 'receiverConciliation',
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
-    	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
-    	(CASE WHEN t5.id IS NULL THEN 'nota' ELSE 'cfdi' END) AS 'tipoCFDI'
+    	(IF(t1.id_provider = '$id', 'emisor', 'receptor')) AS 'role',
+    	(IF(t5.id IS NULL, 'nota', 'cfdi')) AS 'tipoCFDI'
 		FROM $this->base.operations t1 
 		    INNER JOIN $this->base.companies t2 ON t2.id = t1.id_client 
 		    INNER JOIN $this->base.companies t3 ON t3.id = t1.id_provider 
@@ -211,7 +207,7 @@ class Operation_model extends CI_Model {
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//Query para insertar la nueva conciliacion
-		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
+		$query = "INSERT INTO $this->base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
 VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['userId']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
 		if(!@$this->db->query($query)){
 			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
@@ -234,7 +230,7 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 		$this->enviroment = $env === NULL ? $this->enviroment : $env;
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//Query para insertar la nueva conciliacion
-		$query = "INSERT INTO compensatest_base.operations (id_invoice, id_invoice_relational, id_uploaded_by, id_client, 
+		$query = "INSERT INTO $this->base.operations (id_invoice, id_invoice_relational, id_uploaded_by, id_client,
                                           id_provider, operation_number, payment_date, entry_money, exit_money, status)
 VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$args['receiver']}', 
         '{$args['provider']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','1')";

@@ -83,6 +83,31 @@
 			echo json_encode ( [ "code" => 500, "message" => "Error al actualizar el estatus", "reason" => "No es un Id valido" ] );
 			return FALSE;
 		}
+		public function reject () {
+			//Se obtienen el ID y fecha de la conciliación que se acepta
+			$id = $this->input->post ( 'id' );
+			$payDate = $this->input->post ( 'payDate' );
+			//Se valida que tengamos un dato valido
+			if ( $id ) {
+				//Se carga el modelo de donde se obtendrán los datos y se obtiene el ID de compañía de la sesión
+				$this->load->model ( 'Operation_model', 'OpData' );
+				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
+				//Se envía la instrucción para aceptar la conciliación
+				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
+				if ( $res[ 'code' ] === 200 ) {
+					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
+					$add = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id' ], 'SANDBOX' );
+					echo json_encode ( [
+						"code" => 200,
+						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
+					] );
+					$this->adviseAuthorized ( $id );
+					return TRUE;
+				}
+			}
+			echo json_encode ( [ "code" => 500, "message" => "Error al actualizar el estatus", "reason" => "No es un Id valido" ] );
+			return FALSE;
+		}
 		/**
 		 * Función para notificar que se a autorizado una conciliación
 		 *

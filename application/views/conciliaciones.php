@@ -127,16 +127,16 @@
 				<div class="card-content ">
 					<div class="row">
 						<div class="col l12">
-							<label style="top: 0!important; color: #212121; font-size: 18px;" for="descripcion">
+							<label style="top: 0!important; color: #212121; font-size: 18px;" for="rejectText">
 								Indique la razón específica de la cancelación de la operación.</label>
 							<textarea
 								style="min-height: 30vh;" id="rejectText" name="rejectText"
 								class="materialize-textarea validate" required></textarea>
-							<input type="hidden" id = "">
+							<input type="hidden" id = "idReject" name="idReject" >
 						</div>
 						<div class="col l12 d-flex justify-content-flex-end" style="margin-top:10px">
 							<div class="col"><a class="button-gray modal-close ">Cancelar</a></div>
-							<div class="col"><a class="button-blue modal-close ">Enviar</a></div>
+							<div class="col"><a class="button-blue modal-close " id="btnReject">Enviar</a></div>
 						</div>
 					</div>
 				</div>
@@ -206,7 +206,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+			<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
 		</div>
 	</div>
 	<!-- Subir los CFDI -->
@@ -233,7 +233,7 @@
 						<div class="row">
 							<div class="col l12 center-align">
 								<a class="modal-close button-gray">Cancelar</a>
-								<input class="button-blue" type="submit" value="Siguiente" </input>
+								<input class="button-blue" type="submit" value="Siguiente">
 							</div>
 						</div>
 						<div class="row">
@@ -645,6 +645,166 @@
 				
 			});
 		});
+		$("#btnReject").on('click', function(){
+			$.ajax({
+				url: "/Conciliaciones/conciliation",
+				data: {
+					from: $("#start").val(),
+					to: $("#fin").val(),
+				},
+				dataType: "json",
+				method: "post",
+				beforeSend: function () {
+					const obj = $("#tblsViewer");
+					const left = obj.offset().left;
+					const top = obj.offset().top;
+					const width = obj.width();
+					const height = obj.height();
+					$("#solveLoader").css({
+						display: "block",
+						left: left,
+						top: top,
+						width: width,
+						height: height,
+						zIndex: 999999
+					}).focus();
+				},
+				success: function (data) {
+					if (data.code === 500 || data.code === 404) {
+						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>";
+						M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
+					} else {
+						$("#tblBody").empty();
+						$.each(data, function (index, value) {
+							let uuid, status, uuid2;
+							let aut, cancel, acept;
+							uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid1 + "</a>";
+							uuid2 = "<a href=\"" + value.idur2 + "\" target=\"_blank\">" + value.uuid2 + "</a>";
+							if (value.role === "receptor") {
+								switch (value.status) {
+									case "0":
+										aut = $("<a class=\"modal-trigger\" href=\"#modal-aut-conciliation\">Autorizar</a>");
+										cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
+										acept = $("<a class=\"button-blue \">Aceptar</a>");
+										cancel.click(function () {
+											$('#rejectText').empty();
+											$('#idReject').val(value.id);
+										});
+										acept.click(function () {
+											aceptOp(value.id, $("#autPayDate").val());
+										});
+										aut.click(function () {
+											let autEmisor = $("#autEmisor");
+											let autCFDI = $("#autCFDI");
+											let autConciliador = $("#autConciliador");
+											let autReferencia = $("#autReferencia");
+											let autMonto1 = $("#autMonto1");
+											let autMonto2 = $("#autMonto2");
+											let autClabe = $("#autClabe");
+											let autPayDate = $("#autPayDate");
+											autEmisor.empty();
+											autCFDI.empty();
+											autConciliador.empty();
+											autReferencia.empty();
+											autMonto1.empty();
+											autMonto2.empty();
+											autClabe.empty();
+											autEmisor.append(value.emisor);
+											autCFDI.append(uuid);
+											autConciliador.append(uuid2);
+											autReferencia.append(value.operation_number);
+											autMonto1.append("$" + value.total1);
+											autMonto2.append("$" + value.total2);
+											autClabe.append(value.account_clabe);
+											let dateS = (value.datePago);
+											dateS = dateS.split("-");
+											autPayDate.attr("value", dateS[2] + "-" + dateS[1] + "-" + dateS[0]);
+											$("#autAceptar").empty();
+											$("#autCancel").empty();
+											$("#autAceptar").append(acept);
+											$("#autCancel").append(cancel);
+										});
+										break;
+									case "1":
+									case "3":
+										aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+										break;
+									case "2":
+										aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+										break;
+								}
+							} else {
+								switch (value.status) {
+									case "0":
+										aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+										break;
+									case "3":
+									case "1":
+										aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+										break;
+									case "2":
+										aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+										break;
+								}
+							}
+							switch (value.status) {
+								case "0":
+									status = "<p>Pendiente de autorización</p>";
+									break;
+								case "1":
+									status = "<p>Autorizada</p>";
+									break;
+								case "2":
+									status = "<p>Rechazada</p>";
+									break;
+								case "3":
+									status = "<p>Realizada</p>";
+									break;
+								case "4":
+									status = "<p>Vencida</p>";
+									break;
+							}
+							const tr = $("<tr>" +
+								"<td class=\"tabla-celda center-align\" id=\"aut" + value.id + "\"></td>" +
+								"<td class=\"tabla-celda center-align\">" + status + "</td>" +
+								"<td class='center-align'>" + value.operation_number + "</td>" +
+								"<td class='center-align'>" + value.emisor + "</td>" +
+								"<td class='center-align'>" + value.receptor + "</td>" +
+								"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
+								"<td class=\"center-align\">$ " + value.total1 + "</td>" +
+								"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
+								"<td class='center-align'>" + value.datePago1 + "</td>" +
+								"<td class='center-align'>" + value.senderConciliation + "</td>" +
+								"<td class='center-align'>" + value.receiverConciliation + "</td>" +
+								"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
+								"<td class='center-align'>$ " + value.total2 + "</td>" +
+								"<td class='center-align'>" + value.dateCFDI2 + "</td>" +
+								"<td class='center-align' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
+								"</tr>");
+							$("#tblBody").append(tr);
+							$("#aut" + value.id).append(aut);
+						});
+					}
+				},
+				complete: function () {
+					$("#solveLoader").css({
+						display: "none"
+					});
+				},
+				error: function (data) {
+					$("#solveLoader").css({
+						display: "none"
+					});
+					let toastHTML = "<span><strong>Ha ocurrido un problema</strong></span>";
+					M.toast({html: toastHTML, displayLength: 1000, duration: 1000});
+					toastHTML = "<span>Por favor intente mas tarde</span>";
+					M.toast({html: toastHTML, displayLength: 1000, duration: 1000});
+					toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>";
+					M.toast({html: toastHTML, displayLength: 1000, duration: 1000});
+					
+				}
+			});
+		});
 	});
 	
 	function noSelect() {
@@ -720,7 +880,8 @@
 									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
 									acept = $("<a class=\"button-blue \">Aceptar</a>");
 									cancel.click(function () {
-									
+										$('#rejectText').empty();
+									    $('#idReject').val(value.id);
 									});
 									acept.click(function () {
 										aceptOp(value.id, $("#autPayDate").val());
