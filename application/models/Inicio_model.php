@@ -306,7 +306,8 @@ class Inicio_model extends CI_Model {
 
         //operaciones recientes
         $ResOper = "SELECT o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation, companies.short_name, companies.legal_name, ip.id_user, 
-                            ip.total as money_prov, ic.total as money_clie, debit_notes.uuid AS uuid_nota, debit_notes.total as money_nota 
+                            ip.total as money_prov, ic.total as money_clie, debit_notes.uuid AS uuid_nota, debit_notes.total as money_nota, debit_notes.id AS id_nota, 
+                            debit_notes.total AS dn_total
                     FROM operations as o 
                     LEFT JOIN debit_notes ON debit_notes.id = o.id_debit_note 
                     LEFT JOIN invoices as ip ON ip.id = o.id_invoice 
