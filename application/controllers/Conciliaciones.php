@@ -58,7 +58,7 @@
 			echo json_encode ( [ "code" => 500, "message" => "Error al extraer la información", "reason" => "No se envió una fecha valida" ] );
 			return FALSE;
 		}
-		public function accept () {
+		public function accept (): bool {
 			//Se obtienen el ID y fecha de la conciliación que se acepta
 			$id = $this->input->post ( 'id' );
 			$payDate = $this->input->post ( 'payDate' );
@@ -83,25 +83,46 @@
 			echo json_encode ( [ "code" => 500, "message" => "Error al actualizar el estatus", "reason" => "No es un Id valido" ] );
 			return FALSE;
 		}
-		public function reject () {
+		public function reject (): bool {
 			//Se obtienen el ID y fecha de la conciliación que se acepta
-			$id = $this->input->post ( 'id' );
-			$payDate = $this->input->post ( 'payDate' );
+			$comments = $this->input->post ( 'comments' );
+			$idConciliation = $this->input->post ( 'idConciliation' );
 			//Se valida que tengamos un dato valido
-			if ( $id ) {
+			if ( $idConciliation && $comments ) {
 				//Se carga el modelo de donde se obtendrán los datos y se obtiene el ID de compañía de la sesión
 				$this->load->model ( 'Operation_model', 'OpData' );
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
-				//Se envía la instrucción para aceptar la conciliación
-				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
-				if ( $res[ 'code' ] === 200 ) {
-					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
-					$add = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id' ], 'SANDBOX' );
+				$iduser = $this->session->userdata ( 'datosUsuario' )[ "id" ];
+				//Se envía la instrucción para rechazar la conciliación
+				$res = $this->OpData->rejectConciliation ( $idConciliation, $comments, $this->enviroment );
+//				var_dump ($res);
+				if ( $res[ 'code' ] === 200 ) {//en caso correcto se procede a notificar a la otra empresa y se guarda la información en logs
+					$this->load->model ( 'User_model','dataUsr');
+					$conciliation = $this->OpData->getConciliacionesByID ( $idConciliation, $this->enviroment );
+					$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $this->enviroment );
+					
+					$args['mail'] = $provider[ 'result' ]['email'];
+					$args['cc'] = 'uriel.magallon@whitefish.mx';
+					$args['mailData'] = [
+						'name' => $provider[ 'result' ][ 'name' ],
+						'lastName' => $provider[ 'result' ][ 'last_name' ],
+						'company' => $provider[ 'result' ][ 'short_name' ],
+					];
+					$args[ 'notification' ] = [
+						'reason' => $comments,
+						'operationNumber' => $conciliation['result']['operation_number'],
+						'idUser' => $iduser,
+					];
+					$m= 2;
+					$args['L'] = ['id_c' => $idCompany, 'id' =>$iduser, 'module' =>$m, 'code' =>$res['code'],
+						'in' =>json_encode (['rejectConciliation'=>['idConciliation'=>$idConciliation, 'comment'=>$comments, 'env'=>$this->enviroment]]),
+						'out' =>json_encode ($res['message'])];
+					$this->Binnacle ($args,8,[1,2,3],$m, $this->enviroment);
 					echo json_encode ( [
 						"code" => 200,
-						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
+						"message" => "Conciliación rechazada<br>
+Se envió a su correo a su socio comercial con la información del rechazo de conciliación",
 					] );
-					$this->adviseAuthorized ( $id );
 					return TRUE;
 				}
 			}
@@ -423,5 +444,29 @@
 		private function MakeOperationNumber ( int $operation ): string {
 			$trash = '010203040506070809';
 			return str_pad ( $operation, 7, substr ( str_shuffle ( $trash ), 0, 10 ), STR_PAD_LEFT );
+		}
+		public function Binnacle ( array $args, int $cat, array $ins, string $module,string $env = 'SANDBOX' ): bool {
+			$this->load->helper ( 'notifications_helper' );
+			$this->load->model ( 'Notification_model', 'nt' );
+			$this->load->helper ( 'sendmail_helper' );
+			$nText = notificationBody ( $args[ 'notification' ], $cat );
+			$nText['id'] = $args['notification']['idUser'];
+			$args[ 'N' ] = $nText;
+			$args[ 'A' ] = $nText;
+			$module = $this->nt->getModuleByArgs($module, $this->enviroment);
+			$support = $this->nt->getModuleByArgs('1', $this->enviroment);
+			$binnacle = $this->nt->saveBinnacle ( $args, $ins, $env );
+			$data = [
+				'user' => [
+					'name' => $args['mailData']['name'],
+					'lastName' => $args['mailData']['lastName'],
+					'company' => $args['mailData']['company'],
+				],
+				'text' => $nText[ 'body' ],
+				'urlDetail' => [ 'url' => base_url ( $module['result']['url'] ), 'name' => $module['result']['module'] ],
+				'urlSoporte' => [ 'url' => base_url ( $support['result']['url'] ), 'name' => $support['result']['module'] ],
+			];
+			send_mail ($args['mail'], $data, 2, $args['cc'], $nText['title']);
+			return true;
 		}
 	}
