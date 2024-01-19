@@ -56,4 +56,5 @@ function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null)
 	$CI->email->set_newline("\r\n");
 	$CI->email->send();
 	$debug = $CI->email->print_debugger();
+	return TRUE;
 }

@@ -29,7 +29,8 @@
 			$this->environment = $env === NULL ? $this->environment : $env;
 			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			//Crear el query para insertar las notificaciones en la Base de Datos
-			$query = "INSERT INTO $this->base.notificationds (user_id, title, body, readed) 
+//			var_dump ($args);
+			$query = "INSERT INTO $this->base.notifications (user_id, title, body, readed)
 VALUES ('{$args['id']}', '{$args['title']}',  \"" . $args[ 'body' ] . "\", 0)";
 			//Revisa que sea correcta la conexión y ejecución con la BD
 			$this->db->db_debug = FALSE;
@@ -107,10 +108,10 @@ VALUES ('{$args['id']}', '{$args['title']}',  \"" . $args[ 'body' ] . "\", 0)";
 			//Crear el query para insertar las notificaciones en la Base de Datos
 			$query = "INSERT INTO $this->base.logs (id_company, id_user, module, code, data_in, result)
 VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']}',
-        \"" . $args[ 'in' ] . "\", \"" . $args[ 'out' ] . "\")";
+        '{$args[ 'in' ] }', '{$args[ 'out' ]}')";
 			//Revisa que sea correcta la conexión y ejecución con la BD
 			$this->db->db_debug = FALSE;
-			if ( !@$this->db->query ( $query ) ) {
+			if ( !@$res=$this->db->query ( $query ) ) {
 				return [ "code" => 500, "message" => "Error al insertar logs", "reason" => $this->db->error ()[ 'message' ] ];
 			}
 			return [ "code" => 200, "message" => "logs registrado.",
@@ -118,9 +119,10 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 		}
 		/**
 		 * Función para insertar logs, notificaciones y alertas según sean requeridos
+		 *
 		 * @param array       $args arreglo con los datos que se insertaran
-		 * @param array       $ins arreglo para determinar donde insertar la información
-		 * @param string|NULL $env ambiente en el que se estara trabajando
+		 * @param array       $ins  arreglo para determinar donde insertar la información
+		 * @param string|NULL $env  ambiente en el que se estara trabajando
 		 *
 		 * @return array Arreglo con el resultado de la ejecución de los query
 		 */
@@ -129,26 +131,41 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 			foreach ( $ins as $binnacle ) {
 				switch ( $binnacle ) {
 					case 1:
-						$subRes = $this->insertNotification ($args,$env);
-						if($subRes['code' != 200]){
-							$res['notification']= $subRes;
+						$subRes = $this->insertNotification ( $args[ 'N' ], $env );
+						if ( $subRes[ 'code'] != 200 ) {
+							$res[ 'notification' ] = $subRes;
 						}
 						break;
 					case 2:
-						$subRes = $this->insertAlert ($args,$env);
-						if($subRes['code' != 200]){
-							$res['alert']= $subRes;
+						$subRes = $this->insertAlert ( $args[ 'A' ], $env );
+						if ( $subRes[ 'code' ] != 200 ) {
+							$res[ 'alert' ] = $subRes;
 						}
 						break;
 					case 3:
-						$subRes = $this->insertLogs ($args,$env);
-						if($subRes['code' != 200]){
-							$res['log']= $subRes;
+						$subRes = $this->insertLogs ( $args[ 'L' ], $env );
+						if ( $subRes[ 'code' ]!= 200  ) {
+							$res[ 'log' ] = $subRes;
 						}
 						break;
 				}
 			}
-			return empty($res) ? [ "code" => 200, "message" => "logs registrado.",
+			return empty( $res ) ? [ "code" => 200, "message" => "logs registrado.",
 				"id" => $this->db->insert_id () ] : $res;
+		}
+		public function getModuleByArgs ( string $arg, string $env = NULL ) {
+			//Se declara el ambiente a utilizar
+			$this->environment = $env === NULL ? $this->environment : $env;
+			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+			//Crear el query para insertar las notificaciones en la Base de Datos
+			$query = "SELECT * FROM compensatest_base.cat_module
+         WHERE id = '$arg' OR module = '$arg'";
+			$this->db->db_debug = FALSE;
+			if ( !@$res=$this->db->query ( $query ) ) {
+				return [ "code" => 500, "message" => "Error al obtener resultados", "reason" => $this->db->error ()[ 'message' ] ];
+			} else if ( !$res->num_rows () > 0 ) {
+				return [ "code" => 404, "message" => "Error al obtener resultados", "reason" => 'No se encontraron resultados' ];
+			}
+			return [ "code" => 200, "result" => $res->result_array ()[0]];
 		}
 	}

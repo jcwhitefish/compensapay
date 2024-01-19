@@ -25,7 +25,7 @@
 				$this->nt->saveBinnacle ();
 				$this->load->model ( 'Arteria_model', 'dataArt' );
 				$data = $body ?? NULL;
-				if ( $data[ 'object_type' ] === 'transaction' && $data[ 'data' ][ 'type' ] === 'deposit' ) {
+				if ( $data[ 'object_type' ] === 'deposit' && $data[ 'type' ] === 'deposit' ) {
 					$args = [
 						'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
 						'operationNumber' => $data[ 'data' ][ 'reference_number' ],
