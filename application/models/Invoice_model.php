@@ -469,7 +469,7 @@ FROM $this->base.balance t0
 	INNER JOIN $this->base.cat_bancos b1 ON t0.source_bank = b1.bnk_code
 	INNER JOIN $this->base.cat_bancos b2 ON t0.receiver_bank = b2.bnk_code
 	WHERE (t3.id = $id OR t4.id = $id) AND t0.created_at >= '$from' AND t0.created_at <= '$to'";
-		var_dump ($query);
+	
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){
 			//Verífica que haya resultados
