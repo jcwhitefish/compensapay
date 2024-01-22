@@ -384,8 +384,9 @@ FROM $this->base.operations t1
 INNER JOIN $this->base.debit_notes t2 ON t1.id_debit_note = t2.id
 LEFT JOIN $this->base.companies t3 ON t2.sender_rfc = t3.rfc
 LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
-WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.created_at >= '$from' AND t2.created_at <= '$to')
+WHERE (t3.id = $id OR t4.id = $id) AND t2.status = 3 AND t2.created_at >= '$from' AND t2.created_at <= '$to')
 ) AS T ORDER BY T.created_at";
+
 		//se verifica que la consulta se ejecute bien
 		if($invoices = $this->db->query($query)){
 			//se verifica que haya informacion

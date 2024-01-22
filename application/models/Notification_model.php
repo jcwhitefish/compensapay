@@ -153,7 +153,7 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 			return empty( $res ) ? [ "code" => 200, "message" => "logs registrado.",
 				"id" => $this->db->insert_id () ] : $res;
 		}
-		public function getModuleByArgs ( string $arg, string $env = NULL ) {
+		public function getModuleByArgs ( string $arg, string $env = NULL ): array {
 			//Se declara el ambiente a utilizar
 			$this->environment = $env === NULL ? $this->environment : $env;
 			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
