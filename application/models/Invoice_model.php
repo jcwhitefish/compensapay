@@ -360,6 +360,7 @@ class Invoice_model extends CI_Model {
 		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
+		$url2 = base_url('assets/factura/nota.php?idnota=');
 		//Se crea el query para obtener las facturas
 		$query = "SELECT * FROM (
 (SELECT CONCAT(t1.id,'f') AS id2, t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid,
@@ -375,7 +376,7 @@ LEFT JOIN $this->base.companies t4 ON t2.receiver_rfc = t4.rfc
 WHERE (t1.id_client = $id OR t1.id_provider = $id) AND t2.status = 3 AND t2.created_at >= '$from' AND t2.created_at <= '$to')
 UNION
 (SELECT CONCAT(t1.id,'n') AS id2, t2.id, t3.short_name AS 'emisor', t4.short_name AS 'receptor', t2.uuid,
-       CONCAT('$url', t2.id) AS 'idurl',
+       CONCAT('$url2', t2.id) AS 'idurl',
 DATE_FORMAT(FROM_UNIXTIME(t2.debitNote_date), '%d-%m-%Y') AS 'dateCFDI',
 DATE_FORMAT(FROM_UNIXTIME(t2.created_at), '%d-%m-%Y') AS 'dateCreate',
 DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'dateToPay',
@@ -445,12 +446,17 @@ WHERE (t3.id = $id OR t4.id = $id) AND t2.status = 3 AND t2.created_at >= '$from
        DATE_FORMAT(FROM_UNIXTIME(t0.created_at), '%d-%m-%Y') AS 'created_at',
        CONCAT('$cep',t0.url_cep) AS 'cepUrl',
        t3.legal_name AS 'provider', t3.rfc AS 'providerRFC', b1.bnk_alias as 'bank_source', t0.source_clabe,
-       t4.legal_name AS 'client', t4.rfc AS 'clientRFC',  b2.bnk_alias as 'bank_receiver', t0.receiver_clabe,
-       (CASE WHEN t0.amount = t2.total THEN t2.uuid WHEN t0.amount = c1.total THEN c1.uuid ELSE c2.uuid END) AS 'uuid',
+       t4.legal_name AS 'client', t4.rfc AS	 'clientRFC',  b2.bnk_alias as 'bank_receiver', t0.receiver_clabe,
+       (CASE
+           WHEN t0.amount = t2.total THEN t2.uuid
+           WHEN t0.amount = c1.total THEN c1.uuid
+           WHEN t0.amount = c2.total THEN c2.uuid
+           ELSE 'No Aplica' END) AS 'uuid',
        (CASE
            WHEN t0.amount = t2.total THEN CONCAT('$urlF',t2.id)
-           WHEN t0.amount = c1.total THEN  CONCAT('$urlF',c1.id)
-           ELSE CONCAT('$urlN',c2.id) END) AS 'idurl'
+           WHEN t0.amount = c1.total THEN CONCAT('$urlF',c1.id)
+           WHEN t0.amount = c2.total THEN CONCAT('$urlN',c2.id)
+           ELSE 'No Aplica' END) AS 'idurl'
 FROM $this->base.balance t0
 	LEFT JOIN $this->base.operations t1 ON t0.operationNumber = t1.operation_number
 	LEFT JOIN $this->base.invoices t2 ON t1.id_invoice = t2.id
@@ -463,7 +469,7 @@ FROM $this->base.balance t0
 	INNER JOIN $this->base.cat_bancos b1 ON t0.source_bank = b1.bnk_code
 	INNER JOIN $this->base.cat_bancos b2 ON t0.receiver_bank = b2.bnk_code
 	WHERE (t3.id = $id OR t4.id = $id) AND t0.created_at >= '$from' AND t0.created_at <= '$to'";
-//		var_dump ($query);
+		var_dump ($query);
 		//Verífica que se ejecute bien el query
 		if($res = $this->db->query($query)){
 			//Verífica que haya resultados
