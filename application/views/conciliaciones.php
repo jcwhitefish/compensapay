@@ -136,7 +136,7 @@
 						</div>
 						<div class="col l12 d-flex justify-content-flex-end" style="margin-top:10px">
 							<div class="col"><a class="button-gray modal-close ">Cancelar</a></div>
-							<div class="col"><a class="button-blue modal-close " id="btnReject">Enviar</a></div>
+							<div class="col"><a class="button-blue modal-close " id="btnReject" >Enviar</a></div>
 						</div>
 					</div>
 				</div>
@@ -770,7 +770,7 @@
 								case "0":
 									aut = $("<a class=\"modal-trigger\" href=\"#modal-aut-conciliation\">Autorizar</a>");
 									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
-									acept = $("<a class=\"button-blue \">Aceptar</a>");
+									acept = $("<a style='cursor: pointer;' class=\"button-blue \">Aceptar</a>");
 									cancel.click(function () {
 										$('#rejectText').empty();
 									    $('#idReject').val(value.id);
@@ -975,16 +975,13 @@
 								status = "<p>Pendiente de autorización</p>";
 								break;
 							case "1":
-								status = "<p>Autorizada</p>";
+								status = "<p>En operación</p>";
 								break;
 							case "2":
 								status = "<p>Rechazada</p>";
 								break;
 							case "3":
 								status = "<p>Pagada</p>";
-								break;
-							case "4":
-								status = "<p>Vencida</p>";
 								break;
 						}
 						const tr = $("<tr>" +

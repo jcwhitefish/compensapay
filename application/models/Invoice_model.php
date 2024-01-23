@@ -8,16 +8,15 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
  * @property Invoice_model $invData invoice processing model
  */
 class Invoice_model extends CI_Model {
-	private string $enviroment = '';
+	private string $environment = '';
 	private string $dbsandbox = '';
-//	private string $dbprod = 'compensapay';
 	private string $dbprod = '';
 	public string $base = '';
     public function __construct() {
         parent::__construct();
         $this->load->database();
 		require 'conf.php';
-		$this->base = $this->enviroment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->base = $this->environment === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
     }
     public function get_all_invoices() {
         $query = $this->db->get('invoices');
@@ -356,8 +355,8 @@ class Invoice_model extends CI_Model {
 	 */
 	public function getDocsCFDI(string $id, int $from, int $to, string $env = null): array	{
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
 		$url2 = base_url('assets/factura/nota.php?idnota=');
@@ -435,8 +434,8 @@ WHERE (t3.id = $id OR t4.id = $id) AND t2.status = 3 AND t2.created_at >= '$from
 	 */
 	public function getDocsMovements(string $id, int $from, int $to, string $env = null): array	{
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
 		$urlF = base_url('assets/factura/factura.php?idfactura=');
 		$urlN = base_url('assets/factura/nota.php?idnota=');
@@ -496,8 +495,8 @@ FROM $this->base.balance t0
 	 */
 	public function getCFDIByCompany(string $id, int $from, int $to, string $env = null): array	{
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
 		$urlF = base_url('assets/factura/factura.php?idfactura=');
 		$urlN = base_url('assets/factura/nota.php?idnota=');
@@ -573,8 +572,8 @@ ORDER BY T.created_at";
 	 */
 	public function saveCFDI_I(array $cfdi, int $companyID, int $userID, string $env = null): array {
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//Se obtienen y transforman fechas
 		$invoiceDate = strtotime($cfdi['fecha']);
 		$idReceptor = $this->getReceptorByRFC($cfdi['receptor']['rfc'], $env);
@@ -600,8 +599,8 @@ ORDER BY T.created_at";
 	}
 	public function saveCFDI_E(array $cfdi, int $companyID, int $userID, int $id_invoice, string $conciliaDate, string $env = null): array {
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//Se obtienen y transforman fechas
 		$invoiceDate = strtotime($cfdi['fecha']);
 		$idReceptor = $this->getReceptorByRFC($cfdi['receptor']['rfc'], $env);
@@ -628,8 +627,8 @@ ORDER BY T.created_at";
 	}
 	public function getPaymentDate(int $companyID_1, int $companyID_2, string $env = null){
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//Se crea el query para obtener la información
 		$query = "SELECT (IF(t2.paydays IS NULL, t1.dias_pago, t2.paydays)) AS 'payDay',
 (IF(t2.paydays IS NULL, 'company', 'relation')) AS 'table'
@@ -663,8 +662,8 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 	public function getReceptorByRFC(string $rfc, string$env= null)
 	{
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT id FROM $this->base.companies WHERE rfc = '$rfc'";
 		if($res = $this->db->query($query)){
 			if ($res->num_rows() > 0){
@@ -678,8 +677,8 @@ VALUES ('$companyID_1', '$companyID_2', '{$res['payDay']}')";
 	}
 	public function getContraCFDI(int $provider, int $receiver, float $total, string$env= null){
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		//se crea la variable url de las facturas para concatenarlo
 		$url = base_url('assets/factura/factura.php?idfactura=');
 		//Se crea el query para obtener la información
@@ -704,8 +703,8 @@ WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.statu
 	}
 	public function getCFDIById(int $id, string$env= null){
 		//Se declara el ambiente a utilizar
-		$this->enviroment = $env === NULL ? $this->enviroment : $env;
-		$this->base = strtoupper($this->enviroment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+		$this->environment = $env === NULL ? $this->environment : $env;
+		$this->base = strtoupper($this->environment) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 		$query = "SELECT t1.*, t2.short_name AS 'receiver', t2.rfc AS 'receiverRfc', t3.short_name AS 'provider', t3.short_name AS 'providerRfc' 
 FROM $this->base.invoices t1
     INNER JOIN $this->base.companies t2 ON t1.receiver_rfc = t2.rfc
