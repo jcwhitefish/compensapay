@@ -448,11 +448,13 @@ WHERE (t3.id = $id OR t4.id = $id) AND t2.status = 3 AND t2.created_at >= '$from
        t3.legal_name AS 'provider', t3.rfc AS 'providerRFC', b1.bnk_alias as 'bank_source', t0.source_clabe,
        t4.legal_name AS 'client', t4.rfc AS	 'clientRFC',  b2.bnk_alias as 'bank_receiver', t0.receiver_clabe,
        (CASE
+           WHEN t3.legal_name = t4.legal_name  THEN 'No aplica'
            WHEN t0.amount = t2.total THEN t2.uuid
            WHEN t0.amount = c1.total THEN c1.uuid
            WHEN t0.amount = c2.total THEN c2.uuid
            ELSE 'No Aplica' END) AS 'uuid',
        (CASE
+           WHEN t3.legal_name = t4.legal_name  THEN 'No aplica'
            WHEN t0.amount = t2.total THEN CONCAT('$urlF',t2.id)
            WHEN t0.amount = c1.total THEN CONCAT('$urlF',c1.id)
            WHEN t0.amount = c2.total THEN CONCAT('$urlN',c2.id)
