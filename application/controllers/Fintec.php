@@ -6,31 +6,38 @@
 	 * @property Arteria_model      $dataArt
 	 */
 	class Fintec extends MY_Loggedout {
-		public function createLog ( $logname, $message ): void {
-			$logDir = '/home/compensatest/logs/';
-//		$logDir = 'C:\web\logs\\';
-			$this->logFile = fopen ( $logDir . $logname . '.log', 'a+' );
-			if ( $this->logFile !== FALSE ) {
-				fwrite ( $this->logFile, '|' . date ( 'Y-m-d H:i:s' ) . '|   ' . $message . "\r\n" );
-				fclose ( $this->logFile );
+		private string $environment = 'SANDBOX';
+		public function createLog (string $logName, string $message ): void {
+			$logDir = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? 'C:/web/logs/' : '/home/compensatest/logs/';
+			$this->logFile = fopen($logDir . $logName . '.log', 'a+');
+			if ($this->logFile !== false) {
+				$logMessage = '|' . date('Y-m-d H:i:s') . '|   ' . $message . "\r\n";
+				fwrite($this->logFile, $logMessage);
+				fclose($this->logFile);
 			}
 		}
 		public function getEvents () {
 			$this->load->model ( 'response' );
-			$this->load->model('Notification_model', 'nt');
 			$error = 0;
 			$resp = [ "response" => 'ok' ];
-			if ( Request::getStaticMethod () == 'POST' && ( $body = Request::getBody () ) ) {
-				$this->createLog ( 'ping', json_encode ( $body, JSON_PRETTY_PRINT ) );
-				$this->nt->saveBinnacle ();
-				$this->load->model ( 'Arteria_model', 'dataArt' );
-				$data = $body ?? NULL;
-				if ( $data[ 'object_type' ] === 'deposit' && $data[ 'type' ] === 'deposit' ) {
+			//Se revisa que la petición sea por POST y haya información en el cuerpo del mensaje
+			if ( Request::getStaticMethod () == 'POST' && ( $data = Request::getBody () ) ) {
+				//Se crea el log que guarda todo lo que se recibe
+				$this->createLog ( 'ping', json_encode ( $data, JSON_PRETTY_PRINT ) );
+				$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+					'in' => json_encode ( [ $data[ 'object_type' ], $data[ 'data' ][ 'type' ], $data[ 'event' ] ] ),
+					'out' => json_encode ( 'ok' ) ];
+				$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+				//Verificar que el tipo de evento sea de una transferencia entrante.
+				if ( $data[ 'object_type' ] === 'deposit' && $data[ 'data' ][ 'type' ] === 'deposit' ) {
+					$this->load->model ( 'Arteria_model', 'dataArt' );
+					//Se empieza a crear el arreglo con los datos que vamos a utilizar
 					$args = [
 						'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
 						'operationNumber' => $data[ 'data' ][ 'reference_number' ],
 						'descriptor' => $data[ 'data' ][ 'descriptor' ],
 					];
+					// Verificar que el deposito sea de una conciliación activa
 					if ( $op = $this->dataArt->SearchOperations ( $args, 'SANDBOX' ) ) {
 						$args = [
 							'trakingKey' => $data[ 'data' ][ 'tracking_key' ],
@@ -46,19 +53,31 @@
 							'operationNumber' => $op[ 'operationNumber' ],
 							'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
 						];
-						$res = $this->dataArt->AddMovement ( $args, 'SANDBOX' );
-						$cep = $this->getCEP ( $args );
-						$exitMoney = $op[ 'exitD' ] === NULL || $op[ 'exitD' ] === '' || empty( $op[ 'exitD' ] ) ? $op[ 'exitF' ] : $op[ 'exitD' ];
+						$this->AddMovement ( $args, 'SANDBOX' );
+						$this->getCEP ( $args );
+						$exitMoney = empty( $op[ 'exitD' ] ) ? $op[ 'exitF' ] : $op[ 'exitD' ];
 						if ( ( $op[ 'entry' ] ) != $data[ 'data' ][ 'amount' ] ) {
 							$rollback = [
 								'clabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
 								'amount' => $data[ 'data' ][ 'amount' ],
-								'descriptor' => 'Devolucion por monto incorrecto',
+								'descriptor' => 'Devolución por monto incorrecto',
 								'name' => $data[ 'data' ][ 'source' ][ 'name' ],
 								'idempotency_key' => base64_encode ( $data[ 'data' ][ 'tracking_key' ] ),
 							];
 							$back = json_decode ( $this->dataArt->CreateTransfer ( $rollback, 'SANDBOX' ), TRUE );
 							$this->createLog ( 'CreateTransfer', json_encode ( $back, JSON_PRETTY_PRINT ) );
+							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+								'in' => json_encode ( $rollback ),
+								'out' => json_encode ( $back ) ];
+							$binnacle[ 'notification' ] = [ 'clabe' => $rollback[ 'clabe' ], 'amount' => $rollback[ 'amount' ] ];
+							$binnacle[ 'mail' ] = [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ];
+							$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
+							$binnacle[ 'mailData' ] = [
+								'name' => 'usuario',
+								'lastName' => 'administrator',
+								'company' => 'whitefish / Solve',
+							];
+							$this->Binnacle ( $binnacle, 100, [ 2, 3 ], 3, $this->environment );
 							if ( $back ) {
 								$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
 								if ( !$traking[ 'tracking_key' ] ) {
@@ -79,40 +98,32 @@
 									'transactionDate' => $back[ 'created_at' ],
 									'operationNumber' => NULL,
 								];
-								$res = $this->dataArt->AddMovement ( $argsR, 'SANDBOX' );
-								$cep = $this->getCEP ( $argsR );
+								$this->AddMovement ( $argsR, 'SANDBOX' );
+								$this->getCEP ( $argsR );
 								$newOPNumber = $this->dataArt->GetNewOperationNumber ( $op[ 'operationId' ], 'SANDBOX' );
-								$this->load->helper ( 'sendmail_helper' );
-								$this->load->helper ( 'notifications_helper' );
-								$data[ 'OpEntrty' ] = ( $op[ 'entry' ] / 100 );
-								$data[ 'NewOpNumber' ] = $newOPNumber;
-								$notification = notificationBody ( $data, 1 );
-								$notification2 = notificationBody ( $data, 7 );
-								$data = [
-									'user' => [
-										'name' => $op[ 'clientPerson' ][ 'name' ],
-										'lastName' => $op[ 'clientPerson' ][ 'last' ],
-										'company' => $op[ 'clientPerson' ][ 'company' ],
-									],
-									'text' => $notification[ 'body' ],
-									'urlDetail' => [ 'url' => base_url ( '/ModeloFiscal' ), 'name' => 'Documentos' ],
-									'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
+								
+								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+									'in' => json_encode ( ['idAnterior'=>$op[ 'operationId' ]] ),
+									'out' => json_encode ( ['newOP'=>$newOPNumber] ) ];
+								$binnacle[ 'notification' ] = [
+									'OpEntrty' => ( $op[ 'entry' ] / 100 ),
+									'NewOpNumber' => $newOPNumber ];
+								$binnacle[ 'mail' ] = $op[ 'clientPerson' ][ 'mail' ];
+								$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
+								$binnacle[ 'mailData' ] = [
+									'name' => $op[ 'clientPerson' ][ 'name' ],
+									'lastName' =>$op[ 'clientPerson' ][ 'last' ],
+									'company' => $op[ 'clientPerson' ][ 'company' ],
 								];
-								send_mail ( $op[ 'clientPerson' ][ 'mail' ], $data, 2, 'uriel.magallon@whitefish.mx', $notification[ 'title' ] );
-								$this->nt->insertNotification (
-									[ 'id' => $op[ 'client' ], 'title' => $notification[ 'title' ], 'body' => $notification[ 'body' ], ], 'SANDBOX' );
-								$notification = notificationBody ( $data, 1 );
-								$data [ 'user' ] = [
+								$this->Binnacle ( $binnacle, 1, [1, 2, 3 ], 3, $this->environment );
+								$binnacle[ 'mail' ] = $op[ 'providerPerson' ][ 'mail' ];
+								$binnacle[ 'mailData' ] = [
 									'name' => $op[ 'providerPerson' ][ 'name' ],
-									'lastName' => $op[ 'providerPerson' ][ 'last' ],
+									'lastName' =>$op[ 'providerPerson' ][ 'last' ],
 									'company' => $op[ 'providerPerson' ][ 'company' ],
 								];
-								$data[ 'text' ] = $notification2[ 'body' ];
-								send_mail ( $op[ 'providerPerson' ][ 'mail' ], $data, 2, 'uriel.magallon@whitefish.mx', $notification2[ 'title' ] );
-								$this->nt->insertNotification (
-									[ 'id' => $op[ 'provider' ], 'title' => $notification2[ 'title' ], 'body' => $notification2[ 'body' ], ], 'SANDBOX' );
+								$this->Binnacle ( $binnacle, 7, [1, 2, 3 ], 3, $this->environment );
 								return $this->response->sendResponse ( [ "response" => 'Operación correcta err 2' ], $error );
-								
 							}
 						} else {
 							//====| Comenzamos a enviar el dinero del cliente |=====
@@ -245,8 +256,9 @@
 							'operationNumber' => NULL,
 							'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
 						];
-						$res = $this->dataArt->AddMovement ( $args, 'SANDBOX' );
-						$cep = $this->getCEP ( $args );
+						$this->AddMovement ( $args, 'SANDBOX' );
+						$this->getCEP ( $args );
+						var_dump ( $args );
 						$rollback = [
 							'clabe' => $args[ 'sourceClabe' ],
 							'amount' => $data[ 'data' ][ 'amount' ],
@@ -256,6 +268,10 @@
 						];
 						$back = json_decode ( $this->dataArt->CreateTransfer ( $rollback, 'SANDBOX' ), TRUE );
 						$this->createLog ( 'CreateTransfer', json_encode ( $back, JSON_PRETTY_PRINT ) );
+						$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+							'in' => json_encode ( $rollback ),
+							'out' => json_encode ( $back ) ];
+						$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 						if ( $back ) {
 							$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
 							if ( !$traking[ 'tracking_key' ] ) {
@@ -276,8 +292,8 @@
 								'transactionDate' => $back[ 'created_at' ],
 								'operationNumber' => NULL,
 							];
-							$res = $this->dataArt->AddMovement ( $argsR, 'SANDBOX' );
-							$cep = $this->getCEP ( $argsR );
+							$this->AddMovement ( $argsR, $this->environment );
+							$this->getCEP ( $argsR );
 							return $this->response->sendResponse ( [ "response" => 'Operación correcta err 1' ], $error );
 						}
 					}
@@ -285,7 +301,7 @@
 			}
 			return $this->response->sendResponse ( $resp, $error );
 		}
-		public function getCEP ( $args ) {
+		public function getCEP ( $args ): int|string|null {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			$sourceBank = $this->dataArt->getBankByClabe ( $args[ 'sourceBank' ] );
 			$receiverBank = $this->dataArt->getBankByClabe ( $args[ 'receiverBank' ] );
@@ -302,20 +318,25 @@
 				'monto' => $args[ 'amount' ],
 			];
 			$res = $this->dataArt->DownloadCEP ( $data, 0, 'SANDBOX' );
-//		var_dump($res);
-//		var_dump($res < 1);
 			if ( $res < 1 ) {
 				$this->createLog ( 'CEP', 'No se pudo descargar ' . $data[ 'criterio' ] );
+				$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => $res,
+					'in' => json_encode ( $data ),
+					'out' => json_encode ( 'No se pudo descargar ' . $data[ 'criterio' ] ) ];
 			} else {
-				$this->dataArt->insertCEP ( $args, $res, 'SANDBOX' );
+				$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 200, 'in' => json_encode ( $data ), 'out' => json_encode ( $res ) ];
+				$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+				$insert = $this->dataArt->insertCEP ( $args, $res, 'SANDBOX' );
+				$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => $insert[ 'code' ], 'in' => json_encode ( $args ) . ( $res ), 'out' => json_encode ( $insert ) ];
 			}
+			$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 			return $res;
 		}
 		function checkTracking ( $id ) {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			return json_decode ( $this->dataArt->getIdRastreo ( $id, 'SANDBOX' ) );
 		}
-		public function tryCEPMultiDownload () {
+		public function tryCEPMultiDownload (): void {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			$balance = $this->dataArt->getAllBalanceCEP ();
 			foreach ( $balance as $row => $item ) {
@@ -346,10 +367,10 @@
 			return base64_decode ( $texto . $key );
 			//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 		}
-		public function ini () {
+		public function ini (): void {
 			phpinfo ();
 		}
-		public function testNotifications () {
+		public function testNotifications (): void {
 			$this->load->model ( 'Notification_model', 'nt' );
 			$data = [
 				'id' => 1,
@@ -357,5 +378,70 @@
 				'body' => 'Esto es una pruebaaa',
 			];
 			var_dump ( $this->nt->insertNotification ( $data, 'SANDBOX' ) );
+		}
+		public function AddMovement ( array $args, string $env = NULL ): void {
+			$this->load->model ( 'Arteria_model', 'dataArt' );
+			$res = $this->dataArt->AddMovement ( $args, $env );
+			$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => $res[ 'code' ],
+				'in' => json_encode ( $args ),
+				'out' => json_encode ( $res ) ];
+			$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+		}
+		
+		public function insertLog() {
+		
+		}
+		/**
+		 * @param array  $args Arreglo con la información a guardar
+		 * @param int    $cat  Categoria de notificación
+		 * @param array  $ins
+		 * @param string $module
+		 * @param string $env
+		 *
+		 * @return bool
+		 */
+		public function Binnacle ( array  $args, int $cat, array $ins, string $module,
+		                           string $env = 'SANDBOX' ): bool {
+			$this->load->helper ( 'notifications_helper' );
+			$this->load->model ( 'Notification_model', 'nt' );
+			$this->load->helper ( 'sendmail_helper' );
+			$nText = '';
+			if ( $cat != 0 ) {
+				$nText = notificationBody ( $args[ 'notification' ], $cat );
+				$nText[ 'id' ] = $args[ 'notification' ][ 'idUser' ];
+			}
+			foreach ( $ins as $binnacle ) {
+				switch ( $binnacle ) {
+					case 1:
+						$args[ 'N' ] = $nText;
+						break;
+					case 2:
+						$args[ 'A' ] = $nText;
+						break;
+					case 3:
+						$module = $this->nt->getModuleByArgs ( $module, $this->environment );
+						$support = $this->nt->getModuleByArgs ( '1', $this->environment );
+						break;
+				}
+			}
+			$binnacle = $this->nt->saveBinnacle ( $args, $ins, $env );
+			if ( isset( $args[ 'mailData' ], $args[ 'mail' ] ) ) {
+				$data = [
+					'user' => [
+						'name' => $args[ 'mailData' ][ 'name' ],
+						'lastName' => $args[ 'mailData' ][ 'lastName' ],
+						'company' => $args[ 'mailData' ][ 'company' ],
+					],
+					'text' => $nText[ 'body' ],
+					'urlDetail' => [ 'url' => base_url ( $module[ 'result' ][ 'url' ] ), 'name' => $module[ 'result' ][ 'module' ] ],
+					'urlSoporte' => [ 'url' => base_url ( $support[ 'result' ][ 'url' ] ), 'name' => $support[ 'result' ][ 'module' ] ],
+				];
+				if ( isset( $args[ 'cc' ] ) ) {
+					send_mail ( $args[ 'mail' ], $data, 2, $args[ 'cc' ], $nText[ 'title' ] );
+				} else {
+					send_mail ( $args[ 'mail' ], $data, 2, NULL, $nText[ 'title' ] );
+				}
+			}
+			return TRUE;
 		}
 	}

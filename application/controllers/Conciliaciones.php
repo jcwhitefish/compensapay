@@ -7,7 +7,7 @@
 	 * @property Notification_model $nt
 	 */
 	class Conciliaciones extends MY_Loggedin {
-		private string $enviroment = 'SANDBOX';
+		private string $environment = 'SANDBOX';
 		public function index (): void {
 			$data[ 'main' ] = $this->load->view ( 'conciliaciones', '', TRUE );
 			$this->load->view ( 'plantilla', $data );
@@ -94,12 +94,12 @@
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				$iduser = $this->session->userdata ( 'datosUsuario' )[ "id" ];
 				//Se envía la instrucción para rechazar la conciliación
-				$res = $this->OpData->rejectConciliation ( $idConciliation, $comments, $this->enviroment );
+				$res = $this->OpData->rejectConciliation ( $idConciliation, $comments, $this->environment );
 //				var_dump ($res);
 				if ( $res[ 'code' ] === 200 ) {//en caso correcto se procede a notificar a la otra empresa y se guarda la información en logs
 					$this->load->model ( 'User_model','dataUsr');
-					$conciliation = $this->OpData->getConciliacionesByID ( $idConciliation, $this->enviroment );
-					$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $this->enviroment );
+					$conciliation = $this->OpData->getConciliacionesByID ( $idConciliation, $this->environment );
+					$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $this->environment );
 					
 					$args['mail'] = $provider[ 'result' ]['email'];
 					$args['cc'] = 'uriel.magallon@whitefish.mx';
@@ -115,9 +115,9 @@
 					];
 					$m= 2;
 					$args['L'] = ['id_c' => $idCompany, 'id' =>$iduser, 'module' =>$m, 'code' =>$res['code'],
-						'in' =>json_encode (['rejectConciliation'=>['idConciliation'=>$idConciliation, 'comment'=>$comments, 'env'=>$this->enviroment]]),
+						'in' =>json_encode (['rejectConciliation'=>['idConciliation'=>$idConciliation, 'comment'=>$comments, 'env'=>$this->environment]]),
 						'out' =>json_encode ($res['message'])];
-					$this->Binnacle ($args,8,[1,2,3],$m, $this->enviroment);
+					$this->Binnacle ($args,8,[1,2,3],$m, $this->environment);
 					echo json_encode ( [
 						"code" => 200,
 						"message" => "Conciliación rechazada<br>
@@ -369,7 +369,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 		 */
 		public function validaComprobante ( array $factura, int $tipo, string $env = NULL, float $monto = NULL ): array {
 			//Se selecciona el ambiente a trabajar
-			$env = $env === NULL ? $this->enviroment : $env;
+			$env = $env === NULL ? $this->environment : $env;
 			//se obtienen los datos de la compañia que tienen iniciada sesión
 			$company = $this->session->userdata ( 'datosEmpresa' );
 			//Se verífica que el emisor de la factura sea el mismo que la compañia del usuario activo
@@ -454,8 +454,8 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			$nText['id'] = $args['notification']['idUser'];
 			$args[ 'N' ] = $nText;
 			$args[ 'A' ] = $nText;
-			$module = $this->nt->getModuleByArgs($module, $this->enviroment);
-			$support = $this->nt->getModuleByArgs('1', $this->enviroment);
+			$module = $this->nt->getModuleByArgs($module, $this->environment);
+			$support = $this->nt->getModuleByArgs('1', $this->environment);
 			$binnacle = $this->nt->saveBinnacle ( $args, $ins, $env );
 			$data = [
 				'user' => [

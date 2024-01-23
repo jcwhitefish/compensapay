@@ -13,7 +13,7 @@ class Openpay_model extends CI_Model
 	private string $planIdSandbox = 'pd0trwwrrvgh8oibesej';
 	private string $planIdProd = 'pd0trwwrrvgh8oibesej';
 	private string $usernameSandbox = 'sk_10a295f448a043a9ab582aa200552647';
-	private string $usernameProd = 'sk_ed68782c8b8d4b5086c5feb6f546972c';
+		private string $usernameProd = 'sk_ed68782c8b8d4b5086c5feb6f546972c';
 	private string $passwordSandbox = '';
 	private string $passwordProd = '';
 	private string $env = 'LIVE';
