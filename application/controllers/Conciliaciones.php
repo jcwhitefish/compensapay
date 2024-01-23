@@ -283,6 +283,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 							'noteId' => $res[ 'id' ],
 							'userId' => $userId,
 							'receiver' => $receiver,
+							'provider' => $companyId,
 							'opNumber' => $this->MakeOperationNumber ( $invoiceId ),
 							'paymentDate' => strtotime ( $conciliaDate ),
 							'inCash' => $amount,

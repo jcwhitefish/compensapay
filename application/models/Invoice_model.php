@@ -614,9 +614,11 @@ ORDER BY T.created_at";
     (id_invoice, id_company, sender_rfc, receiver_rfc, uuid, debitnote_date, payment_date, total, xml_document)
     VALUES ('$id_invoice','$companyID','{$cfdi['emisor']['rfc']}','{$cfdi['receptor']['rfc']}', '{$cfdi['uuid']}', '$invoiceDate',
             '$paymentDate','{$cfdi['monto']}','{$cfdi['xml']}')";
+//		var_dump ($query);
+//		die();
 		$this->db->db_debug = FALSE;
 		if(!@$this->db->query($query)){
-			return ["code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado"];
+			return ["code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error()];
 			// do something in error case
 		}else{
 			return ["code" => 200, "id" => $this->db->insert_id()];

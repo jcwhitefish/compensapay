@@ -279,9 +279,9 @@ FROM $this->base.operations t1
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			//Query para insertar la nueva conciliacion
 			$query = "INSERT INTO $this->base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
-VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['userId']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
+VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['provider']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
 			if ( !@$this->db->query ( $query ) ) {
-				return [ "code" => 500, "message" => "Error al guardar información", "reason" => "CFDI duplicado" ];
+				return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error() ];
 				// do something in error case
 			} else {
 				$res = [
