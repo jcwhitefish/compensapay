@@ -245,11 +245,11 @@
 		alert("ERROR [" + response.status + "] " + desc);
 	};
 	$(document).ready(function() {
-		const sandbox = true;
+		const sandbox = false;
 		let deviceDataId;
 		OpenPay.setId('mtcyupm65psrjreromun');
 		OpenPay.setApiKey('pk_88137bbfe9d94c208d6741754c9e24d4');
-		OpenPay.setSandboxMode(true);
+		OpenPay.setSandboxMode(false);
 		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
 		$('#deviceID').val(deviceDataId);
 		$('#cardNumber').on('change', function() {
