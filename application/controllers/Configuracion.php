@@ -26,8 +26,6 @@ class Configuracion extends MY_Loggedin {
 
 		$id = $this->session->userdata('id');
 		$customerDAta = $this->dataOp->NewClient($id, $this->env);
-		var_dump($customerDAta);
-		die();
 		$args = [
 			'card_number' => $this->input->post('cardNumber'),
 			'holder_name' => $this->input->post('holderName'),

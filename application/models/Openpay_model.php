@@ -6,7 +6,7 @@
 class Openpay_model extends CI_Model
 {
 	private string $openPaySandbox = 'https://sandbox-api.openpay.mx/v1';
-	private string $openPayLive = 'api.openpay.mx';
+	private string $openPayLive = 'https://api.openpay.mx/v1';
 	private string $customerIDSandBox = 'mhcmkrgyxbjfw9vb9cqc';
 	private string $customerIDProd = 'mtcyupm65psrjreromun';
 //	private string $planIdSandbox = 'pvnhncnq55gwfjulrbiq';
@@ -54,7 +54,7 @@ class Openpay_model extends CI_Model
 			'email' => $args['email'],
 		];
 		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
-		$endpoint = $custommer . '/customers/';
+		$endpoint = $custommer . '/customers';
 		$this->headers = [];
 		return $this->sendRequest($endpoint, $request, $env, 'POST', 'JSON');
 	}
@@ -142,7 +142,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 	public function NewCard(array $args, string $env = NULL){
 		$this->env = $env === NULL ? $this->env : $env;
 		$this->base = strtoupper($this->env) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-		$res = json_decode($this->SendNewCard($args,$this->env), true);		var_dump($res);
+		$res = json_decode($this->SendNewCard($args,$this->env), true);
 		if (!empty($res['http_code'])) {
 			return ['code' => 502, 'error' => 'Error: No se pudo agregar el método de pago.',
 				'message' => 'Verifique los campos o intente con otra tarjeta.'];
@@ -318,6 +318,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 				$response = json_encode($resp);
 			}
 			curl_close($ch);
+			$info = curl_getinfo($ch);
 			return $response;
 
 		} else {
