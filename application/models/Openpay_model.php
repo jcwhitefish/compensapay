@@ -52,7 +52,6 @@ class Openpay_model extends CI_Model
 		$request = [
 			'name' => $args['name'],
 			'email' => $args['email'],
-			'requires_account' => FALSE,
 		];
 		$custommer = strtoupper($env) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
 		$endpoint = $custommer . '/customers/';
@@ -143,7 +142,7 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 	public function NewCard(array $args, string $env = NULL){
 		$this->env = $env === NULL ? $this->env : $env;
 		$this->base = strtoupper($this->env) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-		$res = json_decode($this->SendNewCard($args,$this->env), true);
+		$res = json_decode($this->SendNewCard($args,$this->env), true);		var_dump($res);
 		if (!empty($res['http_code'])) {
 			return ['code' => 502, 'error' => 'Error: No se pudo agregar el método de pago.',
 				'message' => 'Verifique los campos o intente con otra tarjeta.'];

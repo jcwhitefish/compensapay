@@ -6,6 +6,7 @@
 
 class Configuracion extends MY_Loggedin {
 	private int $amount = 600;
+	private $env = 'LIVE';
 
 	public function index(): void
 	{
@@ -24,8 +25,9 @@ class Configuracion extends MY_Loggedin {
 		$this->load->model('Openpay_model', 'dataOp');
 
 		$id = $this->session->userdata('id');
-		$customerDAta = $this->dataOp->NewClient($id, 'SANDBOX');
-
+		$customerDAta = $this->dataOp->NewClient($id, $this->env);
+		var_dump($customerDAta);
+		die();
 		$args = [
 			'card_number' => $this->input->post('cardNumber'),
 			'holder_name' => $this->input->post('holderName'),
@@ -37,7 +39,7 @@ class Configuracion extends MY_Loggedin {
 			'cardType' => $this->input->post('cardType'),
 			'tokenCard' => $this->input->post('tokenCard'),
 		];
-		$cardData = $this->dataOp->NewCard($args, 'SANDBOX');
+		$cardData = $this->dataOp->NewCard($args, $this->env);
 		if (!empty($cardData['code'])){
 			echo json_encode($cardData);
 			return false;
@@ -45,14 +47,14 @@ class Configuracion extends MY_Loggedin {
 
 		if ($cardData['insertId'] > 0){
 			$args['OpId'] = $cardData['opId'];
-			return $this->NewSubscriptionCharge($cardData['insertId'], $args, $id);
+//			return $this->NewSubscriptionCharge($cardData['insertId'], $args, $id);
 		}
 		return false;
 	}
 	public function changeCard(){
 		$this->load->model('Openpay_model', 'dataOp');
 		$id = $this->session->userdata('id');
-		$subs =  $this->dataOp->getSubscription($id, 'SANDBOX');
+		$subs =  $this->dataOp->getSubscription($id, $this->env);
 		$subs = $subs[0];
 //		var_dump($subs);
 		$args = [
@@ -67,7 +69,7 @@ class Configuracion extends MY_Loggedin {
 			'cardType' => $this->input->post('cardType'),
 			'tokenCard' => $this->input->post('tokenCard'),
 		];
-		$cardData = $this->dataOp->NewCard($args, 'SANDBOX');
+		$cardData = $this->dataOp->NewCard($args, $this->env);
 		if (!empty($cardData['code'])){
 			echo json_encode($cardData);
 			return false;
@@ -77,7 +79,7 @@ class Configuracion extends MY_Loggedin {
 			$args['cardRecordID'] =  $cardData['insertId'];
 			$args['amount'] = $this->amount;
 			$args['opId'] = $cardData['opId'];
-			$subsData= $this->dataOp->DeleteCard($args, $id, 'SANDBOX');
+			$subsData= $this->dataOp->DeleteCard($args, $id, $this->env);
 			if (strtotime('NOW') <= $subs['nextPay'] ){
 				echo json_encode($this->dataOp->ChangeSubscription($args,$subs,$id));
 				return true;
@@ -110,7 +112,7 @@ class Configuracion extends MY_Loggedin {
 			'nt_SupportReply' => filter_var($this->input->post('nt_SupportReply'), FILTER_VALIDATE_INT),
 		];
 		$this->load->model('Settings_model', 'conf');
-		$res = $this->conf->updateNotifications($data, $id,'SANDBOX');
+		$res = $this->conf->updateNotifications($data, $id,$this->env);
 		if ($res){
 			header('HTTP/1.0 200 Configuración guardada con éxito');
 			echo json_encode(['code'=>'200', 'message'=>'Configuración guardada con éxito', 'details'=>$res['message']]);
@@ -130,9 +132,9 @@ class Configuracion extends MY_Loggedin {
 	{
 		$args['cardRecordID'] = $insertId;
 		$args['amount'] = $this->amount;
-		$payment = $this->dataOp->SendNewSubscription($args, 'SANDBOX');
+		$payment = $this->dataOp->SendNewSubscription($args, $this->env);
 		$args['payment'] = $payment;
-		echo json_encode($this->dataOp->SuccessfulSubscription2($args, $id, 'SANDBOX'));
+		echo json_encode($this->dataOp->SuccessfulSubscription2($args, $id, $this->env));
 		return true;
 	}
 }
