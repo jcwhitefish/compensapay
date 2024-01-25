@@ -17,6 +17,7 @@ if ($this->session->userdata('logged_in')) {
     <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
     <!-- importamos iconos -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a5e678cc82.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -108,9 +109,10 @@ if ($this->session->userdata('logged_in')) {
             <ul>
                 <ul class="icon-list">
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">notifications</i></a></li>', base_url('notificaciones'), (strpos(current_url(), 'notificaciones')) ? ' icon-list-hover' : ''); ?>
-                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'Conciliaciones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">home</i></a></li>', base_url('inicio'), (count(array_intersect(['notificaciones', 'Conciliaciones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'Timbrado', 'xml'], explode('/', current_url()))) == 0) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">swap_horiz</i></a></li>', base_url('Conciliaciones'), (strpos(current_url(), 'Conciliaciones') !== false || strpos(current_url(), 'facturas/subida') !== false) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">insert_drive_file</i></a></li>', base_url('Documentos'), (strpos(current_url(), 'Documentos')) ? ' icon-list-hover' : ''); ?>
+                    <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">room_service</i></a></li>', base_url('Timbrado'), (strpos(current_url(), 'Timbrado')) ? ' icon-list-hover' : ''); ?>
                     <?php //echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('reportes'), (strpos(current_url(), 'reportes')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">today</i></a></li>', base_url('calendario'), (strpos(current_url(), 'calendario')) ? ' icon-list-hover' : ''); ?>
                     <?php echo sprintf('<li><a href="%s"><i class="material-icons%s">people</i></a></li>', base_url('ClientesProveedores'), (strpos(current_url(), 'clientesproveedores')) ? ' icon-list-hover' : ''); ?>
