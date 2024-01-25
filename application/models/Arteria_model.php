@@ -297,6 +297,7 @@
 		public function getIdRastreo ( string $id, string $env ) {
 			$this->headers = [];
 			$endpoint = 'transfers/' . $id;
+
 			return $this->SendRequest ( $endpoint, [], $env, 'GET', 'JSON' );
 		}
 		/**
