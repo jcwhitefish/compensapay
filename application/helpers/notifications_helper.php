@@ -9,6 +9,7 @@
 		$body = $title = '';
 		switch ( $cat ) {
 			case 1:
+				var_dump( $args );
 				$body = "No se pudo procesar el pago por la operaci&oacute;n <strong>{$args['operationNumber']}</strong> debido a que ingres&oacute;
 un monto diferente al de la factura: <br><table><tr><td>Monto pagado</td><td>Monto factura</td></tr><tr><td>" . ( $args[ 'data' ][ 'amount' ] / 100 ) . "</td>
 <td>{$args['OpEntrty']}</td></tr></table><br>Por este motivo se le ha realizado un reembolso total de su pago, realize nuevamente la 
@@ -39,9 +40,7 @@ de referencia</td><td>Descripci&oacute;n</td></tr><tr>{$args['OpEntrty']}<td></t
 			case 6:
 				$body = "Te informamos que se hizo un dep&oacute;sito a tu cuenta clabe en solve por $ {$args['amount']} MXN.
 Debido a que no pudimos identificar el n&uacute;mero de operaci&oacute;n en la referencia, se hizo la devoluci&oacute;n del monto 
-al cliente en su totalidad, por lo cual se ver&aacute; reflejado en tus movimientos y estados de cuenta. 
-<br>Estaremos enviando notificaci&oacute;n de esto a tu cliente <strong>{$args['client']}</strong> para que vuelva a hacer el pago 
-con los datos correctos.";
+al cliente en su totalidad, por lo cual se ver&aacute; reflejado en tus movimientos y estados de cuenta.";
 				$title = "Devolución de pago";
 				break;
 			case 7:
@@ -110,6 +109,13 @@ banco de origen debido a {$args['reason']}. Te recomendamos revisar los detalles
 			case 100:
 				$body = "Se genero una transferencia a la cuenta clabe {$args['clabe']}, por un monto de $ {$args['monto']} ";
 				$title = "Transferencia realizada";
+				break;
+			case 101:
+				$body = "Se generó una devolución por la cantidad de <strong>${$args['amount']}</strong>, en la cuenta clabe
+				<strong>{$args['clabe']}</strong>, con el motivo de que no se encontró una conciliacion con el número de referencia o
+				descripción con el que se hizo la transferencia.";
+				$title = "Devolución por conciliación no encontrada";
+				break;
 		}
 		return [ 'body' => $body, 'title' => $title ];
 	}

@@ -4,20 +4,24 @@
 	 * @property Settings_model     $conf
 	 * @property Notification_model $nt
 	 * @property Arteria_model      $dataArt
+	 * @property Response           $response
 	 */
 	class Fintec extends MY_Loggedout {
 		private string $environment = 'SANDBOX';
-		public function createLog (string $logName, string $message ): void {
-			$logDir = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? 'C:/web/logs/' : '/home/compensatest/logs/';
-			$this->logFile = fopen($logDir . $logName . '.log', 'a+');
-			if ($this->logFile !== false) {
-				$logMessage = '|' . date('Y-m-d H:i:s') . '|   ' . $message . "\r\n";
-				fwrite($this->logFile, $logMessage);
-				fclose($this->logFile);
+		public function __construct () {
+			parent::__construct ();
+			$this->load->model ( 'response' );
+		}
+		public function createLog ( string $logName, string $message ): void {
+			$logDir = ( strtoupper ( substr ( PHP_OS, 0, 3 ) ) === 'WIN' ) ? 'C:/web/logs/' : '/home/compensatest/logs/';
+			$this->logFile = fopen ( $logDir . $logName . '.log', 'a+' );
+			if ( $this->logFile !== FALSE ) {
+				$logMessage = '|' . date ( 'Y-m-d H:i:s' ) . '|   ' . $message . "\r\n";
+				fwrite ( $this->logFile, $logMessage );
+				fclose ( $this->logFile );
 			}
 		}
 		public function getEvents () {
-			$this->load->model ( 'response' );
 			$error = 0;
 			$resp = [ "response" => 'ok' ];
 			//Se revisa que la petición sea por POST y haya información en el cuerpo del mensaje
@@ -69,7 +73,8 @@
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
 								'in' => json_encode ( $rollback ),
 								'out' => json_encode ( $back ) ];
-							$binnacle[ 'notification' ] = [ 'clabe' => $rollback[ 'clabe' ], 'amount' => $rollback[ 'amount' ] ];
+							$binnacle[ 'notification' ] = [ 'clabe' => $rollback[ 'clabe' ], 'monto' => $rollback[ 'amount' ],
+								'idUser' => 1 ];
 							$binnacle[ 'mail' ] = [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ];
 							$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
 							$binnacle[ 'mailData' ] = [
@@ -101,28 +106,30 @@
 								$this->AddMovement ( $argsR, 'SANDBOX' );
 								$this->getCEP ( $argsR );
 								$newOPNumber = $this->dataArt->GetNewOperationNumber ( $op[ 'operationId' ], 'SANDBOX' );
-								
 								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-									'in' => json_encode ( ['idAnterior'=>$op[ 'operationId' ]] ),
-									'out' => json_encode ( ['newOP'=>$newOPNumber] ) ];
+									'in' => json_encode ( [ 'idAnterior' => $op[ 'operationId' ] ] ),
+									'out' => json_encode ( [ 'newOP' => $newOPNumber ] ) ];
 								$binnacle[ 'notification' ] = [
 									'OpEntrty' => ( $op[ 'entry' ] / 100 ),
-									'NewOpNumber' => $newOPNumber ];
+									'amount' => ( $data[ 'data' ][ 'amount' ] ) / 100,
+									'operationNumber' => $newOPNumber,
+									'client' => $op[ 'client' ],
+								];
 								$binnacle[ 'mail' ] = $op[ 'clientPerson' ][ 'mail' ];
 								$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
 								$binnacle[ 'mailData' ] = [
 									'name' => $op[ 'clientPerson' ][ 'name' ],
-									'lastName' =>$op[ 'clientPerson' ][ 'last' ],
+									'lastName' => $op[ 'clientPerson' ][ 'last' ],
 									'company' => $op[ 'clientPerson' ][ 'company' ],
 								];
-								$this->Binnacle ( $binnacle, 1, [1, 2, 3 ], 3, $this->environment );
+								$this->Binnacle ( $binnacle, 1, [ 1, 2, 3 ], 3, $this->environment );
 								$binnacle[ 'mail' ] = $op[ 'providerPerson' ][ 'mail' ];
 								$binnacle[ 'mailData' ] = [
 									'name' => $op[ 'providerPerson' ][ 'name' ],
-									'lastName' =>$op[ 'providerPerson' ][ 'last' ],
+									'lastName' => $op[ 'providerPerson' ][ 'last' ],
 									'company' => $op[ 'providerPerson' ][ 'company' ],
 								];
-								$this->Binnacle ( $binnacle, 7, [1, 2, 3 ], 3, $this->environment );
+								$this->Binnacle ( $binnacle, 7, [ 1, 2, 3 ], 3, $this->environment );
 								return $this->response->sendResponse ( [ "response" => 'Operación correcta err 2' ], $error );
 							}
 						} else {
@@ -146,7 +153,7 @@
 							$this->createLog ( 'CreateTransfer', 'Send ->' . json_encode ( $clientT, JSON_PRETTY_PRINT ) );
 							$this->createLog ( 'CreateTransfer', 'Response ->' . json_encode ( $transferCliente, JSON_PRETTY_PRINT ) );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ($clientT ),
+								'in' => json_encode ( $clientT ),
 								'out' => json_encode ( $transferCliente ) ];
 							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							sleep ( 2 );
@@ -156,12 +163,12 @@
 								$traking = json_decode ( $this->dataArt->getIdRastreo ( $transferCliente[ 'id' ], 'SANDBOX' ), TRUE );
 								$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking, JSON_PRETTY_PRINT ) );
 								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-									'in' => json_encode (['idCuenca'=>$transferCliente[ 'id' ]]),
+									'in' => json_encode ( [ 'idCuenca' => $transferCliente[ 'id' ] ] ),
 									'out' => json_encode ( $traking ) ];
 								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							}
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode (['idCuenca'=>$transferCliente[ 'id' ]]),
+								'in' => json_encode ( [ 'idCuenca' => $transferCliente[ 'id' ] ] ),
 								'out' => json_encode ( $traking ) ];
 							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking, JSON_PRETTY_PRINT ) );
@@ -184,7 +191,7 @@
 							//====| Comenzamos a enviar el dinero del proveedor |=====
 							$prov = json_decode ( $this->dataArt->CreateTransfer ( $provedor, 'SANDBOX' ), TRUE );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ($provedor),
+								'in' => json_encode ( $provedor ),
 								'out' => json_encode ( $prov ) ];
 							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							$this->createLog ( 'CreateTransfer', 'Send ->' . json_encode ( $provedor, JSON_PRETTY_PRINT ) );
@@ -192,21 +199,21 @@
 							sleep ( 2 );
 							$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode (['idCuenca'=>$prov[ 'id' ]]),
+								'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
 								'out' => json_encode ( $traking2 ) ];
 							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							while ( !$traking2[ 'tracking_key' ] ) {
 								sleep ( 3 );
 								$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
 								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-									'in' => json_encode (['idCuenca'=>$prov[ 'id' ]]),
+									'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
 									'out' => json_encode ( $traking2 ) ];
 								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 								$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
 							}
 							$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode (['idCuenca'=>$prov[ 'id' ]]),
+								'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
 								'out' => json_encode ( $traking2 ) ];
 							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 							$argsProv = [
@@ -227,14 +234,13 @@
 							];
 							$this->dataArt->AddMovement ( $argsProv, 'SANDBOX' );
 							$this->getCEP ( $argsProv );
-
 							$data[ 'OpEntrty' ] = ( $op[ 'entry' ] / 100 );
-
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ( $argsProv),
-								'out' => json_encode (['result'=>'OK'] ) ];
+								'in' => json_encode ( $argsProv ),
+								'out' => json_encode ( [ 'result' => 'OK' ] ) ];
 							$binnacle[ 'notification' ] = $args;
-
+							$binnacle[ 'notification' ][ 'idUser' ] = 1;
+							$binnacle[ 'notification' ][ 'client' ] = $op[ 'clientPerson' ][ 'company' ];
 							$binnacle[ 'mail' ] = $op[ 'providerPerson' ][ 'mail' ];
 							$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
 							$binnacle[ 'mailData' ] = [
@@ -242,75 +248,97 @@
 								'lastName' => $op[ 'providerPerson' ][ 'last' ],
 								'company' => $op[ 'providerPerson' ][ 'company' ],
 							];
-							$this->Binnacle ( $binnacle, 2, [1, 2, 3 ], 3, $this->environment );
-
+							$this->Binnacle ( $binnacle, 2, [ 1, 2, 3 ], 3, $this->environment );
 							$binnacle[ 'mail' ] = $op[ 'clientPerson' ][ 'mail' ];
 							$binnacle[ 'mailData' ] = [
 								'name' => $op[ 'clientPerson' ][ 'name' ],
 								'lastName' => $op[ 'clientPerson' ][ 'last' ],
 								'company' => $op[ 'clientPerson' ][ 'company' ],
 							];
-							$this->Binnacle ( $binnacle, 7, [1, 2, 3 ], 3, $this->environment );
+							$this->Binnacle ( $binnacle, 2, [ 1, 2, 3 ], 3, $this->environment );
 							return $this->response->sendResponse ( [ "response" => 'Operación correcta' ], $error );
 						}
 					} else {
-						$args = [
-							'trakingKey' => $data[ 'data' ][ 'tracking_key' ],
-							'arteriaId' => $data[ 'id' ],
-							'amount' => ( $data[ 'data' ][ 'amount' ] / 100 ),
-							'descriptor' => $data[ 'data' ][ 'descriptor' ],
-							'sourceBank' => substr ( $data[ 'data' ][ 'source' ][ 'account_number' ], 0, 3 ),
-							'receiverBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
-							'sourceRfc' => $data[ 'data' ][ 'source' ][ 'rfc' ],
-							'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
-							'sourceClabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
-							'transactionDate' => $data[ 'data' ][ 'created_at' ],
-							'operationNumber' => NULL,
-							'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
-						];
-						$this->AddMovement ( $args, 'SANDBOX' );
-						$this->getCEP ( $args );
-						$rollback = [
-							'clabe' => $args[ 'sourceClabe' ],
-							'amount' => $data[ 'data' ][ 'amount' ],
-							'descriptor' => 'Devolucion por referencia no encontrada',
-							'name' => $data[ 'data' ][ 'source' ][ 'name' ],
-							'idempotency_key' => $args[ 'trakingKeyReceived' ] . '01',
-						];
-						$back = json_decode ( $this->dataArt->CreateTransfer ( $rollback, 'SANDBOX' ), TRUE );
-						$this->createLog ( 'CreateTransfer', json_encode ( $back, JSON_PRETTY_PRINT ) );
-						$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-							'in' => json_encode ( $rollback ),
-							'out' => json_encode ( $back ) ];
-						$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
-						if ( $back ) {
-							$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
-							if ( !$traking[ 'tracking_key' ] ) {
-								sleep ( 15 );
-								$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
-							}
-							$argsR = [
-								'trakingKey' => $traking[ 'tracking_key' ],
-								'arteriaId' => $back[ 'id' ],
-								'amount' => ( $data[ 'data' ][ 'amount' ] ) / 100,
-								'descriptor' => $back[ 'descriptor' ],
-								'sourceBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
-								'receiverBank' => substr ( $data[ 'data' ][ 'source' ][ 'account_number' ], 0, 3 ),
-								'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
-								'receiverRfc' => $data[ 'data' ][ 'source' ][ 'rfc' ],
-								'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
-								'receiverClabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
-								'transactionDate' => $back[ 'created_at' ],
-								'operationNumber' => NULL,
-							];
-							$this->AddMovement ( $argsR, $this->environment );
-							$this->getCEP ( $argsR );
-							return $this->response->sendResponse ( [ "response" => 'Operación correcta err 1' ], $error );
-						}
+						return $this->operationNotFound ( $data, $error );
 					}
 				}
 			}
 			return $this->response->sendResponse ( $resp, $error );
+		}
+		/**
+		 * @param $data
+		 * @param $error
+		 *
+		 * @return null
+		 */
+		public function operationNotFound ( $data, $error ) {
+			$args = [
+				'trakingKey' => $data[ 'data' ][ 'tracking_key' ],
+				'arteriaId' => $data[ 'id' ],
+				'amount' => ( $data[ 'data' ][ 'amount' ] / 100 ),
+				'descriptor' => $data[ 'data' ][ 'descriptor' ],
+				'sourceBank' => substr ( $data[ 'data' ][ 'source' ][ 'account_number' ], 0, 3 ),
+				'receiverBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
+				'sourceRfc' => $data[ 'data' ][ 'source' ][ 'rfc' ],
+				'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
+				'sourceClabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
+				'transactionDate' => $data[ 'data' ][ 'created_at' ],
+				'operationNumber' => NULL,
+				'receiverClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
+			];
+			$this->AddMovement ( $args, 'SANDBOX' );
+			$this->getCEP ( $args );
+			$rollback = [
+				'clabe' => $args[ 'sourceClabe' ],
+				'amount' => $data[ 'data' ][ 'amount' ],
+				'descriptor' => 'Devolucion por referencia no encontrada',
+				'name' => $data[ 'data' ][ 'source' ][ 'name' ],
+				'idempotency_key' => str_shuffle ( $args[ 'trakingKey' ] . '01' ),
+			];
+			$back = json_decode ( $this->dataArt->CreateTransfer ( $rollback, 'SANDBOX' ), TRUE );
+			$this->createLog ( 'CreateTransfer', json_encode ( $back, JSON_PRETTY_PRINT ) );
+			if ( $back ) {
+				$binnacle[ 'notification' ] = [
+					'monto' => $args[ 'amount' ],
+					'clabe' => $rollback[ 'clabe' ],
+				];
+				$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+					'in' => json_encode ( $rollback ),
+					'out' => json_encode ( $back ) ];
+				$this->Binnacle ( $binnacle, 102, [ 2, 3 ], 3, $this->environment );
+				$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
+				if ( !$traking[ 'tracking_key' ] ) {
+					sleep ( 15 );
+					$traking = json_decode ( $this->dataArt->getIdRastreo ( $back[ 'id' ], 'SANDBOX' ), TRUE );
+				}
+				$argsR = [
+					'trakingKey' => $traking[ 'tracking_key' ],
+					'arteriaId' => $back[ 'id' ],
+					'amount' => ( $data[ 'data' ][ 'amount' ] ) / 100,
+					'descriptor' => $back[ 'descriptor' ],
+					'sourceBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
+					'receiverBank' => substr ( $data[ 'data' ][ 'source' ][ 'account_number' ], 0, 3 ),
+					'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
+					'receiverRfc' => $data[ 'data' ][ 'source' ][ 'rfc' ],
+					'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
+					'receiverClabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
+					'transactionDate' => $back[ 'created_at' ],
+					'operationNumber' => NULL,
+				];
+				$binnacle['notification'] = [];
+				$binnacle[ 'mail' ] = $op[ 'providerPerson' ][ 'mail' ];
+				$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
+				$binnacle[ 'mailData' ] = [
+					'name' => $op[ 'providerPerson' ][ 'name' ],
+					'lastName' => $op[ 'providerPerson' ][ 'last' ],
+					'company' => $op[ 'providerPerson' ][ 'company' ],
+				];
+				$this->AddMovement ( $argsR, $this->environment );
+				$this->getCEP ( $argsR );
+				return $this->response->sendResponse ( [ "response" => 'Operación correcta err 1' ], $error );
+			}
+			$error = 500;
+			return $this->response->sendResponse ( [ "response" => 'No se pudo generar la devolución' ], $error );
 		}
 		public function getCEP ( $args ): int|string|null {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
@@ -343,10 +371,6 @@
 			$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 			return $res;
 		}
-		function checkTracking ( $id ) {
-			$this->load->model ( 'Arteria_model', 'dataArt' );
-			return json_decode ( $this->dataArt->getIdRastreo ( $id, 'SANDBOX' ) );
-		}
 		public function tryCEPMultiDownload (): void {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			$balance = $this->dataArt->getAllBalanceCEP ();
@@ -363,20 +387,6 @@
 //			var_dump($cep1);
 				$this->getCEP ( $cep1 );
 			}
-		}
-		/**
-		 * @param string $texto texto a encriptar
-		 * @param string $key   llave que será usada en la encriptación y necesaria para desencriptar
-		 *
-		 * @return string Devuelve el texto encriptado
-		 */
-		function encriptar ( string $texto, string $key ) {
-			return base64_encode ( $texto . '-' . $key );
-			//return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $texto, MCRYPT_MODE_CBC, md5(md5($key))));
-		}
-		function desencriptar ( string $texto, string $key ) {
-			return base64_decode ( $texto . $key );
-			//return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($texto), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 		}
 		public function ini (): void {
 			phpinfo ();
@@ -398,8 +408,7 @@
 				'out' => json_encode ( $res ) ];
 			$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 		}
-		
-		public function insertLog() {
+		public function insertLog () {
 		
 		}
 		/**
