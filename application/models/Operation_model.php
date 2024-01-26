@@ -89,8 +89,7 @@
        (IF(t5.id IS NULL, t6.total, t5.total)) AS 'total2',
        (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y'),
        DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y'))) AS 'dateCFDI2',
-       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y'),
-       DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y'))) AS 'datePago',
+       DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago',
        (IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.sender_rfc),
        (SELECT short_name FROM $this->base.companies where rfc= t5.sender_rfc))) AS 'senderConciliation',
     	(IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.receiver_rfc),
@@ -146,9 +145,7 @@
        (case WHEN t5.id IS NULL 
            THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y') 
            ELSE DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y') END) AS 'dateCFDI2', 
-    	(case WHEN t5.id IS NULL 
-    	    THEN DATE_FORMAT(FROM_UNIXTIME(t6.payment_date), '%d-%m-%Y') 
-    	    ELSE DATE_FORMAT(FROM_UNIXTIME(t5.payment_date), '%d-%m-%Y') END) AS 'datePago', 
+    	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
     	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',
     	t3.id as 'idEmisor', t2.id as 'idReceptor'

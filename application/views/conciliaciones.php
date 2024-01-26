@@ -858,7 +858,7 @@
 							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
 							"<td class=\"center-align\">$ " + value.total1 + "</td>" +
 							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
-							"<td class='center-align'>" + value.datePago1 + "</td>" +
+							"<td class='center-align'>" + value.datePago + "</td>" +
 							"<td class='center-align'>" + value.senderConciliation + "</td>" +
 							"<td class='center-align'>" + value.receiverConciliation + "</td>" +
 							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
