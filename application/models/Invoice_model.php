@@ -522,7 +522,7 @@ t1.status, t2.id AS 'senderId', t3.id AS 'receptorId', t1.created_at
 FROM $this->base.debit_notes t1
 LEFT JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 LEFT JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
-WHERE (t1.id_company = $id) AND t1.created_at >= '$from' AND t1.created_at <= '$to')) AS T
+WHERE (t1.id_company = $id) AND t1.status != 4 AND t1.created_at >= '$from' AND t1.created_at <= '$to')) AS T
 ORDER BY T.created_at";
 //		var_dump ($query);
 		//se verifica que la consulta se ejecute bien
