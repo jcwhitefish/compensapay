@@ -682,6 +682,7 @@
 					$("#solveLoader").css({
 						display: "none"
 					});
+					conciliation();
 				},
 				error: function (data) {
 					$("#solveLoader").css({
