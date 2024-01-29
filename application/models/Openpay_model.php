@@ -7,7 +7,7 @@ class Openpay_model extends CI_Model
 {
 	private string $openPaySandbox = 'https://sandbox-api.openpay.mx/v1';
 	private string $openPayLive = 'https://api.openpay.mx/v1';
-	private string $customerIDSandBox = 'mhcmkrgyxbjfw9vb9cqc';
+	private string $customerIDSandBox = 'pvnhncnq55gwfjulrbiq';
 	private string $customerIDProd = 'mtcyupm65psrjreromun';
 //	private string $planIdSandbox = 'pvnhncnq55gwfjulrbiq';
 	private string $planIdSandbox = 'pd0trwwrrvgh8oibesej';

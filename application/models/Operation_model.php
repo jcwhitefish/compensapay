@@ -222,7 +222,7 @@
 			if ( $this->db->query ( $query ) && $this->db->affected_rows () > 0 ) {
 				//Validamos que tipo de camino se va a seguir
 				if ( $cfdi[ 'res' ][ 'tipo' ] === 'nota' ) {
-					$query = "UPDATE compensatest_base.invoices SET status = 0 WHERE id = '$id'";
+					$query = "UPDATE compensatest_base.invoices SET status = 0 WHERE id = '{$cfdi['res']['id']}'";
 					//Sé verífica que haya una actualización
 					if ( $this->db->query ( $query ) && $this->db->affected_rows () > 0 ) {
 						$query = "UPDATE compensatest_base.debit_notes SET status = 4 WHERE id = '{$cfdi['res']['id2']}'";
@@ -235,7 +235,7 @@
 						}
 					}
 				} else {
-					$query = "UPDATE compensatest_base.invoices SET status = 0 WHERE id IN ('$id', '{$cfdi['res']['id']}' )";
+					$query = "UPDATE compensatest_base.invoices SET status = 0 WHERE id IN ('$id', '{$cfdi['res']['id2']}' )";
 					if ( $this->db->query ( $query ) ) {
 						//Sé verífica que haya una actualización
 						if ( $this->db->affected_rows () > 1 ) {

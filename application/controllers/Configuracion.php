@@ -6,7 +6,7 @@
 
 class Configuracion extends MY_Loggedin {
 	private int $amount = 600;
-	private $env = 'LIVE';
+	private $env = 'SANDBOX';
 
 	public function index(): void
 	{
