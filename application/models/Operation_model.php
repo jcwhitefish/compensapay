@@ -261,7 +261,9 @@
 FROM $this->base.operations t1
 	INNER JOIN $this->base.invoices t2 ON t2.id = t1.id_invoice
 	LEFT JOIN $this->base.invoices t3 ON t3.id = t1.id_invoice_relational
-	LEFT JOIN $this->base.debit_notes t4 ON t4.id =id_debit_note";
+	LEFT JOIN $this->base.debit_notes t4 ON t4.id =id_debit_note
+	WHERE t1.id = {$id}";
+			
 			if ( $res = $this->db->query ( $query ) ) {
 				if ( $res->num_rows () ) {
 					return [ 'code' => 200, 'res' =>$res->result_array ()[ 0 ] ];

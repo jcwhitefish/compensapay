@@ -972,7 +972,7 @@
 						}
 						switch (value.status) {
 							case "0":
-								status = "<p>Pendiente de autorización</p>";
+								status = "<p>Libre</p>";
 								break;
 							case "1":
 								status = "<p>En operación</p>";
