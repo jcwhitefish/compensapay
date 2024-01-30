@@ -31,7 +31,8 @@ class Timbrado extends MY_Loggedin {
     public function index(){
 
 		$dato = array(
-			"empresa" => $this->Timbrado_model->empresa()
+			"empresa" => $this->Timbrado_model->empresa(),
+			"cfdis" => $this->Timbrado_model->cfdis()
 		);
 
 
@@ -113,12 +114,20 @@ class Timbrado extends MY_Loggedin {
 
 		//print_r($factura);
 
-		$dato = array(
-            "factura" => $this->Timbrado_model->guardar_factura($factura)
-        );
+		//$dato = array(
+        //    "factura" => $this->Timbrado_model->guardar_factura($factura)
+        //);
 
-		$data['main'] = $this->load->view('timbrado/guardar_factura', $dato, true);
-		//$this->load->view('plantilla', $data);
+		$dato = array(
+			"empresa" => $this->Timbrado_model->empresa(),
+			"factura" => $this->Timbrado_model->guardar_factura($factura),
+			"cfdis" => $this->Timbrado_model->cfdis()
+		);
+
+
+		$data['main'] = $this->load->view('timbrado/timbrado', $dato, true);
+		$this->load->view('plantilla', $data);
+
 	}
 
 	public function configuracion(){

@@ -103,6 +103,7 @@ class Timbrado_model extends CI_Model {
 
         $idCompanie = $this->session->userdata('datosEmpresa')['id'];
 		$keyCompanie = $this->session->userdata('datosEmpresa')['unique_key'];
+		$iduser = $this->session->userdata('datosUsuario')['id'];
 
         //emisor
         $ResEmisor = "SELECT * FROM companies AS c 
@@ -336,18 +337,6 @@ class Timbrado_model extends CI_Model {
 
         //sellamos cadena
 		//guardamos en archivo
-		//$fp = fopen ('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\prueba.txt', "w+");
-        //fwrite($fp, $cadenaoriginal);
-        //fclose($fp);
-        ////archivo .key
-        //$key='C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\\'.$RResCer[0]["ArchivoKey"];
-		////sellamos archivo
-		//exec('C:\wamp64\www\compensapay\boveda\652fedab76eab-16\certificados\sellos\openssl.exe dgst -sha256 -sign '.$key.' C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\prueba.txt | C:\wamp64\www\compensapay\boveda\652fedab76eab-16\certificados\sellos\openssl.exe enc -base64 -A > C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt');
-        ////leer sello
-		//$f=fopen('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt','r');
-        //$selloemisor=file_get_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt');
-        //fclose($f);
-
 		$clave_privada = file_get_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\\'.$RResCer[0]["ArchivoKey"]);
 		openssl_sign($cadenaoriginal, $sello, $clave_privada, OPENSSL_ALGO_SHA256);
 		$selloemisor=base64_encode($sello);
@@ -586,58 +575,63 @@ class Timbrado_model extends CI_Model {
 		    //producción
 		    //$soapclient = new SoapClient('https://timbradodp.expidetufactura.com.mx:8453/timbrado/TimbradoWS?wsdl');
 		
-		    //$param=array('usuario' => "CAFJ741213UG4", 'contrasena' => "TBRhA3pxjT8X", 'cfdi' => $cfdi);
+		    //$param=array('usuario' => "WST230202CQ2", 'contrasena' => "BxDBNloBiOn7", 'cfdi' => $cfdi);
 		
 			$response = $soapclient->timbrar($param);
 		
-		    //var_dump($response);
-		
-		    //echo '<br /><br /><br />';
-		
 			$array = json_decode(json_encode($response), true);
-		
-		    //print_r($array);
-		
-		    //echo '<br /><br /><br />';
 		
 			if($array['return']['codigo']==200)
 			{
-				$xmlt=str_replace('<','&lt;',$array['return']['timbre']);
-				$xmlt=str_replace('>','&gt;',$xmlt);
+				$xml2=$array['return']['timbre'];
 
-				echo '<pre><code>'.$xmlt.'</code></pre>';
+				$xml = simplexml_load_string( $xml2 );
+				$ns = $xml->getNamespaces(true);
+				$xml->registerXPathNamespace('t', $ns['tfd']);
+				$uuid = (string)$xml->xpath('//t:TimbreFiscalDigital')[0]['UUID'];
+
+				//guardamos factura
+				$query = "INSERT INTO invoices (id_company, id_user, sender_rfc, receiver_rfc, uuid, invoice_date, status, total, xml_document, created_at, Timbrado)
+										VALUES ('".$idCompanie."', '".$iduser."', '".$Emisor[0]["rfc"]."', '".$Receptor[0]["rfc"]."',  '".$uuid."', '".strtotime($fechafactura)."',
+												'-1', '".$factura["totalf"]."', '".$xml2."', '".time()."', '1')";
+
+				if ( !@$this->db->query ( $query ) ) {
+					return [ "code" => 500, "message" => "Error al guardar factura", "reason" => $this->db->error ()[ 'message' ] ];
+				}
+				return [ "code" => 200, "message" => "Factura guardada correctamente.",
+					"id" => $this->db->insert_id () ];
 			}
 			else
 			{
 				echo $array['return']['codigo'].' - '.$array['return']['mensaje'].'<br />';
+
+				return [ "code" => 500, "message" => "Error al guardar factura", "reason" => $array['return']['mensaje'] ];
 			}    
 		}
 		catch (Exception $e){
 			echo $e->getMessage();
 		}
 
-
-        //print_r($Emisor);
-
-        //echo '<br /><br />';
-
-        //print_r($Receptor);
-
-        //echo '<br /><br />';
-
-        echo $cadenaoriginal;
-
-        echo '<br /><br />';
-
-        $xml=str_replace('<','&lt;',$xml);
-        $xml=str_replace('>','&gt;',$xml);
-
-        echo '<pre><code>'.$xml.'</code></pre>';
-
-
-        //crea xml
-
-        //guardar en db
-
     }
+
+	public function cfdis(){
+		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+        $ResCfdis = "SELECT i.id AS id, c.short_name AS short_name, c.legal_name AS legal_name, i.uuid AS uuid, i.invoice_date AS invoice_date,
+							i.status AS status, i.total AS total 
+					FROM invoices AS i
+					INNER JOIN companies AS c ON i.receiver_rfc = c.rfc
+					WHERE i.id_company = '".$idCompanie."' AND i.Timbrado='1' ORDER BY i.invoice_date DESC";
+
+		if ($RResCf = $this->db->query($ResCfdis)) {
+            if ($RResCf->num_rows() > 0){
+                $Rcfdis = $RResCf->result_array();
+            }
+            else {
+                $Rcfdis = '';
+            }
+        }
+
+		return $Rcfdis;
+	}
 }

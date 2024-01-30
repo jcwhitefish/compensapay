@@ -2,6 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
+
+
 <div class="p-5" id="app">
     <div class="row">
         <p class="px-3">Periodo:</p>
@@ -28,14 +30,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <thead>
                         <tr>
                             <th>Empresa</th>
+                            <td>XML</td>
                             <th>UUID</th>
                             <th>Fecha</th>
-                            <th style="text-align: right;">Importe</th>
-                            <th style="text-align: right;">Iva</th>
                             <th style="text-align: right;">Total</th>
                             <th>Status</th>
                         </tr>
                     </thead>
+                    <tbody>
+                    <?php
+                        if(is_array($cfdis))
+                        {
+                            foreach($cfdis as $value)
+                            {
+                                switch($value["status"])
+                                {
+                                    case '-1': $status = '<a class="modal-trigger" href="#modalsf">Disponible</a>'; break;
+                                    case 0: $status = 'Libre para operación'; break;
+                                    case 1: $status = 'En operación'; break;
+                                    case 2: $status = 'Cancelada'; break;
+                                    case 3: $status = 'Pagada'; break;
+                                }
+                                echo '<tr>
+                                        <td><strong>';if($value["short_name"]!=NULL){echo $value["short_name"];}else{echo $value["legal_name"];}echo '</strong></td>
+                                        <td><a href="'.base_url('assets/factura/xml.php?idfactura='.$value["id"]).'"><i class="fa-solid fa-download" style="font-size: 20px"></i></a></td>
+                                        <td><a href="'.base_url('assets/factura/factura.php?idfactura='.$value["id"]).'" target="_blank">'.$value["uuid"].'</a></td>
+                                        <td>'.date("d-m-Y", $value["invoice_date"]).'</td>
+                                        <td style="text-align: right;">$ '.number_format($value["total"], 2).'</td>
+                                        <td>'.$status.'</td>
+                                        
+                                    </tr>';
+                            }
+                        }
+                    ?>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -56,6 +84,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div id="test1" class="col s12"></div>
             <div id="test2" class="col s12"></div>
         </div>
+    </div>
+</div>
+
+<div id="modalsf" class="modal" style="width: 80% !important; height: 90% !important;">
+    <div class="modal-content" id="statusfac">
+        <p class="flow-text">I am Flow Text</p>
     </div>
 </div>
 
@@ -96,4 +130,18 @@ function activaru(idunidad){
 		$('#uact_' + idunidad).html(info);
 	});
 }
+<?php
+if(isset($factura))
+{
+    echo "M.toast({html: '".$factura["message"]."', displayLength: 1000, duration: 1000, edge: \"rigth\"})";
+}
+?>
 </script>
+<style>
+    #toast-container {
+		min-width: 10%;
+		top: 50%;
+		right: 50%;
+		transform: translateX(50%) translateY(50%);
+	}
+</style>
