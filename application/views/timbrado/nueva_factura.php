@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row">
                 <div class="col s2">
                     <label for="descuento">Descuento (en %):</label>
-                    <input type="text" name="descuento" id="descuento" size="5" value="<?php if(isset($_POST["descuento"])){echo $_POST["descuento"];}?>">
+                    <input type="text" name="descuento" id="descuento" size="5" value="<?php if(isset($_POST["descuento"])){echo $_POST["descuento"];}else{echo '0';}?>">
                 </div>
                 <div class="col s2">
                     <div class="switch">
@@ -141,7 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <td bgcolor="#dfe1e7" align="center" class="texto">
                                 <div class="switch">
                                     <label>
-                                        <input name="aplicariva" id="aplicariva" type="checkbox" value="1" <?php if(isset($_POST["apretiva"]) AND $_POST["apretiva"]==1){echo ' checked';}?> >
+                                        <input name="aplicariva" id="aplicariva" type="checkbox" value="1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
@@ -269,6 +269,7 @@ function partidas(borrapar = null){
     var total = document.getElementById('total').value;
     var riva = document.getElementById('retiva').value;
     var nuevafactura = document.getElementById('nuevafactura').value;
+    var descuento = document.getElementById('descuento').value;
 
     if (document.getElementById('aplicaiva').checked){apiva = 1;}else{apiva = 0;}
     if (document.getElementById('aplicariva').checked){apretiva = 1;}else{apretiva = 0;}
@@ -281,7 +282,7 @@ function partidas(borrapar = null){
     $.ajax({
 		type: 'POST',
 		url : '<?php echo base_url('assets/factura/partidas.php');?>',
-        data: 'partida=' + partida + '&borrapar=' + borrapar + '&nuevafactura=' + nuevafactura + '&empresa=' + '<?php echo $dfactura["empresa"];?>'
+        data: 'partida=' + partida + '&borrapar=' + borrapar + '&nuevafactura=' + nuevafactura + '&empresa=' + '<?php echo $dfactura["empresa"];?>' + '&descuento=' + descuento
 	}).done (function ( info ){
 		$('#partidas').html(info);
 	});

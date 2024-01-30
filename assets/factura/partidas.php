@@ -33,15 +33,21 @@
 
         //agregar nueva partida
         $ftotal=str_replace(',','',$prt[9]);
-	    if($prt[0]==1){$ivap=$ftotal*0.16;}else{$ivap=0;}
-	    if($prt[1]==1){$rivap=$ftotal*($prt[10]/100);}else{$rivap=0;}
-	    if($prt[2]==1){$risrp=$ftotal*0.10;}else{$risrp=0;}
-	    $importep=($ftotal+$ivap)-($rivap+$risrp);
+        if($prt[0]==1){$ivap=$ftotal*0.16;}else{$ivap=0;}
+        if($prt[1]==1){$rivap=$ftotal*($prt[10]/100);}else{$rivap=0;}
+        if($prt[2]==1){$risrp=$ftotal*0.10;}else{$risrp=0;}
+        $importep=($ftotal+$ivap)-($rivap+$risrp);
+
+        //unidad
+        $ResU=mysqli_fetch_array(mysqli_query($conn, "SELECT ClaveUnidad FROM c_claveunidad WHERE Id='".$prt[4]."' LIMIT 1"));
+
+        //claveproductoservicio
+        $ResPS=mysqli_fetch_array(mysqli_query($conn, "SELECT ClaveProdServ FROM c_claveprodserv WHERE Id='".$prt[5]."' LIMIT 1"));
     
-	    //                 cantidad unidad   clave    noident  concept  preciou  subtota  apiiva   partiva  partisr  iva    retiva  retisr  importe
-        //             0   1        2        3        4        5        6        7        8        9        10       11     12      13      14       
-	    $arreglo=array($J, $prt[3], $prt[4], $prt[5], str_replace('%20', ' ', $prt[6]), str_replace('%20', ' ', $prt[7]), $prt[8], $ftotal, $prt[0], $prt[1], $prt[2], $ivap, $rivap, $risrp, $importep);
-	    array_push($array, $arreglo);
+	    //                 cantidad unidad                clave                    noident                           concept                           preciou  subtota  apiiva   partiva  partisr  iva    retiva  retisr  importe
+        //             0   1        2                     3                        4                                 5                                 6        7        8        9        10       11     12      13      14       
+        $arreglo=array($J, $prt[3], $ResU["ClaveUnidad"], $ResPS["ClaveProdServ"], str_replace('%20', ' ', $prt[6]), str_replace('%20', ' ', $prt[7]), $prt[8], $ftotal, $prt[0], $prt[1], $prt[2], $ivap, $rivap, $risrp, $importep);
+        array_push($array, $arreglo);
     }
     else
     {
@@ -94,7 +100,7 @@
                             <td bgcolor="#dfe1e7" align="center" class="texto">
                                 <div class="switch">
                                     <label>
-                                        <input name="aplicariva" id="aplicariva" type="checkbox" value="1" <?php if(isset($_POST["apretiva"]) AND $_POST["apretiva"]==1){echo ' checked';}?> >
+                                        <input name="aplicariva" id="aplicariva" type="checkbox" value="1" <?php if($prt[1]==1){echo ' checked';}?> >
                                         <span class="lever"></span>
                                     </label>
                                 </div>
@@ -102,7 +108,7 @@
                             <td bgcolor="#dfe1e7" align="center" class="texto">
                                 <div class="switch">
                                     <label>
-                                        <input name="aplicarisr" id="aplicarisr" type="checkbox" value="1" <?php if(isset($_POST["apretisr"]) AND $_POST["apretisr"]==1){echo ' checked';}?>>
+                                        <input name="aplicarisr" id="aplicarisr" type="checkbox" value="1" <?php if($prt[2]==1){echo ' checked';}?>>
                                         <span class="lever"></span>
                                     </label>
                                 </div>
@@ -204,21 +210,46 @@
                                         </td>
                                     </tr>';
 
-                                    $subtotal = $subtotal + $array[$i][14];
+                                    $subtotal = $subtotal + $array[$i][7];
                                     $subtotalaplicariva=$subtotalaplicariva+$array[$i][12];
                                     $subtotalaplicarisr=$subtotalaplicarisr+$array[$i][13];
                             }
 
+                            $descuento='0.'.$_POST["descuento"];
+                        
+                            if($descuento>0.00)
+                            {
+                                //aplica descuento
+                                $sdescuento=$subtotal*$descuento;
+
+                                echo '<tr>
+                                        <td colspan="9" bgcolor="" style="text-align: right">Descuento: </td>
+                                        <td align="right" bgcolor="">
+                                            <input type="hidden" name="descuentof" id="descuentof" value="'.$sdescuento.'">$ '.number_format($sdescuento,2).'
+                                        </td>
+                                        <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
+                                    </tr>';
+                            }
+
+                            echo '<tr>
+                                    <td colspan="9" bgcolor="" style="text-align: right">Subtotal: </td>
+                                    <td align="right" bgcolor="">
+                                        <input type="hidden" name="subtotalf" id="subtotalf" value="'.$subtotal.'">$ '.number_format($subtotal,2).'
+                                    </td>
+                                    <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
+                                </tr>';
+
+                            if($descuento>0.00)
+                            {
+                                $subtotal=$subtotal-$sdescuento;
+                            }
+                            
                             $iva=$subtotal*0.16;
-                            $total= $iva + $subtotal;
+
+                            //cacula el totol
+
+                            $total= $subtotal - ($subtotalaplicariva + $subtotalaplicarisr) + $iva;
                         ?>
-                        <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Subtotal: </td>
-                            <td align="right" bgcolor="">
-                                <input type="hidden" name="subtotalf" id="subtotalf" value="<?php echo $subtotal;?>">$ <?php echo number_format($subtotal,2);?>
-                            </td>
-                            <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
-                        </tr>
                         <tr>
                             <td colspan="9" bgcolor="" style="text-align: right">Iva 16 %: </td>
                             <td align="right" class="texto" bgcolor="">

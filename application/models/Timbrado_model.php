@@ -1,4 +1,5 @@
 <?php 
+date_default_timezone_set('America/Mexico_City');
 class Timbrado_model extends CI_Model {
     public function __construct() {
         parent::__construct();
@@ -101,6 +102,7 @@ class Timbrado_model extends CI_Model {
     public function guardar_factura($factura){
 
         $idCompanie = $this->session->userdata('datosEmpresa')['id'];
+		$keyCompanie = $this->session->userdata('datosEmpresa')['unique_key'];
 
         //emisor
         $ResEmisor = "SELECT * FROM companies AS c 
@@ -144,25 +146,35 @@ class Timbrado_model extends CI_Model {
             }
         }
 
-        $fechafactura=date('d-m-Y').'T'.date('H:i:s');
+		//certificado
+		$certificado = "SELECT * FROM certificados_empresas WHERE IdEmpresa='".$idCompanie."' LIMIT 1";
+
+		if($ResCer = $this->db->query($certificado)){
+			if($ResCer->num_rows() > 0){
+				$RResCer = $ResCer->result_array();
+			}
+			else{
+				$RResCer = '';
+			}
+		}
+
+		$fechafactura=date('Y-m-d').'T'.date('H:i:s');
 
         //crea cadena original
         //version
 		$cadenaoriginal='||4.0|';
         //fecha
-		$cadenaoriginal.$fechafactura.'|';
+		$cadenaoriginal.=$fechafactura.'|';
         //formadepago
         $cadenaoriginal.=$factura["formadepago"].'|';
         //numero de certificado
-		$cadenaoriginal.='AQUIVAELNUMERODELCERTIFICADO//DELETETHISMOTHERLATER|';
+		$cadenaoriginal.=$RResCer[0]["ArchivoCer"].'|';
         //subtotal
 		$cadenaoriginal.=number_format($factura["subtotalf"],2,'.','').'|';
         //descuento
 		if($factura["descuento"]>0)
 		{
-			$desc='0.'.$factura["descueto"];
-			$sdescuento=$factura["subtotalf"]*$desc;
-			$cadenaoriginal.=number_format($sdescuento, 2, '.', '').'|';
+			$cadenaoriginal.=number_format($factura["descuento"], 2, '.', '').'|';
 		}
         //Moneda
 		$cadenaoriginal.=$factura["moneda"].'|';
@@ -209,6 +221,8 @@ class Timbrado_model extends CI_Model {
         {
             //Clave Producto/Servicio
 			$cadenaoriginal.=$value[3].'|';
+			 //Num. Identificacion (clave)
+			$cadenaoriginal.=$value[4].'|';
             //cantidad
 			$cadenaoriginal.=$value[1].'|';
             //Clave Unidad
@@ -322,23 +336,28 @@ class Timbrado_model extends CI_Model {
 
         //sellamos cadena
 		//guardamos en archivo
-		//$fp = fopen ("certificados2/sellos2/".$idfactura["Id"].".txt", "w+");
+		//$fp = fopen ('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\prueba.txt', "w+");
         //fwrite($fp, $cadenaoriginal);
         //fclose($fp);
         ////archivo .key
-        //$key='certificados/'.$ResFFacturas["ArchivoCadena"];
-        ////sellamos archivo
-        //exec("openssl dgst -sha256 -sign $key certificados2/sellos2/".$idfactura["Id"].".txt | openssl enc -base64 -A > certificados2/sellos2/sello_".$idfactura["Id"].".txt");
+        //$key='C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\\'.$RResCer[0]["ArchivoKey"];
+		////sellamos archivo
+		//exec('C:\wamp64\www\compensapay\boveda\652fedab76eab-16\certificados\sellos\openssl.exe dgst -sha256 -sign '.$key.' C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\prueba.txt | C:\wamp64\www\compensapay\boveda\652fedab76eab-16\certificados\sellos\openssl.exe enc -base64 -A > C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt');
         ////leer sello
-        //$f=fopen("certificados2/sellos2/".$idfactura["Id"].".txt",'r');
-        //$selloemisor=file_get_contents('certificados2/sellos2/sello_'.$idfactura["Id"].'.txt');
+		//$f=fopen('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt','r');
+        //$selloemisor=file_get_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\sellos\sello.txt');
         //fclose($f);
 
+		$clave_privada = file_get_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\\'.$RResCer[0]["ArchivoKey"]);
+		openssl_sign($cadenaoriginal, $sello, $clave_privada, OPENSSL_ALGO_SHA256);
+		$selloemisor=base64_encode($sello);
+		
+
         //generamos el XML
-		//$cer=file_get_contents('certificados/'.$ResFFacturas["NumCertificado"].'.cer.pem'); //leemos el certificado
-		//$cer1=str_replace('-----BEGIN CERTIFICATE-----','',$cer);
-		//$certificado=str_replace('-----END CERTIFICATE-----','',$cer1);
-		$certificado='AQUIVAELCERTIFICADOYAPROCESADO';
+		$cer=file_get_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\certificados\\'.$RResCer[0]["ArchivoCer"].'.pem'); //leemos el certificado
+		$cer1=str_replace('-----BEGIN CERTIFICATE-----','',$cer);
+		$certificado=str_replace('-----END CERTIFICATE-----','',$cer1);
+		//$certificado='AQUIVAELCERTIFICADOYAPROCESADO';
 
         $xml='<?xml version="1.0" encoding="UTF-8"?><cfdi:Comprobante';
         //version
@@ -347,15 +366,20 @@ class Timbrado_model extends CI_Model {
 		$xml.=' Fecha="'.$fechafactura.'"';
         //sello
 		//$xml.=' Sello="'.file_get_contents('certificados2/sellos2/sello_'.$idfactura["Id"].'.txt').'"';
-		$xml.=' Sello="AQUIVAELSELLODELAFACTURA"';
+		$xml.=' Sello="'.$selloemisor.'"';
         //forma de pago
 		$xml.=' FormaPago="'.$factura["formadepago"].'"';
         //No. de certificado
-		$xml.=' NoCertificado="00001000000519410674"';
+		$xml.=' NoCertificado="'.$RResCer[0]["ArchivoCer"].'"';
         //certificado
 		$xml.=' Certificado="'.$certificado.'"';
         //subtotal
 		$xml.=' SubTotal="'.number_format($factura["subtotalf"],2,'.','').'"';
+		//descuento
+		if($factura["descuento"]>0)
+		{
+			$xml.=' Descuento="'.number_format($factura["descuento"],2,'.','').'"';
+		}
         //Moneda
 		$xml.=' Moneda="'.$factura["moneda"].'"';
         //TipoCambio
@@ -495,7 +519,7 @@ class Timbrado_model extends CI_Model {
 		$xml.='<cfdi:Impuestos';
         if($factura["riva"]>0 OR $factura["risr"]>0)
 		{
-			$xml.=' TotalImpuestosRetenidos="'.number_format(($factura["riva"]+$ResFactura["RetISR"]),2,'.','').'"';
+			$xml.=' TotalImpuestosRetenidos="'.number_format(($factura["riva"]+$factura["risr"]),2,'.','').'"';
 		}
         $xml.=' TotalImpuestosTrasladados="'.number_format($factura["ivaf"],2,'.','').'">';
         //retenciones
@@ -527,6 +551,15 @@ class Timbrado_model extends CI_Model {
 			$xml.=' Impuesto="002"';
             //tipo factor
 			$xml.=' TipoFactor="Tasa"';
+			//tasa o cuota
+			if($factura["ivaf"]>0)
+			{
+				$xml.=' TasaOCuota="0.160000"';
+			}
+			else
+			{
+				$xml.=' TasaOCuota="0.000000"';
+			}
             //importe
 			$xml.=' Importe="'.number_format($factura["ivaf"],2,'.','').'" /></cfdi:Traslados>';
 		}
@@ -534,6 +567,54 @@ class Timbrado_model extends CI_Model {
 		$xml.='</cfdi:Comprobante>';
 
         $xml=str_replace('&', '&amp;', $xml);
+
+		file_put_contents('C:\wamp64\www\compensapay\boveda\\'.$keyCompanie.'\xmls\factura.xml', $xml);
+
+		$cfdi=trim($xml);
+
+		try
+		{
+		    //pruebas
+			$soapclient = new SoapClient('https://appliance-qa.expidetufactura.com.mx:8585/CoreTimbrado.test/TimbradoWSSoapSingle?wsdl');
+		
+		    //producción
+		    //$soapclient = new SoapClient('https://appliance.expidetufactura.com.mx:8585/CoreTimbrado.produccion/TimbradoWSSoapSingle?wsdl');
+		
+		
+			$param=array('usuario' => "testUser", 'contrasena' => "1234", 'cfdi' => $cfdi);
+		
+		    //producción
+		    //$soapclient = new SoapClient('https://timbradodp.expidetufactura.com.mx:8453/timbrado/TimbradoWS?wsdl');
+		
+		    //$param=array('usuario' => "CAFJ741213UG4", 'contrasena' => "TBRhA3pxjT8X", 'cfdi' => $cfdi);
+		
+			$response = $soapclient->timbrar($param);
+		
+		    //var_dump($response);
+		
+		    //echo '<br /><br /><br />';
+		
+			$array = json_decode(json_encode($response), true);
+		
+		    //print_r($array);
+		
+		    //echo '<br /><br /><br />';
+		
+			if($array['return']['codigo']==200)
+			{
+				$xmlt=str_replace('<','&lt;',$array['return']['timbre']);
+				$xmlt=str_replace('>','&gt;',$xmlt);
+
+				echo '<pre><code>'.$xmlt.'</code></pre>';
+			}
+			else
+			{
+				echo $array['return']['codigo'].' - '.$array['return']['mensaje'].'<br />';
+			}    
+		}
+		catch (Exception $e){
+			echo $e->getMessage();
+		}
 
 
         //print_r($Emisor);
