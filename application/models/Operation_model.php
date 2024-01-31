@@ -87,7 +87,7 @@
        (IF(t5.id IS NULL, t6.uuid, t5.uuid)) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$urlN', t6.id) ELSE CONCAT('$urlF', t5.id) END) AS 'idur2',
        (IF(t5.id IS NULL, t6.total, t5.total)) AS 'total2',
-       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y'),
+       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.created_at), '%d-%m-%Y'),
        DATE_FORMAT(FROM_UNIXTIME(t5.created_at), '%d-%m-%Y'))) AS 'dateCFDI2',
        DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago',
        (IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.sender_rfc),
