@@ -4,17 +4,17 @@
 		/* Cambia el color según tus preferencias */
 		/* Otros estilos que desees aplicar al marcador de posición */
 	}
-
+	
 	/* Modal */
 	.text-modal {
 		font-size: 13px;
 	}
-
+	
 	.modal {
 		max-height: 83% !important;
 		width: 80% !important;
 	}
-
+	
 	/* Fix show checkbox and radiobutton*/
 	[type="checkbox"]:not(:checked),
 	[type="checkbox"]:checked {
@@ -22,14 +22,14 @@
 		position: relative;
 		pointer-events: auto;
 	}
-
+	
 	[type="radio"]:not(:checked),
 	[type="radio"]:checked {
 		opacity: 1;
 		position: relative;
 		pointer-events: auto;
 	}
-
+	
 	/* Fix button selected but all class selected afect */
 	.selected {
 		background-color: black !important;
@@ -38,7 +38,7 @@
 		border: 2px solid black !important;
 		border-radius: 10px;
 	}
-
+	
 	#toast-container {
 		min-width: 10%;
 		top: 50%;
@@ -46,12 +46,12 @@
 		transform: translateX(50%) translateY(50%);
 	}
 	
-	.receptor{
+	.receptor {
 		color: #1d7e1d !important;
 		font-weight: bold;
 	}
 	
-	.receptor:hover{
+	.receptor:hover {
 		color: #1d7e1d !important;
 	}
 </style>
@@ -141,11 +141,11 @@
 							<textarea
 								style="min-height: 30vh;" id="rejectText" name="rejectText"
 								class="materialize-textarea validate" required></textarea>
-							<input type="hidden" id = "idReject" name="idReject" >
+							<input type="hidden" id="idReject" name="idReject">
 						</div>
 						<div class="col l12 d-flex justify-content-flex-end" style="margin-top:10px">
 							<div class="col"><a class="button-gray modal-close ">Cancelar</a></div>
-							<div class="col"><a class="button-blue modal-close " id="btnReject" >Enviar</a></div>
+							<div class="col"><a class="button-blue modal-close " id="btnReject">Enviar</a></div>
 						</div>
 					</div>
 				</div>
@@ -202,7 +202,7 @@
 									<input
 										type="date" id="autPayDate" min="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>"
 										max="<?= date ( 'Y-m-d', strtotime ( 'now +3 month' ) ) ?>"
-										value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>"/>
+										value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
 								</label>
 							</div>
 						</div>
@@ -654,7 +654,7 @@
 				
 			});
 		});
-		$("#btnReject").on('click', function(){
+		$("#btnReject").on("click", function () {
 			$.ajax({
 				url: "/Conciliaciones/reject",
 				data: {
@@ -783,8 +783,8 @@
 									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
 									acept = $("<a style='cursor: pointer;' class=\"button-blue \">Aceptar</a>");
 									cancel.click(function () {
-										$('#rejectText').empty();
-									    $('#idReject').val(value.id);
+										$("#rejectText").empty();
+										$("#idReject").val(value.id);
 									});
 									acept.click(function () {
 										aceptOp(value.id, $("#autPayDate").val());
@@ -861,14 +861,14 @@
 								status = "<p>Vencida</p>";
 								break;
 						}
-						const tr = $("<tr "+flag+">" +
+						const tr = $("<tr " + flag + ">" +
 							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
 							"<td class='tabla-celda center-align'>" + status + "</td>" +
-							"<td class='center-align "+flag+"'>" + value.operation_number + "</td>" +
+							"<td class='center-align " + flag + "'>" + value.operation_number + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
 							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
-							"<td class='center-align "+flag+"'>$ " + value.total1 + "</td>" +
+							"<td class='center-align " + flag + "'>$ " + value.total1 + "</td>" +
 							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
 							"<td class='center-align'>" + value.datePago + "</td>" +
 							"<td class='center-align'>" + value.senderConciliation + "</td>" +
@@ -958,7 +958,7 @@
 				} else {
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
-						let status = '';
+						let status = "";
 						let uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						let initC = $("<a class=\"modal-trigger\" href=\"#modal-new-conciliation\">Crear conciliación</a>");
 						switch (value.status) {
