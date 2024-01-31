@@ -297,7 +297,6 @@
 		public function getIdRastreo ( string $id, string $env ) {
 			$this->headers = [];
 			$endpoint = 'transfers/' . $id;
-
 			return $this->SendRequest ( $endpoint, [], $env, 'GET', 'JSON' );
 		}
 		/**
@@ -358,5 +357,37 @@
 				$response = json_encode ( $resp );
 			}
 			return $response;
+		}
+		public function successConciliation ( mixed $operationId, array $cfdi, string $env = NULL ) {
+			//Se declara el ambiente a utilizar
+			$this->environment = $env === NULL ? $this->environment : $env;
+			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+			$query = "UPDATE compensatest_base.operations set status = 3 WHERE id = '$operationId'";
+			$this->db->db_debug = FALSE;
+			if ( $this->db->query ( $query ) ) {
+				if ( $cfdi[ 'tipo' ] === 'nota' ) {
+					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id = '{$cfdi['id']}'";
+					$this->db->db_debug = FALSE;
+					if ( $this->db->query ( $query ) ) {
+						$query = "UPDATE compensatest_base.debit_notes SET status = 3 WHERE id = '{$cfdi['id2']}'";
+						$this->db->db_debug = FALSE;
+						if ( $this->db->query ( $query ) ) {
+							return [ "code" => 200, "message" => "Conciliación realizada", "reason" => 'ok' ];
+						} else {
+							return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
+						}
+					} else {
+						return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
+					}
+				} else {
+					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id in ('{$cfdi['id']}', '{$cfdi['id2']}')";
+					$this->db->db_debug = FALSE;
+					if ( $this->db->query ( $query ) ) {
+						return [ "code" => 200, "message" => "Conciliación realizada", "reason" => 'ok' ];
+					} else {
+						return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
+					}
+				}
+			}
 		}
 	}

@@ -5,6 +5,7 @@
 	 * @property Notification_model $nt
 	 * @property Arteria_model      $dataArt
 	 * @property Response           $response
+	 * @property Operation_model    $OpData
 	 */
 	class Fintec extends MY_Loggedout {
 		private string $environment = 'SANDBOX';
@@ -256,6 +257,9 @@
 								'company' => $op[ 'clientPerson' ][ 'company' ],
 							];
 							$this->Binnacle ( $binnacle, 2, [ 1, 2, 3 ], 3, $this->environment );
+							$this->load->model('Operation_model','OpData');
+							$cfdis = $this->OpData->getCFDIFromConciliation ($op[ 'operationId' ], $this->environment);
+							$this->dataArt->successConciliation ($op[ 'operationId' ], $cfdis, $this->environment );
 							return $this->response->sendResponse ( [ "response" => 'Operación correcta' ], $error );
 						}
 					} else {
@@ -325,7 +329,7 @@
 					'transactionDate' => $back[ 'created_at' ],
 					'operationNumber' => NULL,
 				];
-				$binnacle['notification'] = [];
+				$binnacle[ 'notification' ] = [];
 				$binnacle[ 'mail' ] = $op[ 'providerPerson' ][ 'mail' ];
 				$binnacle[ 'cc' ] = 'uriel.magallon@whitefish.mx';
 				$binnacle[ 'mailData' ] = [
