@@ -366,7 +366,7 @@
 			var_dump ($query,$operationId,$cfdi);
 			$this->db->db_debug = FALSE;
 			if ( $this->db->query ( $query ) ) {
-				if ( $cfdi[ 'tipo' ] === 'nota' ) {
+				if ( $cfdi['res'][ 'tipo' ] === 'nota' ) {
 					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id = '{$cfdi['res']['id']}'";
 					$this->db->db_debug = FALSE;
 					if ( $this->db->query ( $query ) ) {
