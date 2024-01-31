@@ -363,7 +363,6 @@
 			$this->environment = $env === NULL ? $this->environment : $env;
 			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			$query = "UPDATE compensatest_base.operations set status = 3 WHERE id = '$operationId'";
-			var_dump ($query,$operationId,$cfdi);
 			$this->db->db_debug = FALSE;
 			if ( $this->db->query ( $query ) ) {
 				if ( $cfdi['res'][ 'tipo' ] === 'nota' ) {

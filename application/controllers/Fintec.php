@@ -191,6 +191,9 @@
 							$cepC = $this->getCEP ( $argsR );
 							//====| Comenzamos a enviar el dinero del proveedor |=====
 							$prov = json_decode ( $this->dataArt->CreateTransfer ( $provedor, 'SANDBOX' ), TRUE );
+							$this->load->model('Operation_model','OpData');
+							$cfdis = $this->OpData->getCFDIFromConciliation ($op[ 'operationId' ], $this->environment);
+							$this->dataArt->successConciliation ($op[ 'operationId' ], $cfdis, $this->environment );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
 								'in' => json_encode ( $provedor ),
 								'out' => json_encode ( $prov ) ];
@@ -257,9 +260,6 @@
 								'company' => $op[ 'clientPerson' ][ 'company' ],
 							];
 							$this->Binnacle ( $binnacle, 2, [ 1, 2, 3 ], 3, $this->environment );
-							$this->load->model('Operation_model','OpData');
-							$cfdis = $this->OpData->getCFDIFromConciliation ($op[ 'operationId' ], $this->environment);
-							$this->dataArt->successConciliation ($op[ 'operationId' ], $cfdis, $this->environment );
 							return $this->response->sendResponse ( [ "response" => 'Operación correcta' ], $error );
 						}
 					} else {
