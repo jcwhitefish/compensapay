@@ -143,7 +143,7 @@
        (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
        (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2', 
        (case WHEN t5.id IS NULL 
-           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y') 
+           THEN DATE_FORMAT(FROM_UNIXTIME(t6.created_at), '%d-%m-%Y')
            ELSE DATE_FORMAT(FROM_UNIXTIME(t5.created_at), '%d-%m-%Y') END) AS 'dateCFDI2',
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
