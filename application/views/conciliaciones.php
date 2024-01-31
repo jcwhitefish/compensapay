@@ -45,6 +45,15 @@
 		right: 50%;
 		transform: translateX(50%) translateY(50%);
 	}
+	
+	.receptor{
+		color: #1d7e1d !important;
+		font-weight: bold;
+	}
+	
+	.receptor:hover{
+		color: #1d7e1d !important;
+	}
 </style>
 <div class="p-5" style="margin: 0;padding: 0 !important;">
 	<!-- head con el calendario -->
@@ -764,6 +773,7 @@
 					$.each(data, function (index, value) {
 						let uuid, status, uuid2;
 						let aut, cancel, acept;
+						let flag;
 						uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid1 + "</a>";
 						uuid2 = "<a href=\"" + value.idur2 + "\" target=\"_blank\">" + value.uuid2 + "</a>";
 						if (value.role === "receptor") {
@@ -819,6 +829,7 @@
 									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
 									break;
 							}
+							flag = value.role;
 						} else {
 							switch (value.status) {
 								case "0":
@@ -850,14 +861,14 @@
 								status = "<p>Vencida</p>";
 								break;
 						}
-						const tr = $("<tr>" +
-							"<td class=\"tabla-celda center-align\" id=\"aut" + value.id + "\"></td>" +
-							"<td class=\"tabla-celda center-align\">" + status + "</td>" +
-							"<td class='center-align'>" + value.operation_number + "</td>" +
+						const tr = $("<tr "+flag+">" +
+							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
+							"<td class='tabla-celda center-align'>" + status + "</td>" +
+							"<td class='center-align "+flag+"'>" + value.operation_number + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
 							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
-							"<td class=\"center-align\">$ " + value.total1 + "</td>" +
+							"<td class='center-align "+flag+"'>$ " + value.total1 + "</td>" +
 							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
 							"<td class='center-align'>" + value.datePago + "</td>" +
 							"<td class='center-align'>" + value.senderConciliation + "</td>" +
