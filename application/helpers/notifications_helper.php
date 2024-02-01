@@ -102,7 +102,7 @@ banco de origen debido a {$args['reason']}. Te recomendamos revisar los detalles
 				$body = "Te informamos que la operación {$args['operationNumber']} ha sido aprobada con éxito.
 <br>Recuerda iniciar la operación transifiriendo con los siguientes detalles:
 <br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td><td>Descripci&oacute;n</td><td>Clabe bancaria</td></tr>
-<tr>{$args['amount']}<td></td><td>{$args['operationNumber']}</td><td>{$args['operationNumber']}</td><td>{$args['clabe']}</td>
+<tr><td>$ {$args['amount']}</td><td>{$args['operationNumber']}</td><td>{$args['operationNumber']}</td><td>{$args['clabe']}</td>
 </tr></table>";
 				$title = "Operación autorizada";
 				break;
