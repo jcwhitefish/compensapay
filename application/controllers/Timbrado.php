@@ -30,9 +30,21 @@ class Timbrado extends MY_Loggedin {
 
     public function index(){
 
+		if($this->input->post('idipasaoper'))
+		{
+			$idipasaoper = $this->input->post('idipasaoper');
+			$ifactura = [
+				'idipasaoper' => $idipasaoper
+			];
+		}
+		else
+		{
+			$ifactura=NULL;
+		}
+
 		$dato = array(
 			"empresa" => $this->Timbrado_model->empresa(),
-			"cfdis" => $this->Timbrado_model->cfdis()
+			"cfdis" => $this->Timbrado_model->cfdis($ifactura)
 		);
 
 

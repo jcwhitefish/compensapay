@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             {
                                 switch($value["status"])
                                 {
-                                    case '-1': $status = '<a class="modal-trigger" href="#modalsf">Disponible</a>'; break;
+                                    case '-1': $status = '<a class="modal-trigger" href="#modalsf" onclick="pasar_a_oper(\''.$value["id"].'\')">Disponible</a>'; break;
                                     case 0: $status = 'Libre para operación'; break;
                                     case 1: $status = 'En operación'; break;
                                     case 2: $status = 'Cancelada'; break;
@@ -88,7 +88,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <div id="modalsf" class="modal" style="width: 80% !important; height: 90% !important;">
-    <div class="modal-content" id="statusfac">
+    <div class="modal-content" id="pasaope">
         <p class="flow-text">I am Flow Text</p>
     </div>
 </div>
@@ -128,6 +128,15 @@ function activaru(idunidad){
         data: 'idunidad=' + idunidad + '&empresa=' + '<?php echo $empresa;?>'
 	}).done (function ( info ){
 		$('#uact_' + idunidad).html(info);
+	});
+}
+function pasar_a_oper(idinvoice){
+    $.ajax({
+		type: 'POST',
+		url : '<?php echo base_url('assets/factura/pasaraoper.php');?>', 
+        data: 'idinvoice=' + idinvoice + '&url=' + '<?php echo base_url();?>'
+	}).done (function ( info ){
+		$('#pasaope').html(info);
 	});
 }
 <?php

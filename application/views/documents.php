@@ -298,7 +298,7 @@
 			"<th>Institución receptora</th>" +
 			"<th>Cuenta beneficiaria</th>" +
 			"<th>Clave de rastreo</th>" +
-			"<th>Numero de referencia</th>" +
+			"<th>Id de Operación</th>" +
 			"<th>Fecha de pago</th>" +
 			"<th>Monto del pago</th>" +
 			"</tr></thead>" +

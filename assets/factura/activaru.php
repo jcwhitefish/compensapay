@@ -1,7 +1,7 @@
 <?php 
 include ('../../db/conexion.php');
 
-$ResU=mysqli_num_rows(mysqli_query($conn, "SELECT * FROM c_claveunidad_emp WHERE IdClaveUnidad='".$_POST["idunidad"]."' AND Empresa='".$_PSOT["empresa"]."' LIMIT 1"));
+$ResU=mysqli_num_rows(mysqli_query($conn, "SELECT * FROM c_claveunidad_emp WHERE IdClaveUnidad='".$_POST["idunidad"]."' AND Empresa='".$_POST["empresa"]."' LIMIT 1"));
 
 if($ResU==0)
 {
