@@ -14,7 +14,7 @@
 un monto diferente al de la factura: <br><table><tr><td>Monto pagado</td><td>Monto factura</td></tr><tr><td>" . ( $args[ 'data' ][ 'amount' ] / 100 ) . "</td>
 <td>{$args['OpEntrty']}</td></tr></table><br>Por este motivo se le ha realizado un reembolso total de su pago, realize nuevamente la 
 tranferencia por el monto correcto con el siguiente n&uacute;mero de referencia y descripci&oacute;n: <br><table><tr><td>Monto</td><td>N&uacute;mero 
-de referencia</td><td>Descripci&oacute;n</td></tr><tr>{$args['OpEntrty']}<td></td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td>
+de referencia</td><td>Descripci&oacute;n</td></tr><tr><td>$ {$args['OpEntrty']}</td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td>
 </tr></table>";
 				$title = 'Operación rechazada.';
 				break;
@@ -83,7 +83,7 @@ es necesario validarla ingresando en el m&oacute;dulo de <strong>conciliaciones<
 			case 14:
 				$body = "Te informamos que la operación #<strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito. Recuerda
 iniciar la operación transifiriendo con los siguientes detalles: <br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td>
-<td>Descripci&oacute;n</td></tr><tr>{$args['OpEntrty']}<td></td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td></tr></table>";
+<td>Descripci&oacute;n</td></tr><tr><td>$ {$args['OpEntrty']}</td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td></tr></table>";
 				$title = "Operación creada";
 				break;
 			case 15:
