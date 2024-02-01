@@ -22,6 +22,7 @@
 		private string $dbprod = 'compensatest_base';
 		private string $base;
 		private array $headers = [];
+		private int $amount = 150;
 		public function __construct () {
 			parent::__construct ();
 			$this->load->database ();
@@ -253,7 +254,8 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 								$args[ 'clientName' ] = $row[ 'name' ];
 								$args[ 'email' ] = $row[ 'email' ];
 							}
-							$args[ 'orderId' ] = 'SolveSB-' . str_pad ( $id, 5, "0", STR_PAD_LEFT ) . strtotime ( "now" );
+							$args[ 'orderId' ] =
+								'SolveSB-' . str_pad ( $id, 5, "0", STR_PAD_LEFT ) . strtotime ( "now" );
 							return json_decode ( $this->SendCharges ( $args, $this->env ), TRUE );
 						}
 					}
@@ -276,6 +278,36 @@ VALUES ('{$id}', '{$args['cardRecordID']}','{$prevSubs['customer_id']}', '{$prev
 			$custommer = strtoupper ( $this->env ) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
 			$endpoint = $custommer . '/customers/' . $args[ 'customer_id' ] . '/charges';
 			return $this->sendRequest ( $endpoint, $data, 'SANDBOX', 'POST', 'JSON' );
+		}
+		public function SendCharges3D ( array $args, $env = NULL ): bool|string {
+			$this->env = $env === NULL ? $this->env : $env;
+			$data = [
+				'source_id' => $args[ 'tokenCard' ],
+				'method' => 'card',
+				'amount' => $args[ 'amount' ],
+				'redirect_url' => base_url ( '/Out/succesBuy' ),
+				'currency' => 'mxn',
+				'description' => 'Cargo de por compra de operaciones',
+				'device_session_id' => $args[ 'session_id' ],
+				'order_id' => $args[ 'orderId' ],
+				'use_3d_secure' => 'true',
+				'customer' => [
+					"name"=>"Luke",
+                    "email"=> "uriel.magallon@whitefish.mx"],
+			];
+			$this->headers = [];
+			$custommer = strtoupper ( $this->env ) === 'SANDBOX' ? $this->customerIDSandBox : $this->customerIDProd;
+			$endpoint = $custommer . '/charges';
+			return $this->sendRequest ( $endpoint, $data, 'SANDBOX', 'POST', 'JSON' );
+		}
+		public function charge3DS ( array $args, string $id, $env = NULL ) {
+			$this->env = $env === NULL ? $this->env : $env;
+			$this->base = strtoupper ( $this->env ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
+			$query = "SELECT name, last_name, email FROM $this->base.users WHERE id = '{$id}'";
+			$args[ 'amount' ] = $this->amount;
+			$args[ 'orderId' ] =
+				'SolveOP-' . str_pad ( $id, 5, "0", STR_PAD_LEFT ) . strtotime ( "now" );
+			return json_decode ( $this->SendCharges3D ( $args, $this->env ), TRUE );
 		}
 		private function monthTranslate ( int $month ) {
 			$text = [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ];
