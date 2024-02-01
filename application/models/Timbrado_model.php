@@ -614,8 +614,15 @@ class Timbrado_model extends CI_Model {
 
     }
 
-	public function cfdis(){
+	public function cfdis($factura = NULL){
 		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+		if($factura!=NULL)
+		{
+			$query = "UPDATE invoices SET status = 0 WHERE Id='".$factura["idipasaoper"]."'";
+
+			$this->db->query($query);
+		}
 
         $ResCfdis = "SELECT i.id AS id, c.short_name AS short_name, c.legal_name AS legal_name, i.uuid AS uuid, i.invoice_date AS invoice_date,
 							i.status AS status, i.total AS total 
