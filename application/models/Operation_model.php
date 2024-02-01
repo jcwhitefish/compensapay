@@ -82,13 +82,13 @@
 			//Se crea el query para obtener las facturas
 			$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
        CONCAT('$urlF', t4.id) AS 'idurl', t3.account_clabe,
-       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.invoice_date), '%d-%m-%Y') AS 'dateCFDI1',
+       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.created_at), '%d-%m-%Y') AS 'dateCFDI1',
        DATE_FORMAT(FROM_UNIXTIME(t4.payment_date), '%d-%m-%Y') AS 'datePago1',
        (IF(t5.id IS NULL, t6.uuid, t5.uuid)) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$urlN', t6.id) ELSE CONCAT('$urlF', t5.id) END) AS 'idur2',
        (IF(t5.id IS NULL, t6.total, t5.total)) AS 'total2',
-       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y'),
-       DATE_FORMAT(FROM_UNIXTIME(t5.invoice_date), '%d-%m-%Y'))) AS 'dateCFDI2',
+       (IF(t5.id IS NULL, DATE_FORMAT(FROM_UNIXTIME(t6.created_at), '%d-%m-%Y'),
+       DATE_FORMAT(FROM_UNIXTIME(t5.created_at), '%d-%m-%Y'))) AS 'dateCFDI2',
        DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago',
        (IF(t5.id IS NULL, (SELECT short_name FROM $this->base.companies where rfc= t6.sender_rfc),
        (SELECT short_name FROM $this->base.companies where rfc= t5.sender_rfc))) AS 'senderConciliation',
@@ -138,13 +138,13 @@
 			//Se crea el query para obtener las facturas
 			$query = "SELECT t1.id ,t1.status, t1.operation_number, t2.short_name AS 'receptor', t3.short_name AS 'emisor', t4.uuid AS 'uuid1',
        CONCAT('$url', t4.id) AS 'idurl', t3.account_clabe, t7.arteria_clabe, 
-       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.create_at), '%d-%m-%Y') AS 'dateCFDI1',
+       t4.total AS 'total1', DATE_FORMAT(FROM_UNIXTIME(t4.created_at), '%d-%m-%Y') AS 'dateCFDI1',
        (case WHEN t5.id IS NULL THEN t6.uuid ELSE t5.uuid END) AS 'uuid2',
        (case WHEN t5.id IS NULL THEN CONCAT('$url', t6.id) ELSE CONCAT('$url', t5.id) END) AS 'idur2', 
        (case WHEN t5.id IS NULL THEN t6.total ELSE t5.total END) AS 'total2', 
        (case WHEN t5.id IS NULL 
-           THEN DATE_FORMAT(FROM_UNIXTIME(t6.debitNote_date), '%d-%m-%Y') 
-           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.create_at), '%d-%m-%Y') END) AS 'dateCFDI2',
+           THEN DATE_FORMAT(FROM_UNIXTIME(t6.created_at), '%d-%m-%Y')
+           ELSE DATE_FORMAT(FROM_UNIXTIME(t5.created_at), '%d-%m-%Y') END) AS 'dateCFDI2',
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'datePago', 
     	DATE_FORMAT(FROM_UNIXTIME(t1.payment_date), '%d-%m-%Y') AS 'conciliationDate', 
     	(CASE WHEN t1.id_provider = '$id' THEN 'emisor' ELSE 'receptor' END) AS 'role',

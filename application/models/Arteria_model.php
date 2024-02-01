@@ -365,11 +365,11 @@
 			$query = "UPDATE compensatest_base.operations set status = 3 WHERE id = '$operationId'";
 			$this->db->db_debug = FALSE;
 			if ( $this->db->query ( $query ) ) {
-				if ( $cfdi[ 'tipo' ] === 'nota' ) {
-					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id = '{$cfdi['id']}'";
+				if ( $cfdi['res'][ 'tipo' ] === 'nota' ) {
+					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id = '{$cfdi['res']['id']}'";
 					$this->db->db_debug = FALSE;
 					if ( $this->db->query ( $query ) ) {
-						$query = "UPDATE compensatest_base.debit_notes SET status = 3 WHERE id = '{$cfdi['id2']}'";
+						$query = "UPDATE compensatest_base.debit_notes SET status = 3 WHERE id = '{$cfdi['res']['id2']}'";
 						$this->db->db_debug = FALSE;
 						if ( $this->db->query ( $query ) ) {
 							return [ "code" => 200, "message" => "Conciliación realizada", "reason" => 'ok' ];
@@ -380,7 +380,7 @@
 						return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
 					}
 				} else {
-					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id in ('{$cfdi['id']}', '{$cfdi['id2']}')";
+					$query = "UPDATE compensatest_base.invoices SET status = 3 WHERE id in ('{$cfdi['res']['id']}', '{$cfdi['res']['id2']}')";
 					$this->db->db_debug = FALSE;
 					if ( $this->db->query ( $query ) ) {
 						return [ "code" => 200, "message" => "Conciliación realizada", "reason" => 'ok' ];

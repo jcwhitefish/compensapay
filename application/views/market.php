@@ -7,7 +7,7 @@
 	<div class="row">
 		<div class="col l6 m6">
 			<div class="section">
-				<h5>Método de pago</h5>
+				<h5>Subscripción</h5>
 				<div class="divider"></div>
 				<div class="row align-content-lg-center" style="margin-top: 15px; margin-bottom: 1px">
 					<div class="col l2 white" id="cardInfoImg">
@@ -59,13 +59,13 @@
 							</a>
 						</div>
 					</div>
-					<div class="section" style="border: 1px solid #e8e6e3; padding: 10px">
+					<!--<div class="section" style="border: 1px solid #e8e6e3; padding: 10px">
 						<h6>Paquete 1</h6>
 						<div class="divider"></div>
 						<div class="row">
 							<div class="col">
 								<img
-									src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+									src="<?php /*= base_url ( 'assets/images/logo_purple_s.png' ); */ ?>" alt="Logo"
 									class="image-side hide-on-med-and-down">
 							</div>
 							<div class="col">
@@ -85,7 +85,7 @@
 						<div class="row">
 							<div class="col">
 								<img
-									src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+									src="<?php /*= base_url ( 'assets/images/logo_purple_s.png' ); */ ?>" alt="Logo"
 									class="image-side hide-on-med-and-down">
 							</div>
 							<div class="col">
@@ -98,10 +98,10 @@
 								<i class="material-icons right">shopping_cart</i>Comprar
 							</a>
 						</div>
-					</div>
+					</div>-->
 				</div>
 			</div>
-			<div class="col l6">
+			<!--<div class="col l6">
 				<div>
 					<div class="section" style="border: 1px solid #e8e6e3; padding: 10px">
 						<h6>Paquete 1</h6>
@@ -109,7 +109,7 @@
 						<div class="row">
 							<div class="col">
 								<img
-									src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+									src="<?php /*= base_url ( 'assets/images/logo_purple_s.png' ); */ ?>" alt="Logo"
 									class="image-side hide-on-med-and-down">
 							</div>
 							<div class="col">
@@ -129,7 +129,7 @@
 						<div class="row">
 							<div class="col">
 								<img
-									src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+									src="<?php /*= base_url ( 'assets/images/logo_purple_s.png' ); */ ?>" alt="Logo"
 									class="image-side hide-on-med-and-down">
 							</div>
 							<div class="col">
@@ -149,7 +149,7 @@
 						<div class="row">
 							<div class="col">
 								<img
-									src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+									src="<?php /*= base_url ( 'assets/images/logo_purple_s.png' ); */ ?>" alt="Logo"
 									class="image-side hide-on-med-and-down">
 							</div>
 							<div class="col">
@@ -164,7 +164,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 	<div id="addCardM" class="modal modal-fixed-footer" style="max-height 90% !important;">
@@ -235,14 +235,101 @@
 					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
 				</div>
 				<div class="col l3">
-					<button class="btn waves-effect waves-light grey right" id="sendCard" name="sendCard">
+					<button class="btn waves-effect waves-light blue right" id="sendCard" name="sendCard">
 						Enviar<i class="material-icons right">send</i>
 					</button>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+			<a href="#!" class="modal-close waves-effect waves-orange btn-flat">Cerrar</a>
+		</div>
+	</div>
+	<div id="buyModal" class="modal modal-fixed-footer" style="max-height 90% !important;">
+		<div class="modal-content">
+			<h5 id="folio_modal" style="margin-top: 1px; margin-bottom: 1px">Comprar Operaciones</h5>
+			<p>Completa los datos requeridos para poder generar el pago correspondientes a la compra de operaciones</p>
+			<p>Se le realizará un cargo único por $150.00 MXN</p>
+			<form method="POST" id="payment-form2" style="margin-top: 1px; margin-bottom: 1px;">
+				<input type="hidden" name="token_id2" id="token_id2">
+				<input type="hidden" name="deviceID2" id="deviceID2" value="" />
+				<input type="hidden" name="cardType2" id="cardType2" value="" />
+				<input type="hidden" name="cardFlag2" id="cardFlag2" value="<?= $flag = empty( $card ) ? 1 : 2; ?>" />
+				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+					<div class="col l12">
+						<label>
+							<span>Nombre del titular</span>
+							<input
+								id="nameHolder2" name="nameHolder2" class="validate" type="text"
+								placeholder="Como aparece en la tarjeta" data-openpay-card="holder_name" required
+								oninput="this.value = this.value.replace(/[^a-z. A-Z]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</label>
+					</div>
+				</div>
+				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+					<div class="col l9">
+						<label>
+							<span>Número de tarjeta</span>
+							<input
+								id="cardNumber2" name="cardNumber2" maxlength="16" class="validate" type="text"
+								data-openpay-card="card_number" required
+								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</label>
+					</div>
+					<div class="col l3" id="cardTypeImg2"></div>
+				</div>
+				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
+					<div class="col l6"><label>Fecha de expiración</label></div>
+					<div class="col l6"><label>Código de seguridad</label></div>
+				</div>
+				<div class="row" style="margin-bottom: 15px; margin-top: 1px">
+					<div class="col l6">
+						<div class="col s4"><input
+								id="expMonth2" name="expMonth2" maxlength="2" class="validate" type="text"
+								placeholder="Mes" data-openpay-card="expiration_month" required
+								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</div>
+						<div class="col s1"></div>
+						<div class="col s4"><input
+								id="expYear2" name="expYear2" maxlength="2" class="validate" type="text"
+								placeholder="Año"
+								data-openpay-card="expiration_year" required
+								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</div>
+					</div>
+					<div class="col l6">
+						<div class="col s4"><input
+								id="cvv2" name="cvv2" type="text" maxlength="3" class="validate" placeholder="3 dígitos"
+								autocomplete="off" data-openpay-card="cvv2" required
+								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="row" style="margin-bottom: 1px;margin-top: 4px;">
+				<div class="col l3">
+					<img src="/assets/images/openpay.png" alt="taretas" height="30px">
+				</div>
+				<div class="col l6">
+					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
+				</div>
+				<div class="col l3">
+					<button class="btn waves-effect waves-light blue right" id="sendCard2" name="sendCard2">
+						Enviar<i class="material-icons right">send</i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="/Tienda" class="modal-close waves-effect orange btn-flat">Cancelar</a>
+		</div>
+	</div>
+	<div id="3dModal" class="modal modal-fixed-footer" role="dialog" style="max-height 90% !important;">
+		<div class="modal-content" id="3dContent">
+		
+		</div>
+		<div class="modal-footer">
+			<a href="/Tienda" class="modal-close waves-effect orange btn-flat">Cerrar</a>
 		</div>
 	</div>
 </div>
@@ -273,15 +360,14 @@
 		alert("ERROR [" + response.status + "] " + desc);
 	};
 	$(document).ready(function () {
+		// $("#3dModal").modal("open");
 		const sandbox = true;
 		let deviceDataId;
-		OpenPay.setSandboxMode(true);
-		OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
-		OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		let deviceDataId2;
+		
 		// OpenPay.setId('mtcyupm65psrjreromun');
 		// OpenPay.setApiKey('pk_88137bbfe9d94c208d6741754c9e24d4');
-		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
-		$("#deviceID").val(deviceDataId);
+		
 		$("#cardNumber").on("change", function () {
 			const cardIMG = $("#cardTypeImg");
 			const cardNumber = $("#cardNumber").val();
@@ -291,13 +377,33 @@
 			cardIMG.empty();
 			cardIMG.append(img);
 		});
+		$("#cardNumber2").on("change", function () {
+			const cardIMG = $("#cardTypeImg2");
+			const cardNumber = $("#cardNumber2").val();
+			const cardType = OpenPay.card.cardType(cardNumber);
+			verifyForm2();
+			const img = "<img src=\"/assets/images/cardtype/" + cardType + ".svg\" alt=\"" + cardType + "\" height=\"70px\">";
+			cardIMG.empty();
+			cardIMG.append(img);
+		});
 		$("#nameHolder").on("input", function () {
 			verifyForm();
+		});
+		$("#nameHolder2").on("input", function () {
+			verifyForm2();
 		});
 		$("#cvv").on("input", function () {
 			verifyForm();
 		});
+		$("#cvv2").on("input", function () {
+			verifyForm2();
+		});
 		$("#sendCard").on("click", function (event) {
+			OpenPay.setSandboxMode(true);
+			OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+			OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+			deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+			$("#deviceID").val(deviceDataId);
 			const flag = $("#cardFlag").val();
 			if (flag === 1 || flag === "1") {
 				OpenPay.token.extractFormAndCreate("payment-form", newCard, error_callbak);
@@ -305,66 +411,15 @@
 				OpenPay.token.extractFormAndCreate("payment-form", shiftCard, error_callbak);
 			}
 		});
-		
+		$("#sendCard2").on("click", function (event) {
+			OpenPay.token.extractFormAndCreate("payment-form2", buyOp, error_callbak);
+			
+		});
 		$("#changeCard").on("click", function () {
 			$("#addCardM").modal("open");
 		});
-		$("#nt_SupportReply").on("change", function () {
-			console.log($("#nt_SupportReply").prop("checked"));
-		});
-		$("#saveChanges").on("click", function () {
-			$.ajax({
-				url: "Configuracion/saveChanges",
-				data: {
-					nt_OperationNew: $("#nt_OperationNew").prop("checked") ? 1 : 0,
-					nt_OperationApproved: $("#nt_OperationApproved").prop("checked") ? 1 : 0,
-					nt_OperationStatus: $("#nt_OperationStatus").prop("checked") ? 1 : 0,
-					nt_OperationPaid: $("#nt_OperationPaid").prop("checked") ? 1 : 0,
-					nt_OperationReturn: $("#nt_OperationReturn").prop("checked") ? 1 : 0,
-					nt_OperationReject: $("#nt_OperationReject").prop("checked") ? 1 : 0,
-					nt_OperationDate: $("#nt_OperationDate").prop("checked") ? 1 : 0,
-					nt_OperationInvoiceRequest: $("#nt_OperationInvoiceRequest").prop("checked") ? 1 : 0,
-					nt_OperationExternalAccount: $("#nt_OperationExternalAccount").prop("checked") ? 1 : 0,
-					nt_InviteNew: $("#nt_InviteNew").prop("checked") ? 1 : 0,
-					nt_InviteStatus: $("#nt_InviteStatus").prop("checked") ? 1 : 0,
-					nt_DocumentStatementReady: $("#nt_DocumentStatementReady").prop("checked") ? 1 : 0,
-					nt_SupportTicketStatus: $("#nt_SupportTicketStatus").prop("checked") ? 1 : 0,
-					nt_SupportReply: $("#nt_SupportReply").prop("checked") ? 1 : 0,
-				},
-				dataType: "json",
-				method: "post",
-				beforeSend: function () {
-				},
-				success: function (data) {
-					if (data.code === 502) {
-						$("#addCardM").modal("close");
-						alert("Error");
-						console.log(data);
-					} else if (data.type != null) {
-						$("#cardInfoImg").empty();
-						$("#cardInfoText").empty();
-						const img = "<img src=\"/assets/images/cardtype/" + data.type + ".svg\" alt=\"" + data.type + "\" width=\"100px\">";
-						const info = "<p id=\"cardInfo\"><strong>" + data.type + ":</strong> ****" + data.endCard + "</p> <p id=\"cardExp\">Vence en " + data.month + " del 20" + data.year + "</p>";
-						$("#cardInfoImg").append(img);
-						$("#cardInfoText").append(info);
-						$("#changeCard").empty();
-						$("#changeCard").append("Cambiar");
-						$("#addCardM").modal("close");
-						var toastHTML = "<span><strong>¡Tarjeta agregada exitosamente!</strong></span>";
-						M.toast({html: toastHTML});
-					} else {
-						$("#addCardM").modal("close");
-						if (data.error_code === 3002) {
-							var toastHTML = "<span><strong>Error</strong></span>";
-							M.toast({html: toastHTML});
-							var toastHTML = "<span><strong>Tarjeta expirada</strong></span>";
-							M.toast({html: toastHTML});
-						}
-					}
-				},
-				complete: function () {
-				}
-			});
+		$("#buyOp1").on("click", function () {
+			$("#buyModal").modal("open");
 		});
 	});
 	
@@ -377,6 +432,81 @@
 		} else {
 			$("#sendCard").prop("disabled", true);
 		}
+	}
+	
+	function verifyForm2() {
+		var card = $("#cardNumber2").val();
+		var name = $("#nameHolder2").val();
+		var cvv = $("#cvv2").val();
+		if (card !== "" && name !== "" && cvv !== "") {
+			$("#sendCard2").prop("disabled", false);
+		} else {
+			$("#sendCard2").prop("disabled", true);
+		}
+	}
+	
+	function buyOp(response) {
+		OpenPay.setSandboxMode(true);
+		OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+		OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		deviceDataId2 = OpenPay.deviceData.setup("payment-form2", "deviceIdHiddenFieldName");
+		
+		let cardNumber = $("#cardNumber2").val();
+		let cardType = OpenPay.card.cardType(cardNumber);
+		// let device = $("#deviceID2").val();
+		let cvv = $("#cvv2").val();
+		let month = $("#expMonth2").val();
+		let year = $("#expYear2").val();
+		let name = $("#nameHolder2").val();
+		let tokenCard = response.data.id;
+		$("#token_id2").val(tokenCard);
+		$.ajax({
+			url: "Tienda/BuyOperations",
+			data: {
+				cardNumber: cardNumber,
+				holderName: name,
+				expirationMonth: month,
+				expirationYear: year,
+				cvv: cvv,
+				sessionID: deviceDataId2,
+				cardType: cardType,
+				tokenCard: tokenCard
+			},
+			dataType: "json",
+			method: "post",
+			beforeSend: function () {
+				const left = $("#addCardM").offset().left;
+				const top = $("#addCardM").offset().top;
+				const width = $("#addCardM").width();
+				$("#solveLoader").css({
+					display: "block",
+					left: left,
+					top: top + 59,
+					width: width,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				let toastHTML;
+				if (data.code === 500) {
+					$("#addCardM").modal("close");
+					toastHTML = "<span><strong>" + data.error + "</strong></span>";
+					M.toast({html: toastHTML});
+					toastHTML = "<span><strong>" + data.message + "</strong></span>";
+					M.toast({html: toastHTML});
+				} else {
+					$("#addCardM").modal("close");
+					const frame = '<iframe id="3dFrame" title="3D Secure Validation" width="100%" height="100%" src="'+data.payment_method.url+'"></iframe>';
+					$('#3dContent').append(frame);
+					$('#3dModal').modal('open');
+				}
+			},
+			complete: function () {
+				$("#solveLoader").css({
+					display: "none"
+				});
+			}
+		});
 	}
 	
 	function newCard(response) {
