@@ -1,7 +1,4 @@
 <?php
-
-
-
 function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null){
     if ($date === null){
         $date = date('Y-m-d');
@@ -11,8 +8,8 @@ function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null)
             'smtp_host'     => 'smtpout.secureserver.net',
             'smtp_auth'     => TRUE,
             'smtp_port'     => 465,
-            'smtp_user'     => 'hola@compensapay.xyz',
-            'smtp_pass'     => 'compensamail2023#',
+            'smtp_user'     => 'noresponder@solve.com.mx',
+            'smtp_pass'     => 'NoReply_solve#',
             'smtp_timeout'  => '30',
             'mailtype'      => 'html',
             'crlf'          => "\r\n",
@@ -22,7 +19,7 @@ function send_mail($mail, $data, $view, $cc = null, $subject = null, $date=null)
 	$CI =& get_instance();
 	$CI->load->library('email', $config);
 	$CI->email->set_newline("\r\n");
-	$CI->email->from('hola@compensapay.xyz', 'Equipo Solve');
+	$CI->email->from('noresponder@solve.com.mx', 'Equipo Solve');
 	$CI->email->set_newline("\r\n");
 	$CI->email->to($mail);
 	$CI->email->set_newline("\r\n");
