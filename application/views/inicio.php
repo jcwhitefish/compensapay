@@ -25,17 +25,15 @@
         </div>
     </div>
 </div>
-<div class="container">    
+<div class="container section">    
     <div class="row">
         <div class="col s3">
             <h5><strong>Periodo</strong></h5>
-            <input type="date" value="<?php echo date("Y-m").'-01';?>">
-            <h6>Desde</h6>
+            <p>Desde: <input type="date" value="<?php echo date("Y-m").'-01';?>" style="width: calc(100% - 60px)"></p>
         </div>
         <div class="col s3">
             <h5>&nbsp;</h5>
-            <input type="date" value="<?php echo date("Y-m-d");?>">
-            <h6>Hasta</h6>
+            <p>Hasta: <input type="date" value="<?php echo date("Y-m-d");?>" style="width: calc(100% - 60px)"></p>
         </div>
         <div class="col s6">
             <h5>&nbsp;</h5>
@@ -59,7 +57,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg;">import_export</i></span>
+                    <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg; color:#9118bd;">import_export</i></span>
                     <p><?php echo $dashboard["OperacionesMes"];?></p>
                     <!--<h6 style="font-size: 12px; color: #bdbdbd;">-1.22%</h6>-->
                 </div>
@@ -68,7 +66,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Ingresos</strong><i class="material-icons right">arrow_downward</i></span>
+                    <span class="card-title"><strong>Ingresos</strong><i class="material-icons right" style="color:#9118bd;">arrow_downward</i></span>
                     <p>$ <?php echo number_format($dashboard["IngresosMes"], 2);?></p>
                     <!--<h6 style="font-size: 12px; color: #bdbdbd;">+2.031</h6>-->
                 </div>
@@ -77,7 +75,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Egresos</strong><i class="material-icons right">arrow_upward</i></span>
+                    <span class="card-title"><strong>Egresos</strong><i class="material-icons right" style="color:#9118bd;">arrow_upward</i></span>
                     <p>$ <?php echo number_format($dashboard["EgresosMes"], 2);?></p>
                     <!--<h6 style="font-size: 12px; color: #bdbdbd;">+$2.201</h6>-->
                 </div>
@@ -86,7 +84,7 @@
         <div class="col s3">
             <div class="card grey lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
-                    <span class="card-title"><strong>Diferencia</strong><i class="material-icons right">attach_money</i></span>
+                    <span class="card-title"><strong>Diferencia</strong><i class="material-icons right" style="color:#9118bd;">attach_money</i></span>
                     <p>$ <?php echo number_format(($dashboard["IngresosMes"] - $dashboard["EgresosMes"]), 2);?></p>
                     <!--<h6 style="font-size: 12px; color: #bdbdbd;">+3.392</h6>-->
                 </div>
@@ -125,16 +123,16 @@
     <div class="row section">
         <div class="col s12">
          <h5><strong>Operaciones recientes</strong></h5>
-            <table class="striped">
+            <table class="stripe row-border order-column nowrap" id="table_i_oper_rec" width="100%">
             <thead>
       <tr>
         <th>Id Operación</th>
         <th>Proveedor</th>
         <th>Fecha</th>
         <th>Factura</th>
-        <th class="right-align">Monto</th>
+        <th>Monto</th>
         <th>Nota de Débito /<br /> Mi Factura</th>
-        <th class="right-align">Monto</th>
+        <th>Monto</th>
         <th>Estatus</th>
       </tr>
     </thead>
@@ -149,25 +147,25 @@
                         <td>';if($value["short_name"]!=NULL){echo $value["short_name"];}else{echo $value["legal_name"];}echo '</td>
                         <td>'.$value["created_at"].'</td>
                         <td><a href="'.base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice"]).'" target="_blank">'.$value["uuid"].'</a></td>
-                        <td class="right-align">$'.number_format($value["money_prov"], 2).'</td>
+                        <td align="right">$'.number_format($value["money_prov"], 2).'</td>
                         <td><a href="';if($value["uuid_nota"]!=NULL){echo base_url('/assets/factura/nota.php?idnota='.$value["id_nota"]).'" target="_blank">'.$value["uuid_nota"];}else{echo base_url('/assets/factura/factura.php?idfactura='.$value["id_invoice_relational"]).'" target="_blank">'.$value["uuid_relation"];}echo '</a></td>
-                        <td class="right-align">$';if($value["money_clie"]!=NULL){echo number_format($value["money_clie"], 2);}elseif($value["dn_total"]!=NULL){echo number_format($value["dn_total"], 2);} echo '</td>
+                        <td align="right">$';if($value["money_clie"]!=NULL){echo number_format($value["money_clie"], 2);}elseif($value["dn_total"]!=NULL){echo number_format($value["dn_total"], 2);} echo '</td>
                         <td>';
                     switch ($value["status"]) {
-                        case 0: echo 'Por autorizar'; break;
-                        case 1: echo 'Autorizada'; break;
-                        case 2: echo 'Rechazada'; break;
-                        case 3: echo 'Realizada'; break;
-                        case 4: echo 'Vencida'; break;
+                        case 0: echo '<span class="estatus">Por autorizar</span>'; break;
+                        case 1: echo '<span class="estatus" style="background-color:#8225fc">Autorizada</span>'; break;
+                        case 2: echo '<span class="estatus" style="background-color:#f36115">Rechazada</span>'; break;
+                        case 3: echo '<span class="estatus" style="background-color:#569700">Realizada</span>'; break;
+                        case 4: echo '<span class="estatus" style="background-color:#f36115">Vencida</span>'; break;
                     } 
                     echo '</td>
                         </tr>';
                 }
             }
         ?>
-        <tr>
+        <!--<tr>
             <td colspan="8" class="right-align"><a href="<?php echo base_url('/facturas');?>">Ver mas>></a></td>
-        </tr>
+        </tr>-->
     </tbody>
   </table>
         </div>
@@ -235,4 +233,29 @@ var myLineChart2 = new Chart(ctx2, {
             }
         ]}
 });
+</script>
+
+<script>
+        var table_1 = $('#table_i_oper_rec').DataTable({
+            scrollX: true,
+        scrollCollapse: true,
+        scroller:       true,
+        deferRender:    true,
+        language: {
+            decimal: '.',
+            thousands: ',',
+            url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+        },
+        paging: false,
+        info: false,
+        searching: false,
+        order: [[0, 'desc']],
+        columnDefs: [
+            {
+                target: 0,
+                visible: false,
+                searchable: false,
+            }
+        ]
+    });
 </script>

@@ -18,16 +18,20 @@ if ($this->session->userdata('logged_in')) {
     <!-- importamos iconos -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a5e678cc82.js" crossorigin="anonymous"></script>
-</head>
-
-<body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    <!-- datatables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
 		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
 		crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
 		integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
 		crossorigin="anonymous"
 		referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css">
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+
 	<script>
 		function ready() {
 			$('#solveLoader').css({
@@ -87,7 +91,7 @@ if ($this->session->userdata('logged_in')) {
                         <a class="nav-max" style="top:-25px;" href="">$200.000</a>
                     </div>-->
                     <div class="hide-on-med-and-down d-flex flex-direction-column justificarVertical">
-                        <p class="nav-max" style="padding-left: 10px;top:-15px"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
+                        <p class="nav-max" style="padding-left:10px;top:-15px;padding-right:10px;"><?= $this->session->userdata('datosUsuario')['user'] ?></p>
                     </div>
                     <div class="d-flex justificarVertical alinearVertical">
                         <a class="d-flex justificarVertical alinearVertical" href="<?= base_url('perfil/usuario') ?>" target="_self" rel="noopener noreferrer">

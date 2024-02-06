@@ -1,3 +1,6 @@
+body{
+    background: #f6f2f7 !important;
+}
 /* inputs */
 input[type="file"] {
     display: none;
@@ -166,17 +169,22 @@ input[type="number"] {
 /* buttons */
 .button-gray {
     transition-duration: 0.4s;
-    background-color: #444 !important;
+    background-color: #9118bd !important;
     color: white !important;
     padding: 8px 30px;
-    border: 2px solid #444;
+    border: 2px solid #9118bd ;
     border-radius: 10px !important;
+    background: -webkit-gradient(linear, right top, left top, from(#9118bd), to(#8225fc));
+    background: -moz-linear-gradient(top,  #9118bd ,  #8225fc);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9118bd', endColorstr='#8225fc');
   }
   
 .button-gray:hover {
     transition-duration: 0.4s;
     background-color: white !important; 
-    color: #444 !important;
+    color: #9118bd !important;
+    border: 2px solid #9118bd;
+    background: white;
 }
 
 .button-white {
@@ -278,15 +286,11 @@ tbody tr:hover{
 }
 
 thead, thead tr,thead tr th{
-    background-color:#17a2b8 ;
+    background-color:#8225fc ;
     border-collapse: collapse;
     border-radius: 0!important;
     color: white;
     
-}
-
-th, td {
-    padding: 20px 25px;
 }
 
 /* Estos estilos son para el navegador */
@@ -312,3 +316,13 @@ th, td {
     height: 50px;
 }
 
+.estatus{
+    display: block;
+    padding: 3px 5px;
+    border-radius: 12px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background-color: #cccccc;
+}
