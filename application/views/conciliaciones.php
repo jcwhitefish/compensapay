@@ -492,7 +492,7 @@
 						toastHTML = "<span>Por favor intente mas tarde</span>";
 						M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
 						toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>";
-						M.toast({html: toastHTM, displayLength: 1000, duration: 1000, edge: "rigth"});
+						M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
 						
 					}
 				});
