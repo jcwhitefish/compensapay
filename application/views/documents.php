@@ -338,9 +338,9 @@
 					$.each(data, function (index, value) {
 						let cepUrl;
 						if(value.url_cep === null){
-							cepUrl = "No disponible";
+							cepUrl = "En proceso...";
 						}else{
-							cepUrl = "<a href=\"" + value.url_cep + "\" target=\"_blank\">Descargar CEP</a>";
+							cepUrl = "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
 						}
 					
 						const tr = $("<tr>" +
@@ -434,7 +434,7 @@
 					$.each(data, function (index, value) {
 						let uuid;
 						let urlCep;
-						urlCep = (value.cepUrl === null || value.cepUrl === "") ? "No disponible" : "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
+						urlCep = (value.cepUrl === null || value.cepUrl === "") ? "En proceso..." : "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
 					
 						uuid = (value.idurl === "No aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						
