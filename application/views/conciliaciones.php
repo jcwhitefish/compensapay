@@ -330,7 +330,7 @@
 							<div class="col l12 center-align">
 								<a class="modal-close button-gray">Cancelar</a>
 								&nbsp;
-								<input class="button-blue" type="submit" value="Siguiente" </input>
+								<input class="button-blue" type="submit" value="Siguiente" id="sbtNF"/>
 							</div>
 						</div>
 					</form>
@@ -430,6 +430,7 @@
 			});
 		});
 		$("#uploadNoteForm").on("submit", function (e) {
+			$('#sbtNF').attr("disabled", true);
 			e.preventDefault();
 			if (conciliateWay === 0) {
 				const formData = new FormData();
@@ -468,12 +469,10 @@
 							toastHTML = "<span><strong>" + data.reason + "</strong></span>";
 							M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
 							
-							// location.reload()
 						} else {
 							$("#modal-new-conciliation").modal("close");
-							toastHTML = "<span>" + data.message + "</span>";
+							let toastHTML = "<span>" + data.message + "</span>";
 							M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
-							
 							conciliation();
 						}
 					},
@@ -482,6 +481,7 @@
 							display: "none"
 						}).delay(2000);
 						cfdi();
+						$('#sbtNF').attr("disabled", false);
 					},
 					error: function (data) {
 						$("#solveLoader").css({
