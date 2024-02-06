@@ -136,7 +136,7 @@
 						} else {
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
-								'clabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
+								'clabe' => $op['clientClabe'],
 								'amount' => filter_var ( $exitMoney, FILTER_VALIDATE_INT ),
 								'descriptor' => 'Pago por ' . $op[ 'uuid' ],
 								'name' => $data[ 'data' ][ 'source' ][ 'name' ],
