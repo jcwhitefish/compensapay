@@ -229,7 +229,7 @@
 								'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
 								'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
 								'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
-								'receiverClabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
+								'receiverClabe' => $provedor['clabe'],
 								'operationNumber' => $op[ 'operationNumber' ],
 								'transactionDate' => $prov[ 'created_at' ],
 								'arteriaId' => $prov[ 'id' ],
