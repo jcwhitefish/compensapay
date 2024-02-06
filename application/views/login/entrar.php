@@ -20,10 +20,17 @@
                             echo $error_message;
                         } ?>
                         <div class="container right-align">
-                            <label>
+                            <div class="switch">
+                                <label>
+                                  <input type="checkbox" checked>
+                                  <span class="lever"></span>
+                                  Guardar datos en este equipo
+                                </label>
+                              </div>
+                            <!--<label>
                                 <input v-model="data['session']" class="filled-in" type="checkbox" />
                                 <span>Guardar datos en este equipo</span>
-                            </label>
+                            </label>-->
                         </div>
 
                         <div class="center-align p-5">
