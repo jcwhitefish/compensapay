@@ -127,7 +127,9 @@ class Soporte extends MY_Loggedin{
 		$this->load->helper('sendmail_helper');
 		$mail       = 'ury197@hotmail.com';
 		$userData = ['name' => 'Uriel', 'lastName' => 'Magallon', 'company' => 'WHITEFISH SOLVE TECH'];
-		$text = 'Esto es una prueba que se est&aacute; realizando para ver el funcionamiento de nuestro sistema de notificaciones por correo, Lo que se intenta es ver que el dise&ntilde;o, estructura y la informaci&oacute;n del correo lleguen de forma correcta y se muestren bien ya estando en un gestor de correos electr&oacute;nicos, <br>Por su atenci&oacute;n gracias. ';
+		$text = 'Esto es una prueba que se est&aacute; realizando para ver el funcionamiento de nuestro sistema de notificaciones por correo,
+Lo que se intenta es ver que el dise&ntilde;o, estructura y la informaci&oacute;n del correo lleguen de forma correcta y se muestren bien ya
+estando en un gestor de correos electr&oacute;nicos, <br>Por su atenci&oacute;n gracias. ';
 		$urlDetail = ['url' => base_url('/soporte'), 'name' => 'Soporte'];
 		$urlSoporte = ['url' => base_url('/soporte'), 'name' => base_url('/soporte')];
 		$data = [

@@ -337,11 +337,12 @@
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
 						let cepUrl;
-						if (value.cepUrl !== null || value.cepUrl !== "") {
-							cepUrl = "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
-						} else {
+						if(value.url_cep === null){
 							cepUrl = "No disponible";
+						}else{
+							cepUrl = "<a href=\"" + value.url_cep + "\" target=\"_blank\">Descargar CEP</a>";
 						}
+					
 						const tr = $("<tr>" +
 							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
 							"<td>" + cepUrl + "</td>" +

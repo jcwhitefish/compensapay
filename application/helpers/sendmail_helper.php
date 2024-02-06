@@ -52,6 +52,5 @@
 		$CI->email->set_newline ( "\r\n" );
 		$CI->email->send ();
 		$debug = $CI->email->print_debugger ();
-		var_dump ( $debug );
 		return TRUE;
 	}
