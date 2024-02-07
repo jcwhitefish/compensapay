@@ -304,8 +304,9 @@
 	}
 	
 	.logoUsuario {
-		max-width: 50px;
-		max-height: 50px;
+		width: 40px;
+		height: 40px;
+        border-radius: 50%;
 	}
 	
 	.justificarVertical {
