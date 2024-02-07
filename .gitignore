@@ -51,3 +51,6 @@ application/config/database.php
 
 ##database
 db/conexion.php
+
+#htaccess
+.htaccess

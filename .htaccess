@@ -31,9 +31,9 @@ RewriteRule ^(.*)$ index.php/$1 [L]
   DeflateCompressionLevel 9
    
   # Make sure proxies don't deliver the wrong content
-  Header append Vary User-Agent env=!dont-vary
+   Header append Vary User-Agent env=!dont-vary
 </IfModule>
 
 <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|svg)$">
-Header set Cache-Control "max-age=604800, public"
+# Header set Cache-Control "max-age=604800, public"
 </FilesMatch>
