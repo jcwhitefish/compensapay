@@ -330,7 +330,7 @@
 							<div class="col l12 center-align">
 								<a class="modal-close button-gray">Cancelar</a>
 								&nbsp;
-								<input class="button-blue" type="submit" value="Siguiente" id="sbtNF"/>
+								<input class="button-blue" type="submit" value="Siguiente" id="sbtNF" />
 							</div>
 						</div>
 					</form>
@@ -389,8 +389,10 @@
 					const top = obj.offset().top;
 					const width = obj.width();
 					const height = obj.height();
-					$("#solveLoader").css({
+					$("#solveLoader").delay(50000).css({
 						display: "block",
+						opacity: 1,
+						visibility: "visible",
 						left: left,
 						top: top,
 						width: width,
@@ -435,7 +437,7 @@
 			});
 		});
 		$("#uploadNoteForm").on("submit", function (e) {
-			$('#sbtNF').attr("disabled", true);
+			$("#sbtNF").attr("disabled", true);
 			e.preventDefault();
 			if (conciliateWay === 0) {
 				const formData = new FormData();
@@ -457,8 +459,10 @@
 						const top = obj.offset().top;
 						const width = obj.width();
 						const height = obj.height();
-						$("#solveLoader").css({
+						$("#solveLoader").delay(50000).css({
 							display: "block",
+							opacity: 1,
+							visibility: "visible",
 							left: left,
 							top: top,
 							width: width,
@@ -486,7 +490,7 @@
 							display: "none"
 						}).delay(2000);
 						cfdi();
-						$('#sbtNF').attr("disabled", false);
+						$("#sbtNF").attr("disabled", false);
 					},
 					error: function (data) {
 						$("#solveLoader").css({
@@ -519,8 +523,10 @@
 						const top = obj.offset().top;
 						const width = obj.width();
 						const height = obj.height();
-						$("#solveLoader").css({
+						$("#solveLoader").delay(50000).css({
 							display: "block",
+							opacity: 1,
+							visibility: "visible",
 							left: left,
 							top: top,
 							width: width,
@@ -594,8 +600,10 @@
 							const top = obj.offset().top;
 							const width = obj.width();
 							const height = obj.height();
-							$("#solveLoader").css({
+							$("#solveLoader").delay(50000).css({
 								display: "block",
+								opacity: 1,
+								visibility: "visible",
 								left: left,
 								top: top,
 								width: width,
@@ -674,8 +682,10 @@
 					const top = obj.offset().top;
 					const width = obj.width();
 					const height = obj.height();
-					$("#solveLoader").css({
+					$("#solveLoader").delay(50000).css({
 						display: "block",
+						opacity: 1,
+						visibility: "visible",
 						left: left,
 						top: top,
 						width: width,
@@ -762,8 +772,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,
@@ -947,8 +959,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,
@@ -1058,8 +1072,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,

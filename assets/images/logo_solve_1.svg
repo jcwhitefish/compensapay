@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    version="1.0"
-   width="2450.9441pt"
-   height="1607.8185pt"
-   viewBox="0 0 2450.9441 1607.8185"
+   width="400.15268pt"
+   height="262.5pt"
+   viewBox="0 0 400.15268 262.5"
    preserveAspectRatio="xMidYMid"
    id="svg9"
    sodipodi:docname="logo_solve_1.svg"
@@ -80,9 +80,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
-     inkscape:zoom="0.049138361"
-     inkscape:cx="61.052097"
-     inkscape:cy="2309.8043"
+     inkscape:zoom="0.78621377"
+     inkscape:cx="292.5413"
+     inkscape:cy="172.34498"
      inkscape:window-width="1366"
      inkscape:window-height="697"
      inkscape:window-x="-8"
@@ -91,7 +91,7 @@
      inkscape:current-layer="svg9" /><metadata
      id="metadata1">&#10;Created by potrace 1.15, written by Peter Selinger 2001-2017&#10;</metadata><g
      id="g28"
-     transform="translate(-556.07334,-524.05618)"
+     transform="matrix(0.1632647,0,0,0.1632647,-90.787148,-85.559874)"
      style="fill:#1d1e1b;fill-opacity:1;stroke:none;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"><path
        d="m 1758,1752 v 368 h 39.5 39.5 v -368 -368 h -39.5 -39.5 z"
        id="path5"
@@ -110,7 +110,7 @@
        style="fill:#1d1e1b;fill-opacity:1;stroke:none;stroke-width:2;stroke-dasharray:none;stroke-opacity:1" /></g><g
      id="g22"
      style="fill:url(#linearGradient23);stroke:#ffffff;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
-     transform="translate(-558.20113,-539.12048)"><rect
+     transform="matrix(0.1632647,0,0,0.1632647,-91.134538,-88.019344)"><rect
        style="fill:url(#linearGradient28);fill-opacity:1;stroke:#ffffff;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
        id="rect9"
        width="433.88837"

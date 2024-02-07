@@ -231,8 +231,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,
@@ -318,8 +320,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,
@@ -337,12 +341,12 @@
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
 						let cepUrl;
-						if(value.url_cep === null){
+						if (value.url_cep === null) {
 							cepUrl = "En proceso...";
-						}else{
+						} else {
 							cepUrl = "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
 						}
-					
+						
 						const tr = $("<tr>" +
 							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
 							"<td>" + cepUrl + "</td>" +
@@ -414,8 +418,10 @@
 				const top = obj.offset().top;
 				const width = obj.width();
 				const height = obj.height();
-				$("#solveLoader").css({
+				$("#solveLoader").delay(50000).css({
 					display: "block",
+					opacity: 1,
+					visibility: "visible",
 					left: left,
 					top: top,
 					width: width,
@@ -435,7 +441,7 @@
 						let uuid;
 						let urlCep;
 						urlCep = (value.cepUrl === null || value.cepUrl === "") ? "En proceso..." : "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
-					
+						
 						uuid = (value.idurl === "No aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						
 						const tr = $("<tr>" +
@@ -500,7 +506,7 @@
 	/* Fix show checkbox and radiobuttons*/
 	
 	[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-		opacity: 1;
+		opacity: 1,
 		position: relative;
 		pointer-events: auto;
 	}

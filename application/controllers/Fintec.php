@@ -11,7 +11,6 @@
 		private string $environment = 'SANDBOX';
 		public function __construct () {
 			parent::__construct ();
-			$this->load->model ( 'response' );
 		}
 		public function createLog ( string $logName, string $message ): void {
 			$logDir = ( strtoupper ( substr ( PHP_OS, 0, 3 ) ) === 'WIN' ) ? 'C:/web/logs/' : '/home/compensatest/logs/';
@@ -23,6 +22,7 @@
 			}
 		}
 		public function getEvents () {
+			$this->load->model ( 'response' );
 			$error = 0;
 			$resp = [ "response" => 'ok' ];
 			//Se revisa que la petición sea por POST y haya información en el cuerpo del mensaje
@@ -136,7 +136,7 @@
 						} else {
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
-								'clabe' => $data[ 'data' ][ 'source' ][ 'account_number' ],
+								'clabe' => $op['clientClabe'],
 								'amount' => filter_var ( $exitMoney, FILTER_VALIDATE_INT ),
 								'descriptor' => 'Pago por ' . $op[ 'uuid' ],
 								'name' => $data[ 'data' ][ 'source' ][ 'name' ],
