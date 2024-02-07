@@ -105,7 +105,7 @@
 <?php if ( $this->session->userdata ( 'logged_in' ) ) : ?>
 	<div class="sidebar center-align">
 		<a href="<?= base_url ( '' ) ?>"><img
-				src="<?= base_url ( 'assets/images/logo_purple_s.png' ); ?>" alt="Logo"
+				src="<?= base_url ( 'assets/images/logo_purple_s.svg' ); ?>" alt="Logo"
 				class="image-side hide-on-med-and-down"></a>
 		<!--<hr class="line-side">-->
 		<ul>

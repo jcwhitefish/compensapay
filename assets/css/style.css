@@ -1,6 +1,18 @@
 body{
     background: #f6f2f7 !important;
 }
+#solveLoader {
+	display: none;
+	position: absolute;
+	background-color: rgba(255, 255, 255, .8);
+	background-image: url('/assets/images/loader.gif') !important;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 200px 200px;
+	top: 0;
+	z-index: 999;
+	transition: opacity 5s ease, visibility 5s ease;
+}
 /* inputs */
 input[type="file"] {
     display: none;
