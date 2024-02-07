@@ -456,7 +456,7 @@
 						let urlCep;
 						urlCep = (value.cepUrl === null || value.cepUrl === "") ? "En proceso..." : "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
 						
-						uuid = (value.idurl === "No aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
+						uuid = (value.uuid === "No Aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						
 						const tr = $("<tr>" +
 							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
