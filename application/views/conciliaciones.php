@@ -1,4 +1,7 @@
 <style>
+	td, th {
+		padding: 15px !important;
+	}
 	input:disabled::placeholder {
 		color: black !important;
 		/* Cambia el color según tus preferencias */
@@ -55,44 +58,42 @@
 		color: #1d7e1d !important;
 	}
 </style>
-<div class="p-5" style="margin: 0;padding: 0 !important;">
+
+<div class="p-5">
+	<h5>Conciliaciones</h5>
 	<!-- head con el calendario -->
-	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
-		<div class="row" style="margin-left: 30px; margin-bottom: 1px">
-			<h6>Periodo:</h6>
+	<div class="row" style="margin-bottom: 10px">
+		<div class="col l3">
+			<div class="row" style="margin-bottom: 0;">
+				<div class="col valign-wrapper"><p>Desde:</p></div>
+				<div class="col">
+					<label for="start">
+						<input
+							type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
+							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+					</label>
+				</div>
+			</div>
 		</div>
-		<div class="row" style="margin-bottom: 10px">
-			<div class="col l3">
-				<div class="row" style="margin-bottom: 0;">
-					<div class="col valign-wrapper"><p>Desde:</p></div>
-					<div class="col">
-						<label for="start">
-							<input
-								type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
-								max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
-						</label>
-					</div>
+		<div class="col l3">
+			<div class="row" style="margin-bottom: 0;">
+				<div class="col valign-wrapper"><p>Hasta:</p></div>
+				<div class="col">
+					<label for="fin">
+						<input
+							type="date" id="fin" name="trip-start"
+							value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+					</label>
 				</div>
 			</div>
-			<div class="col l3">
-				<div class="row" style="margin-bottom: 0;">
-					<div class="col valign-wrapper"><p>Hasta:</p></div>
-					<div class="col">
-						<label for="fin">
-							<input
-								type="date" id="fin" name="trip-start"
-								value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
-								max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
-						</label>
-					</div>
-				</div>
-			</div>
-			<div class="col l3"></div>
-			<div class="col l3 valign-wrapper">
-				<a id="btnAction" class="modal-trigger button-blue" href="#modal-CFDI">Subir CFDI</a>
-			</div>
+		</div>
+		<div class="col l3"></div>
+		<div class="col l3 valign-wrapper">
+			<a id="btnAction" class="modal-trigger button-gray" href="#modal-CFDI">Subir CFDI</a>
 		</div>
 	</div>
+	
 	<!-- Las tablas principales que se muestran Facturas-->
 	<div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
 		<div class="card-content" style="padding: 10px; ">
@@ -101,13 +102,13 @@
 					<div class="col l3">
 						<button
 							id="btnConciliation" class="button-table" style="margin-right: 0.75rem"
-							onclick="conciliation()">
+							onclick="conciliation();data_tablas()">
 							Conciliación
 						</button>
 						<button
-							id="btnInvoice" class="button-table" style="margin-right: 0.75rem; margin-left: 0.75rem"
-							onclick="cfdi()">
-							Facturas
+							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
+							onclick="cfdi();data_tablas()">
+							CFDI's
 						</button>
 					</div>
 					<div class="col l2">
@@ -115,16 +116,15 @@
 					</div>
 				</div>
 			</div>
-			<div style="overflow-x: auto;">
-				<table
-					id="activeTbl" class="visible-table striped responsive-table"
-					style="display: block; max-height: 400px">
+			<div style="overflow-x: auto;" id="tablaActiva">
+				<!--<table
+					id="activeTbl" class="stripe row-border order-column nowrap">
 					<tbody>
 					<tr>
 						<td class="center-align" colspan="14">No hay datos</td>
 					</tr>
 					</tbody>
-				</table>
+				</table>-->
 			</div>
 		</div>
 	</div>
@@ -344,14 +344,17 @@
 	let conciliateWay = 0;
 	$(document).ready(function () {
 		conciliation();
+		data_tablas();
 		// $('#modal-new-conciliation').modal('open');/
 		$("#start").on("change", function () {
 			switch (btnActive) {
 				case 0:
 					conciliation();
+					data_tablas();
 					break;
 				case 1:
 					cfdi();
+					data_tablas();
 					break;
 			}
 			
@@ -360,9 +363,11 @@
 			switch (btnActive) {
 				case 0:
 					conciliation();
+					data_tablas();
 					break;
 				case 1:
 					cfdi();
+					data_tablas();
 					break;
 			}
 		});
@@ -707,40 +712,42 @@
 				}
 			});
 		});
+		
 	});
 	
 	function noSelect() {
 		$("#btnConciliation").removeClass("selected");
 		$("#btnInvoice").removeClass("selected");
-		$("#activeTbl").empty();
+		$("#tablaActiva").empty();
 		$("#btnAction").empty();
 	}
 	
 	function conciliation() {
+		$("#tablaActiva").empty();
 		btnActive = 0;
 		noSelect();
 		$("#btnConciliation").addClass("selected");
 		let btnAction = $("#btnAction").append("Subir CFDI");
 		btnAction.attr("href", "#modal-CFDI");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_conciliaciones\" class=\"stripe row-border order-column nowrap\"><thead><tr>" +
 			"<th>Autorizar</th>" +
-			"<th class=\"center-align\">Estatus conciliación</th>" +
-			"<th style=\"min-width: 142px; text-align: center\">ID Operación / Número de Referencia</th>" +
-			"<th class=\"center-align\">Emisor CFDI Inicial</th>" +
-			"<th class=\"center-align\">Receptor CFDI Inicial</th>" +
-			"<th class=\"center-align\">CFDI Inicial</th>" +
-			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto CFDI Inicial </th>" +
-			"<th style='min-width: 128px;' class=\"center-align\">Fecha Alta CFDI Inicial</th>" +
-			"<th style='min-width: 162px;' class=\"center-align\">Fecha Límite de Pago CFDI Inicial</th>" +
-			"<th style=\"text-align: center\">Emisor CFDI Conciliación</th>" +
-			"<th style=\"text-align: center\" class=\"center-align\">Receptor CFDI Conciliación</th>" +
-			"<th class=\"center-align\">CFDI Conciliación</th>" +
-			"<th class=\"center-align\">Monto CFDI Conciliación</th>" +
-			"<th class=\"center-align\">Fecha Alta CFDI Conciliación</th>" +
-			"<th class=\"center-align\">Fecha Conciliación</th>" +
+			"<th class=\"center-align\">Estatus<br />conciliación</th>" +
+			"<th style=\"min-width: 142px; text-align: center\">ID Operación /<br />Número de Referencia</th>" +
+			"<th class=\"center-align\">Emisor<br />CFDI Inicial</th>" +
+			"<th class=\"center-align\">Receptor<br />CFDI Inicial</th>" +
+			"<th class=\"center-align\">CFDI<br />Inicial</th>" +
+			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto<br />CFDI Inicial </th>" +
+			"<th style='min-width: 128px;' class=\"center-align\">Fecha Alta<br />CFDI Inicial</th>" +
+			"<th style='min-width: 162px;' class=\"center-align\">Fecha Límite de Pago<br />CFDI Inicial</th>" +
+			"<th style=\"text-align: center\">Emisor<br />CFDI Conciliación</th>" +
+			"<th style=\"text-align: center\" class=\"center-align\">Receptor<br />CFDI Conciliación</th>" +
+			"<th class=\"center-align\">CFDI<br />Conciliación</th>" +
+			"<th class=\"center-align\">Monto<br />CFDI Conciliación</th>" +
+			"<th class=\"center-align\">Fecha Alta<br />CFDI Conciliación</th>" +
+			"<th class=\"center-align\">Fecha<br />Conciliación</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=\"14\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody></table>";
+		$("#tablaActiva").append(tableBase);
 		$.ajax({
 			url: "/Conciliaciones/conciliation",
 			data: {
@@ -846,19 +853,19 @@
 						}
 						switch (value.status) {
 							case "0":
-								status = "<p>Pendiente de autorización</p>";
+								status = "<p><span class=\"estatus\">Pendiente de autorización</span></p>";
 								break;
 							case "1":
-								status = "<p>Autorizada</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
 								break;
 							case "2":
-								status = "<p>Rechazada</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#f36115\">Rechazada</span></p>";
 								break;
 							case "3":
-								status = "<p>Realizada</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#569700\">Realizada</span></p>";
 								break;
 							case "4":
-								status = "<p>Vencida</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#f36115\">Vencida</span></p>";
 								break;
 						}
 						const tr = $("<tr " + flag + ">" +
@@ -867,13 +874,13 @@
 							"<td class='center-align " + flag + "'>" + value.operation_number + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis;'>" + uuid + "</td>" +
 							"<td class='center-align " + flag + "'>$ " + value.total1 + "</td>" +
 							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
 							"<td class='center-align'>" + value.datePago + "</td>" +
 							"<td class='center-align'>" + value.senderConciliation + "</td>" +
 							"<td class='center-align'>" + value.receiverConciliation + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
 							"<td class='center-align'>$ " + value.total2 + "</td>" +
 							"<td class='center-align'>" + value.dateCFDI2 + "</td>" +
 							"<td class='center-align' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
@@ -900,18 +907,21 @@
 				M.toast({html: toastHTML, displayLength: 1000, duration: 1000});
 				
 			}
+			
 		});
 	}
 	
 	function cfdi() {
+		
+		$("#tablaActiva").empty();
 		btnActive = 0;
 		noSelect();
 		$("#cfdi").addClass("selected");
 		let btnAction = $("#btnAction").append("Subir CFDI");
 		btnAction.attr("href", "#modal-CFDI");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
-			"<th class='center-align'>Conciliación</th>" +
-			"<th class='center-align'>Estatus Factura</th>" +
+		const tableBase = "<table id=\"tabla_cfdis\" class=\"stripe row-border order-column nowrap\"><thead style=\"position:sticky; top: 0;\"><tr>" +
+			"<th>Conciliación</th>" +
+			"<th class='center-align'>Estatus CFDI</th>" +
 			"<th class='center-align'>UUID del CFDI</th>" +
 			"<th class=\"center-align\">Emisor</th>" +
 			"<th class='center-align'>Receptor</th>" +
@@ -919,10 +929,10 @@
 			"<th class='center-align' style=\"min-width: 135px\">Fecha de Alta del CFDI</th>" +
 			"<th class='center-align' style=\"min-width: 110px\">Fecha Límite de Pago</th>" +
 			"<th class='center-align'>Monto Total</th>" +
-			"<th class='center-align'>Tipo de Factura</th>" +
+			"<th class='center-align'>Tipo de CFDI</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=11\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody></table>";
+		$("#tablaActiva").append(tableBase);
 		$.ajax({
 			url: "/Conciliaciones/CFDI",
 			data: {
@@ -984,22 +994,22 @@
 						}
 						switch (value.status) {
 							case "0":
-								status = "<p>Libre</p>";
+								status = "<p><span class=\"estatus\">Libre</span></p>";
 								break;
 							case "1":
-								status = "<p>En operación</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">En operación</span></p>";
 								break;
 							case "2":
-								status = "<p>Rechazada</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#f36115\">Rechazada</span></p>";
 								break;
 							case "3":
-								status = "<p>Pagada</p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#569700\">Pagada</span></p>";
 								break;
 						}
 						const tr = $("<tr>" +
 							"<td class='center-align' id=\"initC" + value.id2 + "\"></td>" +
 							"<td class='center-align'>" + status + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 200px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
 							"<td class='center-align'>" + value.dateCFDI + "</td>" +
@@ -1095,6 +1105,34 @@
 				M.toast({html: toastHTML, displayLength: 1000, duration: 1000, edge: "rigth"});
 				
 			}
+		});
+	}
+</script>
+<script>
+	function data_tablas() {
+        var table_2 = $('#tabla_conciliaciones').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
+        var table_2 = $('#tabla_cfdis').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
 		});
 	}
 </script>

@@ -29,11 +29,13 @@
     <div class="row">
         <div class="col s3">
             <h5><strong>Periodo</strong></h5>
-            <p>Desde: <input type="date" value="<?php echo date("Y-m").'-01';?>" style="width: calc(100% - 60px)"></p>
+            <div class="col valign-wrapper"><p>Desde:</p></div>
+            <div class="col"><input type="date" value="<?php echo date("Y-m").'-01';?>"></div>
         </div>
         <div class="col s3">
             <h5>&nbsp;</h5>
-            <p>Hasta: <input type="date" value="<?php echo date("Y-m-d");?>" style="width: calc(100% - 60px)"></p>
+            <div class="col valign-wrapper"><p>Hasta:</p></div>
+            <div class="col"><input type="date" value="<?php echo date("Y-m-d");?>"></div>
         </div>
         <div class="col s6">
             <h5>&nbsp;</h5>
@@ -55,7 +57,7 @@
 <div class="container">
     <div class="row section">
         <div class="col s3">
-            <div class="card grey lighten-3" style="border-radius: 15px;">
+            <div class="card white lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Operaciones</strong><i class="material-icons right" style="rotate: 90deg; color:#9118bd;">import_export</i></span>
                     <p><?php echo $dashboard["OperacionesMes"];?></p>
@@ -64,7 +66,7 @@
             </div>
         </div>
         <div class="col s3">
-            <div class="card grey lighten-3" style="border-radius: 15px;">
+            <div class="card white lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Ingresos</strong><i class="material-icons right" style="color:#9118bd;">arrow_downward</i></span>
                     <p>$ <?php echo number_format($dashboard["IngresosMes"], 2);?></p>
@@ -73,7 +75,7 @@
             </div>
         </div>
         <div class="col s3">
-            <div class="card grey lighten-3" style="border-radius: 15px;">
+            <div class="card white lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Egresos</strong><i class="material-icons right" style="color:#9118bd;">arrow_upward</i></span>
                     <p>$ <?php echo number_format($dashboard["EgresosMes"], 2);?></p>
@@ -82,7 +84,7 @@
             </div>
         </div>
         <div class="col s3">
-            <div class="card grey lighten-3" style="border-radius: 15px;">
+            <div class="card white lighten-3" style="border-radius: 15px;">
                 <div class="card-content">
                     <span class="card-title"><strong>Diferencia</strong><i class="material-icons right" style="color:#9118bd;">attach_money</i></span>
                     <p>$ <?php echo number_format(($dashboard["IngresosMes"] - $dashboard["EgresosMes"]), 2);?></p>
@@ -120,7 +122,7 @@
 </div>
 
 <div class="container">
-    <div class="row section">
+    <div class="row section esquinasRedondas card">
         <div class="col s12">
          <h5><strong>Operaciones recientes</strong></h5>
             <table class="stripe row-border order-column nowrap" id="table_i_oper_rec" width="100%">

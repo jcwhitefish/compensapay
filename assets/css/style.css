@@ -123,7 +123,7 @@ input[type="number"] {
 }
 
 .esquinasRedondas {
-    border-radius: 25px !important;
+    border-radius: 15px !important;
 }
 
 .center-button {
@@ -286,10 +286,11 @@ tbody tr:hover{
 }
 
 thead, thead tr,thead tr th{
-    background-color:#8225fc ;
+    background-color:#f6f2f7 ;
     border-collapse: collapse;
     border-radius: 0!important;
-    color: white;
+    color: #808080;
+    font-size: 13px;
     
 }
 

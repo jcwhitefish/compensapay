@@ -26,7 +26,7 @@ if ($this->session->userdata('logged_in')) {
 		integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
 		crossorigin="anonymous"
 		referrerpolicy="no-referrer"></script>
-    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css">
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" rel="stylesheet">
 	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 </head>
 
