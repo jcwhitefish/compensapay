@@ -183,7 +183,6 @@
 			
 		});
 	});
-	
 	function noSelect() {
 		$("#cfdi").removeClass("selected");
 		$("#comprobantes").removeClass("selected");
@@ -191,7 +190,6 @@
 		$("#estados").removeClass("selected");
 		$("#tablaActivaD").empty();
 	}
-	
 	function cfdi() {
 		$("#tablaActivaD").empty();
 		btnActive = 0;
@@ -239,10 +237,14 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>";
-					M.toast({html: toastHTML});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>";
-					M.toast({html: toastHTML});
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 				} else if (data.code === 404) {
 				} else {
 					$("#tblBody").empty();
@@ -281,16 +283,17 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema</strong></span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Por favor intente mas tarde</span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>";
-				M.toast({html: toastHTML});
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
-	
 	function comprobantesP() {
 		$("#tablaActivaD").empty();
 		btnActive = 1;
@@ -337,11 +340,16 @@
 				}).focus();
 			},
 			success: function (data) {
-				if (data.code === 500 || data.code === 404) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>";
-					M.toast({html: toastHTML});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>";
-					M.toast({html: toastHTML});
+				if (data.code === 500) {
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				} else if (data.code === 404) {
 				} else {
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
@@ -383,16 +391,17 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema</strong></span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Por favor intente mas tarde</span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>";
-				M.toast({html: toastHTML});
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
-	
 	function movimientos() {
 		$("#tablaActivaD").empty();
 		btnActive = 2;
@@ -445,11 +454,16 @@
 				}).focus();
 			},
 			success: function (data) {
-				if (data.code === 500 || data.code === 404) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>";
-					M.toast({html: toastHTML});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>";
-					M.toast({html: toastHTML});
+				if (data.code === 500) {
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				} else if (data.code === 404) {
 				} else {
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
@@ -457,7 +471,7 @@
 						let urlCep;
 						urlCep = (value.cepUrl === null || value.cepUrl === "") ? "En proceso..." : "<a href=\"" + value.cepUrl + "\" target=\"_blank\">Descargar CEP</a>";
 						
-						uuid = (value.idurl === "No aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
+						uuid = (value.uuid === "No Aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						
 						const tr = $("<tr>" +
 							"<td>" +
@@ -496,16 +510,17 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema</strong></span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Por favor intente mas tarde</span>";
-				M.toast({html: toastHTML});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>";
-				M.toast({html: toastHTML});
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
-	
 	function estados() {
 		$("#tablaActivaD").empty();
 		noSelect();

@@ -36,13 +36,4 @@
 			];
 			$this->load->view ( 'notificacion', $dato );
 		}
-		
-		public function ShowAlerts (){
-			$dato = [
-				"noti" => $this->Notification_model->verNotificaciones (),
-				"dump" => 0,
-			];
-			$data[ 'main' ] = $this->load->view ( 'alerts', $dato, TRUE );
-			$this->load->view ( 'plantilla', $data );
-		}
 	}

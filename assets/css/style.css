@@ -1,6 +1,11 @@
 body{
     background: #f6f2f7 !important;
 }
+#toast-container{
+	top: 50% !important;
+	right: 50% !important;
+	transform: translateX(50%) translateY(50%) !important;
+}
 #solveLoader {
 	display: none;
 	position: absolute;
