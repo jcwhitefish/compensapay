@@ -1,15 +1,6 @@
 <?php
 	$factura = base_url ( 'assets/factura/factura.php?idfactura=' );
 ?>
-<script
-	src="https://code.jquery.com/jquery-3.6.0.min.js"
-	integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-	integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-	crossorigin="anonymous"
-	referrerpolicy="no-referrer"></script>
 <script>
 	$(document).ready(function () {
 		$("#download").on("click", function () {
@@ -65,14 +56,11 @@
 	function hideForms() {
 	}
 </script>
-<div class="p-5" style="margin: 0;padding: 0 !important;">
+<div class="p-5">
+	<h5>Documentos</h5>
 	<!-- head con el calendario -->
-	<div class="card esquinasRedondas" style="margin-right: 15px; margin-bottom: 5px">
-		<div class="row" style="margin-left: 30px; margin-bottom: 1px">
-			<h6>Periodo:</h6>
-		</div>
-		<div class="row" style="margin-bottom: 10px">
-			<div class="col l3">
+	<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
+		<div class="col l3">
 				<div class="row" style="margin-bottom: 0px;">
 					<div class="col valign-wrapper"><p>Desde:</p></div>
 					<div class="col">
@@ -83,29 +71,25 @@
 						</label>
 					</div>
 				</div>
-			</div>
-			<div class="col l3">
-				<div class="row" style="margin-bottom: 0px;">
-					<div class="col valign-wrapper"><p>Hasta:</p></div>
-					<div class="col">
-						<label for="fin">
-							<input
-								type="date" id="fin" name="trip-start"
-								value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
-								max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
-						</label>
-					</div>
+		</div>
+		<div class="col l3">
+			<div class="row" style="margin-bottom: 0px;">
+				<div class="col valign-wrapper"><p>Hasta:</p></div>
+				<div class="col">
+					<label for="fin">
+						<input
+							type="date" id="fin" name="trip-start"
+							value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+					</label>
 				</div>
 			</div>
-			<div class="col l3"></div>
-			<div class="col l3 valign-wrapper">
-				<a
-					id="download" class="waves-effect btn " download
-					style="background-color:#1565c0 !important; border: 2px solid #0d47a1 !important;
-				   border-radius:10px !important">Exportar</a>
-			</div>
 		</div>
-	
+		<div class="col l2"></div>
+		<div class="col l2"></div>
+		<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
+			<a id="download"  class="modal-trigger button-gray" download>Exportar</a>
+		</div>
 	</div>
 	<!-- Las tablas principales que se muestran -->
 	<div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
@@ -113,37 +97,36 @@
 			<div class="row" style="margin-bottom: 1px">
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
 					<div class="col l2">
-						<button id="cfdi" class="button-table" onclick="cfdi()">
+						<button id="cfdi" class="button-table" onclick="cfdi();data_tablas_d();">
 							CFDI
 						</button>
 					</div>
 					<div class="col l2">
-						<button id="comprobantes" class="button-table" onclick="comprobantesP()">
+						<button id="comprobantes" class="button-table" onclick="comprobantesP();data_tablas_d();">
 							Comprobantes de pago
 						</button>
 					</div>
 					<div class="col l2">
-						<button id="movimientos" class="button-table" onclick="movimientos()">
+						<button id="movimientos" class="button-table" onclick="movimientos();data_tablas_d();">
 							Movimientos
 						</button>
 					</div>
 					<div class="col l2">
-						<button id="estados" class="button-table" onclick="estados()">
+						<button id="estados" class="button-table" onclick="estados();data_tablas_d();">
 							Estados de cuenta
 						</button>
 					</div>
 				</div>
 			</div>
-			<div style="overflow-x: auto;">
-				<table
-					id="activeTbl" class="visible-table striped responsive-table"
-					style="display: block; max-height: 400px">
+			<div style="overflow-x: auto;" id="tablaActivaD">
+				<!--<table
+					id="activeTbl" class="stripe row-border order-column nowrap">
 					<tbody>
 					<tr>
-						<td class="center-align">No hay datos</td>
+						<td class="center-align"></td>
 					</tr>
 					</tbody>
-				</table>
+				</table>-->
 			</div>
 		</div>
 	</div>
@@ -152,19 +135,24 @@
 	let btnActive = 0;
 	$(document).ready(function () {
 		cfdi();
+		data_tablas_d();
 		$("#start").on("change", function () {
 			switch (btnActive) {
 				case 0:
 					cfdi();
+					data_tablas_d();
 					break;
 				case 1:
 					comprobantesP();
+					data_tablas_d();
 					break;
 				case 2:
 					movimientos();
+					data_tablas_d();
 					break;
 				case 3:
 					estados();
+					data_tablas_d();
 					break;
 				default:
 				// code block
@@ -175,15 +163,19 @@
 			switch (btnActive) {
 				case 0:
 					cfdi();
+					data_tablas_d();
 					break;
 				case 1:
 					comprobantesP();
+					data_tablas_d();
 					break;
 				case 2:
 					movimientos();
+					data_tablas_d();
 					break;
 				case 3:
 					estados();
+					data_tablas_d();
 					break;
 				default:
 				// code block
@@ -196,13 +188,15 @@
 		$("#comprobantes").removeClass("selected");
 		$("#movimientos").removeClass("selected");
 		$("#estados").removeClass("selected");
-		$("#activeTbl").empty();
+		$("#tablaActivaD").empty();
 	}
 	function cfdi() {
+		$("#tablaActivaD").empty();
 		btnActive = 0;
 		noSelect();
 		$("#cfdi").addClass("selected");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_d_cfdis\" class=\"stripe row-border order-column nowrap\">" +
+			"<thead><tr>" +
 			"<th>Seleccionar</th>" +
 			"<th>Emisor</th>" +
 			"<th>Receptor</th>" +
@@ -213,8 +207,9 @@
 			"<th style=\"min-width: 110px\">Total</th>" +
 			"<th>tipo</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=11\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody>" +
+			"</table>";
+		$("#tablaActivaD").append(tableBase);
 		$.ajax({
 			url: "/Documentos/DocsCFDI",
 			data: {
@@ -258,7 +253,14 @@
 						let subtotal;
 						let iva;
 						const tr = $("<tr>" +
-							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
+							"<td>" +
+							"<div class=\"switch\">" +
+                            "<label>" +
+                            "<input type=\"checkbox\" id=\"checkTbl\">" +
+                            "<span class=\"lever\"></span>" +
+                            "</label>" +
+                            "</div>" +
+							"</td>" +
 							"<td>" + value.emisor + "</td>" +
 							"<td>" + value.receptor + "</td>" +
 							"<td>" + uuid + "</td>" +
@@ -293,10 +295,12 @@
 		});
 	}
 	function comprobantesP() {
+		$("#tablaActivaD").empty();
 		btnActive = 1;
 		noSelect();
 		$("#comprobantes").addClass("selected");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_d_comprobantes\" class=\"stripe row-border order-column nowrap\">" +
+			"<thead style=\"position:sticky; top: 0;\"><tr>" +
 			"<th>Seleccionar</th>" +
 			"<th>Descargar CEP</th>" +
 			"<th>Institución emisora</th>" +
@@ -307,8 +311,9 @@
 			"<th>Fecha de pago</th>" +
 			"<th>Monto del pago</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=\"9\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody>" + 
+			"</table>";
+		$("#tablaActivaD").append(tableBase);
 		$.ajax({
 			url: "/Documentos/DocsCEP",
 			data: {
@@ -356,7 +361,14 @@
 						}
 						
 						const tr = $("<tr>" +
-							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
+							"<td>" +
+							"<div class=\"switch\">" +
+                            "<label>" +
+                            "<input type=\"checkbox\" id=\"checkTbl\">" +
+                            "<span class=\"lever\"></span>" +
+                            "</label>" +
+                            "</div>" +
+							"</td>" +
 							"<td>" + cepUrl + "</td>" +
 							"<td>" + value.bank_source + "</td>" +
 							"<td>" + value.bank_receiver + "</td>" +
@@ -391,10 +403,12 @@
 		});
 	}
 	function movimientos() {
+		$("#tablaActivaD").empty();
 		btnActive = 2;
 		noSelect();
 		$("#movimientos").addClass("selected");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_d_movimientos\" class=\"stripe row-border order-column nowrap\">" +
+			"<thead style=\"position:sticky; top: 0;\"><tr>" +
 			"<th>Seleccionar</th>" +
 			"<th>Monto</th>" +
 			"<th>Clave de rastreo</th>" +
@@ -411,8 +425,9 @@
 			"<th>CFDI correspondiente</th>" +
 			"<th>Fecha de Transacción</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=\"16\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody>" + 
+			"</table>";
+		$("#tablaActivaD").append(tableBase);
 		$.ajax({
 			url: "/Documentos/DocsMovimientos",
 			data: {
@@ -459,7 +474,14 @@
 						uuid = (value.uuid === "No Aplica") ? value.uuid : "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
 						
 						const tr = $("<tr>" +
-							"<td><input id=\"checkTbl\" type=\"checkbox\" style=\"position:static\"></td>" +
+							"<td>" +
+							"<div class=\"switch\">" +
+                            "<label>" +
+                            "<input type=\"checkbox\" id=\"checkTbl\">" +
+                            "<span class=\"lever\"></span>" +
+                            "</label>" +
+                            "</div>" +
+							"</td>" +
 							"<td>$ " + value.amount + "</td>" +
 							"<td>" + value.traking_key + "</td>" +
 							"<td>" + urlCep + "</td>" +
@@ -500,9 +522,11 @@
 		});
 	}
 	function estados() {
+		$("#tablaActivaD").empty();
 		noSelect();
 		$("#estados").addClass("selected");
-		const tableBase = "<thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_d_estados\" class=\"stripe row-border order-column nowrap\">" +
+			"<thead style=\"position:sticky; top: 0;\"><tr>" +
 			"<th>Seleccionar</th>" +
 			"<th>Mes</th>" +
 			"<th>Días del periodo</th>" +
@@ -512,8 +536,59 @@
 			"<th>Saldo Final</th>" +
 			"<th>Movimientos</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"><tr><td colspan=\"8\" class=\"center-align\">No hay datos</td></tr></tbody>";
-		$("#activeTbl").append(tableBase);
+			"<tbody id=\"tblBody\"></tbody>";
+		$("#tablaActivaD").append(tableBase);
+	}
+
+	function data_tablas_d() {
+        var tabla_31 = $('#tabla_d_cfdis').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
+        var tabla_32 = $('#tabla_d_comprobantes').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
+        var tabla_33 = $('#tabla_d_movimientos').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
+        var tabla_34 = $('#tabla_d_estados').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
 	}
 </script>
 <style>

@@ -162,7 +162,9 @@ input[type="number"] {
 }
 
 .p-5{
-    padding: 1.25rem !important;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-top: 0px;
 }
 
 .px-3{
@@ -251,17 +253,17 @@ input[type="number"] {
 
 .button-orange {
     transition-duration: 0.4s;
-    background-color: #ff6624 !important;
+    background-color: #c20005 !important;
     color: white !important;
     padding: 8px 30px;
-    border: 2px solid #af3a11 !important;
+    border: 2px solid #c20005 !important;
     border-radius: 10px !important;
 }
 
 .button-orange:hover {
     transition-duration: 0.4s;
-    background-color: #af3a11 !important; 
-    color: white !important;
+    background-color: #ffffff !important; 
+    color: #c20005 !important;
 }
 
 /* images */
