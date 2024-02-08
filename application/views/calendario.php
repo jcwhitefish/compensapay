@@ -24,10 +24,10 @@
         </div>
         <div class="col l2 center-align">
             <div class="row">
-                <div class="col s12"><a @click="cambiarSatusBoton('p')" :class="`btnLeyenda btn-small  ${vProgramed == false ? 'transparent black-text' : 'programed'}`">Programadas</a></div>
+                <div class="col s12"><a class="btnLeyenda btn-small  programed">Programadas</a></div>
             </div>
             <div class="row">
-                <div class="col s12"><a @click="cambiarSatusBoton('v')" :class="`btnLeyenda btn-small  ${vOverdue == false ? 'transparent black-text' : 'overdue'}`">Vencidas</a></div>
+                <div class="col s12"><a  class="btnLeyenda btn-small  overdue">Vencidas</a></div>
             </div>
         </div>
     </div>
@@ -202,11 +202,6 @@
             };
 
             const cambiarSatusBoton = (boton) => {
-                if(boton == 'p'){
-                    vProgramed.value = !vProgramed.value;
-                }else{
-                    vOverdue.value = !vOverdue.value;
-                }
                 colocarOperaciones();
             }
 
@@ -215,7 +210,7 @@
                 if (op.length > 0) {
                     opeToView.value = [];
                     for (let i = 0; i < op.length; i++) {
-                        const dia = op[i]['transaction_date'].slice(8);
+                        const dia = op[i]['transaction_date'].slice(0,3);
                         const estado = op[i]['status'] == '0' ? 'programed' : 'overdue';
                         const dt = {
                             'dia': parseInt(dia),
@@ -223,6 +218,7 @@
                             'indexOp': i,
                             'numberOp': op[i]['operation_number']
                         };
+						console.log(op[i]['transaction_date']);
                         if(vProgramed.value && !vOverdue.value && estado == 'programed'){
                             opeToView.value.push(dt);
                         }else if(!vProgramed.value && vOverdue.value && estado == 'overdue'){
@@ -423,6 +419,9 @@
 
     .overdue {
         background-color: #DB544F;
+    }
+    .overdue:hover {
+	    background-color: #DB544F;
     }
 
     .opeCalendar {
