@@ -3,7 +3,7 @@
 		padding: 15px !important;
 	}
 	input:disabled::placeholder {
-		color: black !important;
+		color: #ad8db8 !important;
 		/* Cambia el color según tus preferencias */
 		/* Otros estilos que desees aplicar al marcador de posición */
 	}
@@ -62,7 +62,7 @@
 <div class="p-5">
 	<h5>Conciliaciones</h5>
 	<!-- head con el calendario -->
-	<div class="row" style="margin-bottom: 10px">
+	<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
 		<div class="col l3">
 			<div class="row" style="margin-bottom: 0;">
 				<div class="col valign-wrapper"><p>Desde:</p></div>
@@ -88,8 +88,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col l3"></div>
-		<div class="col l3 valign-wrapper">
+		<div class="col l2"></div>
+		<div class="col l2"></div>
+		<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
 			<a id="btnAction" class="modal-trigger button-gray" href="#modal-CFDI">Subir CFDI</a>
 		</div>
 	</div>
@@ -219,7 +220,7 @@
 		</div>
 	</div>
 	<!-- Subir los CFDI -->
-	<div id="modal-CFDI" class="modal modal" style="max-height: 98% !important; height: 95%; width: 90% !important">
+	<div id="modal-CFDI" class="modal modal" style=" height: 95%; width: 90% !important">
 		<div class="modal-content">
 			<h5>Carga tus CFDI</h5>
 			<div class="card esquinasRedondas">
@@ -233,7 +234,7 @@
 									placeholder="Una factura en xml o múltiples en .zip" disabled>
 							</div>
 							<div style="width: 25%;margin-left: auto;">
-								<label for="containerCFDI" class="custom-file-upload button-blue">Seleccionar</label>
+								<label for="containerCFDI" class="custom-file-upload button-gray">Seleccionar</label>
 								<input
 									name="containerCFDI" id="containerCFDI" type="file" accept=".zip, .xml"
 									maxFileSize="5242880" required />
@@ -241,14 +242,19 @@
 						</div>
 						<div class="row">
 							<div class="col l12 center-align">
-								<a class="modal-close button-gray">Cancelar</a>
-								<input class="button-blue" type="submit" value="Siguiente">
+								<a class="modal-close button-orange">Cancelar</a>
+								<input class="button-gray" type="submit" value="Siguiente">
 							</div>
 						</div>
 						<div class="row">
 							<div class="col l12 d-flex">
 								<div class="p-5">
-									<input class="p-5" type="checkbox" required>
+									<div class="switch">
+										<label>
+											<input type="checkbox" required>
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
 								<p class="text-modal" style="text-align: justify;">
 									En caso de utilizar la presente factura para conciliar con una nota de crédito, el
