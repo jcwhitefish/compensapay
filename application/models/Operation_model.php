@@ -36,9 +36,9 @@
 		}
 		public function get_operation_calendar ( $user, $mes = NULL ) {
 			$year = date ( 'Y', time () );
-			$mes = $mes === NULL ? date ( 'Y', time () ) : $mes;
-			$fechaI = date ( 'Y-m-d', strtotime ( "01-{$mes}-{$year}" ) );
-			$fechaF = date ( 'Y-m-t', strtotime ( "01-{$mes}-{$year}" ) );
+			$mes = $mes === NULL ? date ( 'm', time () ) : intval( $mes );
+			$fechaI = mktime(0, 0, 0, $mes, 1);
+			$fechaF = strtotime ( date('Y-m-d',$fechaI).' +1 months' );
 			//$this->db->select('o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation,
 			//c.short_name, c.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
 			//d.uuid AS uuid_nota, d.total as money_nota ');
@@ -53,7 +53,7 @@
 			$this->db->join ( 'companies as c', 'c.id = o.id_provider' );
 			$this->db->where ( "(o.id_provider = $user OR o.id_client = $user)" );
 			$this->db->where ( "(o.status = 0 OR o.status = 4)" );
-			$this->db->where ( "(ip.transaction_date BETWEEN '$fechaI' AND '$fechaF')" );
+			$this->db->where ( "(o.payment_date BETWEEN '$fechaI' AND '$fechaF')" );
 			$query = $this->db->get ();
 			return $query->result ();
 		}
@@ -263,10 +263,9 @@ FROM $this->base.operations t1
 	LEFT JOIN $this->base.invoices t3 ON t3.id = t1.id_invoice_relational
 	LEFT JOIN $this->base.debit_notes t4 ON t4.id =id_debit_note
 	WHERE t1.id = {$id}";
-			
 			if ( $res = $this->db->query ( $query ) ) {
 				if ( $res->num_rows () ) {
-					return [ 'code' => 200, 'res' =>$res->result_array ()[ 0 ] ];
+					return [ 'code' => 200, 'res' => $res->result_array ()[ 0 ] ];
 				}
 				return [ 'code' => 404, 'message' => 'No se encontraron resultados', 'reason' => 'No se encontraron resultados para el id ingresado' ];
 			}
@@ -280,7 +279,7 @@ FROM $this->base.operations t1
 			$query = "INSERT INTO $this->base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
 VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['provider']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
 			if ( !@$this->db->query ( $query ) ) {
-				return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error() ];
+				return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
 				// do something in error case
 			} else {
 				$res = [

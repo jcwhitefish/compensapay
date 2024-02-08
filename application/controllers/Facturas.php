@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
+ * @property Operation_model $OpData
  * @property Invoice_model $invData
  * @property User_model $dataUsr
  */
@@ -17,6 +18,7 @@ class Facturas extends MY_Loggedin {
 		$this->load->model('company_model');
 		// Cambia por el usuario
 		$this->user = $this->user = $this->session->userdata('id');
+		
 	}
 
 	/**
@@ -250,9 +252,11 @@ class Facturas extends MY_Loggedin {
 	}
 
 	public function operacionesCalendario(){
+		$this->load->model('Operation_model', 'OpData');
 		$dato = array();
 		$mesSelected = $_POST['mesSelected'];
-		$dato['operaciones'] = $this->Operation_model->get_operation_calendar($this->user, $mesSelected);
+		$id = $this->session->userdata('datosEmpresa')['id'];
+		$dato['operaciones'] = $this->OpData->get_operation_calendar($id, $mesSelected);
 		$dato['status'] = 'ok';
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
