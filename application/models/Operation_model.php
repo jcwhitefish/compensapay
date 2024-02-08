@@ -42,8 +42,11 @@
 			//$this->db->select('o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation,
 			//c.short_name, c.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
 			//d.uuid AS uuid_nota, d.total as money_nota ');
-			$this->db->select ( 'o.*, ip.id AS urlid, ip.uuid AS uuid, ip.transaction_date,
-                            ic.id AS urlidrel,ic.uuid as uuid_relation, 
+			$this->db->select ( 'o.*, ip.id AS urlid, ip.uuid AS uuid, '.
+				"DATE_FORMAT(FROM_UNIXTIME(o.payment_date), '%d-%m-%Y') as transaction_date,
+				DATE_FORMAT(FROM_UNIXTIME(o.payment_date), '%d-%m-%Y') as payment_date,
+				DATE_FORMAT(FROM_UNIXTIME(o.created_at), '%d-%m-%Y') as created_at,".
+                            'ic.id AS urlidrel,ic.uuid as uuid_relation,
                             c.short_name, c.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
                             d.id AS urldeb, d.uuid AS uuid_nota, d.total as money_nota ' );
 			$this->db->from ( 'operations as o' );

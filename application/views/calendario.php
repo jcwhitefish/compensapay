@@ -215,7 +215,7 @@
                 if (op.length > 0) {
                     opeToView.value = [];
                     for (let i = 0; i < op.length; i++) {
-                        const dia = op[i]['transaction_date'].slice(8);
+                        const dia = op[i]['transaction_date'].slice(0,3);
                         const estado = op[i]['status'] == '0' ? 'programed' : 'overdue';
                         const dt = {
                             'dia': parseInt(dia),
@@ -223,6 +223,7 @@
                             'indexOp': i,
                             'numberOp': op[i]['operation_number']
                         };
+						console.log(op[i]['transaction_date']);
                         if(vProgramed.value && !vOverdue.value && estado == 'programed'){
                             opeToView.value.push(dt);
                         }else if(!vProgramed.value && vOverdue.value && estado == 'overdue'){
