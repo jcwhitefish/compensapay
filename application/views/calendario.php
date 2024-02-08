@@ -24,10 +24,10 @@
         </div>
         <div class="col l2 center-align">
             <div class="row">
-                <div class="col s12"><a :class="`btnLeyenda btn-small  ${vProgramed == false ? 'transparent black-text' : 'programed'}`">Programadas</a></div>
+                <div class="col s12"><a class="btnLeyenda btn-small  programed">Programadas</a></div>
             </div>
             <div class="row">
-                <div class="col s12"><a  :class="`btnLeyenda btn-small  ${vOverdue == false ? 'transparent black-text' : 'overdue'}`">Vencidas</a></div>
+                <div class="col s12"><a  class="btnLeyenda btn-small  overdue">Vencidas</a></div>
             </div>
         </div>
     </div>
@@ -419,6 +419,9 @@
 
     .overdue {
         background-color: #DB544F;
+    }
+    .overdue:hover {
+	    background-color: #DB544F;
     }
 
     .opeCalendar {
