@@ -3,10 +3,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 ?>
 
-<div class="p-5" id="app">
-    <div class="row">
+<div class="p-5">
+    <h5>Nueva Factura</h5>
+    <div class="row card esquinasRedondas" style="padding: 10px">
         <form name="ffactura" id="ffactura" method="POST" action="<?php echo base_url('/timbrado/guardar_factura');?>">
-            <p class="px-3">Nueva Factura</p>
             <div class="row">
                 <div class="col s8">
                     <label for="cliente">Cliente:</label>
@@ -112,7 +112,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <div style="overflow-x: auto;" id="partidas">
-                <table class="visible-table">
+                <table id="tabla_t_nuevafactura" class="stripe row-border order-column nowrap">
                     <thead>
                         <tr>
                             <th align="center" class="texto3">IVA</th>
@@ -130,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </thead>
                     <tbody>
                         <tr>
-                            <td bgcolor="#dfe1e7" align="center" class="texto">
+                            <td align="center" class="texto">
                                 <div class="switch">
                                     <label>
                                         <input name="aplicaiva" id="aplicaiva" type="checkbox" value="1" checked>
@@ -138,7 +138,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </label>
                                 </div>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto">
+                            <td align="center" class="texto">
                                 <div class="switch">
                                     <label>
                                         <input name="aplicariva" id="aplicariva" type="checkbox" value="1">
@@ -146,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </label>
                                 </div>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto">
+                            <td align="center" class="texto">
                                 <div class="switch">
                                     <label>
                                         <input name="aplicarisr" id="aplicarisr" type="checkbox" value="1" <?php if(isset($_POST["apretisr"]) AND $_POST["apretisr"]==1){echo ' checked';}?>>
@@ -154,10 +154,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </label>
                                 </div>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <input type="text" name="cantidad" id="cantidad" size="5"  value="1" onKeyUp="calculo(this.value,precio.value,total);">
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <select name="unidad" id="unidad"  class="browser-default">
                                     <option value="0">Seleccione</option>
                                     <?php
@@ -171,7 +171,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     ?>
                                 </selec>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <select name="claveprodserv" id="claveprodserv"  class="browser-default">
                                     <option value="0">Seleccione</option>
                                     <?php
@@ -185,61 +185,111 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     ?>
                                 </select>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <input type="text" name="numidentificacion" id="numidentificacion" size="10"  value="NO APLICA">
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <textarea name="producto" id="producto" style="height: 70px"></textarea>
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <input type="text" name="precio" id="precio" size="10"  onKeyUp="calculo(cantidad.value,this.value,total)">
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <input type="text" name="total" id="total" size="10" >
                             </td>
-                            <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
+                            <td align="center" class="texto" valign="top">
                                 <!--<input type="button" name="botadprod" id="botadprod" value="+" class="btn waves-effect waves-light" onclick="partidas('hola')">-->
                                 <input type="hidden" name="nuevafactura" id="nuevafactura" value="1">
-                                <a class="modal-trigger button-blue" onclick="partidas()">+</a>
+                                <a class="modal-trigger button-gray" onclick="partidas()">+</a>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Subtotal: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">Subtotal: </td>
                             <td align="right" bgcolor="">
                                 <input type="hidden" name="subtotalf" id="subtotalf" value="">$ 
                             </td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Iva 16 %: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">Iva 16 %: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="ivaf" id="ivaf" value="">$ 
                             </td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">RET. I.S.R.: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">RET. I.S.R.: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="risr" id="risr" value=""  size="3">$ 
                             </td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">RET. I.V.A.: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">RET. I.V.A.: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="riva" id="riva" value=""  size="3">$ </td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Total: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">Total: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="totalf" id="totalf" value="">$ </td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="15" align="center" bgcolor="" style="text-align: right">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="center" bgcolor="" style="text-align: right">
                                 <input type="hidden" name="partidas" id="partidas" value="">
-                                <input type="submit" name="botfinfact" id="botfinfact" value="Guardar Factura>>" class="btn waves-effect waves-light" onclick="">
+                                <input type="submit" name="botfinfact" id="botfinfact" value="Guardar" class="button-gray" onclick="">
                             </td>
                         </tr>
                     </tbody>
@@ -287,4 +337,17 @@ function partidas(borrapar = null){
 		$('#partidas').html(info);
 	});
 }
+
+var tabla_44 = $('#tabla_t_nuevafactura').DataTable({
+	deferRender:    true,
+	language: {
+		decimal: '.',
+		thousands: ',',
+		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+	},
+	paging: false,
+	info: false,
+	searching: false,
+	sort: false
+});
 </script>

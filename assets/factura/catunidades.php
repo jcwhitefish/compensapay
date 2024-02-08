@@ -39,12 +39,12 @@ $cadena='<div class="p-5" id="app">
                                 </select>
                             </div>
                             <div class="col s3 input-field">
-                                <a class="waves-effect waves-light btn" onclick="unidades(document.getElementById(\'unidad\').value, document.getElementById(\'descripcionu\').value, document.getElementById(\'estatusu\').value)">Buscar <i class="material-icons right">search</i></a>
+                                <a class="waves-effect waves-light button-gray" onclick="unidades(document.getElementById(\'unidad\').value, document.getElementById(\'descripcionu\').value, document.getElementById(\'estatusu\').value)">Buscar <i class="material-icons right">search</i></a>
                             </div>
                         </div>
                     </form>
                     <div style="overflow-x: auto;">
-                        <table class="visible-table striped">
+                        <table id="tabla_t_unidades" class="stripe row-border order-column nowrap">
                             <thead>
                                 <tr>
                                     <th>Clave Unidad</th>
@@ -90,4 +90,17 @@ echo $cadena;
     $(document).ready(function(){
     $('select').formSelect();
 });
+
+var tabla_43 = $('#tabla_t_unidades').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: true
+		});
 </script>

@@ -71,7 +71,7 @@
     $_SESSION["partidas"] = $array;
 
 ?>
-<table class="visible-table">
+<table id="tabla_t_nuevafactura" class="stripe row-border order-column nowrap">
                     <thead>
                         <tr>
                             <th align="center" class="texto3">IVA</th>
@@ -158,7 +158,7 @@
                             </td>
                             <td bgcolor="#dfe1e7" align="center" class="texto" valign="top">
                                 <input type="hidden" name="nuevafactura" id="nuevafactura" value="0">
-                                <a class="modal-trigger button-blue" onclick="partidas()">+</a>
+                                <a class="modal-trigger button-gray" onclick="partidas()">+</a>
                             </td>
                         </tr>
                         <?php
@@ -223,7 +223,15 @@
                                 $sdescuento=$subtotal*$descuento;
 
                                 echo '<tr>
-                                        <td colspan="9" bgcolor="" style="text-align: right">Descuento: </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td bgcolor="" style="text-align: right">Descuento: </td>
                                         <td align="right" bgcolor="">
                                             <input type="hidden" name="descuentof" id="descuentof" value="'.$sdescuento.'">$ '.number_format($sdescuento,2).'
                                         </td>
@@ -232,7 +240,15 @@
                             }
 
                             echo '<tr>
-                                    <td colspan="9" bgcolor="" style="text-align: right">Subtotal: </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td bgcolor="" style="text-align: right">Subtotal: </td>
                                     <td align="right" bgcolor="">
                                         <input type="hidden" name="subtotalf" id="subtotalf" value="'.$subtotal.'">$ '.number_format($subtotal,2).'
                                     </td>
@@ -251,7 +267,15 @@
                             $total= $subtotal - ($subtotalaplicariva + $subtotalaplicarisr) + $iva;
                         ?>
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Iva 16 %: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">Iva 16 %: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="ivaf" id="ivaf" value="<?php echo $iva;?>">$ <?php echo number_format($iva, 2);?> 
                             </td>
@@ -261,7 +285,15 @@
                             if($subtotalaplicarisr>0)
                             {
                                 echo '<tr>
-                                    <td colspan="9" bgcolor="" style="text-align: right">RET. I.S.R.: </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td bgcolor="" style="text-align: right">RET. I.S.R.: </td>
                                     <td align="right" class="texto" bgcolor="">
                                         <input type="hidden" name="risr" id="risr" value="'.$subtotalaplicarisr.'"  size="3">$ '.number_format($subtotalaplicarisr, 2).'
                                     </td>
@@ -272,7 +304,15 @@
                             if($subtotalaplicariva>0)
                             {
                                 echo '<tr>
-                                    <td colspan="9" bgcolor="" style="text-align: right">RET. I.V.A.: </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td bgcolor="" style="text-align: right">RET. I.V.A.: </td>
                                     <td align="right" class="texto" bgcolor="">
                                         <input type="hidden" name="riva" id="riva" value="'.$subtotalaplicariva.'"  size="3">$ '.number_format($subtotalaplicariva, 2).'
                                     </td>
@@ -282,15 +322,33 @@
                         ?>
                         
                         <tr>
-                            <td colspan="9" bgcolor="" style="text-align: right">Total: </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td bgcolor="" style="text-align: right">Total: </td>
                             <td align="right" class="texto" bgcolor="">
                                 <input type="hidden" name="totalf" id="totalf" value="<?php echo $total;?>">$ <?php echo number_format($total, 2);?></td>
                             <td align="center" clasS="texto" bgcolor="">&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="15" align="center" bgcolor="" style="text-align: right">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="center" bgcolor="" style="text-align: right">
                                 <input type="hidden" name="partidas" id="partidas" value="<?php echo count($array);?>">
-                                <input type="submit" name="botfinfact" id="botfinfact" value="Guardar Factura>>" class="btn waves-effect waves-light" onclick="">
+                                <input type="submit" name="botfinfact" id="botfinfact" value="Guardar" class="button-gray" onclick="">
                             </td>
                         </tr>
                     </tbody>

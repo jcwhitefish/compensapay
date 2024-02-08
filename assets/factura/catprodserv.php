@@ -39,12 +39,12 @@ $cadena='<div class="p-5" id="app">
                                 </select>
                             </div>
                             <div class="col s3 input-field">
-                                <a class="waves-effect waves-light btn" onclick="productosyservicios(document.getElementById(\'prodserv\').value, document.getElementById(\'descripcion\').value, document.getElementById(\'estatus\').value)">Buscar <i class="material-icons right">search</i></a>
+                                <a class="waves-effect waves-light button-gray" onclick="productosyservicios(document.getElementById(\'prodserv\').value, document.getElementById(\'descripcion\').value, document.getElementById(\'estatus\').value)">Buscar <i class="material-icons right">search</i></a>
                             </div>
                         </div>
                     </form>
                     <div style="overflow-x: auto;">
-                        <table class="visible-table striped">
+                        <table id="tabla_t_prodserv" class="stripe row-border order-column nowrap">
                             <thead>
                                 <tr>
                                     <th>Clave Producto/Servicio</th>
@@ -90,4 +90,17 @@ echo $cadena;
     $(document).ready(function(){
     $('select').formSelect();
 });
+
+var tabla_42 = $('#tabla_t_prodserv').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: true
+		});
 </script>

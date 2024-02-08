@@ -3,34 +3,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 
-
-<div class="p-5" id="app">
-    <div class="row">
-        <p class="px-3">Periodo:</p>
+<div class="p-5">
+    <h5>Timbrado</h5>
+    <div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
         <div class="col l3">
-            <input type="date" id="start" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="start">Desde:</label>
+            <div class="row" style="margin-bottom: 0px;">
+				<div class="col valign-wrapper"><p>Desde:</p></div>
+				<div class="col">
+					<label for="start">
+						<input
+							type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
+							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+					</label>
+				</div>
+			</div>
         </div>
         <div class="col l3">
-            <input type="date" id="fin" name="trip-start" value="2023-07-22" min="2023-01-01" max="2040-12-31" />
-            <label for="fin">Hasta:</label>
+            <div class="row" style="margin-bottom: 0px;">
+				<div class="col valign-wrapper"><p>Hasta:</p></div>
+				<div class="col">
+					<label for="fin">
+						<input
+							type="date" id="fin" name="trip-start"
+							value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+					</label>
+				</div>
+			</div>
         </div>
         <div class="col l2"></div>
-        <div class="col l4 valign-wrapper right">
-			<a id="btnAction" class="button-blue" style="margin-right: 40px" href="<?php echo base_url('/timbrado/nueva_factura');?>">Nueva Factura</a>
-            <a id="btnAction" class="modal-trigger button-blue" style="margin-right: 40px" href="#modalcf" onclick="productosyservicios();unidades();">Configuración</a>
+        <div class="col l2 valign-wrapper">
+			<a id="btnAction" class="button-gray" href="<?php echo base_url('/timbrado/nueva_factura');?>">Nueva Factura</a>
+        </div>
+        <div class="col l2 valign-wrapper">
+            <a id="btnAction" class="modal-trigger button-gray" href="#modalcf" onclick="productosyservicios();unidades();">Configuración</a>
 		</div>
         
     </div>
 
-    <div class="row">
+    <div class="card esquinasRedondas">
         <div class="card-content">
             <div style="overflow-x: auto;">
-                <table class="visible-table striped">
+                <table id="tabla_t_cfdis" class="stripe row-border order-column nowrap">
                     <thead>
                         <tr>
                             <th>Empresa</th>
-                            <td>XML</td>
+                            <th>XML</th>
                             <th>UUID</th>
                             <th>Fecha</th>
                             <th style="text-align: right;">Total</th>
@@ -72,13 +90,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <div id="modalcf" class="modal" style="width: 80% !important; height: 90% !important;">
-    <div class="modal-content">
-        <h6>Configuración facturas</h6>
-        <div class="row">
+    <div class="modal-content" styke="background: #f6f2f7 !important;">
+        <h5>Configuración facturas</h5>
+        <div class="row card esquinasRedondas">
             <div class="col s12">
                 <ul class="tabs">
-                    <li class="tab col s3"><a href="#test1" class="active">Productos y Servicios</a></li>
-                    <li class="tab col s3"><a href="#test2">Unidades de medida</a></li>
+                    <li class="tab col s3"><a class="active" href="#test1">Productos y Servicios</a></li>
+                    <li class="tab col s3"><a class="" href="#test2">Unidades de medida</a></li>
                 </ul>
             </div>
             <div id="test1" class="col s12"></div>
@@ -94,6 +112,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <script>
+$(document).ready(function(){
+    $('.tabs').tabs();
+});
+
 function productosyservicios(clave = null, descripcion = null, estatus = null){
     $.ajax({
 		type: 'POST',
@@ -145,6 +167,19 @@ if(isset($factura))
     echo "M.toast({html: '".$factura["message"]."', displayLength: 1000, duration: 1000, edge: \"rigth\"})";
 }
 ?>
+
+var tabla_41 = $('#tabla_t_cfdis').DataTable({
+	deferRender:    true,
+	language: {
+		decimal: '.',
+		thousands: ',',
+		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+	},
+	paging: false,
+	info: false,
+	searching: false,
+	sort: true
+});
 </script>
 <style>
     #toast-container {
