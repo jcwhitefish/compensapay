@@ -69,8 +69,8 @@
 					<div class="col l4">
 						<?php $btnVal = empty( $card ) ? 'Agregar' : 'Cambiar'; ?>
 						<a
-							id="changeCard" class="waves-effect button-gray waves-light btn-large l12"
-							style="width: 100%; padding: 0;"><?= $btnVal ?></a>
+							id="changeCard" class="waves-effect blue waves-light btn-large l12"
+							style="width: 100%"><?= $btnVal ?></a>
 					</div>
 				</div>
 				<h6 style="margin-top: 1px">Historial de facturación</h6>
@@ -78,7 +78,7 @@
 			</div>
 		</div>
 		<div class="col l6 m6">
-			<!--<div class="section"><h5>Notificaciones relacionadas con mis clientes</h5></div>
+			<div class="section"><h5>Notificaciones relacionadas con mis clientes</h5></div>
 			<div class="divider"></div>
 			<div class="section">
 				<h6>Operaciones</h6>
@@ -193,7 +193,7 @@
 			</div>
 			<div class="section">
 				<a id="saveChanges" class="waves-effect blue waves-light btn-large l12" style="width: 100%">Guardar</a>
-			</div>-->
+			</div>
 		</div>
 	</div>
 	<div id="addCardM" class="modal modal-fixed-footer" style="max-height 90% !important;">
@@ -264,8 +264,8 @@
 					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
 				</div>
 				<div class="col l3">
-					<button class="button-gray waves-effect waves-light right" id="sendCard" name="sendCard">
-						Guardar
+					<button class="btn waves-effect waves-light grey right" id="sendCard" name="sendCard">
+						Enviar<i class="material-icons right">send</i>
 					</button>
 				</div>
 			</div>
