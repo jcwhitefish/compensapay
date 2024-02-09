@@ -3,8 +3,8 @@
 $unique = $this->session->userdata('datosEmpresa')['unique_key'];
 //var_dump($this->session->userdata('datosEmpresa'));
 if(empty($this->session->userdata('datosEmpresa')['rec_id'])){
-    $botonProv = '<a class="modal-trigger button-blue" href="#modal-proveedor" >
-                        Regístrate Proveedor
+    $botonProv = '<a class="modal-trigger button-gray" href="#modal-proveedor" >
+                        Crear cuenta bancaria
                     </a>';
 }else{
     $botonProv ='';
@@ -552,7 +552,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     <!-- Modal Registrarse como Proveedor -->
     <div id="modal-proveedor" class="modal">
         <div class="modal-content">
-            <h5>Registro de Proveedor</h5>
+            <h5>Crear cuenta bancaria</h5>
             <div class="card esquinasRedondas">
                 <div class="card-content">
                     <div name="div-fase-1" id="div-fase-1">
@@ -885,16 +885,16 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                     </div>
                     <div class="row">
                         <div class="col center-align cover">
-                            <a class="modal-close button-gray" name="cancelForm" id="cancelForm" style="color:#fff; color:hover:#">Cancelar</a>
+                            <a class="modal-close button-orange" name="cancelForm" id="cancelForm" style="color:#fff; color:hover:#">Cancelar</a>
                             &nbsp;
-                            <button hidden class="button-blue" name="back-fase-1" id="back-fase-1" type="submit">Atrás</button>
-                            <button hidden class="button-blue" name="back-fase-2" id="back-fase-2" type="submit">Atrás</button>
-                            <button hidden class="button-blue" name="back-fase-3" id="back-fase-3" type="submit">Atrás</button>
+                            <button hidden class="button-gray" name="back-fase-1" id="back-fase-1" type="submit">Atrás</button>
+                            <button hidden class="button-gray" name="back-fase-2" id="back-fase-2" type="submit">Atrás</button>
+                            <button hidden class="button-gray" name="back-fase-3" id="back-fase-3" type="submit">Atrás</button>
                             &nbsp;
-                            <button class="button-blue" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
-                            <button hidden class="button-blue" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
-                            <button hidden class="button-blue" name="btn-fase-3" id="btn-fase-3" type="">Siguiente</button>
-                            <a hidden class="modal-trigger modal-close button-blue" name="btn-fase-4" id="btn-fase-4" href="#modal-proveedor-final" onchange="return fileValidation()" style="color:#fff; color:hover:#">
+                            <button class="button-gray" name="btn-fase-1" id="btn-fase-1" type="submit">Siguiente</button>
+                            <button hidden class="button-gray" name="btn-fase-2" id="btn-fase-2" type="">Siguiente</button>
+                            <button hidden class="button-gray" name="btn-fase-3" id="btn-fase-3" type="">Siguiente</button>
+                            <a hidden class="modal-trigger modal-close button-gray" name="btn-fase-4" id="btn-fase-4" href="#modal-proveedor-final" onchange="return fileValidation()" style="color:#fff; color:hover:#">
                                 Enviar registro
                             </a>
                         </div>
