@@ -9,17 +9,19 @@ class Clientesproveedores_model extends CI_Model {
 
         $idCompanie = $this->session->userdata('datosEmpresa')['id'];
 
-        $queryc = "SELECT * FROM clientprovider AS c 
-                    INNER JOIN companies AS com ON c.client_id=com.id 
-                    INNER JOIN cat_zipcode AS cp ON com.id_postal_code=cp.zip_id 
-                    WHERE provider_id='".$idCompanie."' 
-                    ORDER BY com.legal_name;";
+        //$queryc = "SELECT * FROM clientprovider AS c 
+        //            INNER JOIN companies AS com ON c.client_id=com.id 
+        //            INNER JOIN cat_zipcode AS cp ON com.id_postal_code=cp.zip_id 
+        //            WHERE provider_id='".$idCompanie."' 
+        //            ORDER BY com.legal_name;";
+        $queryc = "SELECT * FROM companies AS c 
+                    INNER JOIN cat_zipcode AS cp on c.id_postal_code = cp.zip_id
+                    WHERE c.id IN 
+                    (SELECT emp.empresa AS empresa FROM 
+                        (SELECT client_id AS empresa FROM `clientprovider` WHERE provider_id = 1 
+                        UNION ALL SELECT provider_id AS empresa FROM clientprovider WHERE client_id = 1) AS emp 
+                        GROUP BY empresa)";
 
-        $queryp = "SELECT * FROM clientprovider AS c
-                    INNER JOIN companies AS com On c.provider_id=com.id
-                    INNER JOIN cat_zipcode AS cp on com.id_postal_code=cp.zip_id 
-                    WHERE client_id='".$idCompanie."' 
-                    ORDER BY com.legal_name;";
 
         if ($result = $this->db->query($queryc)) {
 			if ($result->num_rows() > 0){
@@ -30,18 +32,9 @@ class Clientesproveedores_model extends CI_Model {
             }
 		}
 
-        if($resul2 = $this->db->query($queryp)) {
-            if($resul2->num_rows() >0){
-                $resultp = $resul2->result_array();
-            }
-            else{
-                $resultp = '';
-            }
-        }
 
         $rescp = array (
-            "clientes" => $resultc, 
-            "proveedores" => $resultp
+            "clientes" => $resultc
         );
 
 		return $rescp;
