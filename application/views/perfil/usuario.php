@@ -6,9 +6,10 @@ if ($this->session->userdata('logged_in')) {
 //var_dump($usuario);
 ?>
 <div class="p-5" id="app">
-    <div class="card esquinasRedondas">
+    <h5>Perfil de usuario</h5>
+    <div class="row card esquinasRedondas" style="padding: 20px">
         <div class="card-content">
-            <h2 class="card-title">Registro de usuario</h2>
+            
             <form @submit.prevent="submitForm" class="col l12" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col l5 line-card-right especial-p">
@@ -88,14 +89,14 @@ if ($this->session->userdata('logged_in')) {
                         <div class="container">
                             <h2 class="card-title">Imagen de Perfil</h2>
                             <img src="<?= $urlUsuario . 'foto.jpg' ?>" alt="" style="max-width: 140px; height: 140px;"><br>
-                            <label for="imageUpload" class="custom-file-upload p-5">
+                            <label for="imageUpload" class="button-gray">
                                 Seleccionar Imagen
                             </label>
                             <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/*" maxFileSize="1048576" />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
-                        <button class="custom-file-upload" type="submit" name="action">Guardar</button>
+                        <button class="button-gray" type="submit" name="action">Guardar</button>
                     </div>
                 </div>
             </form>
