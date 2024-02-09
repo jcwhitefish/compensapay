@@ -4,21 +4,12 @@
 <script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
 <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
 <div class="p-5">
-	<div>
-		<div class="yellow center">
-			<div class="col 12"><span></span> Invita a tus clientes y/o proveedores. <a href="">aquí</a></div>
-		</div>
-	</div>
+
 	<?php $notifications = $notifications[ 0 ] ?? ''; ?>
-	
-	<div class="row">
-		<div class="col l12">
-			<div><h5 style="font-weight: bold">Configuración
-			                                   para <?= $this->session->userdata ( 'datosEmpresa' )[ 'short_name' ] ?></h5>
-			</div>
-		</div>
+	<h5>Configuración avanzada <?= $this->session->userdata ( 'datosEmpresa' )[ 'short_name' ] ?></h5>
+	<div class="row card esquinasRedondas" style="padding: 20px">
 		<div class="col l6 m6">
-			<div class="section"><h5>Mis Contactos</h5></div>
+			<!--<div class="section"><h5>Mis Contactos</h5></div>
 			<div class="divider"></div>
 			<div class="section">
 				<label>
@@ -51,7 +42,7 @@
 					<input type="checkbox" id="operaciones" name="operaciones" class="filled-in" />
 					<span>Todos los usuarios pueden crear operaciones</span>
 				</label>
-			</div>
+			</div>-->
 			<div class="section">
 				<h5>Subscripción</h5>
 				<h6>Método de pago</h6>
@@ -78,8 +69,8 @@
 					<div class="col l4">
 						<?php $btnVal = empty( $card ) ? 'Agregar' : 'Cambiar'; ?>
 						<a
-							id="changeCard" class="waves-effect blue waves-light btn-large l12"
-							style="width: 100%"><?= $btnVal ?></a>
+							id="changeCard" class="waves-effect button-gray waves-light btn-large l12"
+							style="width: 100%; padding: 0;"><?= $btnVal ?></a>
 					</div>
 				</div>
 				<h6 style="margin-top: 1px">Historial de facturación</h6>
@@ -87,7 +78,7 @@
 			</div>
 		</div>
 		<div class="col l6 m6">
-			<div class="section"><h5>Notificaciones relacionadas con mis clientes</h5></div>
+			<!--<div class="section"><h5>Notificaciones relacionadas con mis clientes</h5></div>
 			<div class="divider"></div>
 			<div class="section">
 				<h6>Operaciones</h6>
@@ -202,7 +193,7 @@
 			</div>
 			<div class="section">
 				<a id="saveChanges" class="waves-effect blue waves-light btn-large l12" style="width: 100%">Guardar</a>
-			</div>
+			</div>-->
 		</div>
 	</div>
 	<div id="addCardM" class="modal modal-fixed-footer" style="max-height 90% !important;">
@@ -273,8 +264,8 @@
 					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
 				</div>
 				<div class="col l3">
-					<button class="btn waves-effect waves-light grey right" id="sendCard" name="sendCard">
-						Enviar<i class="material-icons right">send</i>
+					<button class="button-gray waves-effect waves-light right" id="sendCard" name="sendCard">
+						Guardar
 					</button>
 				</div>
 			</div>

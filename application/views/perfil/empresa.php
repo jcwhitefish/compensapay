@@ -12,13 +12,7 @@ if(empty($this->session->userdata('datosEmpresa')['rec_id'])){
 
 $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
+
 <script>
     $(document).ready(function() {
         $('#btn-fase-1').on('click', function() {
@@ -361,20 +355,19 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     }
 </script>
 
-<div class="p-5" id="app">
+<div class="p-5">
+    <h5>Configuración de la empresa</h5>
     <div class="row">
-        <div class="col l12 d-flex space-between">
-            <h5 class="card-title">Registro de Empresa</h5>
-
-            <a class="linkConfiguracion" href="<?= base_url('Configuracion'); ?>">
-                Configuración
+        <div class="col l12 card esquinasRedondas right-align" style="padding: 20px;">
+            <a class="linkConfiguracion" href="<?= base_url('Configuracion'); ?>" style="color: #9118bd">
+                Configuración Avanzada
                 <i class="material-icons iconoSetting">
                     settings
                 </i></a>
         </div>
     </div>
     <form @submit.prevent="submitForm" method="post" action="<?php echo base_url(''); ?>" class="col l12" enctype="multipart/form-data">
-        <div class="row">
+        <div class="row card esquinasRedondas">
             <div class="col l5 especial-p">
                 <div class="row">
                     <div class="col l12" style="margin-bottom: 30px;">
@@ -478,15 +471,15 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                 <div class="container">
                     <h5 class="card-title">Seleccionar logotipo</h5>
                     <img :src="imageUploadURL" alt="" style="max-width: 140px; max-height: 140px;"><br>
-                    <label for="imageUpload" class="custom-file-upload p-5">
+                    <label for="imageUpload" class="button-gray p-5">
                         Seleccionar Imagen
                     </label>
                     <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
                 </div>
             </div>
         </div>
-        <div class="row">
-            <table>
+        <div class="row card esquinasRedondas" style="padding:20px">
+            <table id="tabla_documentos" class="stripe row-border order-column nowrap">
                 <thead>
                     <tr>
                         <th>
@@ -508,7 +501,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         </td>
                         <td><a :href="actaConstitutivaUploadURL" target="_blank">{{actaConstitutivaUploadName}}</a></td>
                         <td>
-                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                            <label for="actaConstitutivaUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
                         </td>
                     </tr>
@@ -518,7 +511,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         </td>
                         <td><a :href="csfUploadURL" target="_blank">{{csfUploadName}}</a></td>
                         <td>
-                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <label for="csfUpload" class="button-gray">Agregar </label>
                             <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
                         </td>
                     </tr>
@@ -528,7 +521,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         </td>
                         <td><a :href="comprobanteDomicilioUploadURL" target="_blank">{{comprobanteDomicilioUploadName}}</a></td>
                         <td>
-                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                            <label for="comprobanteDomicilioUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
                         </td>
                     </tr>
@@ -538,7 +531,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
                         </td>
                         <td><a :href="representanteLegalUploadURL" target="_blank">{{representanteLegalUploadName}}</a></td>
                         <td>
-                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                            <label for="representanteLegalUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880"/>
                         </td>
                     </tr>
@@ -547,11 +540,11 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 
 
         </div>
-        <div class="row">
+        <div class="row card esquinasRedondas" style="padding: 20px">
             <div class="col l12 right-align p-5">
-                <button @click="redireccion" class="btn waves-effect waves-light cancelar" name="action">Cancelar</button>
+                <button @click="redireccion" class="button-orange" name="action">Cancelar</button>
 
-                <button class="btn waves-effect waves-light" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
+                <button class="button-gray" style="margin-left: 20px;" type="submit" name="action">Guardar</button>
             </div>
         </div>
     </form>
@@ -927,6 +920,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     </div>
 </div>
 <script>
+
     const {
         createApp,
         computed,
@@ -1499,3 +1493,17 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
 
 
 </style>
+<script>
+    var tabla_61 = $('#tabla_documentos').DataTable({
+        deferRender:    true,
+        language: {
+            decimal: '.',
+            thousands: ',',
+            url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+        },
+        paging: false,
+        info: false,
+        searching: false,
+        sort: true
+    });
+</script>
