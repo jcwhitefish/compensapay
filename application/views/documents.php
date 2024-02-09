@@ -210,6 +210,18 @@
 			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
 		$("#tablaActivaD").append(tableBase);
+		$('#tabla_d_cfdis').DataTable({
+			deferRender:    true,
+			language: {
+				decimal: '.',
+				thousands: ',',
+				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+			},
+			paging: false,
+			info: false,
+			searching: false,
+			sort: false
+		});
 		$.ajax({
 			url: "/Documentos/DocsCFDI",
 			data: {
@@ -541,18 +553,6 @@
 	}
 
 	function data_tablas_d() {
-        var tabla_31 = $('#tabla_d_cfdis').DataTable({
-			deferRender:    true,
-			language: {
-				decimal: '.',
-				thousands: ',',
-				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
         var tabla_32 = $('#tabla_d_comprobantes').DataTable({
 			deferRender:    true,
 			language: {
