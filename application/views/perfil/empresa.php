@@ -355,7 +355,7 @@ $urlArchivos = base_url('boveda/'.$unique.'/'.$unique.'-');
     }
 </script>
 
-<div class="p-5">
+<div class="p-5" id="app">
     <h5>Configuración de la empresa</h5>
     <div class="row">
         <div class="col l12 card esquinasRedondas right-align" style="padding: 20px;">
