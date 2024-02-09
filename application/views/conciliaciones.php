@@ -104,12 +104,12 @@
 					<div class="col l3">
 						<button
 							id="btnConciliation" class="button-table" style="margin-right: 0.75rem"
-							onclick="conciliation();data_tablas()">
+							onclick="conciliation()">
 							Conciliación
 						</button>
 						<button
 							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
-							onclick="cfdi();data_tablas()">
+							onclick="cfdi()">
 							CFDI's
 						</button>
 					</div>
@@ -351,17 +351,14 @@
 	let conciliateWay = 0;
 	$(document).ready(function () {
 		conciliation();
-		data_tablas();
 		// $('#modal-new-conciliation').modal('open');/
 		$("#start").on("change", function () {
 			switch (btnActive) {
 				case 0:
 					conciliation();
-					data_tablas();
 					break;
 				case 1:
 					cfdi();
-					data_tablas();
 					break;
 			}
 		});
@@ -369,11 +366,9 @@
 			switch (btnActive) {
 				case 0:
 					conciliation();
-					data_tablas();
 					break;
 				case 1:
 					cfdi();
-					data_tablas();
 					break;
 			}
 		});
@@ -946,6 +941,18 @@
 							"<td class='center-align' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
+						$("#tabla_conciliaciones").DataTable({
+							deferRender: true,
+							language: {
+								decimal: ".",
+								thousands: ",",
+								url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+							},
+							paging: false,
+							info: false,
+							searching: false,
+							sort: true
+						});
 						$("#aut" + value.id).append(aut);
 					});
 				}
@@ -1080,7 +1087,21 @@
 							"<td class='center-align' style='min-width:105px;'>" + value.tipo + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
+						
 						$("#initC" + value.id2).append(initC);
+						$("#tabla_cfdis").DataTable({
+							retrieve: true,
+							paging: false,
+							deferRender: true,
+							language: {
+								decimal: ".",
+								thousands: ",",
+								url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+							},
+							info: false,
+							searching: false,
+							sort: true
+						});
 					});
 				}
 			},
@@ -1170,34 +1191,6 @@
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 				
 			}
-		});
-	}
-</script>
-<script>
-	function data_tablas() {
-		var table_2 = $("#tabla_conciliaciones").DataTable({
-			deferRender: true,
-			language: {
-				decimal: ".",
-				thousands: ",",
-				url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
-		var table_2 = $("#tabla_cfdis").DataTable({
-			deferRender: true,
-			language: {
-				decimal: ".",
-				thousands: ",",
-				url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
 		});
 	}
 </script>

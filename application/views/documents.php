@@ -135,24 +135,19 @@
 	let btnActive = 0;
 	$(document).ready(function () {
 		cfdi();
-		data_tablas_d();
 		$("#start").on("change", function () {
 			switch (btnActive) {
 				case 0:
 					cfdi();
-					data_tablas_d();
 					break;
 				case 1:
 					comprobantesP();
-					data_tablas_d();
 					break;
 				case 2:
 					movimientos();
-					data_tablas_d();
 					break;
 				case 3:
 					estados();
-					data_tablas_d();
 					break;
 				default:
 				// code block
@@ -163,19 +158,15 @@
 			switch (btnActive) {
 				case 0:
 					cfdi();
-					data_tablas_d();
 					break;
 				case 1:
 					comprobantesP();
-					data_tablas_d();
 					break;
 				case 2:
 					movimientos();
-					data_tablas_d();
 					break;
 				case 3:
 					estados();
-					data_tablas_d();
 					break;
 				default:
 				// code block
@@ -210,18 +201,7 @@
 			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
 		$("#tablaActivaD").append(tableBase);
-		$('#tabla_d_cfdis').DataTable({
-			deferRender:    true,
-			language: {
-				decimal: '.',
-				thousands: ',',
-				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
+		
 		$.ajax({
 			url: "/Documentos/DocsCFDI",
 			data: {
@@ -283,6 +263,18 @@
 							"<td>" + value.tipo + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
+					});
+					$('#tabla_d_cfdis').DataTable({
+						deferRender:    true,
+						language: {
+							decimal: '.',
+							thousands: ',',
+							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+						},
+						paging: false,
+						info: false,
+						searching: false,
+						sort: true
 					});
 				}
 			},
@@ -391,6 +383,18 @@
 							"<td>" + value.ammountf + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
+					});
+					$('#tabla_d_comprobantes').DataTable({
+						deferRender:    true,
+						language: {
+							decimal: '.',
+							thousands: ',',
+							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+						},
+						paging: false,
+						info: false,
+						searching: false,
+						sort: true
 					});
 				}
 			},
@@ -511,6 +515,18 @@
 							"</tr>");
 						$("#tblBody").append(tr);
 					});
+					$('#tabla_d_movimientos').DataTable({
+						deferRender:    true,
+						language: {
+							decimal: '.',
+							thousands: ',',
+							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+						},
+						paging: false,
+						info: false,
+						searching: false,
+						sort: true
+					});
 				}
 			},
 			complete: function () {
@@ -550,34 +566,7 @@
 			"</tr></thead>" +
 			"<tbody id=\"tblBody\"></tbody>";
 		$("#tablaActivaD").append(tableBase);
-	}
-
-	function data_tablas_d() {
-        var tabla_32 = $('#tabla_d_comprobantes').DataTable({
-			deferRender:    true,
-			language: {
-				decimal: '.',
-				thousands: ',',
-				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
-        var tabla_33 = $('#tabla_d_movimientos').DataTable({
-			deferRender:    true,
-			language: {
-				decimal: '.',
-				thousands: ',',
-				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
-        var tabla_34 = $('#tabla_d_estados').DataTable({
+		$('#tabla_d_estados').DataTable({
 			deferRender:    true,
 			language: {
 				decimal: '.',
