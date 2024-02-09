@@ -1,6 +1,7 @@
 <div class="p-5" id="app">
+    <h5>Calendario</h5>
     <!-- Filtros de vista -->
-    <div class="row valign-wrapper">
+    <div class="row valign-wrapper card esquinasRedondas" style="padding: 20px">
         <div class="col l6">
             <div class="row valign-wrapper">
 
@@ -33,12 +34,12 @@
     </div>
 
     <!-- Calendario -->
-    <div class="row tablas">
+    <div class="row tablas card esquinasRedondas" style="padding: 20px;">
         <table>
             <thead>
                 <tr>
                     <template v-for="(day,index) in daysString" :key="index">
-                        <th if="(modeloTabla == 2)||(modeloTabla == 1)||(modeloTabla == 0 && datosDia['diaSemana'] == index)"> {{daysString[index]}}</th>
+                        <th if="(modeloTabla == 2)||(modeloTabla == 1)||(modeloTabla == 0 && datosDia['diaSemana'] == index)" style="background: #f6f2f7 !important; padding-left: 10px;"> {{daysString[index]}}</th>
                     </template>
                 </tr>
             </thead>
@@ -339,7 +340,7 @@
         text-align: center;
         border-radius: 10px 0 0 10px !important;
         max-height: 35px;
-        z-index: 10 !important;
+        /*z-index: 10 !important;*/
         margin: 0 !important;
         background: linear-gradient(to right, #eeeeee 90%, transparent 10%);
 
@@ -359,24 +360,26 @@
         right: 12px;
         background-color: black;
         top: 0;
-        z-index: 5 !important;
+        /*z-index: 5 !important;*/
     }
 
     /* Estos estilos son del datapicker */
     .datepicker-date-display {
-        background-color: #17a2b8 !important;
-
+        background-color: #9118bd !important;
+        background: -webkit-gradient(linear, right top, left top, from(#9118bd), to(#8225fc));
+        background: -moz-linear-gradient(top,  #9118bd ,  #8225fc);
+        filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9118bd', endColorstr='#8225fc');
     }
 
     .datepicker-cancel,
     .datepicker-clear,
     .datepicker-today,
     .datepicker-done {
-        color: #17a2b8;
+        color: #9118bd;
     }
 
     .datepicker-table td.is-today {
-        color: #17a2b8;
+        color: #9118bd;
     }
 
     .datepicker-table td.is-selected {

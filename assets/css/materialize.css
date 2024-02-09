@@ -8806,7 +8806,7 @@ input[type=range]::-ms-thumb {
 }
 
 .datepicker-day-button:focus {
-  background-color: rgba(43, 161, 150, 0.25);
+  background-color: rgba(145,24,189, 0.25);
 }
 
 /* Footer */
