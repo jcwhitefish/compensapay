@@ -12,7 +12,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 <div class="p-5">
-    <div class="row">
+	<h5>Soporte</h5>
+    <div class="row card esquinasRedondas">
         <div class="col l12">
             <p>Te sugerimos consultar las guias que hemos desarrollado y/o videos de procesos, aqui podras encontrar respuesta a las dudas y procesos mas frecuentes.</p>
             <p>Si tienes alguna otra duda o algun proceso no responde de la manera correcta, puedes enviarnos un ticket y nuestro departamento de soporte te apoyara para resolverlo</p>
@@ -142,7 +143,7 @@
             </div>
 			<div class="row">
 				<div class="col l12 input-border">
-					<button class="btn waves-effect waves-light grey right" type="submit" id="btn-envio" name="btn-envio" disabled>Enviar
+					<button class="button-gray waves-effect waves-light right" type="submit" id="btn-envio" name="btn-envio" disabled>Enviar
 						<i class="material-icons right">send</i>
 					</button>
 				</div>
@@ -172,7 +173,7 @@
 				<div class="row">
 					<input type="hidden" id="inputFolio_modal" name="inputFolio_modal" value="">
 					<textarea class="materialize-textarea" id="tckComentsChat" name="tckComentsChat"></textarea>
-					<button class="btn waves-effect waves-light right grey" type="submit" name="sendChat" id="sendChat" disabled>Enviar
+					<button class="button-gray waves-effect waves-light right" type="submit" name="sendChat" id="sendChat" disabled>Enviar
 						<i class="material-icons right">send</i>
 					</button>
 
