@@ -71,8 +71,9 @@
 				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
 				if ( $res[ 'code' ] === 200 ) {
 					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
-					$this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], 'SANDBOX' );
-					$this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], 'SANDBOX' );
+					$payDate = strtotime ($payDate);
+					$this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], $payDate,'SANDBOX' );
+					$this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], $payDate, 'SANDBOX' );
 					echo json_encode ( [
 						"code" => 200,
 						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
