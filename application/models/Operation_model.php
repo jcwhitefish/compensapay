@@ -55,7 +55,7 @@
 			$this->db->join ( 'invoices as ic', 'ic.id = o.id_invoice_relational', 'left' );
 			$this->db->join ( 'companies as c', 'c.id = o.id_provider' );
 			$this->db->where ( "(o.id_provider = $user OR o.id_client = $user)" );
-			$this->db->where ( "(o.status = 0 OR o.status = 4)" );
+			$this->db->where ( "(o.status = 1 OR o.status = 4)" );
 			$this->db->where ( "(o.payment_date BETWEEN '$fechaI' AND '$fechaF')" );
 			$query = $this->db->get ();
 			return $query->result ();
@@ -189,7 +189,7 @@
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			$payDate = strtotime ( $payDate );
-			//Creamos el query para actualizar la }}BD
+			//Creamos el query para actualizar la BD
 			$query = "UPDATE $this->base.operations SET status = 1, payment_date = '$payDate' WHERE id = '$id'";
 			//Sé verífica que la consulta se ejecute bien
 			if ( $res = $this->db->query ( $query ) ) {
@@ -279,8 +279,10 @@ FROM $this->base.operations t1
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			//Query para insertar la nueva conciliacion
-			$query = "INSERT INTO $this->base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number, payment_date, entry_money, exit_money, status)
-VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['provider']}','{$args['opNumber']}','{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
+			$query = "INSERT INTO $this->base.operations (id_invoice, id_debit_note, id_uploaded_by, id_client, id_provider, operation_number,
+                              payment_date, entry_money, exit_money, status)
+VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['receiver']}','{$args['provider']}','{$args['opNumber']}',
+        '{$args['paymentDate']}','{$args['inCash']}','{$args['outCash']}','0')";
 			if ( !@$this->db->query ( $query ) ) {
 				return [ "code" => 500, "message" => "Error al guardar información", "reason" => $this->db->error () ];
 				// do something in error case
@@ -289,8 +291,8 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 					"code" => 200,
 					"message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora',
 					'id' => $this->db->insert_id () ];
-				$this->acceptCFDI ( $args[ 'invoiceId' ], $env );
-				$this->acceptNote ( $args[ 'noteId' ], $env );
+				$this->acceptCFDI ( $args[ 'invoiceId' ], $args['paymentDate'], $env );
+				$this->acceptNote ( $args[ 'noteId' ], $args['paymentDate'], $env );
 				return $res;
 				// do something in success case
 			}
@@ -312,8 +314,8 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 					"code" => 200,
 					"message" => 'Conciliación creada correctamente,',
 					'id' => $this->db->insert_id () ];
-				$this->acceptCFDI ( $args[ 'invoiceId' ], $env );
-				$this->acceptCFDI ( $args[ 'invoiceRelId' ], $env );
+				$this->acceptCFDI ( $args[ 'invoiceId' ],$args['paymentDate'], $env );
+				$this->acceptCFDI ( $args[ 'invoiceRelId' ], $args['paymentDate'], $env );
 				return $res;
 				// do something in success case
 			}
@@ -331,20 +333,21 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			}
 			return [ 'code' => 500, 'message' => 'No se pudo obtener la información', 'reason' => 'Error con la fuente de información' ];
 		}
-		public function acceptCFDI ( int $id, string $env = NULL ) {
-			
+		public function acceptCFDI ( int $id, $payDay, string $env = NULL ) {
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-			$query = "UPDATE $this->base.invoices set status=1 WHERE id = '$id'";
+			$query = "UPDATE $this->base.invoices set status = 1, payment_date = '$payDay' WHERE id = '$id'";
+//			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
 				return $res;
 			}
 			return FALSE;
 		}
-		public function acceptNote ( int $id, string $env ) {
+		public function acceptNote ( int $id, $payDay, string $env ) {
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
-			$query = "UPDATE $this->base.debit_notes set status=1 WHERE id = '$id'";
+			$query = "UPDATE $this->base.debit_notes set status=1, payment_date = '$payDay' WHERE id = '$id'";
+//			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
 				return $res;
 			}
