@@ -69,15 +69,15 @@
 					<div class="col l4">
 						<?php $btnVal = empty( $card ) ? 'Agregar' : 'Cambiar'; ?>
 						<a
-							id="changeCard" class="waves-effect blue waves-light btn-large l12"
-							style="width: 100%"><?= $btnVal ?></a>
+							id="changeCard" class="button-gray btn-large"
+							style="width: 100%; padding: 0;"><?= $btnVal ?></a>
 					</div>
 				</div>
 				<h6 style="margin-top: 1px">Historial de facturación</h6>
 				<div class="divider"></div>
 			</div>
 		</div>
-		<div class="col l6 m6">
+		<!--<div class="col l6 m6">
 			<div class="section"><h5>Notificaciones relacionadas con mis clientes</h5></div>
 			<div class="divider"></div>
 			<div class="section">
@@ -173,7 +173,7 @@
 							type="checkbox" id="nt_DocumentStatementReady"
 							name="nt_DocumentStatementReady" <?= $notifications[ 'nt_DocumentStatementReady' ] === '1' ? 'checked' : '' ?>
 							class="filled-in" />
-						<span>Estado de cuennta</span>
+						<span>Estado de cuenta</span>
 					</label></p>
 				<h6>Soporte</h6>
 				<p><label>
@@ -194,7 +194,7 @@
 			<div class="section">
 				<a id="saveChanges" class="waves-effect blue waves-light btn-large l12" style="width: 100%">Guardar</a>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<div id="addCardM" class="modal modal-fixed-footer" style="max-height 90% !important;">
 		<div class="modal-content">
@@ -264,14 +264,14 @@
 					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
 				</div>
 				<div class="col l3">
-					<button class="btn waves-effect waves-light grey right" id="sendCard" name="sendCard">
+					<button class="btn waves-effect waves-light grey right button-gray" id="sendCard" name="sendCard" style="padding: 0 20px">
 						Enviar<i class="material-icons right">send</i>
 					</button>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+			<a href="#!" class="modal-close waves-effect waves-red btn-flat">Cerrar</a>
 		</div>
 	</div>
 
