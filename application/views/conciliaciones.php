@@ -110,7 +110,7 @@
 						<button
 							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
 							onclick="cfdi()">
-							CFDI
+							CFDIs
 						</button>
 					</div>
 					<div class="col l2">
@@ -305,7 +305,7 @@
 							<p style="margin-left: 10px;">
 								<label>
 									<input class="with-gap" name="typeConcilia" id="issuingWay" type="radio"  style="visibility: hidden;"/>
-									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar con tu cliente utilizando nota de crédito propia<</span>
+									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar con tu cliente utilizando nota de crédito propia</span>
 								</label>
 								
 								<!--<input name="typeConcilia" id="issuingWay" type="radio" />

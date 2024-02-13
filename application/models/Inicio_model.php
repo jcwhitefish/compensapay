@@ -12,10 +12,10 @@ class Inicio_model extends CI_Model {
 
         //total de operaciones
         $querytop = "SELECT count(*) AS facturas FROM invoices AS i
-        INNER JOIN operations AS o ON o.id_invoice != i.id 
-        INNER JOIN operations AS op ON op.id_invoice_relational != i.id
-        WHERE i.id_company = ".$idCompanie." AND (o.id_client = ".$idCompanie." OR o.id_provider = ".$idCompanie.") 
-        AND (op.id_client = ".$idCompanie." OR op.id_provider = ".$idCompanie.");";
+                        INNER JOIN operations AS o ON o.id_invoice != i.id 
+                        INNER JOIN operations AS op ON op.id_invoice_relational != i.id
+                        WHERE i.id_company = ".$idCompanie." AND (o.id_client = ".$idCompanie." OR o.id_provider = ".$idCompanie.") 
+                        AND (op.id_client = ".$idCompanie." OR op.id_provider = ".$idCompanie.");";
 
         if ($restop = $this->db->query($querytop)) {
 			if ($restop->num_rows() > 0){

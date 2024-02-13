@@ -98,7 +98,7 @@
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
 					<div class="col l2">
 						<button id="cfdi" class="button-table" onclick="cfdi();data_tablas_d();">
-							CFDI
+							CFDIs
 						</button>
 					</div>
 					<div class="col l2">
