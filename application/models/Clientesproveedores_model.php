@@ -18,8 +18,8 @@ class Clientesproveedores_model extends CI_Model {
                     INNER JOIN cat_zipcode AS cp on c.id_postal_code = cp.zip_id
                     WHERE c.id IN 
                     (SELECT emp.empresa AS empresa FROM 
-                        (SELECT client_id AS empresa FROM `clientprovider` WHERE provider_id = 1 
-                        UNION ALL SELECT provider_id AS empresa FROM clientprovider WHERE client_id = 1) AS emp 
+                        (SELECT client_id AS empresa FROM `clientprovider` WHERE provider_id = '".$idCompanie."' 
+                        UNION ALL SELECT provider_id AS empresa FROM clientprovider WHERE client_id = '".$idCompanie."') AS emp 
                         GROUP BY empresa)";
 
 

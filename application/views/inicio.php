@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="container section">    
-    <div class="row">
+    <div class="row card esquinasRedondas">
         <div class="col s3">
             <h5><strong>Periodo</strong></h5>
             <div class="col valign-wrapper"><p>Desde:</p></div>
@@ -156,9 +156,9 @@
                     switch ($value["status"]) {
                         case 0: echo '<span class="estatus">Por autorizar</span>'; break;
                         case 1: echo '<span class="estatus" style="background-color:#8225fc">Autorizada</span>'; break;
-                        case 2: echo '<span class="estatus" style="background-color:#f36115">Rechazada</span>'; break;
+                        case 2: echo '<span class="estatus" style="background-color:#c20005">Rechazada</span>'; break;
                         case 3: echo '<span class="estatus" style="background-color:#569700">Realizada</span>'; break;
-                        case 4: echo '<span class="estatus" style="background-color:#f36115">Vencida</span>'; break;
+                        case 4: echo '<span class="estatus" style="background-color:#dedc48">Vencida</span>'; break;
                     } 
                     echo '</td>
                         </tr>';
@@ -176,7 +176,7 @@
 
 <style>
     
-    .container {
+.container {
   width: 90%;
   max-width:initial;
 }
@@ -238,7 +238,7 @@ var myLineChart2 = new Chart(ctx2, {
 </script>
 
 <script>
-        var table_1 = $('#table_i_oper_rec').DataTable({
+        $('#table_i_oper_rec').DataTable({
             scrollX: true,
         scrollCollapse: true,
         scroller:       true,

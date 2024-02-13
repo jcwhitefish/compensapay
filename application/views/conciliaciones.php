@@ -63,7 +63,7 @@
 <div class="p-5">
 	<h5>Conciliaciones</h5>
 	<!-- head con el calendario -->
-	<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
+	<div class="row card esquinasRedondas" style="padding-top: 10px;">
 		<div class="col l3">
 			<div class="row" style="margin-bottom: 0;">
 				<div class="col valign-wrapper"><p>Desde:</p></div>
@@ -97,7 +97,7 @@
 	</div>
 	
 	<!-- Las tablas principales que se muestran Facturas-->
-	<div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
+	<div class="card esquinasRedondas" id="tblsViewer">
 		<div class="card-content" style="padding: 10px; ">
 			<div class="row" style="margin-bottom: 1px">
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
@@ -110,7 +110,7 @@
 						<button
 							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
 							onclick="cfdi()">
-							CFDI's
+							CFDI
 						</button>
 					</div>
 					<div class="col l2">
@@ -291,18 +291,28 @@
 					<form id="uploadNoteForm" enctype="multipart/form-data">
 						<div class="row">
 							<p style="margin-left: 10px;">
-								<input name="typeConcilia" id="receptorWay" type="radio" />
+								<label>
+									<input class="with-gap" name="typeConcilia" id="receptorWay" type="radio"  style="visibility: hidden;"/>
+									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar contra un CFDI de tu proveedor</span>
+								</label>
+
+								<!--<input name="typeConcilia" id="receptorWay" type="radio" />
 								<label for="receptorWay">
 									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">
 										Conciliar contra un CFDI de tu proveedor</span>
-								</label>
+								</label>-->
 							</p>
 							<p style="margin-left: 10px;">
-								<input name="typeConcilia" id="issuingWay" type="radio" />
+								<label>
+									<input class="with-gap" name="typeConcilia" id="issuingWay" type="radio"  style="visibility: hidden;"/>
+									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar con tu cliente utilizando nota de crédito propia<</span>
+								</label>
+								
+								<!--<input name="typeConcilia" id="issuingWay" type="radio" />
 								<label for="issuingWay">
 									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">
 										Conciliar con tu cliente utilizando nota de crédito propia</span>
-								</label>
+								</label>-->
 							</p>
 						</div>
 						<div class="row" id="contentVariable"></div>
@@ -335,9 +345,9 @@
 						</div>
 						<div class="row">
 							<div class="col l12 center-align">
-								<a class="modal-close button-gray">Cancelar</a>
+								<a class="modal-close button-orange">Cancelar</a>
 								&nbsp;
-								<input class="button-blue" type="submit" value="Siguiente" id="sbtNF" />
+								<input class="button-gray" type="submit" value="Siguiente" id="sbtNF" />
 							</div>
 						</div>
 					</form>
@@ -605,7 +615,7 @@
 					conciliateWay = 0;
 					let debit = "<div class=\"file-field input-field\" ><div class=\"file-path-wrapper\" style=\"width: 75%;margin-left: auto;float: left;\">" +
 						"<input class=\"file-path validate\" type=\"text\" placeholder=\"Sube tu nota de crédito en formato .xml\" disabled ></div>" +
-						"<div style=\"width: 25%;margin-left: auto;\"><label for=\"containerNote\" class=\"custom-file-upload button-blue\">Seleccionar</label>" +
+						"<div style=\"width: 25%;margin-left: auto;\"><label for=\"containerNote\" class=\"custom-file-upload button-gray\">Seleccionar</label>" +
 						"<input name=\"containerNote\" id=\"containerNote\" type=\"file\" accept=\".xml\" maxFileSize=\"5242880\" required /></div></div>";
 					contenVar.empty();
 					contenVar.append(debit);
@@ -641,7 +651,7 @@
 						success: function (data) {
 							let contra = "<table class=\"striped\">" +
 								"<thead><tr>" +
-								"<th>Crear conciliciaón</th>" +
+								"<th>Crear conciliación</th>" +
 								"<th>UUID</th>" +
 								"<th>Emisor</th>" +
 								"<th>Monto</th>" +
@@ -664,11 +674,12 @@
 							} else {
 								$.each(data, function (index, value) {
 									let li = $("<tr><td>" +
-										"<p><input required name=\"cfdiConciation\" id=\"cfdiConciation" + value.id + "\" type=\"radio\" " +
-										"value = \"" + value.id + "\"/>" +
-										"<label for=\"opCFDI" + value.id + "\">" +
-										"<span> Seleccionar</span>" +
-										"</label></p>" +
+										"<p>" + 
+										"<label>" +
+										"<input class=\"with-gap\" name=\"cfdiConciation\" id=\"cfdiConciation" + value.id + "\" type=\"radio\" style=\"visibility: hidden;\" value = \"" + value.id + "\" />" +
+										"<span style=\"font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);\">Seleccionar</span>" +
+										"</label>" +
+										"</p>" +
 										"</td>" +
 										"<td><a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a></td>" +
 										"<td>" + value.sender + "</td>" +
@@ -914,13 +925,13 @@
 								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
 								break;
 							case "2":
-								status = "<p><span class=\"estatus\" style=\"background-color:#f36115\">Rechazada</span></p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#c20005\">Rechazada</span></p>";
 								break;
 							case "3":
 								status = "<p><span class=\"estatus\" style=\"background-color:#569700\">Realizada</span></p>";
 								break;
 							case "4":
-								status = "<p><span class=\"estatus\" style=\"background-color:#f36115\">Vencida</span></p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#dedc48\">Vencida</span></p>";
 								break;
 						}
 						const tr = $("<tr " + flag + ">" +
@@ -937,8 +948,8 @@
 							"<td class='center-align'>" + value.receiverConciliation + "</td>" +
 							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
 							"<td class='center-align'>$ " + value.total2 + "</td>" +
-							"<td class='center-align'>" + value.dateCFDI2 + "</td>" +
-							"<td class='center-align' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
+							"<td class='center-align' style='text-wrap: nowrap;'>" + value.dateCFDI2 + "</td>" +
+							"<td class='center-align'  style='text-wrap: nowrap;' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
 						$("#aut" + value.id).append(aut);

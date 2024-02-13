@@ -196,6 +196,7 @@ input[type="number"] {
     background: -webkit-gradient(linear, right top, left top, from(#9118bd), to(#8225fc));
     background: -moz-linear-gradient(top,  #9118bd ,  #8225fc);
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9118bd', endColorstr='#8225fc');
+    font-size: 14px !important;
   }
   
 .button-gray:hover {

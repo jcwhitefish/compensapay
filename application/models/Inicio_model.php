@@ -77,10 +77,13 @@ class Inicio_model extends CI_Model {
         }
 
         //filtro proveedores
-        $Qprov = "SELECT com.id AS Id, com.legal_name AS Proveedor FROM clientprovider AS c
-                    INNER JOIN companies AS com ON (c.provider_id=com.id OR c.client_id=com.id) AND com.id!='".$idCompanie."' 
-                    WHERE client_id='".$idCompanie."'  OR provider_id='".$idCompanie."' 
-                    ORDER BY com.legal_name";
+        $Qprov = "SELECT c.legal_name AS Proveedor FROM companies AS c 
+                INNER JOIN cat_zipcode AS cp on c.id_postal_code = cp.zip_id
+                WHERE c.id IN 
+                (SELECT emp.empresa AS empresa FROM 
+                    (SELECT client_id AS empresa FROM `clientprovider` WHERE provider_id = '".$idCompanie."' 
+                    UNION ALL SELECT provider_id AS empresa FROM clientprovider WHERE client_id = '".$idCompanie."') AS emp 
+                    GROUP BY empresa)";
 
         if($resprov = $this->db->query($Qprov)) {
             if($resprov->num_rows() > 0){
