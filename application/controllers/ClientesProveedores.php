@@ -38,6 +38,37 @@ class ClientesProveedores extends MY_Loggedin {
 		$this->load->view('plantilla', $data);
 		
 
-	}				
+	}
+	
+	public function invitasocio(){
+
+		$nameCompanie = $this->session->userdata('datosEmpresa')['legal_name'];
+		$nameUser = $this->session->userdata('datosUsuario')["name"];
+		$lastnameUser = $this->session->userdata('datosUsuario')["last_name"];
+
+		$correo = $this->input->post('correoe');
+		$namePartner = $this->input->post("nombre");
+		$empresa = $this->input->post("empresa");
+
+		//envia el correo
+		$this->load->helper('sendmail_helper');
+
+		$data = [
+			'user' => [
+				'name' => $nameUser,
+				'lastName' => $lastnameUser,
+				'companie' => $nameCompanie,
+				'partnerName' => $namePartner,
+				'empresa' => $empresa
+			],
+			'text' => 'Te ha invitado a registrarte en la plataforma Solve para conciliar operaciones de facturación entre ambos, registrate en la liga que te enviamos y comienza a conciliar con el y otros socios de negocios',
+			'urlDetail' => ['url' => base_url('registro/empresa'), 'name' => 'registro en Solve'],
+			'urlSoporte' => ['url' => "https://www.solve.com.mx/#Contacto", 'name' => "https://www.solve.com.mx/#Contacto"],
+		];
+
+		send_mail($correo, $data, 3, 'juan.carreno@whitefish.mx', 'Invitar Socio');
+
+		$this->load->view('clientesproveedores/invitosocio', $dato, true);
+	}
 
 }
