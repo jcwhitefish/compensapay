@@ -375,22 +375,24 @@
 			$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
 			return $res;
 		}
-		public function tryCEPMultiDownload (): void {
+		public function tryCEPMultiDownload (): bool {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			$balance = $this->dataArt->getAllBalanceCEP ();
-			foreach ( $balance as $row => $item ) {
-				$cep1 = [
-					'transactionDate' => date ( 'd-m-Y', $item[ 'transaction_date' ] ),
-					'trakingKey' => $item[ 'traking_key' ],
-					'sourceBank' => substr ( $item[ 'source_clabe' ], 0, 3 ),
-					'receiverBank' => substr ( $item[ 'receiver_clabe' ], 0, 3 ),
-					'receiverClabe' => $item[ 'receiver_clabe' ],
-					'amount' => $item[ 'amount' ],
-					'arteriaId' => $item[ 'arteriaD_id' ],
-				];
-//			var_dump($cep1);
-				$this->getCEP ( $cep1 );
+			if ($balance !=  NULL){
+				foreach ( $balance as $row => $item ) {
+					$cep1 = [
+						'transactionDate' => date ( 'd-m-Y', $item[ 'transaction_date' ] ),
+						'trakingKey' => $item[ 'traking_key' ],
+						'sourceBank' => substr ( $item[ 'source_clabe' ], 0, 3 ),
+						'receiverBank' => substr ( $item[ 'receiver_clabe' ], 0, 3 ),
+						'receiverClabe' => $item[ 'receiver_clabe' ],
+						'amount' => $item[ 'amount' ],
+						'arteriaId' => $item[ 'arteriaD_id' ],
+					];
+					$this->getCEP ( $cep1 );
+				}
 			}
+			return false;
 		}
 		public function ini (): void {
 			phpinfo ();
