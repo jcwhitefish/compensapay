@@ -12,14 +12,11 @@
 		</td>
 	</tr>
 	<tr>
-		<td><h5>Estimado <?=$user['partnerName']?>.</h5></td>
+		<td><h5>Estimado <?=$user['partnerName']?>:</h5></td>
 	</tr>
 	<tr>
-		<td><p>Tu socio <?=$user["name"].' '.$user["lastName"]?>:</p></td>
+		<td><p>Tu socio <?=$user["name"].' '.$user["lastName"]?> de la empresa <?=$user["companie"]?></p></td>
 	</tr>
-    <tr>
-        <td><p>De la empresa <?=$user["empresa"]?></p></td>
-    </tr>
 	<tr>
 		<td><?=$text?></td>
 	</tr>

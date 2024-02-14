@@ -66,9 +66,9 @@ class ClientesProveedores extends MY_Loggedin {
 			'urlSoporte' => ['url' => "https://www.solve.com.mx/#Contacto", 'name' => "https://www.solve.com.mx/#Contacto"],
 		];
 
-		send_mail($correo, $data, 3, 'juan.carreno@whitefish.mx', 'Invitar Socio');
+		send_mail($correo, $data, 4, 'juan.carreno@whitefish.mx', 'Invitar Socio');
 
-		$this->load->view('clientesproveedores/invitosocio', $dato, true);
+		$this->load->view('clientesproveedores/invitosocio', '', true);
 	}
 
 }

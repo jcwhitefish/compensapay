@@ -45,7 +45,7 @@
 </div>
 
 <div id="modalcf" class="modal" style="width: 80% !important; height: 90% !important;">
-    <div class="modal-content" styke="background: #f6f2f7 !important;">
+    <div id="modalinvite" class="modal-content" styke="background: #f6f2f7 !important;">
         <h5>Invitar Socio de negocio</h5>
         <form name="finvitepartner" id="finvitepartner">
         <div class="row card esquinasRedondas">
@@ -113,7 +113,7 @@ $("#finvitepartner").on("submit", function(e){
 		contentType: false,
 		processData: false
 	}).done(function(echo){
-		$("#modalcf").html(echo);
+		$("#modalinvite").html(echo);
 	});
 });
 </script>

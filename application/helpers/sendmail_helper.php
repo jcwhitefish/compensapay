@@ -44,7 +44,7 @@
 			$CI->email->subject ( 'Cambio de contraseña ' );
 			$html = $CI->load->view ( 'email/resetpass', $data, TRUE );
 		} else if ( $view === 4 ) {
-			$CI->email-Asubjetc ( 'Te invitamos a formar parte de solve');
+			$CI->email->subject ( 'Te invitamos a formar parte de solve');
 			$html = $CI->load->view ( 'email/invitasocio', $data, TRUE );
 		}
 		if ( $cc != NULL ) {
