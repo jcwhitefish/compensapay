@@ -68,7 +68,7 @@ class ClientesProveedores extends MY_Loggedin {
 
 		send_mail($correo, $data, 4, 'juan.carreno@whitefish.mx', 'Invitar Socio');
 
-		$this->load->view('clientesproveedores/invitosocio', '', true);
+		$this->load->view('clientesproveedores/invitosocio', $data);
 	}
 
 }
