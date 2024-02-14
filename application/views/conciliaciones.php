@@ -957,19 +957,19 @@
 							"</tr>");
 						$("#tblBody").append(tr);
 						$("#aut" + value.id).append(aut);
-						// $("#tabla_conciliaciones").DataTable({
-						// 	retrieve: true,
-						// 	paging: false,
-						// 	deferRender: true,
-						// 	language: {
-						// 		decimal: ".",
-						// 		thousands: ",",
-						// 		url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-						// 	},
-						// 	info: false,
-						// 	searching: false,
-						// 	sort: true
-						// });
+						$("#tabla_conciliaciones").DataTable({
+							retrieve: true,
+							paging: false,
+							deferRender: true,
+							language: {
+								decimal: ".",
+								thousands: ",",
+								url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+							},
+							info: false,
+							searching: false,
+							sort: true
+						});
 						
 					});
 				}
@@ -1106,19 +1106,19 @@
 						$("#tblBody").append(tr);
 						
 						$("#initC" + value.id2).append(initC);
-						// $("#tabla_cfdis").DataTable({
-						// 	retrieve: true,
-						// 	paging: false,
-						// 	deferRender: true,
-						// 	language: {
-						// 		decimal: ".",
-						// 		thousands: ",",
-						// 		url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-						// 	},
-						// 	info: false,
-						// 	searching: false,
-						// 	sort: true
-						// });
+						$("#tabla_cfdis").DataTable({
+							retrieve: true,
+							paging: false,
+							deferRender: true,
+							language: {
+								decimal: ".",
+								thousands: ",",
+								url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+							},
+							info: false,
+							searching: false,
+							sort: true
+						});
 					});
 				}
 			},
