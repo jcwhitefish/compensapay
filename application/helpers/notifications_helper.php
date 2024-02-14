@@ -16,11 +16,11 @@ un monto diferente al de la factura: <br><table><tr><td>Monto pagado</td><td>Mon
 tranferencia por el monto correcto con el siguiente n&uacute;mero de referencia y descripci&oacute;n: <br><table><tr><td>Monto</td><td>N&uacute;mero 
 de referencia</td><td>Descripci&oacute;n</td></tr><tr><td>$ {$args['OpEntrty']}</td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td>
 </tr></table>";
-				$title = 'Operación rechazada.';
+				$title = 'Operación rechazada';
 				break;
 			case 2:
-				$body = "Te informamos que la operaci&oacute;n <strong>#" . $args[ 'operationNumber' ] . "</strong>. ha sido ejecutada con &eacute;xito";
-				$title = 'Operación realizada.';
+				$body = "Te informamos que la operaci&oacute;n <strong>" . $args[ 'operationNumber' ] . "</strong>. ha sido ejecutada con &eacute;xito";
+				$title = 'Operación realizada';
 				break;
 			case 3:
 				$body = "Te informamos que la operaci&oacute;n <strong>{$args['operationNumber']}</strong> ha sido creada por tu cliente
@@ -76,18 +76,18 @@ como su proveedor en la plataforma Solve.";
 				break;
 			case 13:
 				$url = base_url ( '/Conciliaciones' );
-				$body = "Te informamos que la operaci&oacute;n #<strong>{$args['operationNumber']}</strong> ha sido creada por tu proveedor,
+				$body = "Te informamos que la operaci&oacute;n <strong>{$args['operationNumber']}</strong> ha sido creada por tu proveedor,
 es necesario validarla ingresando en el m&oacute;dulo de <strong>conciliaciones</strong> dando clic <a href='$url'>aquí</a>";
 				$title = "Operación creada";
 				break;
 			case 14:
-				$body = "Te informamos que la operación #<strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito. Recuerda
+				$body = "Te informamos que la operación <strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito. Recuerda
 iniciar la operación transifiriendo con los siguientes detalles: <br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td>
 <td>Descripci&oacute;n</td></tr><tr><td>$ {$args['OpEntrty']}</td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td></tr></table>";
 				$title = "Operación creada";
 				break;
 			case 15:
-				$body = "Te informamos que la transacción de la operación #<strong>{$args['operationNumber']}</strong> ha sido devuelta a su
+				$body = "Te informamos que la transacción de la operación <strong>{$args['operationNumber']}</strong> ha sido devuelta a su
 banco de origen debido a {$args['reason']}. Te recomendamos revisar los detalles de la operación. ";
 				$title = "Operación creada";
 				break;
@@ -99,7 +99,7 @@ banco de origen debido a {$args['reason']}. Te recomendamos revisar los detalles
 				$title = "Operación creada";
 				break;
 			case 17:
-				$body = "Te informamos que la operación {$args['operationNumber']} ha sido aprobada con éxito.
+				$body = "Te informamos que la operación <strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito.
 <br>Recuerda iniciar la operación transifiriendo con los siguientes detalles:
 <br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td><td>Descripci&oacute;n</td><td>Clabe bancaria</td></tr>
 <tr><td>$ {$args['amount']}</td><td>{$args['operationNumber']}</td><td>{$args['operationNumber']}</td><td>{$args['clabe']}</td>
