@@ -210,8 +210,12 @@
 						</div>
 					</div>
 					<div class="row" style="margin-bottom: 0; align-content: center; text-align: center;">
-						<div class="col l6" id="autCancel"></div>
-						<div class="col l6" id="autAceptar"></div>
+						<div class="col l9"></div>
+						<div class="col l3">
+							<div class="col l6" id="autCancel"></div>
+							<div class="col l6" id="autAceptar"></div>
+						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -854,7 +858,7 @@
 								case "0":
 									aut = $("<a class=\"modal-trigger\" href=\"#modal-aut-conciliation\">Autorizar</a>");
 									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
-									acept = $("<a style='cursor: pointer;' class=\"button-blue \">Aceptar</a>");
+									acept = $("<a style='cursor: pointer;' class=\"button-gray \">Aceptar</a>");
 									cancel.click(function () {
 										$("#rejectText").empty();
 										$("#idReject").val(value.id);
@@ -919,7 +923,7 @@
 						}
 						switch (value.status) {
 							case "0":
-								status = "<p><span class=\"estatus\">Pendiente de autorización</span></p>";
+								status = "<p><span class=\"estatus\">Por autorizar</span></p>";
 								break;
 							case "1":
 								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
@@ -936,7 +940,7 @@
 						}
 						const tr = $("<tr " + flag + ">" +
 							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
-							"<td class='tabla-celda center-align'>" + status + "</td>" +
+							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
 							"<td class='center-align " + flag + "'>" + value.operation_number + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
