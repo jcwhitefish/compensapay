@@ -111,7 +111,7 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
         '{$args[ 'in' ] }', '{$args[ 'out' ]}')";
 			//Revisa que sea correcta la conexión y ejecución con la BD
 			$this->db->db_debug = FALSE;
-			if ( !@$res=$this->db->query ( $query ) ) {
+			if ( !@$res = $this->db->query ( $query ) ) {
 				return [ "code" => 500, "message" => "Error al insertar logs", "reason" => $this->db->error ()[ 'message' ] ];
 			}
 			return [ "code" => 200, "message" => "logs registrado.",
@@ -132,7 +132,7 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 				switch ( $binnacle ) {
 					case 1:
 						$subRes = $this->insertNotification ( $args[ 'N' ], $env );
-						if ( $subRes[ 'code'] != 200 ) {
+						if ( $subRes[ 'code' ] != 200 ) {
 							$res[ 'notification' ] = $subRes;
 						}
 						break;
@@ -144,7 +144,7 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 						break;
 					case 3:
 						$subRes = $this->insertLogs ( $args[ 'L' ], $env );
-						if ( $subRes[ 'code' ]!= 200  ) {
+						if ( $subRes[ 'code' ] != 200 ) {
 							$res[ 'log' ] = $subRes;
 						}
 						break;
@@ -160,12 +160,13 @@ VALUES ('{$args['id_c']}', '{$args['id']}', '{$args['module']}', '{$args['code']
 			//Crear el query para insertar las notificaciones en la Base de Datos
 			$query = "SELECT * FROM compensatest_base.cat_module
          WHERE id = '$arg' OR module = '$arg'";
+//			var_dump ($query);
 			$this->db->db_debug = FALSE;
-			if ( !@$res=$this->db->query ( $query ) ) {
+			if ( !@$res = $this->db->query ( $query ) ) {
 				return [ "code" => 500, "message" => "Error al obtener resultados", "reason" => $this->db->error ()[ 'message' ] ];
 			} else if ( !$res->num_rows () > 0 ) {
 				return [ "code" => 404, "message" => "Error al obtener resultados", "reason" => 'No se encontraron resultados' ];
 			}
-			return [ "code" => 200, "result" => $res->result_array ()[0]];
+			return [ "code" => 200, "result" => $res->result_array ()[ 0 ] ];
 		}
 	}
