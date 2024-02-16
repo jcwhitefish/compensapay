@@ -98,17 +98,9 @@
                                 <input v-model="data['diaspago']" @blur="checkFormat('diaspago')" :style="colorsBorder['diaspago'] || {}" :value="45" type="number" name="diaspago" id="diaspago" required pattern="[0-9]{3}" maxlength="3" required>
                             </div>
                         </div>
-                        <div v-if="false" class="row">
-
-                            <p class="bold p-3">
-                                Soy Proveedor
-                            </p>
-                            <div class="input-border col l12">
-                                <input type="text" name="partner" id="partner" disabled>
-                                <label for="partner">Cliente *</label>
-                            </div>
+                        <div class="row">
+                            
                         </div>
-
                     </div>
                     <div class="col l3 center-align">
                         <div class="container">

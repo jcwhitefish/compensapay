@@ -2,13 +2,13 @@
 	//TODO: en todos los registros existe la clase invalid de materialize y es la que se tendrria que ocupar para poner el borde rojo se llama validate
 	$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
 	//var_dump($this->session->userdata('datosEmpresa'));
-	if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) {
-		$botonProv = '<a class="modal-trigger button-gray" href="#modal-proveedor" >
-                        Crear cuenta bancaria
-                    </a>';
-	} else {
+	//if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) {
+	//	$botonProv = '<a class="modal-trigger button-gray" href="#modal-proveedor" >
+    //                    Crear cuenta bancaria
+    //                </a>';
+	//} else {
 		$botonProv = '';
-	}
+	//}
 	$urlArchivos = base_url ( 'boveda/' . $unique . '/' . $unique . '-' );
 ?>
 
@@ -1651,4 +1651,15 @@
 		searching: false,
 		sort: true
 	});
+
+	<?php if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) { ?>
+
+	$(document).ready(function(){
+    	$('#modal-proveedor').modal('open');
+
+  	});
+
+	<?php } ?>
+
+
 </script>

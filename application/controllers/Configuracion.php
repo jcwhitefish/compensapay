@@ -18,7 +18,7 @@
 			$data[ 'main' ] = $this->load->view ( 'configuracion', $conf, TRUE );
 			$this->load->view ( 'plantilla', $data );
 		}
-		public function newSubscription (): bool {
+		public function newSubscription (): bool { //guarda los datos de la tarjeta
 			$this->load->model ( 'Openpay_model', 'dataOp' );
 			$id = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 			$customerDAta = $this->dataOp->NewClient ( $id, $this->env );
@@ -40,7 +40,7 @@
 				return FALSE;
 			} else if ( $cardData[ 'insertId' ] > 0 ) {
 				$args[ 'OpId' ] = $cardData[ 'opId' ];
-				echo json_encode ( $this->NewSubscriptionCharge ( $cardData[ 'insertId' ], $args, $id ) );
+				echo json_encode ( $this->NewSubscriptionCharge ( $cardData[ 'insertId' ], $args, $id ) ); //aqui hace el cargo de la suscripción
 				return TRUE;
 			}
 			return FALSE;

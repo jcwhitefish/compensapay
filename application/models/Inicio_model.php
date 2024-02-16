@@ -361,4 +361,24 @@ class Inicio_model extends CI_Model {
 		return $ResDash;
 
     }
+
+    public function pago (){
+
+        $idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+        $query = "SELECT id FROM subscription WHERE company_id='".$idCompanie."' AND nextPay > '".time()."' ORDER BY created_at DESC LIMIT 1";
+
+        if($ResQ = $this->db->query($query)) {
+            if($ResQ->num_rows() == 0){
+                $this->session->set_userdata('pago_suscription', 0); 
+                return FALSE;
+            }
+            else{
+                $this->session->set_userdata('pago_suscription', 1); 
+                return TRUE;
+            }
+        }
+        
+
+    }
 }

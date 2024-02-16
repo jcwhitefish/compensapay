@@ -28,12 +28,23 @@ class Inicio extends MY_Loggedin
 
 	public function index()
 	{
-		$datos = array(
-			"dashboard" => $this->Inicio_model->dashboard(),
-			"dump" => 0
-		);
-		//mostramos en pantalla welcome_message.php
-		$data['main'] = $this->load->view('inicio', $datos, true);
+		if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) {
+
+			header("Location: ".base_url('/perfil/empresa')); 
+		}
+		elseif($this->Inicio_model->pago() == FALSE)
+		{
+			header("Location: ".base_url('/Configuracion'));
+		}
+		else{
+			$datos = array(
+				"dashboard" => $this->Inicio_model->dashboard(),
+				"dump" => 0
+			);
+			//mostramos en pantalla welcome_message.php
+			$data['main'] = $this->load->view('inicio', $datos, true);
+		}
+
 		$this->load->view('plantilla', $data);
 	}
 }
