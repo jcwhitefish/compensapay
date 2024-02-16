@@ -70,18 +70,19 @@
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				//Se envía la instrucción para aceptar la conciliación
 				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
-				$this->insertLog ( 2, $res[ 'code' ], ['payDate' => $payDate], $res, 'acceptConciliation', $this->environment );
+				$this->insertLog ( 2, $res[ 'code' ], $res['request'], $res, 'acceptConciliation', $this->environment );
 				if ( $res[ 'code' ] === 200 ) {
 					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
 					$payDate = strtotime ( $payDate );
 					$n1 = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], $payDate, 'SANDBOX' );
 					$this->insertLog ( 2, $n1[ 'code' ], ['payDate' => $payDate], $n1, 'acceptConciliation', $this->environment );
 					$n2 = $this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], $payDate, 'SANDBOX' );
+					$this->insertLog ( 2, $n1[ 'code' ], ['payDate' => $payDate], $n2, 'acceptConciliation', $this->environment );
 					echo json_encode ( [
 						"code" => 200,
 						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
 					] );
-					$this->adviseAuthorized ( $id );
+					$this->adviseAuthorized ( $conciliation, $this->environment );
 					return TRUE;
 				}
 			}
@@ -141,12 +142,38 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 		 *
 		 * @return void
 		 */
-		public function adviseAuthorized ( int $id, string $env = 'SANDBOX' ) {
-			//Se cargan los helpers y modelos necesarios
-			$this->load->model ( 'User_model', 'dataUsr' );
-			$this->load->model ( 'Notification_model', 'nt' );
-			$this->load->helper ( 'sendmail_helper' );
+		public function adviseAuthorized ( string $args, string $env = 'SANDBOX' ): void {
+			
+			$this->load->model ( 'Settings_model', 'conf' );
 			$this->load->helper ( 'notifications_helper' );
+			
+			$client = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_client' ], $env );
+			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_provider' ], $env );
+			
+			if ( $this->conf->validateNotification ( $client[ 'id' ], 1, $env ) ) {
+				$data = [ 'operationNumber' => $args[ 'operation_number' ],
+					'amount' => $args[ 'entry_money' ], 'clabe' => $client['account_clabe'] ];
+				$notification = notificationBody ( $data, 4 );
+				$this->insertNotification ($client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$this->insertAlert ($client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$mail = [ 'name' => $client[ 'result' ][ 'name' ],
+					'lastName' => $client[ 'result' ][ 'last_name' ],
+					'company' => $client[ 'result' ][ 'short_name' ],
+					'mail' => $client[ 'result' ][ 'email' ] ];
+				$this->sendEMail ( $mail, $notification, 2, $env );
+			}
+			if ( $this->conf->validateNotification ( $provider[ 'id' ], 1, $env ) ) {
+				$data = [ 'opNumber' => $args[ 'opNumber' ], 'inCash' => $args[ 'inCash' ] ];
+				$notification = notificationBody ( $data, 3 );
+				$this->insertNotification ( $client[ 'result' ][ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$this->insertAlert ( $client[ 'result' ][ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$mail = [ 'name' => $client[ 'result' ][ 'name' ],
+					'lastName' => $client[ 'result' ][ 'last_name' ],
+					'company' => $client[ 'result' ][ 'short_name' ],
+					'mail' => $client[ 'result' ][ 'email' ] ];
+				$this->sendEMail ( $mail, $notification, 2, $env );
+			}
+			//======================================================================================================
 			$conciliation = $this->OpData->getConciliacionesByID ( $id, $env );
 			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $env );
 			$data = [ 'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ] ];
