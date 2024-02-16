@@ -339,9 +339,9 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			$query = "UPDATE $this->base.invoices set status = 1, payment_date = '$payDay' WHERE id = '$id'";
 //			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
-				return $res;
+				return ['code'=> 200, 'in'=>$query];
 			}
-			return FALSE;
+			return ['code'=>500, 'reason' => 'Error con el query'];
 		}
 		public function acceptNote ( int $id, $payDay, string $env ) {
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
