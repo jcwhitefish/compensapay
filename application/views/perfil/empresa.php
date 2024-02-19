@@ -617,7 +617,7 @@
 	<!-- Modal Registrarse como Proveedor -->
 	<div id="modal-proveedor" class="modal">
 		<div class="modal-content">
-			<h5>Crear cuenta bancaria</h5>
+			<h5>Crear cuenta clabe en Solve</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
 					<div name="div-fase-1" id="div-fase-1">
@@ -1045,11 +1045,11 @@
 			<h5>Fin del registro</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
-					<p class="p-3 h5-modular">Te has registrado como proveedor, nuestro equipo revisara tu información y
+					<p class="p-3 h5-modular">Gracias por completar tu registro, nuestro equipo revisara tu información y
 					                          documentación y te haremos saber en cuanto puedas tener acceso a las
-					                          funciones de proveedor.</p>
+					                          funciones de la plataforma.</p>
 					<br>
-					<p style="margin-left:10px">Gracias por usar compensa pay</p>
+					<p style="margin-left:10px">Gracias por usar Solve</p>
 					<br>
 					<a
 						class="modal-close button-gray" style="color:#fff; color:hover:#"

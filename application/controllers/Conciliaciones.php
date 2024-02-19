@@ -366,12 +366,24 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 					'inCash' => $cfdi0[ 'total' ],
 					'outCash' => $OriginAmount,
 				];
-				$op = $this->OpData->newConciliation_I ( $data, 'SANDBOX' );
-				echo json_encode ( [
-					"code" => 200,
-					"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
-				] );
-				$this->adviseAuthorized ( $op[ 'id' ] );
+
+				//if($OriginAmount >= $cfdi0[ 'total' ])
+				//{
+					$op = $this->OpData->newConciliation_I ( $data, 'SANDBOX' );
+					echo json_encode ( [
+						"code" => 200,
+						"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
+					] );
+					$this->adviseAuthorized ( $op[ 'id' ] );
+				//}
+				//else
+				//{
+				//	echo json_encode ( [
+				//		"code" => 500,
+				//		"message" => "El monto total del cfdi de conciliación debe ser menor al monto total del cfdi original",
+				//	] );
+				//}
+				
 				return TRUE;
 			}
 			echo json_encode ( [ "code" => 500, "message" => "Error al obtener información", "reason" => "No se logro obtener los registros" ] );
