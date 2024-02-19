@@ -264,18 +264,18 @@
 							"</tr>");
 						$("#tblBody").append(tr);
 					});
-					$('#tabla_d_cfdis').DataTable({
-						deferRender:    true,
-						language: {
-							decimal: '.',
-							thousands: ',',
-							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-						},
-						paging: false,
-						info: false,
-						searching: false,
-						sort: true
-					});
+					//$('#tabla_d_cfdis').DataTable({
+					//	deferRender:    true,
+					//	language: {
+					//		decimal: '.',
+					//		thousands: ',',
+					//		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+					//	},
+					//	paging: false,
+					//	info: false,
+					//	searching: false,
+					//	sort: true
+					//});
 				}
 			},
 			complete: function () {
@@ -384,18 +384,18 @@
 							"</tr>");
 						$("#tblBody").append(tr);
 					});
-					$('#tabla_d_comprobantes').DataTable({
-						deferRender:    true,
-						language: {
-							decimal: '.',
-							thousands: ',',
-							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-						},
-						paging: false,
-						info: false,
-						searching: false,
-						sort: true
-					});
+					//$('#tabla_d_comprobantes').DataTable({
+					//	deferRender:    true,
+					//	language: {
+					//		decimal: '.',
+					//		thousands: ',',
+					//		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+					//	},
+					//	paging: false,
+					//	info: false,
+					//	searching: false,
+					//	sort: true
+					//});
 				}
 			},
 			complete: function () {
@@ -515,18 +515,18 @@
 							"</tr>");
 						$("#tblBody").append(tr);
 					});
-					$('#tabla_d_movimientos').DataTable({
-						deferRender:    true,
-						language: {
-							decimal: '.',
-							thousands: ',',
-							url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-						},
-						paging: false,
-						info: false,
-						searching: false,
-						sort: true
-					});
+					//$('#tabla_d_movimientos').DataTable({
+					//	deferRender:    true,
+					//	language: {
+					//		decimal: '.',
+					//		thousands: ',',
+					//		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+					//	},
+					//	paging: false,
+					//	info: false,
+					//	searching: false,
+					//	sort: true
+					//});
 				}
 			},
 			complete: function () {
@@ -566,18 +566,18 @@
 			"</tr></thead>" +
 			"<tbody id=\"tblBody\"></tbody>";
 		$("#tablaActivaD").append(tableBase);
-		$('#tabla_d_estados').DataTable({
-			deferRender:    true,
-			language: {
-				decimal: '.',
-				thousands: ',',
-				url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-			},
-			paging: false,
-			info: false,
-			searching: false,
-			sort: false
-		});
+		//$('#tabla_d_estados').DataTable({
+		//	deferRender:    true,
+		//	language: {
+		//		decimal: '.',
+		//		thousands: ',',
+		//		url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+		//	},
+		//	paging: false,
+		//	info: false,
+		//	searching: false,
+		//	sort: false
+		//});
 	}
 </script>
 <style>
