@@ -70,19 +70,19 @@
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				//Se envía la instrucción para aceptar la conciliación
 				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
-				$this->insertLog ( 2, $res[ 'code' ], $res['request'], $res, 'acceptConciliation', $this->environment );
+				$this->insertLog ( 2, $res[ 'code' ], $res[ 'request' ], $res, 'acceptConciliation', $this->environment );
 				if ( $res[ 'code' ] === 200 ) {
 					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
 					$payDate = strtotime ( $payDate );
 					$n1 = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], $payDate, 'SANDBOX' );
-					$this->insertLog ( 2, $n1[ 'code' ], ['payDate' => $payDate], $n1, 'acceptConciliation', $this->environment );
+					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n1, 'acceptConciliation', $this->environment );
 					$n2 = $this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], $payDate, 'SANDBOX' );
-					$this->insertLog ( 2, $n1[ 'code' ], ['payDate' => $payDate], $n2, 'acceptConciliation', $this->environment );
+					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n2, 'acceptConciliation', $this->environment );
 					echo json_encode ( [
 						"code" => 200,
 						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
 					] );
-					$this->adviseAuthorized ( $conciliation, $this->environment );
+					$this->adviseAuthorized ( $conciliation[0], $this->environment );
 					return TRUE;
 				}
 			}
@@ -137,79 +137,82 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 		/**
 		 * Función para notificar que se a autorizado una conciliación
 		 *
-		 * @param int    $id  ID de la conciliación que se a autorizado
+		 * @param array  $args
 		 * @param string $env Ambiente en el que se va a trabajar
 		 *
 		 * @return void
 		 */
-		public function adviseAuthorized ( string $args, string $env = 'SANDBOX' ): void {
-			
+		public function adviseAuthorized ( array $args, string $env = 'SANDBOX' ): void {
 			$this->load->model ( 'Settings_model', 'conf' );
+			$this->load->model ( 'User_model', 'dataUsr' );
 			$this->load->helper ( 'notifications_helper' );
-			
 			$client = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_client' ], $env );
+			$client = $client['result'];
 			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_provider' ], $env );
-			
+			$provider = $provider['result'];
 			if ( $this->conf->validateNotification ( $client[ 'id' ], 1, $env ) ) {
-				$data = [ 'operationNumber' => $args[ 'operation_number' ],
-					'amount' => $args[ 'entry_money' ], 'clabe' => $client['account_clabe'] ];
+				$data = [ 'opNumber' => $args[ 'operation_number' ],
+					'amount' => $args[ 'entry_money' ], 'clabe' => $client[ 'account_clabe' ] ];
 				$notification = notificationBody ( $data, 4 );
-				$this->insertNotification ($client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
-				$this->insertAlert ($client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
-				$mail = [ 'name' => $client[ 'result' ][ 'name' ],
-					'lastName' => $client[ 'result' ][ 'last_name' ],
-					'company' => $client[ 'result' ][ 'short_name' ],
-					'mail' => $client[ 'result' ][ 'email' ] ];
+				$this->insertNotification ( $client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$this->insertAlert ( $client[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$mail = [ 'name' => $client[ 'name' ],
+					'lastName' => $client[ 'last_name' ],
+					'company' => $client[ 'short_name' ],
+					'mail' => $client[ 'email' ] ];
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
 			if ( $this->conf->validateNotification ( $provider[ 'id' ], 1, $env ) ) {
-				$data = [ 'opNumber' => $args[ 'opNumber' ], 'inCash' => $args[ 'inCash' ] ];
+				$data = [ 'opNumber' => $args[ 'operation_number' ]];
 				$notification = notificationBody ( $data, 3 );
-				$this->insertNotification ( $client[ 'result' ][ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
-				$this->insertAlert ( $client[ 'result' ][ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
-				$mail = [ 'name' => $client[ 'result' ][ 'name' ],
-					'lastName' => $client[ 'result' ][ 'last_name' ],
-					'company' => $client[ 'result' ][ 'short_name' ],
-					'mail' => $client[ 'result' ][ 'email' ] ];
+				$this->insertNotification ( $provider[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$this->insertAlert ( $provider[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
+				$mail = [ 'name' => $provider[ 'name' ],
+					'lastName' => $provider[ 'last_name' ],
+					'company' => $provider[ 'short_name' ],
+					'mail' => $provider[ 'email' ] ];
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
 			//======================================================================================================
-			$conciliation = $this->OpData->getConciliacionesByID ( $id, $env );
-			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $env );
-			$data = [ 'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ] ];
-			$notification = notificationBody ( $data, 4 );
-			$data = [
-				'user' => [
-					'name' => $provider[ 'result' ][ 'name' ],
-					'lastName' => $provider[ 'result' ][ 'last_name' ],
-					'company' => $provider[ 'result' ][ 'short_name' ],
-				],
-				'text' => $notification[ 'body' ],
-				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
-				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
-			];
-			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ], $notification[ 'title' ] );
-			$this->nt->insertNotification (
-				[ 'id' => $provider[ 'result' ][ 'id' ], 'title' => $notification[ 'title' ], 'body' => $notification[ 'body' ], ], $env );
-			$data = [
-				'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ],
-				'amount' => $conciliation[ 'result' ][ 'total1' ],
-				'clabe' => $conciliation[ 'result' ][ 'arteria_clabe' ],
-			];
-			$notification = notificationBody ( $data, 17 );
-			$data = [
-				'user' => [
-					'name' => $this->session->userdata ( 'datosUsuario' )[ "name" ],
-					'lastName' => $this->session->userdata ( 'datosUsuario' )[ "last_name" ],
-					'company' => $this->session->userdata ( 'datosEmpresa' )[ "short_name" ],
-				],
-				'text' => $notification[ 'body' ],
-				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
-				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
-			];
-			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ], $notification[ 'title' ] );
-			$this->nt->insertNotification (
-				[ 'id' => $this->session->userdata ( 'datosUsuario' )[ "id" ], 'title' => $notification[ 'title' ], 'body' => $notification[ 'body' ], ], $env );
+//			$conciliation = $this->OpData->getConciliacionesByID ( $id, $env );
+//			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $env );
+//			$data = [ 'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ] ];
+//			$notification = notificationBody ( $data, 4 );
+//			$data = [
+//				'user' => [
+//					'name' => $provider[ 'result' ][ 'name' ],
+//					'lastName' => $provider[ 'result' ][ 'last_name' ],
+//					'company' => $provider[ 'result' ][ 'short_name' ],
+//				],
+//				'text' => $notification[ 'body' ],
+//				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
+//				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
+//			];
+//			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ],
+//				$notification[ 'title' ] );
+//			$this->nt->insertNotification (
+//				[ 'id' => $provider[ 'result' ][ 'id' ], 'title' => $notification[ 'title' ], 'body' => $notification[ 'body' ], ], $env );
+//			$data = [
+//				'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ],
+//				'amount' => $conciliation[ 'result' ][ 'total1' ],
+//				'clabe' => $conciliation[ 'result' ][ 'arteria_clabe' ],
+//			];
+//			$notification = notificationBody ( $data, 17 );
+//			$data = [
+//				'user' => [
+//					'name' => $this->session->userdata ( 'datosUsuario' )[ "name" ],
+//					'lastName' => $this->session->userdata ( 'datosUsuario' )[ "last_name" ],
+//					'company' => $this->session->userdata ( 'datosEmpresa' )[ "short_name" ],
+//				],
+//				'text' => $notification[ 'body' ],
+//				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
+//				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
+//			];
+//			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ],
+//				$notification[ 'title' ] );
+//			$this->nt->insertNotification (
+//				[ 'id' => $this->session->userdata ( 'datosUsuario' )[ "id" ], 'title' => $notification[ 'title' ],
+//					'body' => $notification[ 'body' ], ], $env );
 		}
 		public function notifyNote ( array $args, string $env = 'SANDBOX' ) {
 			$this->load->model ( 'Settings_model', 'conf' );
@@ -517,7 +520,17 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			];
 			return $this->nt->insertLogs ( $args, $env );
 		}
-		public function insertNotification ( $user, $title, $body, $env = NULL ): array {
+		/**
+		 * funcion para insertar notification en la based e datos
+		 *
+		 * @param int         $user  Id del usuario
+		 * @param string      $title título de la notificación
+		 * @param string      $body  cuerpo de la notificación
+		 * @param string|null $env   ambiente en el que se va a trabajar
+		 *
+		 * @return array
+		 */
+		public function insertNotification ( int $user, string $title, string $body, string $env = NULL ): array {
 			$this->load->model ( 'Notification_model', 'nt' );
 			$this->load->helper ( 'notifications_helper' );
 			$args = [
@@ -536,7 +549,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			];
 			return $this->nt->insertAlert ( $args, $env );
 		}
-		public function sendEMail ( $args, $nText, $module, $env = NULL ) {
+		public function sendEMail ( $args, $nText, $module, $env = NULL ): void {
 			$this->load->helper ( 'sendmail_helper' );
 			$module = $this->nt->getModuleByArgs ( $module, $env );
 			$support = $this->nt->getModuleByArgs ( '1', $env );

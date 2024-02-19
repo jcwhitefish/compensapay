@@ -26,10 +26,10 @@ la operaci&oacute;n transfiriendo con los siguientes detalles: <br><table><tr><t
 				$title = "Operación autorizada";
 				break;
 			case 4:
-				$body = "Te informamos que la operación <strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito.
+				$body = "Te informamos que la operación <strong>{$args['opNumber']}</strong> ha sido aprobada con éxito.
 <br>Recuerda iniciar la operación transifiriendo con los siguientes detalles:
 <br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td><td>Descripci&oacute;n</td><td>Clabe bancaria</td></tr>
-<tr><td>$ {$args['amount']}</td><td>{$args['operationNumber']}</td><td>{$args['operationNumber']}</td><td>{$args['clabe']}</td>
+<tr><td>$ {$args['amount']}</td><td>{$args['opNumber']}</td><td>{$args['opNumber']}</td><td>{$args['clabe']}</td>
 </tr></table>";
 				$title = "Operación autorizada";
 				break;
