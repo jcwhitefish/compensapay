@@ -122,7 +122,7 @@
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
 			$this->base = strtoupper ( $this->enviroment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			//Se genera el query para obtener datos
-			$query = "SELECT t1.id, t1.email, t1.name, t1.last_name, t2.short_name
+			$query = "SELECT t1.id, t1.email, t1.name, t1.last_name, t2.short_name, t2.account_clabe
               FROM $this->base.users t1
               INNER JOIN $this->base.companies t2 ON t2.id = t1.id_company 
               WHERE t2.id = '$company' AND t1.profile = 0 Limit 1";

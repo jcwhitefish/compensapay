@@ -20,6 +20,19 @@ la operaci&oacute;n transfiriendo con los siguientes detalles: <br><table><tr><t
 <td>Descripci&oacute;n</td></tr><tr><td>$ {$args['inCash']}</td><td>{$args['opNumber']}</td><td>{$args['opNumber']}</td></tr></table>";
 				$title = "Operación creada";
 				break;
+			case 3:
+				$body = "Te informamos que la operaci&oacute;n <strong>{$args['opNumber']}</strong> ha sido autorizada.
+<br>Te notificaremos en cuanto la operaci&oacute;n sea ejecutada.";
+				$title = "Operación autorizada";
+				break;
+			case 4:
+				$body = "Te informamos que la operación <strong>{$args['operationNumber']}</strong> ha sido aprobada con éxito.
+<br>Recuerda iniciar la operación transifiriendo con los siguientes detalles:
+<br><table><tr><td>Monto</td><td>N&uacute;mero de referencia</td><td>Descripci&oacute;n</td><td>Clabe bancaria</td></tr>
+<tr><td>$ {$args['amount']}</td><td>{$args['operationNumber']}</td><td>{$args['operationNumber']}</td><td>{$args['clabe']}</td>
+</tr></table>";
+				$title = "Operación autorizada";
+				break;
 			case 13:
 				$url = base_url ( '/Conciliaciones' );
 				$body = "Te informamos que la operaci&oacute;n <strong>{$args['operationNumber']}</strong> ha sido creada por tu proveedor,

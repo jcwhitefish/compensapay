@@ -36,17 +36,17 @@
 		}
 		public function get_operation_calendar ( $user, $mes = NULL ) {
 			$year = date ( 'Y', time () );
-			$mes = $mes === NULL ? date ( 'm', time () ) : intval( $mes );
-			$fechaI = mktime(0, 0, 0, $mes, 1);
-			$fechaF = strtotime ( date('Y-m-d',$fechaI).' +1 months' );
+			$mes = $mes === NULL ? date ( 'm', time () ) : intval ( $mes );
+			$fechaI = mktime ( 0, 0, 0, $mes, 1 );
+			$fechaF = strtotime ( date ( 'Y-m-d', $fechaI ) . ' +1 months' );
 			//$this->db->select('o.*, ip.uuid, ip.transaction_date, ic.uuid as uuid_relation,
 			//c.short_name, c.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
 			//d.uuid AS uuid_nota, d.total as money_nota ');
-			$this->db->select ( 'o.*, ip.id AS urlid, ip.uuid AS uuid, '.
+			$this->db->select ( 'o.*, ip.id AS urlid, ip.uuid AS uuid, ' .
 				"DATE_FORMAT(FROM_UNIXTIME(o.payment_date), '%d-%m-%Y') as transaction_date,
 				DATE_FORMAT(FROM_UNIXTIME(o.payment_date), '%d-%m-%Y') as payment_date,
-				DATE_FORMAT(FROM_UNIXTIME(o.created_at), '%d-%m-%Y') as created_at,".
-                            'ic.id AS urlidrel,ic.uuid as uuid_relation,
+				DATE_FORMAT(FROM_UNIXTIME(o.created_at), '%d-%m-%Y') as created_at," .
+				'ic.id AS urlidrel,ic.uuid as uuid_relation,
                             c.short_name, c.legal_name, ip.id_user, ip.total as money_prov, ic.total as money_clie,
                             d.id AS urldeb, d.uuid AS uuid_nota, d.total as money_nota ' );
 			$this->db->from ( 'operations as o' );
@@ -196,13 +196,13 @@
 				//Sé verífica que haya una actualización
 				if ( $this->db->affected_rows () > 0 ) {
 					//Devolvemos que la operación se realizo con éxito
-					return [ "code" => 200, "result" => $this->db->affected_rows () ];
+					return [ "code" => 200, "request" => $query, "result" => $this->db->affected_rows () ];
 				}
 				//Devolvemos que no hubo una actualización
-				return [ "code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "No se realizo ninguna actualización" ];
+				return [ "code" => 500, "request" => $query, "message" => "Error al actualizar la conciliación", "reason" => "No se realizo ninguna actualización" ];
 			}
 			//Devolvemos el error de la operación
-			return [ "code" => 500, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación" ];
+			return [ "code" => 500, "request" => $query, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación" ];
 		}
 		/**
 		 * Función para rechazar una conciliación
@@ -291,8 +291,8 @@ VALUES ('{$args['invoiceId']}','{$args['noteId']}','{$args['userId']}','{$args['
 					"code" => 200,
 					"message" => 'Conciliacion creada correctamente, espere por la autorizacion de la compania receptora',
 					'id' => $this->db->insert_id () ];
-				$this->acceptCFDI ( $args[ 'invoiceId' ], $args['paymentDate'], $env );
-				$this->acceptNote ( $args[ 'noteId' ], $args['paymentDate'], $env );
+				$this->acceptCFDI ( $args[ 'invoiceId' ], $args[ 'paymentDate' ], $env );
+				$this->acceptNote ( $args[ 'noteId' ], $args[ 'paymentDate' ], $env );
 				return $res;
 				// do something in success case
 			}
@@ -314,8 +314,8 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 					"code" => 200,
 					"message" => 'Conciliación creada correctamente,',
 					'id' => $this->db->insert_id () ];
-				$this->acceptCFDI ( $args[ 'invoiceId' ],$args['paymentDate'], $env );
-				$this->acceptCFDI ( $args[ 'invoiceRelId' ], $args['paymentDate'], $env );
+				$this->acceptCFDI ( $args[ 'invoiceId' ], $args[ 'paymentDate' ], $env );
+				$this->acceptCFDI ( $args[ 'invoiceRelId' ], $args[ 'paymentDate' ], $env );
 				return $res;
 				// do something in success case
 			}
@@ -339,9 +339,9 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			$query = "UPDATE $this->base.invoices set status = 1, payment_date = '$payDay' WHERE id = '$id'";
 //			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
-				return ['code'=> 200, 'in'=>$query];
+				return [ 'code' => 200, 'in' => $query, 'out' => $res ];
 			}
-			return ['code'=>500, 'reason' => 'Error con el query'];
+			return [ 'code' => 500, 'reason' => 'Error con el query' ];
 		}
 		public function acceptNote ( int $id, $payDay, string $env ) {
 			$this->enviroment = $env === NULL ? $this->enviroment : $env;
@@ -349,8 +349,8 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			$query = "UPDATE $this->base.debit_notes set status=1, payment_date = '$payDay' WHERE id = '$id'";
 //			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
-				return $res;
+				return [ 'code' => 200, 'in' => $query, 'out' => $res ];
 			}
-			return FALSE;
+			return [ 'code' => 500, 'reason' => 'Error con el query' ];
 		}
 	}
