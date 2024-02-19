@@ -146,8 +146,8 @@
 							<input type="hidden" id="idReject" name="idReject">
 						</div>
 						<div class="col l12 d-flex justify-content-flex-end" style="margin-top:10px">
-							<div class="col"><a class="button-gray modal-close ">Cancelar</a></div>
-							<div class="col"><a class="button-blue modal-close " id="btnReject">Enviar</a></div>
+							<div class="col"><a class="button-orange modal-close ">Cancelar</a></div>
+							<div class="col"><a class="button-gray modal-close " id="btnReject">Enviar</a></div>
 						</div>
 					</div>
 				</div>

@@ -191,12 +191,12 @@
 			"<th>Seleccionar</th>" +
 			"<th>Emisor</th>" +
 			"<th>Receptor</th>" +
-			"<th class=\"center-align\">CFDI</th>" +
+			"<th>CFDI</th>" +
 			"<th>Fecha CFDI</th>" +
 			"<th>Fecha Alta</th>" +
 			"<th style=\"min-width: 135px\">Fecha limite de pago</th>" +
 			"<th style=\"min-width: 110px\">Total</th>" +
-			"<th>tipo</th>" +
+			"<th>Tipo</th>" +
 			"</tr></thead>" +
 			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
@@ -500,18 +500,18 @@
 							"</td>" +
 							"<td>$ " + value.amount + "</td>" +
 							"<td>" + value.traking_key + "</td>" +
-							"<td>" + urlCep + "</td>" +
-							"<td>" + value.descriptor + "</td>" +
-							"<td>" + value.bank_source + "</td>" +
-							"<td>" + value.bank_receiver + "</td>" +
-							"<td>" + value.provider + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + urlCep + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.descriptor + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.bank_source + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.bank_receiver + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.provider + "</td>" +
 							"<td>" + value.providerRFC + "</td>" +
-							"<td>" + value.client + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.client + "</td>" +
 							"<td>" + value.clientRFC + "</td>" +
 							"<td>" + value.source_clabe + "</td>" +
 							"<td>" + value.receiver_clabe + "</td>" +
-							"<td>" + uuid + "</td>" +
-							"<td>" + value.created_at + "</td>" +
+							"<td style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
+							"<td style='text-wrap: nowrap;'>" + value.created_at + "</td>" +
 							"</tr>");
 						$("#tblBody").append(tr);
 					});
