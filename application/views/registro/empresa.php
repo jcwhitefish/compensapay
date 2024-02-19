@@ -106,7 +106,7 @@
                         <div class="container">
                             <h2 class="card-title">Seleccionar logotipo</h2>
                             <img :src="imageUploadURL" alt="" style="max-width: 140px; height: 140px;"><br>
-                            <label for="imageUpload" class="custom-file-upload p-5">
+                            <label for="imageUpload" class=" p-5 button-gray">
                                 Seleccionar Imagen
                             </label>
                             <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
@@ -123,7 +123,7 @@
                             <label for="cSfDisabled"> Constancia de Situación Fiscal *</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="csfUpload" class="custom-file-upload">Agregar </label>
+                            <label for="csfUpload" class="button-gray">Agregar </label>
                             <input @change="checkFormat('csfUpload')" name="csfUpload" ref="csfUpload" id="csfUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                         <div class="col l9 input-border">
@@ -131,7 +131,7 @@
                             <label for="actaConstitutivaDisabled">Acta Constitutiva *</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="actaConstitutivaUpload" class="custom-file-upload">Agregar</label>
+                            <label for="actaConstitutivaUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('actaConstitutivaUpload')" name="actaConstitutivaUpload" ref="actaConstitutivaUpload" id="actaConstitutivaUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                         <div class="col l9 input-border">
@@ -139,7 +139,7 @@
                             <label for="comprobanteDomicilioDisabled">Comprobante de Domicilio *</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="comprobanteDomicilioUpload" class="custom-file-upload">Agregar</label>
+                            <label for="comprobanteDomicilioUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('comprobanteDomicilioUpload')" name="comprobanteDomicilioUpload" ref="comprobanteDomicilioUpload" id="comprobanteDomicilioUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                         <div class="col l9 input-border">
@@ -147,12 +147,12 @@
                             <label for="representanteLegalDisabled">Identificacion de Representante Legal *</label>
                         </div>
                         <div class="col l3 center-align p-5">
-                            <label for="representanteLegalUpload" class="custom-file-upload">Agregar</label>
+                            <label for="representanteLegalUpload" class="button-gray">Agregar</label>
                             <input @change="checkFormat('representanteLegalUpload')" name="representanteLegalUpload" ref="representanteLegalUpload" id="representanteLegalUpload" type="file" accept="application/pdf" maxFileSize="5242880" required />
                         </div>
                     </div>
                     <div class="col l12 right-align p-5">
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Siguiente</button>
+                        <button class="button-gray waves-effect waves-light" type="submit" name="action">Siguiente</button>
                     </div>
                 </div>
             </form>

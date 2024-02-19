@@ -76,14 +76,14 @@
                         <div class="container">
                             <h2 class="card-title">Imagen de Perfil</h2>
                             <img :src="imageUploadURL" alt="" style="max-width: 140px; height: 140px;"><br>
-                            <label for="imageUpload" class="custom-file-upload p-5">
+                            <label for="imageUpload" class="button-gray p-5">
                                 Seleccionar Imagen
                             </label>
                             <input @change="checkFormat('imageUpload')" ref="imageUpload" name="imageUpload" id="imageUpload" type="file" accept="image/jpeg" maxFileSize="1048576" />
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
-                        <button class="custom-file-upload" type="submit" name="action">Guardar</button>
+                        <button class="button-gray" type="submit" name="action">Guardar</button>
                     </div>
                 </div>
             </form>
