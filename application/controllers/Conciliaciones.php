@@ -13,7 +13,7 @@
 			$data[ 'main' ] = $this->load->view ( 'conciliaciones', '', TRUE );
 			$this->load->view ( 'plantilla', $data );
 		}
-		public function CFDI () {
+		public function CFDI (): bool {
 			//Se obtienen la fecha mínima y máxima para filtrar las facturas
 			$from = strtotime ( $this->input->post ( 'from' ) );
 			$to = strtotime ( $this->input->post ( 'to' ) . ' +1 day' );
@@ -36,7 +36,7 @@
 			echo json_encode ( [ "code" => 500, "message" => "Error al extraer la información", "reason" => "No se envió una fecha valida" ] );
 			return FALSE;
 		}
-		public function conciliation () {
+		public function conciliation (): bool {
 			//Se obtienen la fecha mínima y máxima para filtrar las facturas
 			$from = strtotime ( $this->input->post ( 'from' ) );
 			$to = strtotime ( $this->input->post ( 'to' ) . ' +1 day' );
@@ -69,15 +69,15 @@
 				$this->load->model ( 'Operation_model', 'OpData' );
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				//Se envía la instrucción para aceptar la conciliación
-				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, 'SANDBOX' );
+				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, $this->environment);
 				$this->insertLog ( 2, $res[ 'code' ], $res[ 'request' ], $res, 'acceptConciliation', $this->environment );
 				if ( $res[ 'code' ] === 200 ) {
-					$conciliation = $this->OpData->getConciliationByID ( $id, 'SANDBOX' );
+					$conciliation = $this->OpData->getConciliationByID ( $id, $this->environment );
 					$payDate = strtotime ( $payDate );
-					$n1 = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], $payDate, 'SANDBOX' );
-					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n1, 'acceptConciliation', $this->environment );
-					$n2 = $this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], $payDate, 'SANDBOX' );
-					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n2, 'acceptConciliation', $this->environment );
+					$n1 = $this->OpData->acceptCFDI ( $conciliation[ 0 ][ 'id_invoice' ], $payDate, $this->environment );
+					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n1, 'acceptCFDI', $this->environment );
+					$n2 = $this->OpData->acceptNote ( $conciliation[ 0 ][ 'id_debit_note' ], $payDate, $this->environment );
+					$this->insertLog ( 2, $n1[ 'code' ], [ 'payDate' => $payDate ], $n2, 'acceptNote', $this->environment );
 					echo json_encode ( [
 						"code" => 200,
 						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
@@ -173,46 +173,6 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 					'mail' => $provider[ 'email' ] ];
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
-			//======================================================================================================
-//			$conciliation = $this->OpData->getConciliacionesByID ( $id, $env );
-//			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $conciliation[ 'result' ][ 'idEmisor' ], $env );
-//			$data = [ 'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ] ];
-//			$notification = notificationBody ( $data, 4 );
-//			$data = [
-//				'user' => [
-//					'name' => $provider[ 'result' ][ 'name' ],
-//					'lastName' => $provider[ 'result' ][ 'last_name' ],
-//					'company' => $provider[ 'result' ][ 'short_name' ],
-//				],
-//				'text' => $notification[ 'body' ],
-//				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
-//				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
-//			];
-//			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ],
-//				$notification[ 'title' ] );
-//			$this->nt->insertNotification (
-//				[ 'id' => $provider[ 'result' ][ 'id' ], 'title' => $notification[ 'title' ], 'body' => $notification[ 'body' ], ], $env );
-//			$data = [
-//				'operationNumber' => $conciliation[ 'result' ][ 'operation_number' ],
-//				'amount' => $conciliation[ 'result' ][ 'total1' ],
-//				'clabe' => $conciliation[ 'result' ][ 'arteria_clabe' ],
-//			];
-//			$notification = notificationBody ( $data, 17 );
-//			$data = [
-//				'user' => [
-//					'name' => $this->session->userdata ( 'datosUsuario' )[ "name" ],
-//					'lastName' => $this->session->userdata ( 'datosUsuario' )[ "last_name" ],
-//					'company' => $this->session->userdata ( 'datosEmpresa' )[ "short_name" ],
-//				],
-//				'text' => $notification[ 'body' ],
-//				'urlDetail' => [ 'url' => base_url ( '/Conciliaciones' ), 'name' => 'Conciliaciones' ],
-//				'urlSoporte' => [ 'url' => base_url ( '/soporte' ), 'name' => base_url ( '/soporte' ) ],
-//			];
-//			send_mail ( 'uriel.magallon@whitefish.mx', $data, 2, [ 'alejandro@whitefish.mx', 'juan.carreno@whitefish.mx' ],
-//				$notification[ 'title' ] );
-//			$this->nt->insertNotification (
-//				[ 'id' => $this->session->userdata ( 'datosUsuario' )[ "id" ], 'title' => $notification[ 'title' ],
-//					'body' => $notification[ 'body' ], ], $env );
 		}
 		public function notifyNote ( array $args, string $env = 'SANDBOX' ) {
 			$this->load->model ( 'Settings_model', 'conf' );

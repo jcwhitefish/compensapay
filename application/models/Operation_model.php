@@ -196,13 +196,13 @@
 				//Sé verífica que haya una actualización
 				if ( $this->db->affected_rows () > 0 ) {
 					//Devolvemos que la operación se realizo con éxito
-					return [ "code" => 200, "request" => $query, "result" => $this->db->affected_rows () ];
+					return [ "code" => 200, "request" => [ 'id' => $id, 'payment_date' => $payDate ], "result" => $this->db->affected_rows () ];
 				}
 				//Devolvemos que no hubo una actualización
-				return [ "code" => 500, "request" => $query, "message" => "Error al actualizar la conciliación", "reason" => "No se realizo ninguna actualización" ];
+				return [ "code" => 500, "request" => [ 'id' => $id, 'payment_date' => $payDate ], "message" => "Error al actualizar la conciliación", "reason" => "No se realizo ninguna actualización" ];
 			}
 			//Devolvemos el error de la operación
-			return [ "code" => 500, "request" => $query, "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación" ];
+			return [ "code" => 500, "request" => [ 'id' => $id, 'payment_date' => $payDate ], "message" => "Error al actualizar la conciliación", "reason" => "Error de comunicación" ];
 		}
 		/**
 		 * Función para rechazar una conciliación
@@ -339,7 +339,7 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			$query = "UPDATE $this->base.invoices set status = 1, payment_date = '$payDay' WHERE id = '$id'";
 //			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
-				return [ 'code' => 200, 'in' => $query, 'out' => $res ];
+				return [ 'code' => 200, 'in' => [ 'id' => $id, 'payment_date' => $payDay ], 'out' => $res ];
 			}
 			return [ 'code' => 500, 'reason' => 'Error con el query' ];
 		}
@@ -349,7 +349,7 @@ VALUES ('{$args['invoiceId']}','{$args['invoiceRelId']}','{$args['userId']}','{$
 			$query = "UPDATE $this->base.debit_notes set status=1, payment_date = '$payDay' WHERE id = '$id'";
 //			var_dump ( $query);
 			if ( $res = $this->db->query ( $query ) ) {
-				return [ 'code' => 200, 'in' => $query, 'out' => $res ];
+				return [ 'code' => 200, 'in' => [ 'id' => $id, 'payment_date' => $payDay ], 'out' => $res ];
 			}
 			return [ 'code' => 500, 'reason' => 'Error con el query' ];
 		}
