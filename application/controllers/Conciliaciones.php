@@ -334,9 +334,10 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$op = $this->OpData->newConciliation_I ( $data, 'SANDBOX' );
 				echo json_encode ( [
 					"code" => 200,
-					"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
+					"message" => "Conciliación creada y autorizada<br>Se envío a su correo las instrucciones para realizar el pago por transferencia",
 				] );
-				$this->adviseAuthorized ( $op[ 'id' ] );
+				$conciliation = $this->OpData->getConciliationByID ( $op[ 'id' ], $this->environment );
+				$this->adviseAuthorized ( $conciliation[ 0 ]);
 				//}
 				//else
 				//{
