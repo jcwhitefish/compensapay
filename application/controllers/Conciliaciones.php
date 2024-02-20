@@ -69,7 +69,7 @@
 				$this->load->model ( 'Operation_model', 'OpData' );
 				$idCompany = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 				//Se envía la instrucción para aceptar la conciliación
-				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, $this->environment);
+				$res = $this->OpData->acceptConciliation ( $id, $payDate, $idCompany, $this->environment );
 				$this->insertLog ( 2, $res[ 'code' ], $res[ 'request' ], $res, 'acceptConciliation', $this->environment );
 				if ( $res[ 'code' ] === 200 ) {
 					$conciliation = $this->OpData->getConciliationByID ( $id, $this->environment );
@@ -82,7 +82,7 @@
 						"code" => 200,
 						"message" => "Conciliación autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
 					] );
-					$this->adviseAuthorized ( $conciliation[0], $this->environment );
+					$this->adviseAuthorized ( $conciliation[ 0 ], $this->environment );
 					return TRUE;
 				}
 			}
@@ -147,9 +147,9 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			$this->load->model ( 'User_model', 'dataUsr' );
 			$this->load->helper ( 'notifications_helper' );
 			$client = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_client' ], $env );
-			$client = $client['result'];
+			$client = $client[ 'result' ];
 			$provider = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'id_provider' ], $env );
-			$provider = $provider['result'];
+			$provider = $provider[ 'result' ];
 			if ( $this->conf->validateNotification ( $client[ 'id' ], 1, $env ) ) {
 				$data = [ 'opNumber' => $args[ 'operation_number' ],
 					'amount' => $args[ 'entry_money' ], 'clabe' => $client[ 'account_clabe' ] ];
@@ -163,7 +163,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
 			if ( $this->conf->validateNotification ( $provider[ 'id' ], 1, $env ) ) {
-				$data = [ 'opNumber' => $args[ 'operation_number' ]];
+				$data = [ 'opNumber' => $args[ 'operation_number' ] ];
 				$notification = notificationBody ( $data, 3 );
 				$this->insertNotification ( $provider[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
 				$this->insertAlert ( $provider[ 'id' ], $notification[ 'title' ], $notification[ 'body' ], $env );
@@ -329,15 +329,14 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 					'inCash' => $cfdi0[ 'total' ],
 					'outCash' => $OriginAmount,
 				];
-
 				//if($OriginAmount >= $cfdi0[ 'total' ])
 				//{
-					$op = $this->OpData->newConciliation_I ( $data, 'SANDBOX' );
-					echo json_encode ( [
-						"code" => 200,
-						"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
-					] );
-					$this->adviseAuthorized ( $op[ 'id' ] );
+				$op = $this->OpData->newConciliation_I ( $data, 'SANDBOX' );
+				echo json_encode ( [
+					"code" => 200,
+					"message" => "Conciliación creada y autorizada<br>Se envió a su correo las instrucciones para realizar el pago por transferencia",
+				] );
+				$this->adviseAuthorized ( $op[ 'id' ] );
 				//}
 				//else
 				//{
@@ -346,7 +345,6 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				//		"message" => "El monto total del cfdi de conciliación debe ser menor al monto total del cfdi original",
 				//	] );
 				//}
-				
 				return TRUE;
 			}
 			echo json_encode ( [ "code" => 500, "message" => "Error al obtener información", "reason" => "No se logro obtener los registros" ] );
