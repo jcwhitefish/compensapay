@@ -33,6 +33,27 @@ la operaci&oacute;n transfiriendo con los siguientes detalles: <br><table><tr><t
 </tr></table>";
 				$title = "Operación autorizada";
 				break;
+			case 5:
+				$body = "No se pudo procesar el pago por la operaci&oacute;n <strong>{$args['operationNumber']}</strong> debido a que ingres&oacute;
+un monto diferente al de la factura: <br><table><tr><td>Monto pagado</td><td>Monto factura</td></tr><tr><td>" . ( $args[ 'data' ][ 'amount' ] / 100 ) . "</td>
+<td>{$args['OpEntrty']}</td></tr></table><br>Por este motivo se le ha realizado un reembolso total de su pago, realize nuevamente la
+tranferencia por el monto correcto con el siguiente n&uacute;mero de referencia y descripci&oacute;n: <br><table><tr><td>Monto</td><td>N&uacute;mero
+de referencia</td><td>Descripci&oacute;n</td></tr><tr><td>$ {$args['OpEntrty']}</td><td>{$args['NewOpNumber']}</td><td>{$args['NewOpNumber']}</td>
+</tr></table>";
+				$title = 'Operación rechazada';
+				break;
+			case 6:
+				$body = "Te informamos que se hizo un dep&oacute;sito a tu cuenta clabe en solve por $ {$args['amount']} MXN.
+Debido a que el monto transferido no corresponde a la operaci&oacute;n <strong>{$args['operationNumber']}</strong>, se hizo la
+devoluci&oacute;n del monto al cliente en su totalidad, por lo cual se ver&aacute; reflejado en tus movimientos y estados de cuenta.
+<br>Estaremos enviando notificaci&oacute;n de esto a tu cliente <strong>{$args['client']}</strong> para que vuelva a hacer el pago
+con los datos correctos.";
+				$title = "Devolución de pago";
+				break;
+			case 7:
+				$body = "Te informamos que la operaci&oacute;n <strong>" . $args[ 'operationNumber' ] . "</strong>. ha sido ejecutada con &eacute;xito";
+				$title = 'Operación realizada';
+				break;
 			case 13:
 				$url = base_url ( '/Conciliaciones' );
 				$body = "Te informamos que la operaci&oacute;n <strong>{$args['operationNumber']}</strong> ha sido creada por tu proveedor,
