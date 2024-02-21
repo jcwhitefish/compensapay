@@ -148,9 +148,10 @@ class Proveedor extends MY_Loggedin
             'uuid'       => $unique_key
         ];
 
-		$this->load->helper('sendMail');
+		//este mail se mandaria hasta que llene los datos de accionistas
+		//$this->load->helper('sendMail');
 
-		send_mail('mega.megaman@hotmail.com', $data, 1, date('Y-m-d'));
+		//send_mail('mega.megaman@hotmail.com', $data, 1, date('Y-m-d'));
 
 		/*$config = Array(
             'protocol'  => 'smtp',
@@ -180,6 +181,30 @@ class Proveedor extends MY_Loggedin
         }*/
         
 		echo json_encode($resp);
+	}
+
+	public function registra_accionista(){
+
+		$this->load->model('Proveedor_model');
+
+		$tipoaccionista = $this->input->post('tipoa');
+		$nombreaccionista = $this->input->post('nombreacc');
+		$capitalsocial = $this->input->post('capitalsocial');
+		
+
+		$accionista = [
+			'nombreaccionista' => $nombreaccionista,
+			'capitalsocial' => $capitalsocial, 
+			'tipoaccionista' => $tipoaccionista
+		];
+
+		$dato = array(
+			"accionistas" => $this->Proveedor_model->ad_accionista($accionista),
+			"tipo" => $tipoaccionista
+		);
+
+		$this->load->view('accionistas', $dato);
+
 	}
 }
 

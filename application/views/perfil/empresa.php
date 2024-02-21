@@ -637,7 +637,11 @@
 								<div class="row">
 									<div class="input-border col cover">
 										<label style="top:auto" for="nationality">Nacionalidad *</label>
-										<input class="form-1" type="text" name="nationality" id="nationality" value="">
+										<!--<input class="form-1" type="text" name="nationality" id="nationality" value="">-->
+										<select name="nationality" id="nationality">
+											<option value="Mexicana">Mexicana</option>
+											<option value="Extranjera">Extranjera</option>
+										</select>
 									</div>
 								</div>
 								<div class="row">
@@ -1031,7 +1035,7 @@
 								hidden class="modal-trigger modal-close button-gray" name="btn-fase-4" id="btn-fase-4"
 								href="#modal-proveedor-final" onchange="return fileValidation()"
 								style="color:#fff; color:hover:#">
-								Enviar registro
+								Guardar datos
 							</a>
 						</div>
 					</div>
@@ -1042,18 +1046,186 @@
 	<!-- Modal Registrarse como Proveedor -->
 	<div id="modal-proveedor-final" class="modal">
 		<div class="modal-content">
-			<h5>Fin del registro</h5>
+			<h5>Estructura accionaria</h5>
 			<div class="card esquinasRedondas">
 				<div class="card-content">
-					<p class="p-3 h5-modular">Gracias por completar tu registro, nuestro equipo revisara tu información y
-					                          documentación y te haremos saber en cuanto puedas tener acceso a las
-					                          funciones de la plataforma.</p>
-					<br>
-					<p style="margin-left:10px">Gracias por usar Solve</p>
-					<br>
-					<a
-						class="modal-close button-gray" style="color:#fff; color:hover:#"
-						href="<?= base_url ( 'perfil/empresa' ) ?>">Finalizar</a>
+					<p>Manifiesto (manifestamos), que la  conformación de la estructura accionaria de mi (nuestra) representada se satisface de la siguiente forma:</p>
+					<div class="row" id="accionistasM">
+						<div class="col s2"></div>
+						<div class="col s8">
+							<table>
+								<thead>
+									<tr>
+										<th>Accionistas</th>
+										<th>Capital Social</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type="text" name="nombreaccM" id="nombreaccM"></td>
+										<td><input type="number" name="capitalsocialM" id="capitalsocialM"></td>
+										<td align="center">
+											<input type="hidden" name="tipoaM" id="tipoaM" value="M">
+											<input type="button" name="botadacc" id="botadacc" class="button-gray" value="Agregar" onClick="ad_acc(document.getElementById('nombreaccM').value, document.getElementById('capitalsocialM').value, document.getElementById('tipoaM').value)">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col s2"></div>
+					</div>
+					<p>Así mismo, hago de su conocimiento, que la estructura accionaria se compone de las siguientes personas físicas:</p>
+					<div class="row" id="accionistasF">
+						<div class="col s2"></div>
+						<div class="col s8">
+							<table>
+								<thead>
+									<th>Accionistas</th>
+									<th>Capital Social</th>
+									<th></th>
+								</thead>
+								<tbody>
+									<td><input type="text" name="nombreaccF" id="nombreaccF"></td>
+									<td><input type="number" name="capitalsocialF" id="capitalsocialF"></td>
+									<td align="center">
+										<input type="hidden" name="tipoaF" id="tipoaF" value="F">
+										<input type="button" name="botadaccf" id="botadaccf" class="button-gray" value="Agregar" onClick="ad_acc(document.getElementById('nombreaccF').value, document.getElementById('capitalsocialF').value, document.getElementById('tipoaF').value)">
+									</td>
+								</tbody>
+							</table>
+						</div>
+						<div class="col s2"></div>
+					</div>
+					<p>hago de su conocimiento que la persona que ejerce el control de la sociedad es:</p>
+					<div class="row">
+						<form name="festaccionariaf" id="festaccionariaf">
+							<div class="row">
+								<div class="input-field col s6">
+									<input id="personacontrol" name="personacontrol" type="text" class="validate">
+									<label for="personacontrol">Persona que ejerce el control de la sociedad</label>
+								</div>
+								<div class="input-field col s6">
+									<input id="cargofuncion" name="cargofuncion" type="text" class="validate">
+									<label for="cargofuncion">Cargo o función</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input id="nombre" name="nombre" type="text" class="validate">
+									<label for="nombre">Nombre (s)</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="appaterno" name="appaterno" type="text" class="validate">
+									<label for="appaterno">Ap. Paterno</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="apmaterno" id="apmaterno" type="text" class="validate">
+									<label for="apmaterno">Ap. Materno</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-border col s4 cover">
+									<label style="top:auto" for="dateConst">Fecha de nacimiento</label>
+									<input style="height: 4rem !important;" class="form-1" value="" max="<?= date ( "Y-m-d" ) ?>" type="date" name="dateConst" id="dateConst">
+								</div>
+								<div class="input-field col s4">
+									<input id="paisnacimiento" id="paisnacimiento" type="text" class="validate">
+									<label for="paisnacimiento">Pais de nacimiento</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="entidadnacimiento" id="entidadnacimiento" type="text" class="validate">
+									<label for="entidadnacimiento">Entidad de nacimiento</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input id="rfc" name="rfc" type="text" class="validate">
+									<label for="rfc">RFC con homoclave</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="paisrecidencia" name="paisrecidencia" type="text" class="validate">
+									<label for="paisrecidencia">Pais de residencia (nacional/extranjera)</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="paisresidenciafiscal" name="paisresidenciafiscal" type="text" class="validate">
+									<label for="paisresidenciafiscal">Pais de residencia fiscal</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input id="nacionalidad" name="nacionalidad" type="text" class="validate">
+									<label for="nacionalidad">Nacionalidad</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="curp" name="curp" type="text" class="validate">
+									<label for="curp">Curp</label>
+								</div>
+							</div>
+							<p>Domicilio para recibir notificaciones</p>
+							<div class="row">
+								<div class="input-border col s4 cover">
+									<label style="top:auto" for="nationality">Tipo de Dirección *</label>
+									<!--<input class="form-1" type="text" name="nationality" id="nationality" value="">-->
+									<select name="nationality" id="nationality">
+										<option value="Particular">Particular</option>
+										<option value="Empresa">Empresa</option>
+									</select>
+								</div>
+								<div class="input-field col s4">
+									<input id="calle" name="calle" type="text" class="validate">
+									<label for="calle">Calle</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="numext" name="numext" type="text" class="validate">
+									<label for="numext">Num. Exterior</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input id="numint" name="numint" type="text" class="validate">
+									<label for="numint">Num. Interior</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="pais" name="pais" type="text" class="validate">
+									<label for="pais">Pais</label>
+								</div>
+								<div class="input-field col s4">
+									<input id="cp" name="cp" type="text" class="validate">
+									<label for="cp">C. P.</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input type="text" id="colonia" name="colonia" class="validate">
+									<label for="colonia">Colonia</label>
+								</div>
+								<div class="input-field col s4">
+									<input type="text" name="entidad" id="entidad" class="validate">
+									<label for="entidad">Entidad</label>
+								</div>
+								<div class="input-field col s4">
+									<input type="text" name="numtelefono" class="validate" id="numtelefono">
+									<label for="numtelefono">Num. Telefonico</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="input-field col s4">
+									<input type="text" name="tipoiden" class="validate" id="tipoiden">
+									<label for="tipoiden">Tipo de identificación oficial (INE, pasaporte, etc.)</label>
+								</div>
+								<div class="input-field col s4">
+									<input type="text" name="numiden" class="validate" id="numiden">
+									<label for="numiden">Num. Identificación</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12 right-align">
+									<input type="submit" value="Finalizar" class="button-gray" id="butfinalizar">
+								</div>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1655,11 +1827,24 @@
 	<?php if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) { ?>
 
 	$(document).ready(function(){
-    	$('#modal-proveedor').modal('open');
+		$('#modal-proveedor').modal('open');
+	});
 
-  	});
+	<?php } if( $this->session->userdata('datosEmpresa')['accionistas'] == 0 )	{ ?>
+		
+	$(document).ready(function(){
+		$('#modal-proveedor-final').modal('open');
+	});
 
-	<?php } ?>
+	<?php }	?>
 
-
+function ad_acc(nombreacc, capital, tipo){
+	$.ajax({
+		type: 'POST',
+		url : '<?php echo base_url('Proveedor/registra_accionista');?>',
+		data: 'nombreacc=' + nombreacc + '&capitalsocial=' + capital + '&tipoa=' + tipo
+    }).done (function ( info ){
+		$('#accionistas' + tipo).html(info);
+	});
+}
 </script>

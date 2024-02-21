@@ -398,4 +398,31 @@ class Proveedor_model extends CI_Model{
         return $ruta;
 	}
 
+	public function ad_accionista($accionista){
+
+		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+		$query = "INSERT INTO accionistas (IdCompanie, TipoPersona, Accionista, CapitalSocial) 
+									VALUES ('".$idCompanie."', '".$accionista["tipoaccionista"]."', 
+											'".$accionista["nombreaccionista"]."', '".$accionista["capitalsocial"]."')";
+
+		$this->db->query($query);
+
+		//leemos datos de accionistas
+		$queryacc = "SELECT * FROM accionistas WHERE IdCompanie='".$idCompanie."' AND TipoPersona='".$accionista["tipoaccionista"]."' ORDER BY Id ASC";
+
+		echo "SELECT * FROM accionistas WHERE IdCompanie='".$idCompanie."' AND TipoPersona='".$accionista["tipoaccionista"]."' ORDER BY Id ASC";
+		if($ResAcc=$this->db->query($queryacc)){
+			if ($ResAcc->num_rows() > 0){
+                $RResAcc = $ResAcc->result_array();
+            }
+            else {
+                $RResAcc = '';
+            }
+		}
+
+		return $RResAcc;
+
+	}
+
 }

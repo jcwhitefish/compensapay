@@ -28,7 +28,7 @@ class Inicio extends MY_Loggedin
 
 	public function index()
 	{
-		if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) {
+		if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) OR $this->session->userdata('datosEmpresa')['accionistas'] == 0) {
 
 			header("Location: ".base_url('/perfil/empresa')); 
 		}
