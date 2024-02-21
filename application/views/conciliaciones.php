@@ -923,9 +923,9 @@
 							flag = value.role;
 							opNumber = value.operation_number;
 							clabe = value.account_clabe;
-						} else if (value.role === "emisor" && (value.status === '3' || value.status === '4') ) {
+						} else if (value.role === "emisor" && (value.status === "3" || value.status === "4")) {
 							opNumber = value.operation_number;
-							clabe = "xxxxxxxxxxxxxx"+value.account_clabe.substring(value.account_clabe.length - 4);
+							clabe = "xxxxxxxxxxxxxx" + value.account_clabe.substring(value.account_clabe.length - 4);
 						} else {
 							switch (value.status) {
 								case "0":
@@ -940,7 +940,7 @@
 									break;
 							}
 							opNumber = "-";
-							clabe = "-"
+							clabe = "-";
 						}
 						switch (value.status) {
 							case "0":
@@ -962,7 +962,7 @@
 						const tr = $("<tr " + flag + ">" +
 							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
 							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
-							"<td class='center-align'>"+clabe+"</td>" +
+							"<td class='center-align " + flag + "'>" + clabe + "</td>" +
 							"<td class='center-align " + flag + "'>" + opNumber + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
