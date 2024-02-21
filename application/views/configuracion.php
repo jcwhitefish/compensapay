@@ -303,7 +303,6 @@
 		alert("ERROR [" + response.status + "] " + desc);
 	};
 	$(document).ready(function () {
-		const sandbox = true;
 		let deviceDataId;
 		OpenPay.setSandboxMode(true);
 		OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
