@@ -215,7 +215,7 @@
 							<div class="col l6" id="autCancel"></div>
 							<div class="col l6" id="autAceptar"></div>
 						</div>
-						
+					
 					</div>
 				</div>
 			</div>
@@ -296,10 +296,12 @@
 						<div class="row">
 							<p style="margin-left: 10px;">
 								<label>
-									<input class="with-gap" name="typeConcilia" id="receptorWay" type="radio"  style="visibility: hidden;"/>
+									<input
+										class="with-gap" name="typeConcilia" id="receptorWay" type="radio"
+										style="visibility: hidden;" />
 									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar contra un CFDI de tu proveedor</span>
 								</label>
-
+								
 								<!--<input name="typeConcilia" id="receptorWay" type="radio" />
 								<label for="receptorWay">
 									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">
@@ -308,7 +310,9 @@
 							</p>
 							<p style="margin-left: 10px;">
 								<label>
-									<input class="with-gap" name="typeConcilia" id="issuingWay" type="radio"  style="visibility: hidden;"/>
+									<input
+										class="with-gap" name="typeConcilia" id="issuingWay" type="radio"
+										style="visibility: hidden;" />
 									<span style="font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);">Conciliar con tu cliente utilizando nota de crédito propia</span>
 								</label>
 								
@@ -617,10 +621,14 @@
 				if (e.target.id === "issuingWay") {
 					$("#conciliaDate").attr("disabled", true);
 					conciliateWay = 0;
-					let debit = "<div class=\"file-field input-field\" ><div class=\"file-path-wrapper\" style=\"width: 75%;margin-left: auto;float: left;\">" +
-						"<input class=\"file-path validate\" type=\"text\" placeholder=\"Sube tu nota de crédito en formato .xml\" disabled ></div>" +
-						"<div style=\"width: 25%;margin-left: auto;\"><label for=\"containerNote\" class=\"custom-file-upload button-gray\">Seleccionar</label>" +
-						"<input name=\"containerNote\" id=\"containerNote\" type=\"file\" accept=\".xml\" maxFileSize=\"5242880\" required /></div></div>";
+					let debit = "<div class=\"file-field input-field\" ><div class=\"file-path-wrapper\" " +
+						"style=\"width: 75%;margin-left: auto;float: left;\">" +
+						"<input class=\"file-path validate\" type=\"text\" placeholder=\"Sube tu nota de crédito en formato .xml\" " +
+						"disabled ></div>" +
+						"<div style=\"width: 25%;margin-left: auto;\"><label for=\"containerNote\" class=\"custom-file-upload button-gray\">" +
+						"Seleccionar</label>" +
+						"<input name=\"containerNote\" id=\"containerNote\" type=\"file\" accept=\".xml\" maxFileSize=\"5242880\" required />" +
+						"</div></div>";
 					contenVar.empty();
 					contenVar.append(debit);
 				} else {
@@ -678,9 +686,10 @@
 							} else {
 								$.each(data, function (index, value) {
 									let li = $("<tr><td>" +
-										"<p>" + 
+										"<p>" +
 										"<label>" +
-										"<input class=\"with-gap\" name=\"cfdiConciation\" id=\"cfdiConciation" + value.id + "\" type=\"radio\" style=\"visibility: hidden;\" value = \"" + value.id + "\" />" +
+										"<input class=\"with-gap\" name=\"cfdiConciation\" id=\"cfdiConciation" + value.id + "\" type=\"radio\" " +
+										"style=\"visibility: hidden;\" value = \"" + value.id + "\" />" +
 										"<span style=\"font-size: 1.15rem;font-weight: 400; color: rgba(0,0,0,0.87);\">Seleccionar</span>" +
 										"</label>" +
 										"</p>" +
@@ -745,12 +754,14 @@
 				},
 				success: function (data) {
 					if (data.code === 500 || data.code === 404) {
-						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>" +
+						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+							"</strong></span>" +
 							"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 					} else {
-						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>" +
+						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+							"</strong></span>" +
 							"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -839,7 +850,8 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>" +
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -851,6 +863,7 @@
 						let uuid, status, uuid2;
 						let aut, cancel, acept;
 						let flag;
+						let opNumber;
 						uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid1 + "</a>";
 						uuid2 = "<a href=\"" + value.idur2 + "\" target=\"_blank\">" + value.uuid2 + "</a>";
 						if (value.role === "receptor") {
@@ -907,6 +920,9 @@
 									break;
 							}
 							flag = value.role;
+							opNumber = value.operation_number;
+						} else if (value.role === "emisor" && (value.status === '3' || value.status === '4') ) {
+							opNumber = value.operation_number;
 						} else {
 							switch (value.status) {
 								case "0":
@@ -920,6 +936,7 @@
 									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
 									break;
 							}
+							opNumber = "-";
 						}
 						switch (value.status) {
 							case "0":
@@ -941,16 +958,18 @@
 						const tr = $("<tr " + flag + ">" +
 							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
 							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
-							"<td class='center-align " + flag + "'>" + value.operation_number + "</td>" +
+							"<td class='center-align " + flag + "'>" + opNumber + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis;'>" + uuid + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis;'>"
+							+ uuid + "</td>" +
 							"<td class='center-align " + flag + "'>$ " + value.total1 + "</td>" +
 							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
 							"<td class='center-align'>" + value.datePago + "</td>" +
 							"<td class='center-align'>" + value.senderConciliation + "</td>" +
 							"<td class='center-align'>" + value.receiverConciliation + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid2 + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;" +
+							"text-overflow: ellipsis;'>" + uuid2 + "</td>" +
 							"<td class='center-align'>$ " + value.total2 + "</td>" +
 							"<td class='center-align' style='text-wrap: nowrap;'>" + value.dateCFDI2 + "</td>" +
 							"<td class='center-align'  style='text-wrap: nowrap;' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
@@ -1003,7 +1022,8 @@
 		$("#btnInvoice").addClass("selected");
 		let btnAction = $("#btnAction").append("Subir CFDI");
 		btnAction.attr("href", "#modal-CFDI");
-		const tableBase = "<table id=\"tabla_cfdis\" class=\"stripe row-border order-column nowrap\"><thead style=\"position:sticky; top: 0;\"><tr>" +
+		const tableBase = "<table id=\"tabla_cfdis\" class=\"stripe row-border order-column nowrap\"><thead style=\"position:sticky; top: 0;\">" +
+			"<tr>" +
 			"<th>Conciliación</th>" +
 			"<th class='center-align'>Estatus CFDI</th>" +
 			"<th class='center-align'>UUID del CFDI</th>" +
@@ -1044,7 +1064,8 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>" +
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -1094,7 +1115,8 @@
 						const tr = $("<tr>" +
 							"<td class='center-align' id=\"initC" + value.id2 + "\"></td>" +
 							"<td class='center-align'>" + status + "</td>" +
-							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;text-overflow: ellipsis;'>" + uuid + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;" +
+							"text-overflow: ellipsis;'>" + uuid + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
 							"<td class='center-align'>" + value.dateCFDI + "</td>" +
@@ -1169,7 +1191,8 @@
 			success: function (data) {
 				let toastHTML;
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason + "</strong></span>" +
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});

@@ -174,7 +174,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
 		}
-		public function notifyNote ( array $args, string $env = 'SANDBOX' ) {
+		public function notifyNote ( array $args, string $env = 'SANDBOX' ): void {
 			$this->load->model ( 'Settings_model', 'conf' );
 			$this->load->helper ( 'notifications_helper' );
 			$client = $this->dataUsr->getInfoFromCompanyPrimary ( $args[ 'receiver' ], $env );
@@ -203,7 +203,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$this->sendEMail ( $mail, $notification, 2, $env );
 			}
 		}
-		public function cargarComprobantes () {
+		public function cargarComprobantes (): bool {
 			if ( $_FILES[ 'file' ][ 'error' ] == UPLOAD_ERR_OK ) {
 				$uploadedFile = $_FILES[ 'file' ];
 				if ( pathinfo ( $uploadedFile[ 'name' ], PATHINFO_EXTENSION ) === 'zip' ) {
@@ -255,7 +255,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			echo json_encode ( [ "code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento" ] );
 			return FALSE;
 		}
-		public function cargarNote () {
+		public function cargarNote (): bool {
 			if ( $_FILES[ 'file' ][ 'error' ] == UPLOAD_ERR_OK ) {
 				$env = 'SANDBOX';
 				$amount = $this->input->post ( 'OriginAmount' );
@@ -306,7 +306,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			echo json_encode ( [ "code" => 500, "message" => "Error al guardar información", "reason" => "No se logro subir el documento" ] );
 			return FALSE;
 		}
-		public function WayContraCFDI () {
+		public function WayContraCFDI (): bool {
 			$OriginCFDI = $this->input->post ( 'OriginCFDI' );
 			$OriginAmount = $this->input->post ( 'OriginAmount' );
 			$ReceiverId = $this->input->post ( 'ReceiverId' );
@@ -337,7 +337,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 					"message" => "Conciliación creada y autorizada<br>Se envío a su correo las instrucciones para realizar el pago por transferencia",
 				] );
 				$conciliation = $this->OpData->getConciliationByID ( $op[ 'id' ], $this->environment );
-				$this->adviseAuthorized ( $conciliation[ 0 ]);
+				$this->adviseAuthorized ( $conciliation[ 0 ] );
 				//}
 				//else
 				//{
@@ -351,7 +351,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 			echo json_encode ( [ "code" => 500, "message" => "Error al obtener información", "reason" => "No se logro obtener los registros" ] );
 			return FALSE;
 		}
-		public function ContraCFDI () {
+		public function ContraCFDI (): bool {
 			$amount = $this->input->post ( 'amount' );
 			$receiver = $this->input->post ( 'receiverId' );
 			$userId = $this->session->userdata ( 'datosEmpresa' )[ 'id' ];
