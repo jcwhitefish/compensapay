@@ -807,7 +807,7 @@
 		const tableBase = "<table id=\"tabla_conciliaciones\" class=\"stripe row-border order-column nowrap\"><thead><tr>" +
 			"<th>Autorizar</th>" +
 			"<th class=\"center-align\">Estatus<br />conciliación</th>" +
-			"<th class='center-align'>Clabe Interbancaria</th>" +
+			"<th class='center-align'>Clabe Interbancaria Transferencia Inicial</th>" +
 			"<th style=\"min-width: 142px; text-align: center\">ID Operación /<br />Número de Referencia</th>" +
 			"<th class=\"center-align\">Emisor<br />CFDI Inicial</th>" +
 			"<th class=\"center-align\">Receptor<br />CFDI Inicial</th>" +
