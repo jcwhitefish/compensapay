@@ -807,6 +807,7 @@
 		const tableBase = "<table id=\"tabla_conciliaciones\" class=\"stripe row-border order-column nowrap\"><thead><tr>" +
 			"<th>Autorizar</th>" +
 			"<th class=\"center-align\">Estatus<br />conciliación</th>" +
+			"<th class='center-align'>Clabe Interbancaria</th>" +
 			"<th style=\"min-width: 142px; text-align: center\">ID Operación /<br />Número de Referencia</th>" +
 			"<th class=\"center-align\">Emisor<br />CFDI Inicial</th>" +
 			"<th class=\"center-align\">Receptor<br />CFDI Inicial</th>" +
@@ -860,7 +861,7 @@
 				} else {
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
-						let uuid, status, uuid2;
+						let uuid, status, uuid2, clabe;
 						let aut, cancel, acept;
 						let flag;
 						let opNumber;
@@ -921,8 +922,10 @@
 							}
 							flag = value.role;
 							opNumber = value.operation_number;
+							clabe = value.account_clabe;
 						} else if (value.role === "emisor" && (value.status === '3' || value.status === '4') ) {
 							opNumber = value.operation_number;
+							clabe = "xxxxxxxxxxxxxx"+value.account_clabe.substring(value.account_clabe.length - 4);
 						} else {
 							switch (value.status) {
 								case "0":
@@ -937,6 +940,7 @@
 									break;
 							}
 							opNumber = "-";
+							clabe = "-"
 						}
 						switch (value.status) {
 							case "0":
@@ -958,6 +962,7 @@
 						const tr = $("<tr " + flag + ">" +
 							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
 							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
+							"<td class='center-align'>"+clabe+"</td>" +
 							"<td class='center-align " + flag + "'>" + opNumber + "</td>" +
 							"<td class='center-align'>" + value.emisor + "</td>" +
 							"<td class='center-align'>" + value.receptor + "</td>" +
