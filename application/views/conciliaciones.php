@@ -51,12 +51,12 @@
 	}
 	
 	.receptor {
-		color: #1d7e1d !important;
+		color: #52A447 !important;
 		font-weight: bold;
 	}
 	
 	.receptor:hover {
-		color: #1d7e1d !important;
+		color: #52A447 !important;
 	}
 </style>
 
@@ -953,7 +953,7 @@
 								status = "<p><span class=\"estatus\" style=\"background-color:#c20005\">Rechazada</span></p>";
 								break;
 							case "3":
-								status = "<p><span class=\"estatus\" style=\"background-color:#569700\">Realizada</span></p>";
+								status = "<p><span class=\"estatus\" style=\"background-color:#52A447\">Realizada</span></p>";
 								break;
 							case "4":
 								status = "<p><span class=\"estatus\" style=\"background-color:#dedc48\">Vencida</span></p>";
