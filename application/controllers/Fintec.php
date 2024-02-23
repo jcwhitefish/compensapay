@@ -136,7 +136,7 @@
 						} else {
 							//====| Comenzamos a enviar el dinero del cliente |=====
 							$clientT = [
-								'clabe' => $op['clientClabe'],
+								'clabe' => $op[ 'clientClabe' ],
 								'amount' => filter_var ( $exitMoney, FILTER_VALIDATE_INT ),
 								'descriptor' => 'Pago por ' . $op[ 'uuid' ],
 								'name' => $data[ 'data' ][ 'source' ][ 'name' ],
@@ -191,9 +191,9 @@
 							$cepC = $this->getCEP ( $argsR );
 							//====| Comenzamos a enviar el dinero del proveedor |=====
 							$prov = json_decode ( $this->dataArt->CreateTransfer ( $provedor, 'SANDBOX' ), TRUE );
-							$this->load->model('Operation_model','OpData');
-							$cfdis = $this->OpData->getCFDIFromConciliation ($op[ 'operationId' ], $this->environment);
-							$this->dataArt->successConciliation ($op[ 'operationId' ], $cfdis, $this->environment );
+							$this->load->model ( 'Operation_model', 'OpData' );
+							$cfdis = $this->OpData->getCFDIFromConciliation ( $op[ 'operationId' ], $this->environment );
+							$this->dataArt->successConciliation ( $op[ 'operationId' ], $cfdis, $this->environment );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
 								'in' => json_encode ( $provedor ),
 								'out' => json_encode ( $prov ) ];
@@ -225,11 +225,11 @@
 								'amount' => ( $amountP / 100 ),
 								'descriptor' => 'Movimiento entre cuentas',
 								'sourceBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
-								'receiverBank' => substr ( $provedor['clabe'], 0, 3 ),
+								'receiverBank' => substr ( $provedor[ 'clabe' ], 0, 3 ),
 								'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
 								'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
 								'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
-								'receiverClabe' => $provedor['clabe'],
+								'receiverClabe' => $provedor[ 'clabe' ],
 								'operationNumber' => $op[ 'operationNumber' ],
 								'transactionDate' => $prov[ 'created_at' ],
 								'arteriaId' => $prov[ 'id' ],
@@ -378,7 +378,7 @@
 		public function tryCEPMultiDownload (): bool {
 			$this->load->model ( 'Arteria_model', 'dataArt' );
 			$balance = $this->dataArt->getAllBalanceCEP ();
-			if ($balance !=  NULL){
+			if ( $balance != NULL ) {
 				foreach ( $balance as $row => $item ) {
 					$cep1 = [
 						'transactionDate' => date ( 'd-m-Y', $item[ 'transaction_date' ] ),
@@ -392,7 +392,7 @@
 					$this->getCEP ( $cep1 );
 				}
 			}
-			return false;
+			return FALSE;
 		}
 		public function ini (): void {
 			phpinfo ();
@@ -469,5 +469,14 @@
 				}
 			}
 			return TRUE;
+		}
+		public function ping () {
+			$this->load->model ( 'response' );
+			$error = 0;
+			$resp = [ "response" => 'ok' ];
+			if ( Request::getStaticMethod () == 'POST' && ( $data = Request::getBody () ) ) {
+				$this->createLog ( 'stress', json_encode ( $data, JSON_PRETTY_PRINT ) );
+			}
+			return $this->response->sendResponse ( $resp, $error );
 		}
 	}
