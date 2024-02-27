@@ -1048,7 +1048,7 @@
 		<div class="modal-content">
 			<h5>Estructura accionaria</h5>
 			<div class="card esquinasRedondas">
-				<div class="card-content">
+				<div class="card-content" id="form_accionistas">
 					<p>Manifiesto (manifestamos), que la  conformación de la estructura accionaria de mi (nuestra) representada se satisface de la siguiente forma:</p>
 					<div class="row" id="accionistasM">
 						<div class="col s2"></div>
@@ -1099,7 +1099,7 @@
 					</div>
 					<p>hago de su conocimiento que la persona que ejerce el control de la sociedad es:</p>
 					<div class="row">
-						<form name="festaccionariaf" id="festaccionariaf">
+						<form name="faccionistacontrol" id="faccionistacontrol">
 							<div class="row">
 								<div class="input-field col s6">
 									<input id="personacontrol" name="personacontrol" type="text" class="validate">
@@ -1126,8 +1126,8 @@
 							</div>
 							<div class="row">
 								<div class="input-border col s4 cover">
-									<label style="top:auto" for="dateConst">Fecha de nacimiento</label>
-									<input style="height: 4rem !important;" class="form-1" value="" max="<?= date ( "Y-m-d" ) ?>" type="date" name="dateConst" id="dateConst">
+									<label style="top:auto" for="fechanacimiento">Fecha de nacimiento</label>
+									<input style="height: 4rem !important;" class="form-1" value="" max="<?= date ( "Y-m-d" ) ?>" type="date" name="fechanacimiento" id="fechanacimiento">
 								</div>
 								<div class="input-field col s4">
 									<input id="paisnacimiento" id="paisnacimiento" type="text" class="validate">
@@ -1144,15 +1144,19 @@
 									<label for="rfc">RFC con homoclave</label>
 								</div>
 								<div class="input-field col s4">
+									<input id="genero" name="genero" type="text" class="validate">
+									<label for="genero">Genero</label>
+								</div>
+								<div class="input-field col s4">
 									<input id="paisrecidencia" name="paisrecidencia" type="text" class="validate">
 									<label for="paisrecidencia">Pais de residencia (nacional/extranjera)</label>
 								</div>
+							</div>
+							<div class="row">
 								<div class="input-field col s4">
 									<input id="paisresidenciafiscal" name="paisresidenciafiscal" type="text" class="validate">
 									<label for="paisresidenciafiscal">Pais de residencia fiscal</label>
 								</div>
-							</div>
-							<div class="row">
 								<div class="input-field col s4">
 									<input id="nacionalidad" name="nacionalidad" type="text" class="validate">
 									<label for="nacionalidad">Nacionalidad</label>
@@ -1165,9 +1169,9 @@
 							<p>Domicilio para recibir notificaciones</p>
 							<div class="row">
 								<div class="input-border col s4 cover">
-									<label style="top:auto" for="nationality">Tipo de Dirección *</label>
+									<label style="top:auto" for="tipodireccion">Tipo de Dirección *</label>
 									<!--<input class="form-1" type="text" name="nationality" id="nationality" value="">-->
-									<select name="nationality" id="nationality">
+									<select name="tipodireccion" id="tipodireccion">
 										<option value="Particular">Particular</option>
 										<option value="Empresa">Empresa</option>
 									</select>
@@ -1221,7 +1225,7 @@
 							</div>
 							<div class="row">
 								<div class="col s12 right-align">
-									<input type="submit" value="Finalizar" class="button-gray" id="butfinalizar">
+									<input type="button" value="Finalizar" class="button-gray" id="butfinalizar" onClick="add_persona_control()">
 								</div>
 							</div>
 						</form>
@@ -1845,6 +1849,65 @@ function ad_acc(nombreacc, capital, tipo){
 		data: 'nombreacc=' + nombreacc + '&capitalsocial=' + capital + '&tipoa=' + tipo
     }).done (function ( info ){
 		$('#accionistas' + tipo).html(info);
+	});
+}
+
+function add_persona_control(){
+
+	var personacontrol = document.getElementById('personacontrol').value;
+	var cargofuncion = document.getElementById('cargofuncion').value;
+	var nombre = document.getElementById('nombre').value;
+	var appaterno = document.getElementById('appaterno').value;
+	var apmaterno = document.getElementById('apmaterno').value;
+	var fechanacimiento = document.getElementById('fechanacimiento').value;
+	var paisnacimiento = document.getElementById('paisnacimiento').value;
+	var entidadnacimiento = document.getElementById('entidadnacimiento').value;
+	var rfc = document.getElementById('rfc').value;
+	var paisrecidencia = document.getElementById('paisrecidencia').value;
+	var paisresidenciafiscal = document.getElementById('paisresidenciafiscal').value;
+	var nacionalidad = document.getElementById('nacionalidad').value;
+	var curp = document.getElementById('curp').value;
+	var tipodireccion = document.getElementById('tipodireccion').value;
+	var calle = document.getElementById('calle').value;
+	var numext = document.getElementById('numext').value;
+	var numint = document.getElementById('numint').value;
+	var pais = document.getElementById('pais').value;
+	var cp = document.getElementById('cp').value;
+	var colonia = document.getElementById('colonia').value;
+	var entidad = document.getElementById('entidad').value;
+	var numtelefono = document.getElementById('numtelefono').value;
+	var tipoiden = document.getElementById('tipoiden').value;
+	var numiden = document.getElementById('numiden').value;
+
+	$.ajax({
+		url: "<?php echo base_url('Proveedor/guarda_accionista');?>",
+		type: "POST",
+		data: "personacontrol=" + personacontrol +
+				"&cargofuncion=" + cargofuncion +
+				"&nombre=" + nombre +
+				"&appaterno=" + appaterno + 
+				"&apmaterno=" + apmaterno + 
+				"&fechanacimiento=" + fechanacimiento + 
+				"&paisnacimiento=" + paisnacimiento + 
+				"&entidadnacimiento=" + entidadnacimiento + 
+				"&rfc=" + rfc + 
+				"&paisrecidencia=" + paisrecidencia + 
+				"&paisresidenciafiscal" + paisresidenciafiscal +
+				"&nacionalidad=" + nacionalidad +
+				"&curp=" + curp +
+				"&tipodireccion=" + tipodireccion +
+				"&calle=" + calle +
+				"&numext=" + numext + 
+				"&numint=" + numint + 
+				"&pais=" + pais + 
+				"&cp=" + cp + 
+				"&colonia=" + colonia + 
+				"&entidad=" + entidad + 
+				"&numtelefono=" + numtelefono +
+				"&tipoiden=" + tipoiden +
+				"&numiden=" + numiden
+	}).done(function(info){
+		$("#form_accionistas").html(info);
 	});
 }
 </script>

@@ -206,5 +206,119 @@ class Proveedor extends MY_Loggedin
 		$this->load->view('accionistas', $dato);
 
 	}
+
+	public function guarda_accionista(){
+
+		$this->load->model('Proveedor_model');
+
+		$personacontrol = $this->input->post('personacontrol');
+		$cargofuncion = $this->input->post('cargofuncion');
+		$nombre = $this->input->post('nombre');
+		$appaterno = $this->input->post('appaterno');
+		$apmaterno = $this->input->post('apmaterno');
+		$fechanacimiento = $this->input->post('fechanacimiento');
+		$paisnacimiento = $this->input->post('paisnacimiento');
+		$entidadnacimiento = $this->input->post('entidadnacimiento');
+		$rfc = $this->input->post('rfc');
+		$genero = $this->input->post('genero');
+		$paisrecidencia = $this->input->post('paisrecidencia');
+		$paisresidenciafiscal = $this->input->post('paisresidenciafiscal');
+		$nacionalidad = $this->input->post('nacionalidad');
+		$curp = $this->input->post('curp');
+		$tipodireccion = $this->input->post('tipodireccion');
+		$calle = $this->input->post('calle');
+		$numext = $this->input->post('numext');
+		$numint = $this->input->post('numint');
+		$pais = $this->input->post('pais');
+		$cp = $this->input->post('cp');
+		$colonia = $this->input->post('colonia');
+		$entidad = $this->input->post('entidad');
+		$numtelefono = $this->input->post('numtelefono');
+		$tipoiden = $this->input->post('tipoiden');
+		$numiden = $this->input->post('numiden');
+
+		$accprin = [
+			'personacontrol' => $personacontrol,
+			'cargofuncion' => $cargofuncion,
+			'nombre' => $nombre,
+			'appaterno' => $appaterno,
+			'apmaterno' => $apmaterno,
+			'fechanacimiento' => $fechanacimiento,
+			'paisnacimiento' => $paisnacimiento,
+			'entidadnacimiento' => $entidadnacimiento,
+			'rfc' => $rfc,
+			'genero' => $genero,
+			'paisrecidencia' => $paisrecidencia,
+			'paisresidenciafiscal' => $paisresidenciafiscal,
+			'nacionalidad' => $nacionalidad,
+			'curp' => $curp,
+			'tipodireccion' => $tipodireccion, 
+			'calle' => $calle, 
+			'numext' => $numext, 
+			'numint' => $numint, 
+			'pais' => $pais,
+			'cp' => $cp, 
+			'colonia' => $colonia, 
+			'entidad' => $entidad, 
+			'numtelefono' => $numtelefono, 
+			'tipoiden' => $tipoiden, 
+			'numiden' => $numiden
+		];
+
+		$persona = $this->Proveedor_model->add_persona_control($accprin);
+
+		if($persona!=FALSE)
+		{
+			//genera pdf de accionistas
+			$this->Proveedor_model->genera_pdf_persona_control($persona["id"]);
+
+			//genera correo a cuenca
+			$this->load->helper('sendMail');
+
+			//send_mail('mega.megaman@hotmail.com', $data, 1, date('Y-m-d')); //este es el mail de cuenca
+
+			/*$config = Array(
+				'protocol'  => 'smtp',
+				'smtp_host' => 'compensapay.xyz',
+				'smtp_port' => '465',
+				'smtp_user' => 'hola@compensapay.xyz',
+				'smtp_pass' => 'compensamail2023#',
+				'mailtype'  => 'html',
+				'starttls'  => true,
+				'newline'   => "\r\n"
+			);
+
+			$this->email->initialize($config);
+
+			$this->email->to('mega.megaman@hotmail.com');
+			$this->email->from('hola@compensapay.xyz', 'Compensapay');
+			$this->email->subject('Test Email (TEXT)');
+			$this->email->message('<p>Mensaje Funciona</p>');
+			$this->email->attach(__DIR__ . '/../../assets/proveedores/RegistroProveedor_'.$companieName.'.pdf');
+			$this->email->attach(__DIR__ . '/../../assets/proveedores/RegistroProveedorPersonaControl_'.$companieName.'.pdf');
+			if($this->email->send())
+			{
+				$resp = 'Email send.';
+			}
+				else
+			{
+				$resp = $this->email->print_debugger();
+			}*/
+
+			//muestra el mensaje de registro exitoso
+			$this->load->view('registro_accionista_exitoso');
+		}
+		else
+		{
+			$this->load->view('registro_accionista_fallo');
+		}
+
+	}
+	
+	//TODO: delete this mother later
+	//public function genera_pdf(){
+	//	$this->load->model('Proveedor_model');
+	//	$this->Proveedor_model->genera_pdf_persona_control(2);
+	//}
 }
 
