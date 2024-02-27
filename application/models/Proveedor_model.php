@@ -742,7 +742,7 @@ class Proveedor_model extends CI_Model{
 				</body>
 				</html>';
 
-		echo $cadena;
+		//echo $cadena;
 
 		$mpdf->WriteHTML($cadena);
         $ruta = __DIR__ . '/../../assets/proveedores/RegistroProveedorPersonaControl_'.$idCompanie.'.pdf';
