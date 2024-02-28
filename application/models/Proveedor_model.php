@@ -398,4 +398,357 @@ class Proveedor_model extends CI_Model{
         return $ruta;
 	}
 
+	public function ad_accionista($accionista){
+
+		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+		$query = "INSERT INTO accionistas (IdCompanie, TipoPersona, Accionista, CapitalSocial) 
+									VALUES ('".$idCompanie."', '".$accionista["tipoaccionista"]."', 
+											'".$accionista["nombreaccionista"]."', '".$accionista["capitalsocial"]."')";
+
+		$this->db->query($query);
+
+		//leemos datos de accionistas
+		$queryacc = "SELECT * FROM accionistas WHERE IdCompanie='".$idCompanie."' AND TipoPersona='".$accionista["tipoaccionista"]."' ORDER BY Id ASC";
+
+		if($ResAcc=$this->db->query($queryacc)){
+			if ($ResAcc->num_rows() > 0){
+                $RResAcc = $ResAcc->result_array();
+            }
+            else {
+                $RResAcc = '';
+            }
+		}
+
+		return $RResAcc;
+
+	}
+
+	public function add_persona_control($persona){
+
+		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+
+		$query = "INSERT INTO personacontrol (IdCompanie, PersonaControl, CargoFuncion, Nombre, ApPaterno, ApMaterno, FechaNacimiento, PaisNacimiento, 
+												EntidadNacimiento, Rfc, Genero, PaisResidencia, PaisResidenciaFiscal, Nacionalidad, Curp, TipoDireccion, Calle, 
+												NumExt, NumInt, Pais, CP, Colonia, Entidad, NumTelefono, TipoIden, NumIden) 
+										VALUES('".$idCompanie."', '".$persona["personacontrol"]."', '".$persona["cargofuncion"]."', '".$persona["nombre"]."', 
+												'".$persona["appaterno"]."', '".$persona["apmaterno"]."', '".$persona["fechanacimiento"]."', '".$persona["paisnacimiento"]."',
+												'".$persona["entidadnacimiento"]."', '".$persona["rfc"]."', '".$persona["genero"]."', '".$persona["paisrecidencia"]."', '".$persona["paisresidenciafiscal"]."', 
+												'".$persona["nacionalidad"]."', '".$persona["curp"]."', '".$persona["tipodireccion"]."', '".$persona["calle"]."', 
+												'".$persona["numext"]."', '".$persona["numint"]."', '".$persona["pais"]."', '".$persona["cp"]."', '".$persona["colonia"]."', 
+												'".$persona["entidad"]."', '".$persona["numtelefono"]."', '".$persona["tipoiden"]."', '".$persona["numiden"]."')";
+
+		if($this->db->query($query)){
+			$id = $this->db->insert_id();
+			return ['id'=>$id];
+		}
+		else{
+			return FALSE;
+		}
+
+	}
+
+	public function genera_pdf_persona_control($persona){
+
+		$mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
+		$mpdf->SetHTMLHeader('');
+
+		$idCompanie = $this->session->userdata('datosEmpresa')['id'];
+		$nameCompanie = $this->session->userdata('datosEmpresa')["legal_name"];
+
+		$query1 = "SELECT * FROM accionistas WHERE idCompanie='".$idCompanie."' AND TipoPersona='M' ORDER BY Id ASC";
+		$query2 = "SELECT * FROM accionistas WHERE idCompanie='".$idCompanie."' AND TipoPersona='F' ORDER BY Id ASC";
+		$query3 = "SELECT * FROM personacontrol WHERE idCompanie='".$idCompanie."' LIMIT 1";
+		$query4 = "SELECT person_name FROM rec_supplier WHERE id_com='".$idCompanie."' LIMIT 1";
+
+		switch (date("m")){
+			case '01': $mes='enero'; break;
+			case '02': $mes='febrero'; break;
+			case '03': $mes='marzo'; break;
+			case '04': $mes='abril'; break;
+			case '05': $mes='mayo'; break;
+			case '06': $mes='junio'; break;
+			case '07': $mes='julio'; break;
+			case '08': $mes='agosto'; break;
+			case '09': $mes='septiembre'; break;
+			case '10': $mes='octubre'; break;
+			case '11': $mes='noviembre'; break;
+			case '12': $mes='diciembre'; break;
+		}
+
+		$cadena='<html lang="es-MX">
+				<head>
+					<style>
+					*{
+						margin: 0;
+						padding: 0;
+						box-sizing: border-box;
+						font-family: Arial;
+						font-size: 12px;
+					}
+					h3{
+						display: block;
+						text-align: center;
+						font-size: 14px;
+						margin: 0px;
+						padding: 0px;
+					}
+					p{
+						display: block;
+						text-align: justify;
+						font-family: Arial;
+						margin: 20px;
+						padding: 20px;
+					}
+					.tabla{
+						margin: auto;
+						border-spacing: 0 !important;
+						border-collapse: collapse !important;
+					}
+					th{
+						padding: 10px 20px;
+						text-align: center;
+						background: #ccc;
+						border: 1px solid #000;
+						font-family: Arial;
+					}
+					td{
+						padding: 10px 20px;
+						text-align: center;
+						background: #fff;
+						border: 1px solid #000;
+						font-family: Arial;
+					}
+					.pageBreak{
+						page-break-before: always;
+					}
+					</style>
+				</head>
+				<body>
+				
+					<h3>'.$nameCompanie.'</h3>
+					<p style="text-align: right;">'.date('d').'-'.$mes.'-'.date('Y').'</p>
+					<p>Cuenca Tecnología Financiera, S.A. de C.V.,<br />Institución de Fondos de Pago Electrónico<br /><strong>P r e s e n t e</strong></p>
+					<p style="text-indent: 50px;">Por este medio, el (los) que suscribe(n) nombre(s) y apellido(s) del administrador(es) y/o representante(s) legal(es) en nombre de mi (nuestra) representada AZUL S.A. DE C.V., manifiesto (manifestamos), que la  conformación de la estructura accionaria de mi (nuestra) representada se satisface de la siguiente forma:</p>
+					<table class="tabla">
+						<thead>
+							<tr>
+								<th>ACCIONISTAS DE LA SOCIEDAD</th>
+								<th>CAPITAL SOCIAL</th>
+							</tr>
+						</thead>
+						<tbody>';
+		if ($ResAccF = $this->db->query($query1)) {
+			if ($ResAccF->num_rows() > 0){
+				$RResAccF = $ResAccF->result_array();
+
+				foreach($RResAccF AS $value)
+				{
+					$cadena.='<tr>
+								<td>'.$value["Accionista"].'</td>
+								<td>$ '.number_format($value["CapitalSocial"], 2).'</td>
+							</tr>';
+				}
+			}
+			else {
+				$$cadena.= '';
+			}
+		}
+		$cadena.='	</tbody>
+					</table>
+					<p>Así mismo, hago de su conocimiento, que la estructura accionaria de AZUL INC se compone de las siguientes personas físicas:</p>
+					<table class="tabla">
+						<thead>
+							<tr>
+								<th>Accionistas</th>
+								<th>CAPITAL SOCIAL</th>
+							</tr>
+						</thead>
+						<tbody>';
+		if ($ResAccM = $this->db->query($query2)) {
+			if ($ResAccM->num_rows() > 0){
+				$RResAccM = $ResAccM->result_array();
+
+				foreach($RResAccM AS $value)
+				{
+					$cadena.='<tr>
+								<td>'.$value["Accionista"].'</td>
+								<td>$ '.number_format($value["CapitalSocial"], 2).'</td>
+							</tr>';
+				}
+			}
+			else {
+				$$cadena.= '';
+			}
+		}
+		$cadena.='	</tbody>
+					</table>
+					<p>De lo anterior se desprende que ninguna de las personas físicas accionistas de AZUL INC posee más del 25% de acciones por lo que en este acto hago de su conocimiento que la persona que ejerce el control de la sociedad en México es:</p>
+					<table class="tabla">
+						<thead>
+							<tr>
+								<th>PERSONA QUE EJERCE EL CONTROL DE LA SOCIEDAD AZUL MÉXICO S.A. DE C.V.</th>
+								<th>CARGO O FUNCIÓN</th>
+							</tr>
+						</thead>
+						<tbody>';
+		if ($ResPer = $this->db->query($query3)) {
+			if ($ResPer->num_rows() > 0){
+				$RResPer = $ResPer->result_array();
+
+				foreach($RResPer AS $value)
+				{
+					$cadena.='<tr>
+								<td>'.$value["PersonaControl"].'</td>
+								<td>'.$value["CargoFuncion"].'</td>
+							</tr>';
+				}
+			}
+			else {
+				$$cadena.= '';
+			}
+		}
+		$cadena.='	</tbody>
+					</table>
+					<p style="color: #c20005;">NOTA.- Además, recabar la información solicitada en el anexo 2, referente a datos personales y domicilio del propietario real o persona que ejerce el control de la sociedad.</p>
+					<p>De antemano gracias por las atenciones al presente, quedo de usted por cualquier duda o aclaración.</p>
+					<p>Atentamente</p>';
+		if ($RepL = $this->db->query($query4)) {
+			if ($RepL->num_rows() > 0){
+				$RRepL = $RepL->result_array();
+
+				foreach($RRepL AS $value)
+				{
+					$cadena.='<table><tr><td style="border-top: 1px solid #000; border-bottom: 0px; border-right: 0px; border-left: 0px;">'.$value["person_name"].'</td></tr></table>';
+				}
+			}
+			else {
+				$$cadena.= '';
+			}
+		}
+		$cadena.='<div class="pageBreak"></div>
+					<h3>ANEXO 2</h3>
+					<table class="tabla">
+						<tbody>';
+		if ($ResPer = $this->db->query($query3)) {
+			if ($ResPer->num_rows() > 0){
+				$RResPer = $ResPer->result_array();
+
+				foreach($RResPer AS $value)
+				{
+					$cadena.='<tr>
+								<td>Nombre (s)</td>
+								<td>'.$value["Nombre"].'</td>
+							</tr>
+							<tr>
+								<td>Ap. Paterno</td>
+								<td>'.$value["ApPaterno"].'</td>
+							</tr>
+							<tr>
+								<td>Ap. Materno</td>
+								<td>'.$value["ApMaterno"].'</td>
+							</tr>
+							<tr>
+								<td>Fecha de Nacimiento</td>
+								<td>'.$value["FechaNacimiento"].'</td>
+							</tr>
+							<tr>
+								<td>País de Nacimiento</td>
+								<td>'.$value["PaisNacimiento"].'</td>
+							</tr>
+							<tr>
+								<td>Entidad de Nacimiento</td>
+								<td>'.$value["EntidadNacimiento"].'</td>
+							</tr>
+							<tr>
+								<td>RFC con homoclave</td>
+								<td>'.$value["Rfc"].'</td>
+							</tr>
+							<tr>
+								<td>Género</td>
+								<td>'.$value["Genero"].'</td>
+							</tr>
+							<tr>
+								<td>País de Residencia<br />Nacional/Extranjera</td>
+								<td>'.$value["PaisResidencia"].'</td>
+							</tr>
+							<tr>
+								<td>País de Residencia Fiscal</td>
+								<td>'.$value["PaisResidenciaFiscal"].'</td>
+							</tr>
+							<tr>
+								<td>Nacionalidad</td>
+								<td>'.$value["Nacionalidad"].'</td>
+							</tr>
+							<tr>
+								<td>CURP</td>
+								<td>'.$value["Curp"].'</td>
+							</tr>}
+							<tr>
+								<td colspan="2">Domicilio para recibir notificaciones</td>
+							</tr>
+							<tr>
+								<td>Tipo de Dirección</td>
+								<td>'.$value["TipoDireccion"].'</td>
+							</tr>
+							<tr>
+								<td>Calle</td>
+								<td>'.$value["Calle"].'</td>
+							</tr>
+							<tr>
+								<td>Núm. Ext.</td>
+								<td>'.$value["NumExt"].'</td>
+							</tr>
+							<tr>
+								<td>Núm. Int.</td>
+								<td>'.$value["NumInt"].'</td>
+							</tr>
+							<tr>
+								<td>País</td>
+								<td>'.$value["Pais"].'</td>
+							</tr>
+							<tr>
+								<td>C.P.</td>
+								<td>'.$value["CP"].'</td>
+							</tr>
+							<tr>
+								<td>Colonia</td>
+								<td>'.$value["Colonia"].'</td>
+							</tr>
+							<tr>
+								<td>Entidad</td>
+								<td>'.$value["Entidad"].'</td>
+							</tr>
+							<tr>
+								<td>No. Telefónico</td>
+								<td>'.$value["NumTelefono"].'</td>
+							</tr>
+							<tr>
+								<td>Tipo de identificación oficial<br />(INE, pasaporte, …)</td>
+								<td>'.$value["TipoIden"].'</td>
+							</tr>
+							<tr>
+								<td>Número de identificación<br/>oficial</td>
+								<td>'.$value["NumIden"].'</td>
+							</tr>';
+				}
+			}
+			else {
+				$$cadena.= '';
+			}
+		}
+		$cadena.='	</tbody>
+					</table>
+				</body>
+				</html>';
+
+		//echo $cadena;
+
+		$mpdf->WriteHTML($cadena);
+        $ruta = __DIR__ . '/../../assets/proveedores/RegistroProveedorPersonaControl_'.$idCompanie.'.pdf';
+        $mpdf->Output($ruta, 'F');
+        return $ruta;
+
+	}
+
 }
