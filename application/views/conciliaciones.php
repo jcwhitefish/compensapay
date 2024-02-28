@@ -924,6 +924,18 @@
 							opNumber = value.operation_number;
 							clabe = value.account_clabe;
 						} else if (value.role === "emisor" && (value.status === "3" || value.status === "4")) {
+							switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
 							opNumber = value.operation_number;
 							clabe = "xxxxxxxxxxxxxx" + value.account_clabe.substring(value.account_clabe.length - 4);
 						} else {

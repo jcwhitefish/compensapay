@@ -6,6 +6,7 @@
 	 * @property Arteria_model      $dataArt
 	 * @property Response           $response
 	 * @property Operation_model    $OpData
+	 * @property Conciliation_model $dataConc
 	 */
 	class Fintec extends MY_Loggedout {
 		private string $environment = 'SANDBOX';
@@ -470,13 +471,36 @@
 			}
 			return TRUE;
 		}
+		public function insertLogDB ( $module, $code, $in, $out, $function, $env = NULL ): array {
+			$this->load->model ( 'Notification_model', 'nt' );
+			$args = [
+				'id_c' => 1,
+				'id' => 1,
+				'module' => $module,
+				'code' => $code,
+				'in' => json_encode ( [ $function => $in ] ),
+				'out' => json_encode ( $out ),
+			];
+			return $this->nt->insertLogs ( $args, $env );
+		}
 		public function ping () {
+			date_default_timezone_set('America/Mexico_City');
+//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
 			$this->load->model ( 'response' );
+			$this->load->model ( 'Conciliation_model', 'dataConc' );
 			$error = 0;
 			$resp = [ "response" => 'ok' ];
-			if ( Request::getStaticMethod () == 'POST' && ( $data = Request::getBody () ) ) {
-				$this->createLog ( 'stress', json_encode ( $data, JSON_PRETTY_PRINT ) );
-			}
-			return $this->response->sendResponse ( $resp, $error );
+//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
+			$res=$this->dataConc->extracGroups ('SANDBOX');
+			$this->createLog ( 'grouop', json_encode ( $res ) );
+//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
+			$data = Request::getBody ();
+			$this->insertLogDB ( 2, 20, json_encode ( $data ), json_encode ( $resp ), 'ping', 'SANDBOX' );
+//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
+			sleep ( 40 );
+			$this->createLog ( 'stress', json_encode ( $data ) );
+			var_dump (date('Y-m-d H:i:s',strtotime('now')));
+			sleep (1);
+			return $this->response->sendResponse ( [ "response" => 'ok', 'H' => $data[ 'H' ], 'n' => $data[ 'in' ] ], $error );
 		}
 	}
