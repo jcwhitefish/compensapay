@@ -85,7 +85,7 @@ VALUES ( 1, NULL, 1, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 			$curlHandles = [];
 			$multiHandle = curl_multi_init ();
 			$startTime = microtime ( TRUE );
-			for ( $i = 0; $i < 500; $i++ ) {
+			for ( $i = 0; $i < 1000; $i++ ) {
 				// Crear una nueva instancia de CURL y añadirla al array
 				$curlHandles[ $i ] = $this->multiTransaction ( $i );
 				// Añadir el recurso CURL al handler multi-cURL
