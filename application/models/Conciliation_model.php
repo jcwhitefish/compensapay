@@ -89,9 +89,11 @@ VALUES ( 1, NULL, 1, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 				// Crear una nueva instancia de CURL y añadirla al array
 				$curlHandles[ $i ] = $this->multiTransaction ( $i );
 				// Añadir el recurso CURL al handler multi-cURL
+				ini_set('max_execution_time', '300');
 				curl_multi_add_handle ( $multiHandle, $curlHandles[ $i ] );
 				$running = NULL;
 				do {
+					ini_set('max_execution_time', '300');
 					curl_multi_exec ( $multiHandle, $running );
 				} while ( $running > 0 );
 				usleep ( 100000 );
