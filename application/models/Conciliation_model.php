@@ -80,7 +80,7 @@ VALUES ( 1, NULL, 1, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 			] );
 			return $curl;
 		}
-		public function multiD (): array {
+		public function multiD () {
 			$res =[];
 			$curlHandles = [];
 			$multiHandle = curl_multi_init ();
