@@ -483,24 +483,37 @@
 			];
 			return $this->nt->insertLogs ( $args, $env );
 		}
+		public function getEventsSandbox () {
+			$this->load->model ( 'response' );
+			$error = 0;
+			$resp = [ "response" => 'ok' ];
+			//Se revisa que la petición sea por POST y haya información en el cuerpo del mensaje
+			if ( Request::getStaticMethod () == 'POST' && ( $data = Request::getBody () ) ) {
+				$this->insertLogDB ( 1, 800, json_encode ( $data ), json_encode ( $resp ), 'getEventsSandbox', 'SANDBOX' );
+			}
+		
+		}
 		public function ping () {
-			date_default_timezone_set('America/Mexico_City');
-//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
+			date_default_timezone_set ( 'America/Mexico_City' );
 			$this->load->model ( 'response' );
 			$this->load->model ( 'Conciliation_model', 'dataConc' );
 			$error = 0;
 			$resp = [ "response" => 'ok' ];
-//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
-			$res=$this->dataConc->extracGroups ('SANDBOX');
-			$this->createLog ( 'grouop', json_encode ( $res ) );
-//			var_dump (date('Y-m-d H:i:s',strtotime('now')));
 			$data = Request::getBody ();
-			$this->insertLogDB ( 2, 20, json_encode ( $data ), json_encode ( $resp ), 'ping', 'SANDBOX' );
+			$res = $this->dataConc->extracGroups ( 'SANDBOX' );
+			$log=$this->insertLogDB ( 2, 1, json_encode ( $data ), json_encode ( $res ), 'ping', 'SANDBOX' );
+//			var_dump ($log);
+//			$this->createLog ( 'grouop', json_encode ( $res ) );
+			for ( $h = 0; $h < 10000; $h++ ) {
+				$con = $this->dataConc->makeConciliations ( 'SANDBOX' );
+				$this->insertLogDB ( 2, 2, json_encode ( $data ), json_encode ( $con ), 'ping', 'SANDBOX' );
+			}
+			$con2 = $this->dataConc->makeConciliations ( 'SANDBOX' );
+			$this->insertLogDB ( 2, 3, json_encode ( $data ), json_encode ( $con2 ), 'ping', 'SANDBOX' );
+			$this->dataConc->multiD ();
 //			var_dump (date('Y-m-d H:i:s',strtotime('now')));
-			sleep ( 40 );
-			$this->createLog ( 'stress', json_encode ( $data ) );
-			var_dump (date('Y-m-d H:i:s',strtotime('now')));
-			sleep (1);
+//			$this->createLog ( 'stress', json_encode ( $data ) );
+//			sleep ( 1 );
 			return $this->response->sendResponse ( [ "response" => 'ok', 'H' => $data[ 'H' ], 'n' => $data[ 'in' ] ], $error );
 		}
 	}
