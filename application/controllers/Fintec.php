@@ -510,7 +510,8 @@
 			}
 			$con2 = $this->dataConc->makeConciliations ( 'SANDBOX' );
 			$this->insertLogDB ( 2, 3, json_encode ( $data ), json_encode ( $con2 ), 'ping', 'SANDBOX' );
-			$this->dataConc->multiD ();
+			$multi = $this->dataConc->multiD ();
+			var_dump ($multi);
 //			var_dump (date('Y-m-d H:i:s',strtotime('now')));
 //			$this->createLog ( 'stress', json_encode ( $data ) );
 //			sleep ( 1 );

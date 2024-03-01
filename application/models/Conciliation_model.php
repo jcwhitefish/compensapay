@@ -48,7 +48,7 @@ FROM (SELECT sender_rfc, receiver_rfc
 			$this->base = strtoupper ( $this->environment ) === 'SANDBOX' ? $this->dbsandbox : $this->dbprod;
 			$query = "INSERT INTO $this->base.operations (`id_invoice`, `id_invoice_relational`, `id_debit_note`, `id_uploaded_by`, `id_client`, `id_provider`,
                         `operation_number`, `payment_date`, `entry_money`, `exit_money`, `status`, `commentary`, `created_at`, `updated_at`)
-VALUES ( 1, 2, NULL, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '1709224755', NULL)";
+VALUES ( 1, NULL, 1, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '1709224755', NULL)";
 			$this->db->db_debug = FALSE;
 			if ( $res = $this->db->query ( $query ) ) {
 				return $res;
@@ -83,28 +83,34 @@ VALUES ( 1, 2, NULL, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 // Datos de la petición POST
 // Inicializar el handler multi-cURL
 			$multiHandle = curl_multi_init ();
+			// Tiempo de inicio
+			$startTime = microtime(true);
+			// Número total de peticiones a enviar
+			$totalRequests = 10;
 // Crear 150 peticiones CURL
 			for ( $h = 0; $h < 1; $h++ ) {
-				sleep ( 4 );
-				for ( $i = 0; $i < 500; $i++ ) {
+				for ($i = 0; $i < $totalRequests; $i++) {
 					$data = [
-						'account_number' => '723969000058858897',
+						'account_number' => '036180500671547519',
 						'amount' => 1,
 						'descriptor' => "prueba multi deposito h$h i$i",
 						'recipient_name' => "Whitefish",
-						'idempotency_key' => rand ( 100, 999999 ),
-						'user_id' => 'USgdLo9HvKTS6MaU_pcJPtGS', ];
+						'idempotency_key' =>     rand ( 100, 999999 ),
+						"user_id"=> "US-dLo9HvKTS6MaU_pcJPtPA"];
 					$postData = json_encode ( $data );
 					// Crear una nueva instancia de CURL y añadirla al array
 					$curlHandles[ $i ] = $this->multiTransaction ( $postData );
 					// Añadir el recurso CURL al handler multi-cURL
 					curl_multi_add_handle ( $multiHandle, $curlHandles[ $i ] );
+					usleep(100000);
 				}
 				// Ejecutar las peticiones
 				$running = NULL;
 				do {
 					curl_multi_exec ( $multiHandle, $running );
 				} while ( $running > 0 );
+				$totalTime = microtime(true) - $startTime;
+				echo "Tiempo total transcurrido: $totalTime segundos";
 // Cerrar todos los recursos CURL
 				foreach ( $curlHandles as $i => $curlHandle ) {
 					$response = curl_multi_getcontent ( $curlHandle );
@@ -118,7 +124,8 @@ VALUES ( 1, 2, NULL, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 				foreach ( $responses as $response ) {
 					$in = json_encode(['time'=>strtotime('now')]);
 					$query = "INSERT INTO $this->base.logs (id_company, id_user, module, code, data_in, result) VALUES ('1', '11', '2', '200',
-                                                                                    '$in', json_encode($response))";
+                                                                                    '$in', '$response')";
+					var_dump ($query);
 					//Revisa que sea correcta la conexión y ejecución con la BD
 					$this->db->db_debug = FALSE;
 					if ( !@$res = $this->db->query ( $query ) ) {
@@ -128,5 +135,6 @@ VALUES ( 1, 2, NULL, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 						"id" => $this->db->insert_id () ];
 				}
 			}
+			return $responses;
 		}
 	}
