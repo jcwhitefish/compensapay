@@ -28,7 +28,7 @@ class Inicio_model extends CI_Model {
 
         //total por cobrar
         $querytpc = "SELECT SUM(total) AS TTotal FROM invoices WHERE id_company=".$idCompanie." AND status=1";
-        $querytpc2 = "SELECT SUM(dn.total) AS TTotal FROM debit_notes AS dn WHERE dn.id_company = '".$idCompanie."' AND status=1";
+        $querytpc2 = "SELECT SUM(dn.total) AS TTotal FROM debit_notes AS dn WHERE dn.id_company = ".$idCompanie." AND status=1";
 
         if($restpc = $this->db->query($querytpc))
         {
@@ -50,7 +50,7 @@ class Inicio_model extends CI_Model {
         }
 
         //total por pagar
-        $Qtpp = "SELECT SUM(total) AS TTotal FROM invoices WHERE receiver_rfc = '".$rfcEmpresa."' AND (status=0 OR status=1)"; 
+        $Qtpp = "SELECT SUM(total) AS TTotal FROM invoices WHERE receiver_rfc = '".$rfcEmpresa."' AND status=1"; 
         $Qtpp2 = "SELECT SUM(dn.total) AS TTotal FROM debit_notes AS dn WHERE dn.receiver_rfc = '".$rfcEmpresa."' AND dn.status=1";
         
         if($restpp = $this->db->query($Qtpp))
