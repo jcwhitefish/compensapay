@@ -263,3 +263,14 @@ td{
 .container{
     width: 95% !important;
 }
+
+.estatus{
+    display: block;
+    padding: 3px 5px;
+    border-radius: 12px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background-color: #cccccc;
+}
