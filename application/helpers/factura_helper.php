@@ -27,8 +27,8 @@ function XmlProcess(object $xml): array
 			'nombre' => (string)$xml->xpath('//cfdi:Comprobante//cfdi:Emisor')[0]['Nombre'],
 		],
 	];
-	if($xml['CfdiRelacionados']){
-		$data['relacion'] = (string)$xml['CfdiRelacionados'];
+	if($xml->xpath ('//cfdi:CfdiRelacionado')){
+		$data['relacion'] = (string)$xml->xpath ('//cfdi:CfdiRelacionado')[0]['UUID'];
 	}
 	return $data;
 }
