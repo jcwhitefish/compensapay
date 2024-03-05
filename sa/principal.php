@@ -8,7 +8,7 @@
 
     <!-- importamos materialize  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/materialize.min.css">
 
     <link rel="stylesheet" type="text/css" href="estilos/estilos.css">
 
@@ -17,6 +17,8 @@
     <script src="https://kit.fontawesome.com/a5e678cc82.js" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="../assets/js/materialize.min.js"></script>
     
 </head>
 
@@ -47,16 +49,16 @@
         <!--<hr class="line-side">-->
         <ul>
             <ul class="icon-list">
-                <li><a href="#" onclick="dashboard(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">dashboard</i></a></li>
-                <li><a href="%s"><i class="material-icons">warning</i></a></li>
-                <li><a href="#" onclick="costos_operacion(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">monetization_on</i></a></li>
-                <li><a href="%s"><i class="fa-solid fa-cash-register"></i></a></li>
-                <li><a href="#" onclick="tickets(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">headset_mic</i></a></li>
-                <li><a href="#" onclick="empresas(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">business</i></a></li>
-                <li><a href="#" onclick="usuarios(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">people</i></a></li>
-                <li><a href="#" onclick="operaciones(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">swap_horiz</i></a></li>
-                <li><a href="%s"><i class="fa-solid fa-clipboard-list"></i></a></li>
-                <li><a href=""><i class="material-icons">exit_to_app</i></a></li>
+                <li><a href="#" id="mdashboard" onclick="dashboard(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">dashboard</i></a></li>
+                <li><a href="%s" id="malertas"><i class="material-icons">warning</i></a></li>
+                <li><a href="#" id="mcostos" onclick="costos_operacion(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">monetization_on</i></a></li>
+                <li><a href="%s" id="mingresos"><i class="fa-solid fa-cash-register"></i></a></li>
+                <li><a href="#" id="msoporte" onclick="tickets(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">headset_mic</i></a></li>
+                <li><a href="#" id="mceempresas" onclick="empresas(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">business</i></a></li>
+                <li><a href="#" id="mcusuarios" onclick="usuarios(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">people</i></a></li>
+                <li><a href="#" id="moperaciones" onclick="operaciones(document.getElementById('fechai').value, document.getElementById('fechaf').value)"><i class="material-icons">swap_horiz</i></a></li>
+                <li><a href="%s" id="mlogs"><i class="fa-solid fa-clipboard-list"></i></a></li>
+                <li><a href=""id="msalir"><i class="material-icons">exit_to_app</i></a></li>
             </ul>
         </ul>
     </div>
@@ -79,5 +81,54 @@
 
 </body>
 
+
+
 </html>
+
 <script src="js/codigo.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('#mdashboard').tooltip({
+        html: 'Dashboard',
+        position: 'right'
+    });
+    $('#malertas').tooltip({
+        html: 'Alertas', 
+        position: 'right'
+    });
+    $('#mcostos').tooltip({
+        html: 'Costos de operación',
+        position: 'right'
+    });
+    $('#mingresos').tooltip({
+        html: 'Ingresos suscripción',
+        position: 'right'
+    });
+    $('#msoporte').tooltip({
+        html: 'Soporte',
+        position: 'right'
+    });
+    $('#mceempresas').tooltip({
+        html: 'Cuentas empresas',
+        position: 'right'
+    });
+    $('#mcusuarios').tooltip({
+        html: 'Cuentas usuarios',
+        position: 'right'
+    });
+    $('#moperaciones').tooltip({
+        html: 'Operaciones',
+        position: 'right'
+    });
+    $('#mlogs').tooltip({
+        html: 'Logs',
+        position: 'right'
+    });
+    $('#msalir').tooltip({
+        html: 'Salir',
+        position: 'right'
+    });
+
+});
+</script>
