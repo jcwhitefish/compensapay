@@ -96,7 +96,7 @@ VALUES ( 1, NULL, 1, 10, 2, 1, '0020501', '1713052800', 2.32, 1.16, '1', NULL, '
 					ini_set('max_execution_time', '300');
 					curl_multi_exec ( $multiHandle, $running );
 				} while ( $running > 0 );
-				usleep ( 50000 );
+				usleep ( 10000 );
 				while ($info = curl_multi_info_read($multiHandle)) {
 					$index = array_search($info['handle'], $curlHandles);
 					$response = curl_multi_getcontent($info['handle']);
