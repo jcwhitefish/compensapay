@@ -468,7 +468,7 @@
 				formData.append("file", files);
 				formData.append("conciliaDate", $("#conciliaDate").val());
 				formData.append("OriginCFDI", $("#OriginCFDI").val());
-				formData.append("OriginUUID"), $("#OriginUUID").val();
+				formData.append("OriginUUID", $("#OriginUUID").val());
 				formData.append("OriginAmount", $("#OriginAmount").val());
 				$.ajax({
 					url: "/Conciliaciones/cargarNote",
@@ -548,8 +548,8 @@
 						OriginAmount: $("#OriginAmount").val(),
 						ReceiverId: $("#ReceiverId").val(),
 						cfdiConciation: $("input:radio[name=cfdiConciation]:checked").val(),
-						conciliaDate: $("#conciliaDate").val();
-						OriginUUID: $("#OriginUUID").val();
+						conciliaDate: $("#conciliaDate").val(),
+						OriginUUID: $("#OriginUUID").val()
 					},
 					dataType: "json",
 					method: "post",
