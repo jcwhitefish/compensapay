@@ -449,7 +449,7 @@
 						$args[ 'A' ] = $nText;
 						break;
 					case 3:
-						$module = $this->nt->getModuleByArgs ( $module, $this->environment );
+						$module = $this->nt->getModuleByArgs ( 2, $this->environment );
 						$support = $this->nt->getModuleByArgs ( '1', $this->environment );
 						break;
 				}

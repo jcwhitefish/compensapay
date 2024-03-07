@@ -691,7 +691,7 @@ FROM $this->base.invoices t1
 INNER JOIN $this->base.companies t2 ON t1.sender_rfc = t2.rfc
 INNER JOIN $this->base.companies t3 ON t1.receiver_rfc = t3.rfc
 INNER JOIN $this->base.fintech t4 ON t4.id = t2.id
-WHERE t2.id = $provider AND t3.id = $receiver AND t1.total > $total AND t1.status = 0";
+WHERE t2.id = $provider AND t3.id = $receiver AND t1.total >= $total AND t1.status = 0";
 //		var_dump($query);
 			if ( $res = $this->db->query ( $query ) ) {
 				if ( $res->num_rows () > 0 ) {
