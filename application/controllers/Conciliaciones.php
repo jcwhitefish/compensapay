@@ -260,7 +260,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$env = 'SANDBOX';
 				$amount = $this->input->post ( 'OriginAmount' );
 				$invoiceId = $this->input->post ( 'OriginCFDI' );
-				$invoiceUUID = $this->input->post ( 'OriginCFDI' );
+				$invoiceUUID = $this->input->post ( 'OriginUUID' );
 				$conciliaDate = $this->input->post ( 'conciliaDate' );
 				$uploadedFile = $_FILES[ 'file' ];
 				$xml = simplexml_load_file ( $uploadedFile[ 'tmp_name' ] );
@@ -409,6 +409,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 						$fintech = $this->dataUsr->getFintechInfo ( $id, $env );
 						if ( $fintech[ 'code' ] === 200 ) {
 							if ( isset( $factura[ 'relacion' ] ) ) {
+//								var_dump ($factura[ 'relacion' ],$cfdi);
 								if ( $factura[ 'relacion' ] != $cfdi ) {
 									return [
 										'code' => 500,
