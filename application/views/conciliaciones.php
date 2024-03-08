@@ -763,8 +763,7 @@
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 					} else {
-						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
-							"</strong></span>" +
+						let toastHTML = "<span><strong>" + data.message + " </strong> </span>" +
 							"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
