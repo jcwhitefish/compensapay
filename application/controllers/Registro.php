@@ -8,6 +8,7 @@ class Registro extends MY_Loggedout
 		parent::__construct();
 		$this->load->model('user_model'); // Carga el modelo
 		$this->load->model('company_model'); // Carga el modelo
+		$this->load->model('registro_model');
 		$this->load->library('email');
 
 	}
@@ -31,54 +32,40 @@ class Registro extends MY_Loggedout
 		//mostramos en pantalla welcome_message.php
 		$this->load->view('welcome_message');
 	}
-	public function usuario(...$encodedParams)
+	public function usuario()
 	{
-		// TODO: Aqui solo se deberia acceder por medio de empresa
-		$data = array();
-		if (!empty($encodedParams)) {
+		$datos = array(
+			"detalles" => $this->registro_model->detalles()	
+		);
 
-			$decodedParams = array_map('urldecode', $encodedParams);
-
-			$datos = array(
-				'bussinesName' => $decodedParams[0],
-				'nameComercial' => $decodedParams[1],
-				'codigoPostal' => $decodedParams[2],
-				'estado' => $decodedParams[3],
-				'direccion' => $decodedParams[4],
-				'telefono' => $decodedParams[5],
-				'type' => $decodedParams[6],
-				'rfc' => $decodedParams[7],
-				'fiscal' => $decodedParams[8],
-				'clabe' => $decodedParams[9],
-				'bank' => $decodedParams[10],
-				'diaspago' =>$decodedParams[11],
-				'uniqueString' => $decodedParams[11]
-			);
-			$datos = json_encode($datos);
-			$data['datosEmpresa'] = $datos;
-		}
-
-		$data['main'] = $this->load->view('registro/usuario', $data, true);
+		$data['main'] = $this->load->view('registro/usuario', $datos, true);
 		$this->load->view('plantilla', $data);
 	}
 	public function empresa()
 	{
-		//mostramos en pantalla welcome_message.php
-		$data['main'] = $this->load->view('registro/empresa', '', true);
+		//guarda el usuario
+		$name = $this->input->post('name');
+		$lastname = $this->input->post('lastname');
+		$email = $this->input->post('email');
+		$phone = $this->input->post('phone-number');
+
+		//muestra el formulario de los datos de la empresa
+		$datos = array(
+			"detalles" => $this->registro_model->detalles()	
+		);
+		
+		$data['main'] = $this->load->view('registro/empresa', $datos, true);
 		$this->load->view('plantilla', $data);
 	}
-	public function finalizado(...$encodedParams)
+	public function finalizado($nombre, $correo)
 	{
 		$data = array();
-		if (!empty($encodedParams)) {
-
-			$decodedParams = array_map('urldecode', $encodedParams);
-
-			$datos = array(
-				'nombre' => $decodedParams[0],
-				'correo' => $decodedParams[1],
-			);
-		}
+		
+		$datos = array(
+			'nombre' => $nombre,
+			'correo' => $decodedParams[1],
+		);
+		
 		//mostramos en pantalla welcome_message.php
 		$data['main'] = $this->load->view('registro/finalizado', $datos, true);
 		$this->load->view('plantilla', $data);
@@ -95,7 +82,7 @@ class Registro extends MY_Loggedout
 		// Envía los datos en formato JSON
 		$this->output->set_output(json_encode($data));
 	}
-	public function registraEmpresa()
+	public function registraEmpresa() //todo: delete this mother later
 	{
 		$datos = array();
 		$this->form_validation->set_rules('bussinesName', 'BussinesName', 'required');
@@ -160,49 +147,43 @@ class Registro extends MY_Loggedout
 	}
 	public function registraUsuario()
 	{
-		$this->form_validation->set_rules('user', 'Usuario', 'required');
-		$this->form_validation->set_rules('name', 'Nombre', 'required');
-		$this->form_validation->set_rules('lastname', 'Apellidos', 'required');
-		$this->form_validation->set_rules('email', 'Correo', 'required|valid_email');
-		$this->form_validation->set_rules('validateEmail', 'Confirmar Correo', 'required');
-		$this->form_validation->set_rules('number', 'Teléfono Móvil', 'required|exact_length[10]|numeric');
-		$this->form_validation->set_rules('validateNumber', 'Confirmar Teléfono Móvil', 'required|exact_length[10]|numeric');
-		$this->form_validation->set_rules('question', 'Pregunta Secreta', 'required');
-		$this->form_validation->set_rules('answer', 'Respuesta', 'required');
-		$this->form_validation->set_rules('idEmpresa', 'ID', 'required');
-		$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
-		if ($this->form_validation->run() === FALSE) {
-			// Si la validación falla, puedes mostrar errores o redirigir al formulario
-			// redirect('controlador/metodo');
-			$validation_errors = validation_errors();
-			//echo $validation_errors;
-		} else {
+		//$this->form_validation->set_rules('user', 'Usuario', 'required');
+		//$this->form_validation->set_rules('name', 'Nombre', 'required');
+		//$this->form_validation->set_rules('lastname', 'Apellidos', 'required');
+		//$this->form_validation->set_rules('email', 'Correo', 'required|valid_email');
+		//$this->form_validation->set_rules('validateEmail', 'Confirmar Correo', 'required');
+		//$this->form_validation->set_rules('number', 'Teléfono Móvil', 'required|exact_length[10]|numeric');
+		//$this->form_validation->set_rules('validateNumber', 'Confirmar Teléfono Móvil', 'required|exact_length[10]|numeric');
+		//$this->form_validation->set_rules('question', 'Pregunta Secreta', 'required');
+		//$this->form_validation->set_rules('answer', 'Respuesta', 'required');
+		//$this->form_validation->set_rules('idEmpresa', 'ID', 'required');
+		//$this->form_validation->set_rules('uniqueString', 'UniqueString', 'required');
+		//if ($this->form_validation->run() === FALSE) {
+		//	// Si la validación falla, puedes mostrar errores o redirigir al formulario
+		//	// redirect('controlador/metodo');
+		//	$validation_errors = validation_errors();
+		//	//echo $validation_errors;
+		//} else {
 
 			// Si la validación es exitosa, obtén los datos del formulario
-			$user = $this->input->post('user');
+			//$user = $this->input->post('user');
 			$name = $this->input->post('name');
 			$lastname = $this->input->post('lastname');
 			$email = $this->input->post('email');
 			$validateEmail = $this->input->post('validateEmail');
 			$number = $this->input->post('number');
-			$validateNumber = $this->input->post('validateNumber');
-			$question = $this->input->post('question');
-			$answer = $this->input->post('answer');
-			$idEmpresa = $this->input->post('idEmpresa');
-			$uniqueString = $this->input->post('uniqueString');
-		}
+			//$validateNumber = $this->input->post('validateNumber');
+			//$question = $this->input->post('question');
+			//$answer = $this->input->post('answer');
+			//$idEmpresa = $this->input->post('idEmpresa');
+			//$uniqueString = $this->input->post('uniqueString');
+		//}
 		$datos_usuario = array(
-			'user' => $user,
-			'password' => '',
-			'profile' => 1,
+			'user' => $email,
 			'name' => $name,
 			'last_name' => $lastname,
 			'email' => $email,
-			'telephone' => $number,
-			'id_question' => $question,
-			'answer' => $answer,
-			'id_company' => $idEmpresa,
-			'unique_key' => $uniqueString
+			'telephone' => $number
 		);
 		// echo json_encode($datos_usuario);
 		$id_insertado = $this->user_model->insert_user($datos_usuario);
@@ -239,7 +220,7 @@ class Registro extends MY_Loggedout
 		$this->email->from('hola@compensapay.mx', 'compensapay');
 		$this->email->to($email);
 		$this->email->subject('Creacion de cuenta');
-		$this->email->message(base_url('validarCuenta/'.cifrarAES($id)));
+		$this->email->message(base_url('validarCuenta/'.cifrarId($id)));
 
 		if ($this->email->send()) {
 			echo 'Correo enviado con éxito';
@@ -416,6 +397,77 @@ class Registro extends MY_Loggedout
         }
         
 		echo json_encode($resp);
+	}
+
+	public function estado(){
+
+		$codigopostal = $this->input->post('codigopostal');
+
+		$datos = array(
+			"estado" => $this->registro_model->estado($codigopostal)	
+		);
+
+		//$this->load->view('registro/estados', $datos);
+
+	}
+
+	public function banco(){
+		
+		$clabe = $this->input->post('clabe');
+
+		$datos = array(
+			"banco" => $this->registro_model->banco($clabe)
+		);
+
+		$this->load->view('registro/banco', $datos);
+	}
+
+	public function registrarCompanie(){
+
+		//leer datos
+		$name = $this->input->post('name');
+		$lastname = $this->input->post('lastname');
+		$email = $this->input->post('email');
+		$phone_number = $this->input->post('phone-number');
+		$razonsocial = $this->input->post('razonsocial');
+		$nombrecomercial = $this->input->post('nombrecomercial');
+		$rfc = $this->input->post('rfc');
+		$regimen = $this->input->post('regimen');
+
+		$empresa = [
+			"razonsocial" => $razonsocial, 
+			"nombrecomercial" => $nombrecomercial, 
+			"rfc" => $rfc,
+			"regimen" => $regimen
+		];
+
+		$newEmpr = $this->registro_model->onboardinge($empresa);
+
+		$usuario = [
+			"user" => $email,
+			"profile" => 0,
+			"name" => $name,
+			"lastname" => $lastname,
+			"email" => $email, 
+			"phone_number" => $phone_number, 
+			"empresa" => $newEmpr
+		]; 
+		
+		$newUser = $this->registro_model->onboardingu($usuario);
+
+		//manda correo para contaseña
+		//$this->enviarCorreo($newUser,$email);
+
+		$datos = array(
+			'nombre' => $name.' '.$lastname,
+			'correo' => $email,
+		);
+
+		echo cifrarId($newUser); //TODO: comment this mother
+
+		//mostramos en pantalla welcome_message.php
+		$data['main'] = $this->load->view('registro/finalizado', $datos, true);
+		$this->load->view('plantilla', $data);
 	}
 }
 

@@ -1,10 +1,10 @@
 <div class="p-5">
     <div class="card esquinasRedondas">
         <div class="card-content especial-p">
-            <p>Hola <?php echo $nombre;?>, bienvenido a <strong>Compensa</strong> pay, hemos enviado un correo a <?php echo $correo;?>, por favor activa tu cuenta para poder ingresar a nuestra plataforma.</p><br>
-            <p>Si tienes dudas o comentarios puedes comunicarte al correo <strong>soporte@compensapay.mx</strong></p>
+            <p>Hola <?php echo $nombre;?>, bienvenido a <strong>Solve</strong>, hemos enviado un correo a <?php echo $correo;?>, por favor activa tu cuenta para poder ingresar a nuestra plataforma.</p><br>
+            <p>Si tienes dudas o comentarios puedes comunicarte al correo <strong>soporte@solve.com.mx</strong></p>
             <div class="center-align">
-                <img src="<?= base_url('assets/images/CompensaPay_Logos-02.png'); ?>" alt="Logo" class="size-image">
+                <img src="<?= base_url('assets/images/logo_solve_1.svg'); ?>" alt="Logo" class="size-image">
             </div>
         </div>
     </div>

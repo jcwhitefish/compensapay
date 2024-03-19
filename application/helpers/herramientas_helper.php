@@ -33,3 +33,25 @@ function descifrarAES($mensajeCifrado)
     $mensajeDescifrado = openssl_decrypt($datosDecodificados, 'AES-256-CBC', $clave, 0, $iv);
     return $mensajeDescifrado;
 }
+
+function cifrarId($id){
+
+    $clave = 'D0170rN07T#3r31sN07Tr&';
+    $datos = $id;
+    $metodo = 'aes-256-cbc';
+    $iv = hex2bin('34857d973953e44afb49ea9d61104d8c');
+
+    return openssl_encrypt($datos, $metodo, $clave, 0, $iv);
+
+}
+
+function dIrarfic($cadena){
+
+    $clave = 'D0170rN07T#3r31sN07Tr&';
+    $datos = $cadena;
+    $metodo = 'aes-256-cbc';
+    $iv = hex2bin('34857d973953e44afb49ea9d61104d8c');
+
+    return openssl_decrypt($datos, $metodo, $clave, 0, $iv);
+
+}

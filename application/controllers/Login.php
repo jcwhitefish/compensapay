@@ -76,10 +76,14 @@ class Login extends MY_Loggedout
 	public function validarCuenta($AESEmpresa = null)
 	{
 
+		$this->load->helper('herramientas_helper');
+
 		if (isset($AESEmpresa)) {
-			$empresaDecode = urldecode($AESEmpresa);
-			$empresa = descifrarAES($empresaDecode);
-			//echo $empresa;
+			//$empresaDecode = urldecode($AESEmpresa);
+			$empresa = dIrarfic($AESEmpresa);
+			//var_dump($empresa);
+			//echo '-'.$empresaDecode;
+			//echo '-'.$empresa;
 			$condiciones = array('id' => $empresa);
 			$persona = $this->user_model->get_user($condiciones);
 			//var_dump($persona);
@@ -93,14 +97,19 @@ class Login extends MY_Loggedout
 					$data['main'] = $this->load->view('login/crear_contrasena', $data, true);
 					$this->load->view('plantilla', $data);
 				}else {
-					redirect('registro/empresa');
+					//('registro/empresa');
+					redirect('login');
 				}
 
 			} else {
-				redirect('registro/empresa');
+				//redirect('registro/empresa');
+				redirect('registro/usuario');
+				//echo 'Hola 1 '.$AESEmpresa;
 			}
 		} else {
-			redirect('registro/empresa');
+			//redirect('registro/empresa');
+			redirect('registro/usuario');
+			//echo 'Hola 2';
 		}
 	}
 	public function crearContrasena()
@@ -120,11 +129,13 @@ class Login extends MY_Loggedout
 			$user = $this->input->post('userId');
 			$pass = $this->input->post('passwordValidate');
 			$nuevos_datos = array(
-				'password' => cifrarAES($pass)
+				'password' => cifrarId($pass)
 			);
 			$cambio = $this->user_model->update_user($user, $nuevos_datos);
 			$this->user_model->setInitialConf($user);
 			$dato['status'] = $cambio;
+
+			//echo cifrarId($pass);
 		}
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');
@@ -137,12 +148,10 @@ class Login extends MY_Loggedout
 		//TODO: Asi es como debe de hacerse una extraccion de datos por GET y todas las acciones se deben de hacer si se envian los datos correctos dentro del if no fuera
 		$dato = array();
 
-
-
-		$user = $this->input->get('user');
-		$password = $this->input->get('password');
+		$user = $this->input->post('user');
+		$password = $this->input->post('password');
 		//Verificamos que no si exista el usuario
-		$condiciones = array('user' => $user, 'password' => cifrarAES($password));
+		$condiciones = array('user' => $user, 'password' => cifrarId($password));
 		
 		$persona = $this->user_model->get_user($condiciones);
 
@@ -153,8 +162,10 @@ class Login extends MY_Loggedout
 			$this->session->set_userdata('id', $persona['id']);
 			$this->session->set_userdata('vista', 1);
 			$dato['status'] = 1;
+			redirect(base_url('inicio'));
 		} else {
 			$dato['status'] = 0;
+			redirect(base_url('login'));
 		}
 		// Configura la respuesta para que sea en formato JSON
 		$this->output->set_content_type('application/json');

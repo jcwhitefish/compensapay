@@ -1,4 +1,4 @@
-<div class="p-5" id="app">
+<div class="p-5">
     <div class="card esquinasRedondas">
         <div class="card-content">
             <div class="row">
@@ -6,13 +6,13 @@
                     <img src="<?= base_url('assets/images/logo_solve_1.svg'); ?>" alt="Logo" class="custom-image">
                 </div>
                 <div class="col l6 p-5">
-                    <form @submit.prevent="submitForm" method="get" action="<?= base_url('login'); ?>">
+                    <form method="POST" action="<?= base_url('login/validaAcceso'); ?>">
                         <div class="container input-border">
-                            <input v-model="data['user']" @blur="checkFormat('user')" :style="colorsBorder['user'] || {}" type="text" name="user" id="user" placeholder="Usuario" required>
+                            <input type="text" name="user" id="user" placeholder="Usuario" required>
                             <label for="user">Usuario</label>
-                            <input v-model="data['password']" @blur="checkFormat('password')" :style="colorsBorder['password'] || {}" type="password" name="password" id="password" placeholder="Contraseña" required>
+                            <input type="password" name="password" id="password" placeholder="Contraseña" required>
                             <label for="password">Contraseña</label>
-                            <p v-if="fallo == true" class="error-message">¡Usuario o contraseña incorrectos!</p>
+                            <p class="error-message">¡Usuario o contraseña incorrectos!</p>
 
                         </div>
                         <?php
@@ -49,73 +49,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    const {
-        createApp,
-        computed,
-        reactive,
-        ref,
-        isRef
-    } = Vue;
-
-    const app = createApp({
-        setup() {
-            const data = reactive({
-                user: ref(''),
-                password: ref(''),
-                session: ref(true)
-            });
-            
-            const colorsBorder = reactive({});
-            const fallo = ref(false);
-
-            const checkFormat = (nombreInput) => {
-            };
-
-            const submitForm = () => {
-                //console.log('Verificamos que no esten en rojo');
-                var requestOptions = {
-                    method: 'GET',
-                    redirect: 'follow'
-                };
-                fetch(`<?php echo base_url('login/validaAcceso?user=${data.user}&password=${data.password}') ?>`, requestOptions)
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('La solicitud no fue exitosa');
-                        }
-                        return response.json();
-                    })
-                    .then((responseData) => {
-                        // Hacer algo con los datos, por ejemplo, retornarlos
-                        // accion = responseData
-                        //console.log( responseData.status);
-                        if (responseData.status == 1) {
-                            window.location.replace('<?php echo base_url('inicio'); ?>');
-
-                        }else{
-                                fallo.value = true;
-                        }
-
-
-                    })
-                    .catch((error) => {
-                        console.error('Error al realizar la solicitud fetch:', error);
-                    });
-
-
-            }
-
-            return {
-                data,
-                colorsBorder,
-                checkFormat,
-                submitForm,
-                fallo
-            };
-        },
-    });
-</script>
 
 
 <style>
