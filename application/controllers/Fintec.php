@@ -144,13 +144,64 @@
 								'idempotency_key' => rand ( 1000000, 9999999 ),
 							];
 							$amountP = $op[ 'entry' ] - $exitMoney;
-							$provedor = [
-								'clabe' => $op[ 'companyClabe' ],
-								'amount' => filter_var ( $amountP, FILTER_VALIDATE_INT ),
-								'descriptor' => 'Movimiento entre cuentas',
-								'name' => $op[ 'companyName' ],
-								'idempotency_key' => rand ( 1000000, 9999999 ),
-							];
+							if ( $amountP !== 0 ) {
+								$provedor = [
+									'clabe' => $op[ 'companyClabe' ],
+									'amount' => filter_var ( $amountP, FILTER_VALIDATE_INT ),
+									'descriptor' => 'Movimiento entre cuentas',
+									'name' => $op[ 'companyName' ],
+									'idempotency_key' => rand ( 1000000, 9999999 ),
+								];
+								//====| Comenzamos a enviar el dinero del proveedor |=====
+								$prov = json_decode ( $this->dataArt->CreateTransfer ( $provedor, 'SANDBOX' ), TRUE );
+								$this->load->model ( 'Operation_model', 'OpData' );
+								$cfdis = $this->OpData->getCFDIFromConciliation ( $op[ 'operationId' ], $this->environment );
+								$this->dataArt->successConciliation ( $op[ 'operationId' ], $cfdis, $this->environment );
+								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+									'in' => json_encode ( $provedor ),
+									'out' => json_encode ( $prov ) ];
+								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+								$this->createLog ( 'CreateTransfer', 'Send ->' . json_encode ( $provedor, JSON_PRETTY_PRINT ) );
+								$this->createLog ( 'CreateTransfer', 'Response ->' . json_encode ( $prov, JSON_PRETTY_PRINT ) );
+								sleep ( 2 );
+								$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
+								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+									'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
+									'out' => json_encode ( $traking2 ) ];
+								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+								while ( !$traking2[ 'tracking_key' ] ) {
+									sleep ( 3 );
+									$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
+									$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+										'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
+										'out' => json_encode ( $traking2 ) ];
+									$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+									$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
+								}
+								$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
+								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
+									'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
+									'out' => json_encode ( $traking2 ) ];
+								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
+								$argsProv = [
+									'trakingKey' => $traking2[ 'tracking_key' ],
+									'amount' => ( $amountP / 100 ),
+									'descriptor' => 'Movimiento entre cuentas',
+									'sourceBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
+									'receiverBank' => substr ( $provedor[ 'clabe' ], 0, 3 ),
+									'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
+									'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
+									'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
+									'receiverClabe' => $provedor[ 'clabe' ],
+									'operationNumber' => $op[ 'operationNumber' ],
+									'transactionDate' => $prov[ 'created_at' ],
+									'arteriaId' => $prov[ 'id' ],
+//							'transactionDate' => '2023-11-22T22:49:34.973828',
+//							'arteriaId' => 'TROA5qGQ47QeClEPTWiephsw',
+								];
+								$this->dataArt->AddMovement ( $argsProv, 'SANDBOX' );
+								$this->getCEP ( $argsProv );
+							}
 							$transferCliente = json_decode ( $this->dataArt->CreateTransfer ( $clientT, 'SANDBOX' ), TRUE );
 							$this->createLog ( 'CreateTransfer', 'Send ->' . json_encode ( $clientT, JSON_PRETTY_PRINT ) );
 							$this->createLog ( 'CreateTransfer', 'Response ->' . json_encode ( $transferCliente, JSON_PRETTY_PRINT ) );
@@ -190,55 +241,7 @@
 							];
 							$res = $this->dataArt->AddMovement ( $argsR, 'SANDBOX' );
 							$cepC = $this->getCEP ( $argsR );
-							//====| Comenzamos a enviar el dinero del proveedor |=====
-							$prov = json_decode ( $this->dataArt->CreateTransfer ( $provedor, 'SANDBOX' ), TRUE );
-							$this->load->model ( 'Operation_model', 'OpData' );
-							$cfdis = $this->OpData->getCFDIFromConciliation ( $op[ 'operationId' ], $this->environment );
-							$this->dataArt->successConciliation ( $op[ 'operationId' ], $cfdis, $this->environment );
-							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ( $provedor ),
-								'out' => json_encode ( $prov ) ];
-							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
-							$this->createLog ( 'CreateTransfer', 'Send ->' . json_encode ( $provedor, JSON_PRETTY_PRINT ) );
-							$this->createLog ( 'CreateTransfer', 'Response ->' . json_encode ( $prov, JSON_PRETTY_PRINT ) );
-							sleep ( 2 );
-							$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
-							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
-								'out' => json_encode ( $traking2 ) ];
-							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
-							while ( !$traking2[ 'tracking_key' ] ) {
-								sleep ( 3 );
-								$traking2 = json_decode ( $this->dataArt->getIdRastreo ( $prov[ 'id' ], 'SANDBOX' ), TRUE );
-								$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-									'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
-									'out' => json_encode ( $traking2 ) ];
-								$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
-								$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
-							}
-							$this->createLog ( 'getIdRastreo', 'Response ->' . json_encode ( $traking2, JSON_PRETTY_PRINT ) );
-							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
-								'in' => json_encode ( [ 'idCuenca' => $prov[ 'id' ] ] ),
-								'out' => json_encode ( $traking2 ) ];
-							$this->Binnacle ( $binnacle, 0, [ 3 ], 3, $this->environment );
-							$argsProv = [
-								'trakingKey' => $traking2[ 'tracking_key' ],
-								'amount' => ( $amountP / 100 ),
-								'descriptor' => 'Movimiento entre cuentas',
-								'sourceBank' => substr ( $data[ 'data' ][ 'destination' ][ 'account_number' ], 0, 3 ),
-								'receiverBank' => substr ( $provedor[ 'clabe' ], 0, 3 ),
-								'sourceRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
-								'receiverRfc' => $data[ 'data' ][ 'destination' ][ 'rfc' ],
-								'sourceClabe' => $data[ 'data' ][ 'destination' ][ 'account_number' ],
-								'receiverClabe' => $provedor[ 'clabe' ],
-								'operationNumber' => $op[ 'operationNumber' ],
-								'transactionDate' => $prov[ 'created_at' ],
-								'arteriaId' => $prov[ 'id' ],
-//							'transactionDate' => '2023-11-22T22:49:34.973828',
-//							'arteriaId' => 'TROA5qGQ47QeClEPTWiephsw',
-							];
-							$this->dataArt->AddMovement ( $argsProv, 'SANDBOX' );
-							$this->getCEP ( $argsProv );
+							
 							$data[ 'OpEntrty' ] = ( $op[ 'entry' ] / 100 );
 							$binnacle [ 'L' ] = [ 'id_c' => 1, 'id' => 1, 'module' => 3, 'code' => 0,
 								'in' => json_encode ( $argsProv ),
@@ -446,7 +449,7 @@
 						$args[ 'A' ] = $nText;
 						break;
 					case 3:
-						$module = $this->nt->getModuleByArgs ( $module, $this->environment );
+						$module = $this->nt->getModuleByArgs ( 2, $this->environment );
 						$support = $this->nt->getModuleByArgs ( '1', $this->environment );
 						break;
 				}
@@ -491,7 +494,7 @@
 			if ( Request::getStaticMethod () == 'POST' && ( $data = Request::getBody () ) ) {
 				$this->insertLogDB ( 1, 800, json_encode ( $data ), json_encode ( $resp ), 'getEventsSandbox', 'SANDBOX' );
 			}
-		
+			
 		}
 		public function ping () {
 			date_default_timezone_set ( 'America/Mexico_City' );
@@ -501,7 +504,7 @@
 			$resp = [ "response" => 'ok' ];
 			$data = Request::getBody ();
 			$res = $this->dataConc->extracGroups ( 'SANDBOX' );
-			$log=$this->insertLogDB ( 2, 1, json_encode ( $data ), json_encode ( $res ), 'ping', 'SANDBOX' );
+			$log = $this->insertLogDB ( 2, 1, json_encode ( $data ), json_encode ( $res ), 'ping', 'SANDBOX' );
 //			var_dump ($log);
 //			$this->createLog ( 'grouop', json_encode ( $res ) );
 			for ( $h = 0; $h < 10000; $h++ ) {
@@ -511,7 +514,7 @@
 			$con2 = $this->dataConc->makeConciliations ( 'SANDBOX' );
 			$this->insertLogDB ( 2, 3, json_encode ( $data ), json_encode ( $con2 ), 'ping', 'SANDBOX' );
 			$multi = $this->dataConc->multiD ();
-			var_dump ($multi);
+			var_dump ( $multi );
 //			var_dump (date('Y-m-d H:i:s',strtotime('now')));
 //			$this->createLog ( 'stress', json_encode ( $data ) );
 //			sleep ( 1 );

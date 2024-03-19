@@ -260,12 +260,13 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 				$env = 'SANDBOX';
 				$amount = $this->input->post ( 'OriginAmount' );
 				$invoiceId = $this->input->post ( 'OriginCFDI' );
+				$invoiceUUID = $this->input->post ( 'OriginUUID' );
 				$conciliaDate = $this->input->post ( 'conciliaDate' );
 				$uploadedFile = $_FILES[ 'file' ];
 				$xml = simplexml_load_file ( $uploadedFile[ 'tmp_name' ] );
 				$this->load->helper ( 'factura_helper' );
 				$doc = XmlProcess ( $xml );
-				$validation = $this->validaComprobante ( $doc, 2, $env, $amount );
+				$validation = $this->validaComprobante ( $doc, 2, $invoiceUUID, $env, $amount );
 				$this->insertLog ( 2, $validation[ 'code' ], $doc, $validation, 'validaComprobante', $this->environment );
 				if ( $validation[ 'code' ] === 200 ) {
 					$this->load->model ( 'Invoice_model', 'invData' );
@@ -376,7 +377,7 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 		 *
 		 * @return array Devuelve el resultado de la validación con la descripcion caso de erro.
 		 */
-		public function validaComprobante ( array $factura, int $tipo, string $env = NULL, float $monto = NULL ): array {
+		public function validaComprobante ( array $factura, int $tipo, string $cfdi = NULL, string $env = NULL, float $monto = NULL ): array {
 			//Se selecciona el ambiente a trabajar
 			$env = $env === NULL ? $this->environment : $env;
 			//se obtienen los datos de la compañia que tienen iniciada sesión
@@ -407,7 +408,17 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 						//Se obtiene la información de fintech del usuario
 						$fintech = $this->dataUsr->getFintechInfo ( $id, $env );
 						if ( $fintech[ 'code' ] === 200 ) {
-							if ( $factura[ 'monto' ] < $monto ) {
+							if ( isset( $factura[ 'relacion' ] ) ) {
+//								var_dump ($factura[ 'relacion' ],$cfdi);
+								if ( $factura[ 'relacion' ] != $cfdi ) {
+									return [
+										'code' => 500,
+										'reason' => 'Comprobante relacionado',
+										'message' => 'El documento esta relacionado a un UUID diferente',
+									];
+								}
+							}
+							if ( $factura[ 'monto' ] <= $monto ) {
 								return [
 									'code' => 200,
 									'reason' => 'Comprobante valido',
@@ -416,8 +427,8 @@ Se envió a su correo a su socio comercial con la información del rechazo de co
 							}
 							return [
 								'code' => 500,
-								'reason' => 'Monto incorrecto',
-								'message' => 'El total del comprobante es mayor al de la factura a conciliar',
+								'reason' => 'Error: Monto incorrecto',
+								'message' => 'Verifica el monto sea menor al de la factura',
 							];
 						}
 						return [

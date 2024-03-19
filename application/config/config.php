@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $_SERVER['HTTP_HOST'] = empty($_SERVER['HTTP_HOST']) ? "compensapay.local" : $_SERVER['HTTP_HOST'];
-if($_SERVER['HTTP_HOST']=="compensapay.xyz" || $_SERVER['HTTP_HOST']=='app.solve.com.mx')
+if($_SERVER['HTTP_HOST']=="compensapay.xyz" || $_SERVER['HTTP_HOST']=='app.solve.com.mx' || $_SERVER[ 'HTTP_HOST' ] == 'compensapay.local' )
 {
    $config['base_url'] = "https://".$_SERVER['HTTP_HOST']; 
 }
@@ -169,7 +169,7 @@ $config['composer_autoload'] = FALSE;
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-+=';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-+';
 
 /*
 |--------------------------------------------------------------------------

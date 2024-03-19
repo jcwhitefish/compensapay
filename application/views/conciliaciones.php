@@ -345,6 +345,7 @@
 												value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
 										</label>
 										<input type="hidden" id="OriginCFDI">
+										<input type="hidden" id="OriginUUID">
 										<input type="hidden" id="OriginAmount">
 										<input type="hidden" id="ReceiverId">
 									</div>
@@ -467,6 +468,7 @@
 				formData.append("file", files);
 				formData.append("conciliaDate", $("#conciliaDate").val());
 				formData.append("OriginCFDI", $("#OriginCFDI").val());
+				formData.append("OriginUUID", $("#OriginUUID").val());
 				formData.append("OriginAmount", $("#OriginAmount").val());
 				$.ajax({
 					url: "/Conciliaciones/cargarNote",
@@ -546,7 +548,8 @@
 						OriginAmount: $("#OriginAmount").val(),
 						ReceiverId: $("#ReceiverId").val(),
 						cfdiConciation: $("input:radio[name=cfdiConciation]:checked").val(),
-						conciliaDate: $("#conciliaDate").val()
+						conciliaDate: $("#conciliaDate").val(),
+						OriginUUID: $("#OriginUUID").val()
 					},
 					dataType: "json",
 					method: "post",
@@ -681,7 +684,7 @@
 									"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 								M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 							} else if (data.code === 404) {
-								let nf = "<tr><td colspan=\"4\" style='text-align: center'>Ningún dato disponible en esta tabla</td></tr>";
+								let nf = "<tr><td colspan=\"4\" style='text-align: center'>No hay facturas disponibles</td></tr>";
 								$("#contraCFDI").append(nf);
 							} else {
 								$.each(data, function (index, value) {
@@ -760,8 +763,7 @@
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 					} else {
-						let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
-							"</strong></span>" +
+						let toastHTML = "<span><strong>" + data.message + " </strong> </span>" +
 							"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 							"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 						M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -1101,6 +1103,7 @@
 									dateS = dateS.split("-");
 									$("#conciliaDate").attr("value", dateS[2] + "-" + dateS[1] + "-" + dateS[0]);
 									$("#OriginCFDI").val(value.id);
+									$("#OriginUUID").val(value.uuid);
 									$("#OriginAmount").val(value.total);
 									$("#ReceiverId").val(value.receptorId);
 									$("#receptorWay").trigger("change");
