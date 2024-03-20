@@ -121,6 +121,12 @@ class Registro_model extends CI_Model {
 
         $this->db->insert('companies_docs', $dato);
 
+        $dato2 = array(
+            'idCompanie' => $idc
+        );
+
+        $this->db->insert('stp_propietarioreal', $dato2); 
+
         return $idc;
     }
 

@@ -27,6 +27,24 @@
 			$constanciasf = $value["ConstanciaSituacionF"];
 			$comprobanted = $value["ComprobanteDomicilio"];
 			$identificacionrl = $value["IdenRepresentante"];
+			$escriturasp = $value["EscriturasPublicas"];
+			$poderrl = $value["PoderRepresentanteLegal"];
+			$efirma = $value["eFirma"];
+			$propietarior = $value["IdenPropietarioReal"];
+			$documentoa = $value["DocumentoAdicional"];
+		}
+	}
+
+	//datos propietario
+	if(is_array($propietario))
+	{
+		foreach($propietario AS $value)
+		{
+			$domiciliopr = $value["Domicilio"];
+			$correoepr = $value["CorreoE"];
+			$curppr = $value["Curp"];
+			$telefonopr = $value["Telefono"];
+			$ocupacionpr = $value["Ocupacion"];
 		}
 	}
 ?>
@@ -176,7 +194,11 @@
 		</div>
 	</div>
 		<div class="row card esquinasRedondas" style="padding:20px">
+			<h5 class="card-title">Documentos requeridos para la creación de la cuenta</h5>
+			<p>Es necesario que adjunte los siguientes documentos a su cuenta para poder generar su clabe interbancaria dentro de la plataforma Solve</p>
+			
 			<div class="row line-card-2" id="divactac">
+				<p><strong>1. Acta Constitutiva (obligatorio)</strong></p>
 				<div class="col s3">
 					<form id="fadactac" name="fadactac">
 						<label for="actac" class="button-gray p-5">
@@ -185,40 +207,52 @@
 						<input name="actac" id="actac" type="file" accept="application/pdf" maxFileSize="5242880" />
 					</form>
 				</div>
-				<div class="col s9">
+				<div class="col s3">
 					<p><?php if($actac == 0){echo 'No existe documento';}else if ($actac == 1){echo '<a href="'.$urlArchivos.'acta_constitutiva.pdf" target="_blank">Ver Acta Constitutiva</a>';}?></p>
 				</div>
-			</div>
-
-			<div class="row line-card-2"  id="divconstanciasf">
-				<div class="col s3">
-					<form id="fadconstanciasf" name="fadconstanciasf">
-						<label for="constanciasf" class="button-gray p-5">
-							<?php if($constanciasf == 0){echo 'Seleccionar Archivo';}else if($constanciasf == 1){echo 'Actualizar Archivo';} ?>
-						</label>
-						<input name="constanciasf" id="constanciasf" type="file" accept="application/pdf" maxFileSize="5242880" />
-					</form>
-				</div>
-				<div class="col s9">
-					<p><?php if($constanciasf == 0){echo 'No existe documento';}else if ($constanciasf == 1){echo '<a href="'.$urlArchivos.'constancia_situacion_fistcal.pdf" target="_blank">Ver Constancia de Situación Fiscal</a>';}?></p>
+				<div class="col s6">
+					<p>Acta constitutiva (que incluya la constancia de inscripción en el RPPyC o una carta del notario en caso de que se encuentre en proceso de inscripción en el RPPyC)</p>
 				</div>
 			</div>
-
-			<div class="row line-card-2" id="divcomprobanted">
+			
+			<div class="row line-card-2" id="divescriturasp">
+				<p><strong>2. Escrituras Públicas (obligatorio)</strong></p>
 				<div class="col s3">
-					<form id="fadcomprobanted" name="fadcomprobanted">
-						<label for="comprobanted" class="button-gray p-5">
-							<?php if($comprobanted == 0){echo 'Seleccionar Archivo';}else if($comprobanted == 1){echo 'Actualizar Archivo';} ?>
+					<form id="fadescriturasp" name="fadescriturasp">
+						<label for="escriturasp" class="button-gray p-5">
+							<?php if($escriturasp == 0){echo 'Seleccionar Archivo'; } else if ($escriturasp == 1){ echo 'Actualizar Archivo';} ?>
 						</label>
-						<input name="comprobanted" id="comprobanted" type="file" accept="application/pdf" maxFileSize="5242880" />
+						<input name="escriturasp" id="escriturasp" type="file" accept="application/pdf" maxFileSize="5242880" />
 					</form>
 				</div>
-				<div class="col s9">
-					<p><?php if($comprobanted == 0){echo 'No existe documento';}else if($comprobanted == 1){echo '<a href="'.$urlArchivos.'comprobante_domicilio.pdf" target="_blank">Ver Comprobante de domicilio</a>';}?></p>
+				<div class="col s3">
+					<p><?php if($escriturasp == 0){echo 'No existe documento';}else if ($escriturasp == 1){echo '<a href="'.$urlArchivos.'escrituras_publicas.pdf" target="_blank">Ver Escrituras Públicas</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Escrituras públicas en donde consten modificaciones en la empresa (aplica para casos de transformación, fusión, escisión o cambio de denominación)</p>
+				</div>
+			</div>
+
+			<div class="row line-card-2" id="divpoderrl">
+				<p><strong>3. Poder del representante legal </strong></p>
+				<div class="col s3">
+					<form id="fadpoderrl" name="fadpoderrl">
+						<label for="poderrl" class="button-gray p-5">
+							<?php if($poderrl == 0){echo 'Seleccionar Archivo'; } else if ($poderrl == 1){ echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="poerrl" id="poderrl" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($poderrl == 0){echo 'No existe documento';}else if ($poderrl == 1){echo '<a href="'.$urlArchivos.'poder_representante_legal.pdf" target="_blank">Ver Poder del Representante Legal</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Poder del representante legal (solo cuando no se encuentre contenido en el acta constitutiva de la empresa)</p>
 				</div>
 			</div>
 
 			<div class="row line-card-2" id="dividentificacionrl">
+				<p><strong>4. Identificación del representante legal (obligatorio)</strong></p>
 				<div class="col s3">
 					<form id="fadidentificacionrl" name="fadidentificacionrl">
 						<label for="identificacionrl" class="button-gray p-5">
@@ -227,10 +261,156 @@
 						<input name="identificacionrl" id="identificacionrl" type="file" accept="application/pdf" maxFileSize="5242880" />
 					</form>
 				</div>
-				<div class="col s9">
+				<div class="col s3">
 					<p><?php if($identificacionrl == 0){echo 'No existe documento';}else if($identificacionrl == 1){echo '<a href="'.$urlArchivos.'identificacion_representante_legal.pdf" target="_blank">Ver Identificacion de Representante Legal</a>';}?></p>
 				</div>
+				<div class="col s6">
+					<p>Identificación oficial y vigente del representante legal</p>
+				</div>
 			</div>
+
+			<div class="row line-card-2"  id="divconstanciasf">
+				<p><strong>5. Constancia de Situación Fiscal (obligatorio)</strong></p>
+				<div class="col s3">
+					<form id="fadconstanciasf" name="fadconstanciasf">
+						<label for="constanciasf" class="button-gray p-5">
+							<?php if($constanciasf == 0){echo 'Seleccionar Archivo';}else if($constanciasf == 1){echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="constanciasf" id="constanciasf" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($constanciasf == 0){echo 'No existe documento';}else if ($constanciasf == 1){echo '<a href="'.$urlArchivos.'constancia_situacion_fistcal.pdf" target="_blank">Ver Constancia de Situación Fiscal</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Constancia de situación fiscal de reciente emisión (del año en curso)</p>
+				</div>
+			</div>
+
+			<div class="row line-card-2" id="divcomprobanted">
+				<p><strong>6. Comprobante de Domicilio (obligatorio)</strong></p>
+				<div class="col s3">
+					<form id="fadcomprobanted" name="fadcomprobanted">
+						<label for="comprobanted" class="button-gray p-5">
+							<?php if($comprobanted == 0){echo 'Seleccionar Archivo';}else if($comprobanted == 1){echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="comprobanted" id="comprobanted" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($comprobanted == 0){echo 'No existe documento';}else if($comprobanted == 1){echo '<a href="'.$urlArchivos.'comprobante_domicilio.pdf" target="_blank">Ver Comprobante de domicilio</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Comprobante de domicilio no mayor a 3 meses de antigüedad (únicamente si es diferente al domicilio fiscal)</p>
+				</div>
+			</div>
+
+			<div class="row line-card-2" id="divefirma">
+				<p><strong>7. Documento e.firma (obligatorio)</strong></p>
+				<div class="col s3">
+					<form id="fadefirma" name="fadefirma">
+						<label for="efirma" class="button-gray p-5">
+							<?php if($efirma == 0){echo 'Seleccionar Archivo';}else if($efirma == 1){echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="efirma" id="efirma" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($efirma == 0){echo 'No existe documento';}else if($efirma == 1){echo '<a href="'.$urlArchivos.'e_firma.pdf" target="_blank">Ver Documento e.firma</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Documento donde conste la e.firma de la empresa</p>
+				</div>
+			</div>
+
+			<div class="row line-card-2" id="divpropietarior">
+				<p><strong>8. Propietario Real</strong></p>
+				<div class="col s3">
+					<form id="fadpropietarior" name="fadpropietarior">
+						<label for="propietarior" class="button-gray p-5">
+							<?php if($propietarior == 0){echo 'Seleccionar Archivo';}else if($propietarior == 1){echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="propietarior" id="propietarior" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($propietarior == 0){echo 'No existe documento';}else if($propietarior == 1){echo '<a href="'.$urlArchivos.'propietario_real.pdf" target="_blank">Ver Identificación Propietario Real</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Identificación oficial vigente del propietario real</p>
+				</div>
+			</div>
+
+			<div class="row line-card-2" id="divinfopropietarior">
+				<p><strong>9. Información del Propietario Real</strong></p>
+				<form id="fadinfopropietarior" name="fadinfopropietarior">
+					<div class="row">
+						<div class="col s4">
+							<div class="input-border col l12">
+								<input type="email" name="correoepr" id="correoepr" required pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" title="Por favor, ingresa un correo electrónico de contacto." value="<?php echo $correoepr;?>">
+								<label for="correoepr">Correo Electrónico *</label>
+							</div>
+						</div>
+						<div class="col s4">
+							<div class="input-border col l12">
+								<input type="text" name="domiciliopr" id="domiciliopr" required title="Por favor, ingresa el domicilio completo." value="<?php echo $domiciliopr;?>">
+								<label for="domiciliopr">Domiclio *</label>
+							</div>
+						</div>
+						<div class="col s4">
+							<div class="input-border col l12">
+								<input type="text" name="curppr" id="curppr" required pattern="^[A-Z]{4}\d{6}[H,M][A-Z]{5}[A-Z0-9]{2}$" title="Por favor, ingresa el curp." value="<?php echo $curppr;?>">
+								<label for="correoepr">CURP *</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s4">
+							<div class="input-border col l12">
+								<input type="text" name="telefonopr" id="telefonopr" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa un teléfono de contacto." value="<?php echo $telefonopr;?>">
+								<label for="telefonopr">Numero Telefonico *</label>
+							</div>
+						</div>
+						<div class="col s4">
+							<div class="input-border col l12">
+								<input type="text" name="ocupacionpr" id="ocupacionpr" required title="Por favor, ingresa la ocupación del propietario real." value="<?php echo $ocupacionpr;?>">
+								<label for="ocupacionpr">Ocupación *</label>
+							</div>
+						</div>
+						
+						<div class="col s4">
+							<div style="padding: 20px;">
+								<input type="submit" name="savepr" id="savepr" value="Guardar Datos del propietario real" class="button-gray">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="row line-card-2" id="divdocumentoa">
+				<p><strong>10. Documentación Adicional</strong></p>
+				<div class="col s3">
+					<form id="faddocumentoa" name="faddocumentoa">
+						<label for="documentoa" class="button-gray p-5">
+							<?php if($documentoa == 0){echo 'Seleccionar Archivo';}else if($documentoa == 1){echo 'Actualizar Archivo';} ?>
+						</label>
+						<input name="documentoa" id="documentoa" type="file" accept="application/pdf" maxFileSize="5242880" />
+					</form>
+				</div>
+				<div class="col s3">
+					<p><?php if($documentoa == 0){echo 'No existe documento';}else if($documentoa == 1){echo '<a href="'.$urlArchivos.'documento_adicional.pdf" target="_blank">Ver Documento Adicional</a>';}?></p>
+				</div>
+				<div class="col s6">
+					<p>Solo en caso de pertenecer a alguno de estos sectores:</p>
+					<ul>
+						<li>Para actividades de <strong style="text-decoration: underline">outsourcing</strong>, su registro ante el REPSE</li>
+						<li>Para actividades relacionadas con <strong style="text-decoration: underline">activos virtuales</strong>, su acuse como actividad vulnerable</li>
+						<li>Para actividades relacionadas con <strong style="text-decoration: underline">juegos y apuestas</strong>, su autorización ante SEGOB</li>
+					</ul>
+				</div>
+			</div>
+
+			
 		
 		</div>
 	
@@ -337,11 +517,21 @@
 </style>
 <script>
 
-	<?php if( $this->session->userdata('datosEmpresa')["address"] == '' OR $this->session->userdata('datosEmpresa')["telephone"] == '' OR $this->session->userdata('datosEmpresa')["account_clabe"] == '') { ?>
+	<?php if( $this->session->userdata('datosEmpresa')["address"] == '' OR 
+				$this->session->userdata('datosEmpresa')["telephone"] == '' OR 
+				$this->session->userdata('datosEmpresa')["account_clabe"] == '' OR 
+				$actac == 0 OR $constanciasf == 0 OR $comprobanted == 0 OR $identificacionrl == 0 OR 
+				$escriturasp == 0 OR $efirma == 0 ) { ?>
 	
 	$(document).ready(function(){
 		$('#modal-datos-empresa').modal('open');
 	});
+	
+	<?php }	else if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) { ?>
+
+	//$(document).ready(function(){
+	//	$('#modal-proveedor').modal('open');
+	//});
 
 	<?php } else if( $this->session->userdata('datosEmpresa')['accionistas'] == 0 )	{ ?>
 		
@@ -349,11 +539,7 @@
 	//	$('#modal-proveedor-final').modal('open');
 	//});
 
-	<?php }	else if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) { ?>
-
-	//$(document).ready(function(){
-	//	$('#modal-proveedor').modal('open');
-	//});
+	
 
 	<?php } ?>
 
@@ -494,6 +680,38 @@ $("#actac").on("change", function(e){
 	});
 });
 
+$("#escriturasp").on("change", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fadescriturasp"));
+    $.ajax({
+		url: "<?= base_url('perfil/adescriturasp'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divescriturasp").html(echo);
+	});
+});
+
+$("#poderrl").on("change", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fadpoderrl"));
+    $.ajax({
+		url: "<?= base_url('perfil/adpoderrl'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divpoderrl").html(echo);
+	});
+});
+
 $("#constanciasf").on("change", function(e){
 	e.preventDefault();
     var formData = new FormData(document.getElementById("fadconstanciasf"));
@@ -539,6 +757,70 @@ $("#identificacionrl").on("change", function(e){
 		processData: false
 	}).done(function(echo){
 		$("#dividentificacionrl").html(echo);
+	});
+});
+
+$("#efirma").on("change", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fadefirma"));
+    $.ajax({
+		url: "<?= base_url('perfil/adefirma'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divefirma").html(echo);
+	});
+});
+
+$("#propietarior").on("change", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fadpropietarior"));
+    $.ajax({
+		url: "<?= base_url('perfil/adpropietarior'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divpropietarior").html(echo);
+	});
+});
+
+$("#fadinfopropietarior").on("submit", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fadinfopropietarior"));
+    $.ajax({
+		url: "<?= base_url('perfil/adinfopropietarior'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divinfopropietarior").html(echo);
+	});
+});
+
+$("#documentoa").on("change", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("faddocumentoa"));
+    $.ajax({
+		url: "<?= base_url('perfil/addocumentoa'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#divdocumentoa").html(echo);
 	});
 });
 

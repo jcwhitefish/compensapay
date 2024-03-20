@@ -13,7 +13,8 @@ class Perfil_model extends CI_Model {
                             zc.zip_code AS zip_code, zc.zip_town AS colonia, m.cnty_name AS municipio, e.stt_name AS estado, c.address AS address, 
                             c.telephone AS telephone, c.correoe AS correoe, c.account_clabe AS account_clabe, b.bnk_nombre AS banco, cd.Logotipo AS Logotipo, 
                             cd.ActaConstitutiva AS ActaConstitutiva, cd.ConstanciaSituacionF AS ConstanciaSituacionF, cd.ComprobanteDomicilio AS ComprobanteDomicilio,
-                            cd.IdenRepresentante AS IdenRepresentante 
+                            cd.IdenRepresentante AS IdenRepresentante, cd.EscriturasPublicas AS EscriturasPublicas, cd.PoderRepresentanteLegal AS PoderRepresentanteLegal, 
+                            cd.eFirma AS eFirma, cd.IdenPropietarioReal AS IdenPropietarioReal, cd.DocumentoAdicional AS DocumentoAdicional
                     FROM companies AS c 
                     INNER JOIN companies_docs AS cd ON cd.idCompanie = c.id
                     INNER JOIN cat_zipcode AS zc ON c.id_postal_code = zc.zip_id 
@@ -136,6 +137,51 @@ class Perfil_model extends CI_Model {
         $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $idcompanie)));
 
         return $this->empresa();
+    }
+
+    public function savepropietarior($propietario = NULL)
+    {
+        $idcompanie = $this->session->userdata('datosUsuario')['id_company'];
+
+        if($propietario != NULL)
+        {
+            $query = "SELECT Id FROM stp_propietarioreal WHERE idCompanie = $idcompanie LIMIT 1";
+
+            if($ResQuery = $this->db->query($query)){
+
+                if($ResQuery->num_rows() == 0 ) {
+                    //insertamos registro
+                    $query1 = "INSERT INTO stp_propietarioreal (idCompanie, CorreE, Domicilio, Curp, Telefono, Ocupacion)
+                                                        VALUES ('".$idcompanie."', '".$propietario["correopr"]."', '".$propietario["domiciliopr"]."', 
+                                                                '".$propietario["curppr"]."', '".$propietario["telefonopr"]."', '".$propietario["ocupacionpr"]."')";
+                }
+                else {
+                    //actualizamos registro
+                    $query1 = "UPDATE stp_propietarioreal SET CorreoE = '".$propietario["correopr"]."',
+                                                                Domicilio = '".$propietario["domiciliopr"]."',
+                                                                Curp = '".$propietario["curppr"]."',
+                                                                Telefono = '".$propietario["telefonopr"]."', 
+                                                                Ocupacion = '".$propietario["ocupacionpr"]."' 
+                                                        WHERE idCompanie = '".$idcompanie."'";
+                }
+
+                $this->db->query($query1);
+            }
+        }
+
+        $query2 = "SELECT * FROM stp_propietarioreal WHERE idCompanie = $idcompanie LIMIT 1";
+
+        if($ResPR = $this->db->query($query2)){
+            if($ResPR->num_rows() > 0 ) {
+                $propietarioreal = $ResPR->result_array();
+            }
+            else{
+                $propietarioreal = '';
+            }
+        }
+
+        return $propietarioreal;
+
     }
 
     public function registra_file($file)

@@ -52,32 +52,10 @@ class Perfil extends MY_Loggedin
 
 		$data['empresa'] = $this->perfil_model->empresa();
 		$data['detalles'] = $this->registro_model->detalles();
-		
-		if($this->session->userdata('datosEmpresa')['id_postal_code']!=0)
-		{
-			$idPostal  = $this->session->userdata('datosEmpresa')['id_postal_code'];
-			$data['postal'] = $this->postalCodebyId($idPostal);
-		}
-
-		if($this->session->userdata('datosEmpresa')['id_country']!=0)
-		{
-			$idState  = $this->session->userdata('datosEmpresa')['id_country'];
-			$data['state'] = $this->stateCodebyId($idState);
-		}
-		
-		if($this->session->userdata('datosEmpresa')['account_clabe']!=NULL)
-		{
-			//De clabe lo convertimos a string y solo obtenemos las primeras 3 letras para el banco 
-			$clabe  = $this->session->userdata('datosEmpresa')['account_clabe'];
-			// convertimos a string
-			$clabe = strval($clabe);
-			$data['bank'] = $this->bankCode(substr($clabe, 0, 3));
-		}
+		$data['propietario'] = $this->perfil_model->savepropietarior();
 		
 		$data['main'] = $this->load->view('perfil/empresa', $data, true);
 		$this->load->view('plantilla', $data);
-
-
 	}
 	public function usuario()
 	{
@@ -341,5 +319,174 @@ class Perfil extends MY_Loggedin
             
 			$this->load->view('registro/identificacionrl', '');
         }
+	}
+	public function adescriturasp()
+	{
+		$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
+
+		$config['upload_path'] = './boveda/' . $unique . '/'; // Directorio de destino
+        $config['allowed_types'] = 'pdf'; // Tipos de archivos permitidos
+
+		$this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('escriturasp')) {
+            //echo $this->upload->display_errors();
+            // Manejar el error, mostrarlo o redirigir al formulario de carga
+        } else {
+            // Subida exitosa, obten el nombre original del archivo
+            $uploaded_data = $this->upload->data();
+            $original_name = $uploaded_data['file_name'];
+            // Renombra el archivo agregando la el stringUnico al nombre
+            //si es jgp lo renombramos a jpeg
+            $extension = $uploaded_data['file_ext'];
+            
+			$new_name = 'escrituras_publicas' . $extension;
+            // Mueve el archivo con el nuevo nombre al directorio de destino
+            rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+
+			$this->perfil_model->registra_file('EscriturasPublicas');
+            
+			$this->load->view('registro/escriturasp', '');
+        }
+	}
+	public function adpoderrl()
+	{
+		$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
+
+		$config['upload_path'] = './boveda/' . $unique . '/'; // Directorio de destino
+        $config['allowed_types'] = 'pdf'; // Tipos de archivos permitidos
+
+		$this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('poderrl')) {
+            //echo $this->upload->display_errors();
+            // Manejar el error, mostrarlo o redirigir al formulario de carga
+        } else {
+            // Subida exitosa, obten el nombre original del archivo
+            $uploaded_data = $this->upload->data();
+            $original_name = $uploaded_data['file_name'];
+            // Renombra el archivo agregando la el stringUnico al nombre
+            //si es jgp lo renombramos a jpeg
+            $extension = $uploaded_data['file_ext'];
+            
+			$new_name = 'poder_representante_legal' . $extension;
+            // Mueve el archivo con el nuevo nombre al directorio de destino
+            rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+
+			$this->perfil_model->registra_file('PoderRepresentanteLegal');
+            
+			$this->load->view('registro/poderrl', '');
+        }
+	}
+	public function adefirma()
+	{
+		$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
+
+		$config['upload_path'] = './boveda/' . $unique . '/'; // Directorio de destino
+        $config['allowed_types'] = 'pdf'; // Tipos de archivos permitidos
+
+		$this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('efirma')) {
+            //echo $this->upload->display_errors();
+            // Manejar el error, mostrarlo o redirigir al formulario de carga
+        } else {
+            // Subida exitosa, obten el nombre original del archivo
+            $uploaded_data = $this->upload->data();
+            $original_name = $uploaded_data['file_name'];
+            // Renombra el archivo agregando la el stringUnico al nombre
+            //si es jgp lo renombramos a jpeg
+            $extension = $uploaded_data['file_ext'];
+            
+			$new_name = 'e_firma' . $extension;
+            // Mueve el archivo con el nuevo nombre al directorio de destino
+            rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+
+			$this->perfil_model->registra_file('eFirma');
+            
+			$this->load->view('registro/efirma', '');
+        }
+	}
+	public function adpropietarior()
+	{
+		$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
+
+		$config['upload_path'] = './boveda/' . $unique . '/'; // Directorio de destino
+        $config['allowed_types'] = 'pdf'; // Tipos de archivos permitidos
+
+		$this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('propietarior')) {
+            //echo $this->upload->display_errors();
+            // Manejar el error, mostrarlo o redirigir al formulario de carga
+        } else {
+            // Subida exitosa, obten el nombre original del archivo
+            $uploaded_data = $this->upload->data();
+            $original_name = $uploaded_data['file_name'];
+            // Renombra el archivo agregando la el stringUnico al nombre
+            //si es jgp lo renombramos a jpeg
+            $extension = $uploaded_data['file_ext'];
+            
+			$new_name = 'propietario_real' . $extension;
+            // Mueve el archivo con el nuevo nombre al directorio de destino
+            rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+
+			$this->perfil_model->registra_file('IdenPropietarioReal');
+            
+			$this->load->view('registro/propietarior', '');
+        }
+	}
+	public function addocumentoa()
+	{
+		$unique = $this->session->userdata ( 'datosEmpresa' )[ 'unique_key' ];
+
+		$config['upload_path'] = './boveda/' . $unique . '/'; // Directorio de destino
+        $config['allowed_types'] = 'pdf'; // Tipos de archivos permitidos
+
+		$this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('documentoa')) {
+            //echo $this->upload->display_errors();
+            // Manejar el error, mostrarlo o redirigir al formulario de carga
+        } else {
+            // Subida exitosa, obten el nombre original del archivo
+            $uploaded_data = $this->upload->data();
+            $original_name = $uploaded_data['file_name'];
+            // Renombra el archivo agregando la el stringUnico al nombre
+            //si es jgp lo renombramos a jpeg
+            $extension = $uploaded_data['file_ext'];
+            
+			$new_name = 'documento_adicional' . $extension;
+            // Mueve el archivo con el nuevo nombre al directorio de destino
+            rename($config['upload_path'] . $original_name, $config['upload_path'] . $new_name);
+
+			$this->perfil_model->registra_file('DocumentoAdicional');
+            
+			$this->load->view('registro/documentoa', '');
+        }
+	}
+	public function adinfopropietarior()
+	{
+		$correopr = $this->input->post('correoepr');
+		$domiciliopr = $this->input->post('domiciliopr');
+		$curppr = $this->input->post('curppr');
+		$telefonopr = $this->input->post('telefonopr');
+		$ocupacionpr = $this->input->post('ocupacionpr');
+
+		$datospr = array(
+			'correopr' => $correopr,
+			'domiciliopr' => $domiciliopr,
+			'curppr' => $curppr,
+			'telefonopr' => $telefonopr,
+			'ocupacionpr' => $ocupacionpr
+		);
+
+		$spropietarior = $this->perfil_model->savepropietarior($datospr);
+
+		$datos = array (
+			'propietario' => $spropietarior
+		);
+
+		$this->load->view('registro/infopropietarior', $datos);
 	}
 }
