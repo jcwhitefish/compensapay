@@ -347,33 +347,33 @@
 					<div class="row">
 						<div class="col s4">
 							<div class="input-border col l12">
-								<input type="email" name="correoepr" id="correoepr" required pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" title="Por favor, ingresa un correo electrónico de contacto." value="<?php echo $correoepr;?>">
+								<input type="email" name="correoepr" id="correoepr" required pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" title="Por favor, ingresa un correo electrónico de contacto." value="<?php if(isset($correoepr)){echo $correoepr;}?>">
 								<label for="correoepr">Correo Electrónico *</label>
 							</div>
 						</div>
 						<div class="col s4">
 							<div class="input-border col l12">
-								<input type="text" name="domiciliopr" id="domiciliopr" required title="Por favor, ingresa el domicilio completo." value="<?php echo $domiciliopr;?>">
+								<input type="text" name="domiciliopr" id="domiciliopr" required title="Por favor, ingresa el domicilio completo." value="<?php if(isset($domiciliopr)){echo $domiciliopr;}?>">
 								<label for="domiciliopr">Domiclio *</label>
 							</div>
 						</div>
 						<div class="col s4">
 							<div class="input-border col l12">
-								<input type="text" name="curppr" id="curppr" required pattern="^[A-Z]{4}\d{6}[H,M][A-Z]{5}[A-Z0-9]{2}$" title="Por favor, ingresa el curp." value="<?php echo $curppr;?>">
-								<label for="correoepr">CURP *</label>
+								<input type="text" name="curppr" id="curppr" required pattern="^[A-Z]{4}\d{6}[H,M][A-Z]{5}[A-Z0-9]{2}$" title="Por favor, ingresa el curp." value="<?php if(isset($curppr)){echo $curppr;}?>">
+								<label for="curppr">CURP *</label>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col s4">
 							<div class="input-border col l12">
-								<input type="text" name="telefonopr" id="telefonopr" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa un teléfono de contacto." value="<?php echo $telefonopr;?>">
+								<input type="text" name="telefonopr" id="telefonopr" required pattern="[0-9]{10}" maxlength="10" title="Por favor, ingresa un teléfono de contacto." value="<?php if(isset($telefonopr)){echo $telefonopr;}?>">
 								<label for="telefonopr">Numero Telefonico *</label>
 							</div>
 						</div>
 						<div class="col s4">
 							<div class="input-border col l12">
-								<input type="text" name="ocupacionpr" id="ocupacionpr" required title="Por favor, ingresa la ocupación del propietario real." value="<?php echo $ocupacionpr;?>">
+								<input type="text" name="ocupacionpr" id="ocupacionpr" required title="Por favor, ingresa la ocupación del propietario real." value="<?php if(isset($ocupacionpr)){ echo $ocupacionpr;}?>">
 								<label for="ocupacionpr">Ocupación *</label>
 							</div>
 						</div>
@@ -414,18 +414,259 @@
 		
 		</div>
 	
-	<!-- Modal Registrarse como Proveedor -->
-	<div id="modal-proveedor" class="modal">
-		<div class="modal-content">
-			
+	<!-- Modal KYC -->
+	<div id="modal-kyc-stp" class="modal">
+		<div class="modal-content" id="formulario_stp_kyc">
+			<h5 class="card-title">Formato Solicitud de Servicio STP</h5>
+			<p>Como parte de la solicitud de servicio STP, requerimos su apoyo para contestar el siguiente cuestionario:</p>
+			<p><strong>KYC</strong></p>
+			<form name="fkyc" id="fkyc">
+				<div class="row">
+					<div class="col s12">
+						<div class="input-border col l12">
+							<input type="text" name="personalc" id="personalc" required title="Por favor, introduzca la información requerida.">
+							<label for="personalc">1. Personal contactado para entregar la documentación e información (nombre y cargo): </label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<div class="input-border col l12">
+							<input type="text" name="origene" id="origene" required title="Por favor, introduzca la información requerida.">
+							<label for="origene">2. Mencionar origen de la empresa, giro del negocio, mercado objetivo, si forman parte de algún grupo empresarial en México o en el extranjero, etc.:  </label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s3">
+						<div class="input-border col l12">
+							<select name="dedicae" id="dedicae" required>
+								<option value="0">Elija un elemento</option>
+								<option value="1">Agregador de pagos</option>
+								<option value="2">Caja de ahorrros</option>
+								<option value="3">Casa de bolsa</option>
+								<option value="4">Comercio</option>
+								<option value="5">Crowdfunding</option>
+								<option value="6">Desarrollo de software</option>
+								<option value="7">Escolar</option>
+								<option value="8">Factoraje y arrendamiento</option>
+								<option value="9">Financiero- Criptomonedas y/o Activos Virtuales</option>
+								<option value="10">Financiero- NO Regulado (SOFOM)</option>
+								<option value="11">Financiero- Regulado (SOFIPO & SOCAP)</option>
+								<option value="12">Financiero- Regulado (SOFOM)</option>
+								<option value="13">Fondo de inversión</option>
+								<option value="14">Inmobiliaria - Administración</option>
+								<option value="15">Inmobiliaria - Comercialización</option>
+								<option value="16">Inmobiliaria - Construcción</option>
+								<option value="17">Interno</option>
+								<option value="18">Manufactura</option>
+								<option value="19">Mutuo, préstamo o crédito</option>
+								<option value="20">Nómina a terceros</option>
+								<option value="21">Pago de servicios</option>
+								<option value="22">Remesas- Transmisor Extranjeros</option>
+								<option value="23">Remesas- Transmisor Nacional</option>
+								<option value="24">Remesas- Transmisor Nacional</option>
+								<option value="25">SAB DE CV</option>
+								<option value="26">SAPI DE CV</option>
+								<option value="27">Seguros y Fianzas</option>
+								<option value="28">Servicios - Alimentos</option>
+								<option value="29">Servicios - Contabilidad y auditoría</option>
+								<option value="30">Servicios - Consultoría</option>
+								<option value="31">Servicios - Juegos y Apuestas</option>
+								<option value="32">Servicios - Mensajería y Paquetería</option>
+								<option value="33">Servicios - Mercadotecnia y Publicidad</option>
+								<option value="34">Servicios - Mantenimiento y Limpieza</option>
+								<option value="35">Servicios - Perforación de pozos</option>
+								<option value="36">Servicios - Tarjeta de servicios y/o Crédito</option>
+								<option value="37">Servicios agrícolas, ganaderas, silvívolas y pesqueras</option>
+								<option value="38">Servicios - Energía Renovable</option>
+								<option value="39">Servicios - Gasera</option>
+								<option value="40">Servicios - Gasolinera</option>
+								<option value="41">Servicios - Telecomunicaciones</option>
+								<option value="42">Servicios - Telepeaje</option>
+								<option value="43">Servicios - Transporte</option>
+								<option value="44">Servicios - Salud</option>
+								<option value="45">Servicios - Seguridad y alarmas</option>
+								<option value="46">Sindicato</option>
+								<option value="47">Tarjetas de prepago, cupones, devoluciones y recompensas</option>
+								<option value="48">Wallet</option>
+							</select>
+							<label for="dedicae">3.¿a qué se dedica la empresa?: </label>
+						</div>
+					</div>
+					<div class="col s4">
+						<div class="input-border col l12">
+							<select name="serviciosc" id="serviciosc" required>
+								<option value="0">Elija un elemento</option>
+								<option value="1">Dispersión</option>
+								<option value="2">Cobranza</option>
+								<option value="3">CODI</option>
+								<option value="4">CEP</option>
+								<option value="5">Pago de servicios</option>
+								<option value="6">Participación Indirecta</option>
+							</select>
+							<label for="serviciosc">¿Qué servicios implementarán en la cuenta?: </label>
+						</div>
+					</div>
+					<div class="col s5">
+						<div class="input-border col l12">
+							<input type="text" name="usarac" id="usarac" required title="Por favor, introduzca la información requerida.">
+          					<label for="usarac">¿para qué usarán la cuenta de STP?:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<div class="input-border col l12">
+							<input type="text" name="recursos" id="recursos" required title="Por favor, introduzca la información requerida.">
+							<label for="recursos">4. Mencionar, ¿de dónde provienen los recursos (con los que opera la empresa) ?, sobre todo para el caso de reciente constitución o de propietarios reales no nacionales:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<div class="input-border col l12">
+							<input type="text" name="medios" id="medios" required title="Por favor, introduzca la información requerida.">
+							<label for="medios">5. Indicar medios válidos (link) por los que captan a sus clientes (página web, app, facebook, instagram, etc.) o en su defecto indicar cómo atraen:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<div class="input-border col l12 right-align">
+							<input type="submit" name="savekyc" id="savekyc" value="Guardar" class="button-gray">
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
-	<!-- Modal Registrarse como Proveedor -->
-	<div id="modal-proveedor-final" class="modal">
-		<div class="modal-content">
-			
+	<!-- Modal Perfil Transaccional -->
+	<div id="modal-pt-stp" class="modal">
+		<div class="modal-content" id="formulario_stp_pt">
+			<h5 class="card-title">Formato Solicitud de Servicio STP</h5>
+			<p>Como parte de la solicitud de servicio STP, requerimos su apoyo para contestar el siguiente cuestionario:</p>
+			<p><strong>Perfil Transaccional</strong></p>
+			<p>Para esta sección colocar el saldo mensual esperado de cobro y pago en pesos mexicanos; y la información solicitada:</p>
+			<form name="fpt" id="fpt">
+				<div class="row">
+					<div class="col s6">
+						<div class="input-border col l12">
+							<input type="number" name="smec" id="smec" required title="Saldo de cobro (MX)">
+							<label for="smec">Saldo mensual esperado de cobro: </label>
+						</div>
+					</div>
+					<div class="col s6">
+						<div class="input-border col l12">
+							<input type="number" name="smep" id="smep" required title="Saldo de cobro (MX)">
+							<label for="smep">Saldo mensual esperado de pago:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<div class="input-border col l12">
+							<input type="number" name="ntc" id="ntc" required title="Transacciones de cobro">
+							<label for="ntc">Núm. de transacciones esperadas de cobro:</label>
+						</div>
+					</div>
+					<div class="col s6">
+						<div class="input-border col l12">
+							<input type="number" name="ntp" id="ntp" required title="STransacciones de pago">
+							<label for="ntp">Núm. de transacciones esperadas de pago:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<div class="input-border col l12">
+							<select name="or" id="or" required>
+								<option value="0">Elija un elemento.</option>
+								<option value="1">Pagos de Clientes</option>
+								<option value="2">Arrendamientos de inmuebles (Rentas)</option>
+								<option value="3">Recursos de Terceros</option>
+								<option value="4">Aportaciones a Capital de accionistas</option>
+								<option value="5">Cobranza de créditos</option>
+								<option value="6">Aportaciones o Cuotas Sindicales</option>
+								<option value="7">Cuenta Puente Para Inversión </option>
+								<option value="8">Préstamos</option>
+								<option value="9">Manejo de Divisas</option>
+								<option value="10">Desarrollo del Giro del Negocio</option>
+								<option value="11">Tesorería-Capital de Trabajo del Negocio</option>
+								<option value="12">Partidas Presupuestales</option>
+								<option value="13">Negocio Propio</option>
+								<option vlaue="14">Herencia/Donación</option>
+							</select>
+							<label for="or">Origen de los recursos:</label>
+						</div>
+					</div>
+					<div class="col s6">
+						<div class="input-border col l12">
+						<select name="dr" id="dr" required>
+								<option value="0">Elija un elemento.</option>
+								<option value="1">Administración de Gastos</option>
+								<option value="2">Administración de Pagos de Bienes </option>
+								<option value="3">Administración de Pagos de Servicios</option>
+								<option value="4">Administración de Inversiones</option>
+								<option value="5">Concentración y Dispersión de Fondos</option>
+								<option value="6">Pago a Comisionistas</option>
+								<option value="7">Pago de Renta o Compra de Bienes</option>
+								<option value="8">Pago a Proveedores</option>
+								<option value="9">Dispersión de Créditos</option>
+								<option value="10">Pago de Nómina/Primas de Seguro</option>
+								<option value="11">Impuestos/Pago de Servicios</option>
+								<option value="12">Cuenta Puente Para Inversión</option>
+								<option value="13">Pago Dividendos Accionistas</option>
+							</select>
+							<label for="dr">Destino de los recursos:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<div class="input-border col l12">
+							<select name="me" id="me" required>
+								<option value="0">Elija un elemento.</option>
+								<option value="1">21 a 50 %</option>
+								<option value="2">Hasta 20%</option>
+								<option value="3">Más de 51%</option>
+								<option value="4">No Manejo Efectivo</option>
+							</select>
+							<label for="me">Manejo de Efectivo:</label>
+						</div>
+					</div>
+					<div class="col s6">
+						<div class="input-border col l12">
+						<select name="fo" id="fo" required>
+								<option value="0">Elija un elemento.</option>
+								<option value="1">Manual</option>
+								<option value="2">Integrado</option>
+							</select>
+							<label for="fo">Forma de operar:</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s10">
+						<div class="input-border col l12">
+							<select name="s247" id="s247" required>
+								<option value="0">Elija un elemento.</option>
+								<option value="1">Servicio Estándar</option>
+								<option value="2">Servicio 24/7</option>
+							</select>
+							<label for="s247">Confirmar si desean operar con el servicio 24/ 7 (costo adicional de 1500 USD) o servicio estándar:</label>
+						</div>
+					</div>
+					<div class="col s2">
+						<div class="input-border col l12 right-align">
+							<input type="submit" name="savept" id="savept" value="Guardar" class="button-gray">
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
+
 	<!-- Modal datos faltantes -->
 	<div id="modal-datos-empresa" class="modal">
 		<div class="modal-content">
@@ -433,6 +674,151 @@
 			<div class="card-content" id="form_accionistas">
 				<p>Por favor completa los datos restantes para poder activar tu cuenta</p>
 			</div>
+		</div>
+	</div>
+
+	<!-- Modal STP usuarios -->
+	<div id="modal-usuarios-stp" class="modal">
+		<div class="modal-content" id="formulario_stp_usuarios">
+			<h5 class="card-title">Formato Solicitud de Servicio STP</h5>
+			<p>Como parte de la solicitud de servicio STP, requerimos su apoyo para contestar el siguiente cuestionario:</p>
+			<p><strong>Usuarios: Enlace Financiero</strong></p>
+			<p>Por medio del presente, solicitamos se proporcionen los siguientes datos de los usuarios que tendrán acceso para operar en Enlace Financiero considerando los siguientes perfiles:</p>
+			<form name="fusuariosstp" id="fusuariosstp">
+				<div class="row">
+					<div class="col l12">
+						<table>
+							<thead>
+								<tr>
+									<th>Nombre Completo<br />(Exactamente como en la Identificación Oficial)</th>
+									<th>Correo Electrónico</th>
+									<th>Fecha de Nacimiento</th>
+									<th># Celular</th>
+									<th>Perfil</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="text" name="nombre1" id="nombre1" required></td>
+									<td><input type="text" name="correo1" id="correo1" required></td>
+									<td><input type="date" name="fechanacimiento1" id="fechanacimiento1" required></td>
+									<td><input type="text" name="celular1" id="celular1"></td>
+									<td>
+										<select name="perfil1" id="perfil1" required>
+											<option value="0">Elija un Elemento</option>
+											<option value="1">1) Administrador</option>
+											<option value="2">2) Autorizador</option>
+											<option value="3">3) Captura</option>
+											<option value="4">4) Consulta</option>
+											<option value="5">5) Consulta Históricos</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="text" name="nombre2" id="nombre2" required></td>
+									<td><input type="text" name="correo2" id="correo2" required></td>
+									<td><input type="date" name="fechanacimiento2" id="fechanacimiento2" required></td>
+									<td><input type="text" name="celular2" id="celular2" required></td>
+									<td>
+										<select name="perfil2" id="perfil2" required>
+											<option value="0">Elija un Elemento</option>
+											<option value="1">1) Administrador</option>
+											<option value="2">2) Autorizador</option>
+											<option value="3">3) Captura</option>
+											<option value="4">4) Consulta</option>
+											<option value="5">5) Consulta Históricos</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="text" name="nombre3" id="nombre3"></td>
+									<td><input type="text" name="correo3" id="correo3"></td>
+									<td><input type="date" name="fechanacimiento3" id="fechanacimiento3"></td>
+									<td><input type="text" name="celular3" id="celular3"></td>
+									<td>
+										<select name="perfil3" id="perfil3">
+											<option value="0">Elija un Elemento</option>
+											<option value="1">1) Administrador</option>
+											<option value="2">2) Autorizador</option>
+											<option value="3">3) Captura</option>
+											<option value="4">4) Consulta</option>
+											<option value="5">5) Consulta Históricos</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col l12 right-align">
+						<input type="submit" name="botsaveusuariosstp" id="botsabeusuariosstp" value="Guardar" class="button-gray">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal STP contactos -->
+	<div id="modal-contactos-stp" class="modal">
+		<div class="modal-content" id="formulario_stp_contactos">
+			<h5 class="card-title">Formato Solicitud de Servicio STP</h5>
+			<p>Como parte de la solicitud de servicio STP, requerimos su apoyo para contestar el siguiente cuestionario:</p>
+			<p><strong>Contactos Autorizados</strong></p>
+			<p>A continuación colocar a las personas/responsables de las áreas indicadas en los recuadros siguientes, serán los únicos autorizados para solicitar/proporcionar información relacionada con la empresa de acuerdo con su respectiva área </p>
+			<form name="fcontactosstp" id="fcontactosstp">
+				<div class="row">
+					<div class="col s3">
+						<div class="input-border col l12">
+							<input type="text" name="nombre" id="nombre" required title="Exactamente como en la Identificación Oficial">
+							<label for="nombre">Nombre Completo</label>
+						</div>
+					</div>
+					<div class="col s3">
+						<div class="input-border col l12">
+							<input type="text" name="telefono" id="telefono" required >
+							<label for="telefono">teléfono</label>
+						</div>
+					</div>
+					<div class="col s3">
+						<div class="input-border col l12">
+							<input type="text" name="extension" id="extension" >
+							<label for="extension">Extension</label>
+						</div>
+					</div>
+					<div class="col s3">
+						<div class="input-border col l12">
+							<input type="text" name="celular" id="celular" required >
+							<label for="celular">Celular</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s3">
+						<div class="input-border col l12">
+							<input type="text" name="correoe" id="correoe" required >
+							<label for="correoe">Correo Electrónico</label>
+						</div>
+					</div>
+					<div class="col s3">
+						<div class="input-border col l12">
+							<select name="area" id="area" required >
+								<option value="0">Elija un elemento</option>
+								<option value="1">Responsable Operativo</option>
+								<option value="2">Responsable del área de sistemas</option>
+								<option value="3">Responsable del área de cuentas por pagar</option>
+								<option value="4">Responsable Jurídico y/o oficial de complimiento</option>
+							</select>
+							<label for="area">Area</label>
+						</div>
+					</div>
+					<div class="col s6">
+						<div class="input-border col l12 right-align">
+							<input type="submit" name="botadcontacto" id="botadcontacto" value="Agregar Contacto" class="button-gray">
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -520,6 +906,7 @@
 	<?php if( $this->session->userdata('datosEmpresa')["address"] == '' OR 
 				$this->session->userdata('datosEmpresa')["telephone"] == '' OR 
 				$this->session->userdata('datosEmpresa')["account_clabe"] == '' OR 
+				empty($this->session->userdata('datosEmpresa')["propietarioReal"]) OR
 				$actac == 0 OR $constanciasf == 0 OR $comprobanted == 0 OR $identificacionrl == 0 OR 
 				$escriturasp == 0 OR $efirma == 0 ) { ?>
 	
@@ -527,19 +914,29 @@
 		$('#modal-datos-empresa').modal('open');
 	});
 	
-	<?php }	else if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) ) { ?>
+	<?php }	else if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'kyc_id' ] ) ) { ?>
 
-	//$(document).ready(function(){
-	//	$('#modal-proveedor').modal('open');
-	//});
+	$(document).ready(function(){
+		$('#modal-kyc-stp').modal('open');
+	});
 
-	<?php } else if( $this->session->userdata('datosEmpresa')['accionistas'] == 0 )	{ ?>
+	<?php } else if( empty($this->session->userdata('datosEmpresa')['pt_id']) )	{ ?>
 		
-	//$(document).ready(function(){
-	//	$('#modal-proveedor-final').modal('open');
-	//});
+	$(document).ready(function(){
+		$('#modal-pt-stp').modal('open');
+	});
 
-	
+	<?php } else if( $this->session->userdata('datosEmpresa')['StpUsuarios'] < 2 )	{ ?>
+
+	$(document).ready(function(){
+		$('#modal-usuarios-stp').modal('open');
+	});
+
+	<?php } else if( $this->session->userdata('datosEmpresa')['StpContactos'] == 0 ) { ?>
+
+	$(document).ready(function(){
+		$('#modal-contactos-stp').modal('open');
+	});
 
 	<?php } ?>
 
@@ -550,65 +947,6 @@ function ad_acc(nombreacc, capital, tipo){
 		data: 'nombreacc=' + nombreacc + '&capitalsocial=' + capital + '&tipoa=' + tipo
     }).done (function ( info ){
 		$('#accionistas' + tipo).html(info);
-	});
-}
-
-function add_persona_control(){
-
-	var personacontrol = document.getElementById('personacontrol').value;
-	var cargofuncion = document.getElementById('cargofuncion').value;
-	var nombre = document.getElementById('nombre').value;
-	var appaterno = document.getElementById('appaterno').value;
-	var apmaterno = document.getElementById('apmaterno').value;
-	var fechanacimiento = document.getElementById('fechanacimiento').value;
-	var paisnacimiento = document.getElementById('paisnacimiento').value;
-	var entidadnacimiento = document.getElementById('entidadnacimiento').value;
-	var rfc = document.getElementById('rfc').value;
-	var paisrecidencia = document.getElementById('paisrecidencia').value;
-	var paisresidenciafiscal = document.getElementById('paisresidenciafiscal').value;
-	var nacionalidad = document.getElementById('nacionalidad').value;
-	var curp = document.getElementById('curp').value;
-	var tipodireccion = document.getElementById('tipodireccion').value;
-	var calle = document.getElementById('calle').value;
-	var numext = document.getElementById('numext').value;
-	var numint = document.getElementById('numint').value;
-	var pais = document.getElementById('pais').value;
-	var cp = document.getElementById('cp').value;
-	var colonia = document.getElementById('colonia').value;
-	var entidad = document.getElementById('entidad').value;
-	var numtelefono = document.getElementById('numtelefono').value;
-	var tipoiden = document.getElementById('tipoiden').value;
-	var numiden = document.getElementById('numiden').value;
-
-	$.ajax({
-		url: "<?php echo base_url('Proveedor/guarda_accionista');?>",
-		type: "POST",
-		data: "personacontrol=" + personacontrol +
-				"&cargofuncion=" + cargofuncion +
-				"&nombre=" + nombre +
-				"&appaterno=" + appaterno + 
-				"&apmaterno=" + apmaterno + 
-				"&fechanacimiento=" + fechanacimiento + 
-				"&paisnacimiento=" + paisnacimiento + 
-				"&entidadnacimiento=" + entidadnacimiento + 
-				"&rfc=" + rfc + 
-				"&paisrecidencia=" + paisrecidencia + 
-				"&paisresidenciafiscal" + paisresidenciafiscal +
-				"&nacionalidad=" + nacionalidad +
-				"&curp=" + curp +
-				"&tipodireccion=" + tipodireccion +
-				"&calle=" + calle +
-				"&numext=" + numext + 
-				"&numint=" + numint + 
-				"&pais=" + pais + 
-				"&cp=" + cp + 
-				"&colonia=" + colonia + 
-				"&entidad=" + entidad + 
-				"&numtelefono=" + numtelefono +
-				"&tipoiden=" + tipoiden +
-				"&numiden=" + numiden
-	}).done(function(info){
-		$("#form_accionistas").html(info);
 	});
 }
 
@@ -821,6 +1159,70 @@ $("#documentoa").on("change", function(e){
 		processData: false
 	}).done(function(echo){
 		$("#divdocumentoa").html(echo);
+	});
+});
+
+$("#fkyc").on("submit", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fkyc"));
+    $.ajax({
+		url: "<?= base_url('perfil/savestpkyc'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#formulario_stp_kyc").html(echo);
+	});
+});
+
+$("#fpt").on("submit", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fpt"));
+    $.ajax({
+		url: "<?= base_url('perfil/savestppt'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#formulario_stp_pt").html(echo);
+	});
+});
+
+$("#fusuariosstp").on("submit", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fusuariosstp"));
+    $.ajax({
+		url: "<?= base_url('perfil/savestpusuarios'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#formulario_stp_ususarios").html(echo);
+	});
+});
+
+$("#fcontactosstp").on("submit", function(e){
+	e.preventDefault();
+    var formData = new FormData(document.getElementById("fcontactosstp"));
+    $.ajax({
+		url: "<?= base_url('perfil/savestpcontactos'); ?>",
+		type: "POST",
+		dataType: "HTML",
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	}).done(function(echo){
+		$("#formulario_stp_contactos").html(echo);
 	});
 });
 

@@ -469,5 +469,10 @@ class Registro extends MY_Loggedout
 		$data['main'] = $this->load->view('registro/finalizado', $datos, true);
 		$this->load->view('plantilla', $data);
 	}
+
+	public function perfil_transaccional()
+	{
+		$this->load->view('registro/perfiltransaccional', '');
+	}
 }
 

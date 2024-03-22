@@ -151,7 +151,7 @@ class Perfil_model extends CI_Model {
 
                 if($ResQuery->num_rows() == 0 ) {
                     //insertamos registro
-                    $query1 = "INSERT INTO stp_propietarioreal (idCompanie, CorreE, Domicilio, Curp, Telefono, Ocupacion)
+                    $query1 = "INSERT INTO stp_propietarioreal (idCompanie, CorreoE, Domicilio, Curp, Telefono, Ocupacion)
                                                         VALUES ('".$idcompanie."', '".$propietario["correopr"]."', '".$propietario["domiciliopr"]."', 
                                                                 '".$propietario["curppr"]."', '".$propietario["telefonopr"]."', '".$propietario["ocupacionpr"]."')";
                 }
@@ -195,6 +195,184 @@ class Perfil_model extends CI_Model {
         //echo $query;
 
         return TRUE;
+    }
+
+    public function savestpkyc($datoskyc)
+    {
+        $idcompanie = $this->session->userdata('datosUsuario')['id_company'];
+
+        $datos = array(
+            'idCompanie' => $idcompanie,
+            'PersonalC' => $datoskyc["personalc"],
+            'OrigenE' => $datoskyc["origene"],
+            'DedicaE' => $datoskyc["dedicae"],
+            'ServiciosC' => $datoskyc["serviciosc"],
+            'UsaraC' => $datoskyc["usarac"],
+            'Recursos' => $datoskyc["recursos"],
+            'Medios' => $datoskyc["medios"]
+        );
+
+        if($this->db->insert('stp_kyc', $datos)){
+
+            $id = $this->db->insert_id();
+
+            $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $idcompanie)));
+
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
+
+    public function savestppt($datospt)
+    {
+        $idcompanie = $this->session->userdata('datosUsuario')['id_company'];
+
+        $datos = array(
+            'idCompanie' => $idcompanie,
+            'SaldoMensualCobro' => $datospt["smec"],
+            'SaldoMensualPago' => $datospt["smep"],
+            'TransaccionesCobro' => $datospt["ntc"],
+            'TransaccionesPago' => $datospt["ntp"],
+            'OrigenRecursos' => $datospt["or"],
+            'DestinoRecursos' => $datospt["dr"],
+            'ManejoEfectivo' => $datospt["me"],
+            'FormaOperar' => $datospt["fo"],
+            'Servicio247' => $datospt["s247"]
+        );
+
+        if($this->db->insert('stp_perfiltransaccional', $datos)){
+
+            $id = $this->db->insert_id();
+
+            $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $idcompanie)));
+
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
+    public function savestpusuarios($datosu)
+    {
+        $idcompanie = $this->session->userdata('datosUsuario')['id_company'];
+
+        $datos1 = array(
+            'idCompanie' => $idcompanie,
+            'Nombre' => $datosu["nombre1"],
+            'CorreoE' => $datosu["correo1"],
+            'FechaNacimiento' => $datosu["fechanacimiento1"],
+            'Celular' => $datosu["celular1"],
+            'Perfil' => $datosu["perfil1"]
+        );
+        $datos2 = array(
+            'idCompanie' => $idcompanie,
+            'Nombre' => $datosu["nombre2"],
+            'CorreoE' => $datosu["correo2"],
+            'FechaNacimiento' => $datosu["fechanacimiento2"],
+            'Celular' => $datosu["celular2"],
+            'Perfil' => $datosu["perfil2"]
+        );
+
+        $this->db->insert('stp_usuarios', $datos1);
+        $this->db->insert('stp_usuarios', $datos2);
+
+        if($datosu["nombre3"]!='' OR $datosu["correo3"]!='' OR $datosu["fechanacimiento3"]!='0000-00-00' OR $datosu["celular3"]!='' OR $datosu["perfil3"]!='')
+        {
+            $datos3 = array(
+                'idCompanie' => $idcompanie,
+                'Nombre' => $datosu["nombre3"],
+                'CorreoE' => $datosu["correo3"],
+                'FechaNacimiento' => $datosu["fechanacimiento3"],
+                'Celular' => $datosu["celular3"],
+                'Perfil' => $datosu["perfil3"]
+            );
+            
+            $this->db->insert('stp_usuarios', $datos3);
+        }
+       
+
+        $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $idcompanie)));
+
+        return TRUE;
+    }
+
+    public function savestpcontactos($contacto)
+    {
+        $idcompanie = $this->session->userdata('datosUsuario')['id_company'];
+
+        $datos = array(
+            'idCompanie' => $idcompanie,
+            'Nombre' => $contacto["nombre"],
+            'Telefono' => $contacto["telefono"],
+            'Extension' => $contacto["extension"],
+            'Celular' => $contacto["celular"],
+            'CorreoE' => $contacto["correoe"],
+            'Area' => $contacto["area"]
+        );
+
+        $this->db->insert('stp_contactos', $datos);
+
+        $this->session->set_userdata('datosEmpresa',$this->company_model->get_company(array('id' => $idcompanie)));
+
+        //usuarios operativos
+        $queryo = "SELECT * FROM stp_contactos WHERE Area = 1 AND idCompanie = $idcompanie ORDER BY Id ASC";
+
+        if($ResCO = $this->db->query($queryo)){
+            if($ResCO->num_rows() > 0 ) {
+                $contactoso = $ResCO->result_array();
+            }
+            else{
+                $contactoso = '';
+            }
+        }
+
+        //usuarios sistemas
+        $querys = "SELECT * FROM stp_contactos WHERE Area = 2 AND idCompanie = $idcompanie ORDER BY Id ASC";
+
+        if($ResCS = $this->db->query($querys)){
+            if($ResCS->num_rows() > 0 ) {
+                $contactoss = $ResCS->result_array();
+            }
+            else{
+                $contactoss = '';
+            }
+        }
+
+        //usuarios cuentas por pagar
+        $queryc = "SELECT * FROM stp_contactos WHERE Area = 3 AND idCompanie = $idcompanie ORDER BY Id ASC";
+
+        if($ResCC = $this->db->query($queryc)){
+            if($ResCC->num_rows() > 0 ) {
+                $contactosc = $ResCC->result_array();
+            }
+            else{
+                $contactosc = '';
+            }
+        }
+
+        //usuarios juridico
+        $queryj = "SELECT * FROM stp_contactos WHERE Area = 4 AND idCompanie = $idcompanie ORDER BY Id ASC";
+
+        if($ResCJ = $this->db->query($queryj)){
+            if($ResCJ->num_rows() > 0 ) {
+                $contactosj = $ResCJ->result_array();
+            }
+            else{
+                $contactosj = '';
+            }
+        }
+
+        $contactos = array(
+            'contactoso' => $contactoso,
+            'contactoss' => $contactoss,
+            'contactosc' => $contactosc,
+            'contactosj' => $contactosj
+        );
+
+        return $contactos;
+
     }
 
 }

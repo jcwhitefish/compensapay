@@ -20,10 +20,15 @@ class Company_model extends CI_Model {
     }
     public function get_company($condiciones) {
         // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
-        $this->db->select('rec_supplier.rec_id, companies.*, COUNT(accionistas.id) AS accionistas');
+        //$this->db->select('rec_supplier.rec_id, companies.*, COUNT(accionistas.id) AS accionistas');
+        $this->db->select('stp_kyc.kyc_id, stp_perfiltransaccional.pt_id, stp_propietarioreal.Id AS propietarioReal, companies.*, COUNT(stp_usuarios.id) AS StpUsuarios, COUNT(stp_contactos.id) AS StpContactos');
         $this->db->from('companies');
-        $this->db->join('rec_supplier', 'rec_supplier.id_com = companies.id', 'left');
-        $this->db->join('accionistas', 'accionistas.idCompanie = rec_supplier.id_com', 'left');
+        //$this->db->join('rec_supplier', 'rec_supplier.id_com = companies.id', 'left');
+        $this->db->join('stp_kyc', 'stp_kyc.idCompanie = companies.id', 'left');
+        $this->db->join('stp_perfiltransaccional', 'stp_perfiltransaccional.idCompanie = companies.id', 'left');
+        $this->db->join('stp_propietarioreal', 'stp_propietarioreal.idCompanie = companies.id', 'left');
+        $this->db->join('stp_usuarios', 'stp_usuarios.idCompanie = companies.id', 'left');
+        $this->db->join('stp_contactos', 'stp_contactos.idCompanie = companies.id', 'left');
         $this->db->where('companies.id', $condiciones['id']);
         $query = $this->db->get();
         //$query = $this->db->get_where('companies', $condiciones);

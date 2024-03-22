@@ -489,4 +489,98 @@ class Perfil extends MY_Loggedin
 
 		$this->load->view('registro/infopropietarior', $datos);
 	}
+	public function savestpkyc ()
+	{
+		$personalc = $this->input->post('personalc');
+		$origene = $this->input->post('origene');
+		$dedicae = $this->input->post('dedicae');
+		$serviciosc = $this->input->post('serviciosc');
+		$usarac = $this->input->post('usarac');
+		$recursos = $this->input->post('recursos');
+		$medios = $this->input->post('medios');
+
+		$datoskyc = array (
+			'personalc' => $personalc,
+			'origene' => $origene,
+			'dedicae' => $dedicae,
+			'serviciosc' => $serviciosc,
+			'usarac' => $usarac,
+			'recursos' => $recursos,
+			'medios' => $medios
+		);
+
+		$res = $this->perfil_model->savestpkyc($datoskyc);
+
+		$this->load->view('registro/reload', $res);
+
+	}
+	public function savestppt ()
+	{
+		$smec = $this->input->post('smec');
+		$smep = $this->input->post('smep');
+		$ntc = $this->input->post('ntc');
+		$ntp = $this->input->post('ntp');
+		$or = $this->input->post('or');
+		$dr = $this->input->post('dr');
+		$me = $this->input->post('me');
+		$fo = $this->input->post('fo');
+		$s247 = $this->input->post('s247');
+
+		$datospt = array (
+			'smec' => $smec,
+			'smep' => $smep,
+			'ntc' => $ntc,
+			'ntp' => $ntp,
+			'or' => $or,
+			'dr' => $dr,
+			'me' => $me,
+			'fo' => $fo,
+			's247' => $s247
+		);
+
+		$res = $this->perfil_model->savestppt($datospt);
+
+		$this->load->view('registro/reload');
+	}
+	public function savestpusuarios()
+	{
+		$datosusuarios = array (
+			'nombre1' => $this->input->post('nombre1'),
+			'correo1' => $this->input->post('correo1'),
+			'fechanacimiento1' => $this->input->post('fechanacimiento1'),
+			'celular1' => $this->input->post('celular1'),
+			'perfil1' => $this->input->post('perfil1'),
+			'nombre2' => $this->input->post('nombre2'),
+			'correo2' => $this->input->post('correo2'),
+			'fechanacimiento2' => $this->input->post('fechanacimiento2'),
+			'celular2' => $this->input->post('celular2'),
+			'perfil2' => $this->input->post('perfil2'),
+			'nombre3' => $this->input->post('nombre3'),
+			'correo3' => $this->input->post('correo3'),
+			'fechanacimiento3' => $this->input->post('fechanacimiento3'),
+			'celular3' => $this->input->post('celular3'),
+			'perfil3' => $this->input->post('perfil3')
+		);
+
+		$res = $this->perfil_model->savestpusuarios($datosusuarios);
+
+		$this->load->view('registro/reload');
+	}
+	public function savestpcontactos()
+	{
+		$datoscontacto = array(
+			'nombre' => $this->input->post('nombre'),
+			'telefono' => $this->input->post('telefono'),
+			'extension' => $this->input->post('extension'),
+			'celular' => $this->input->post('celular'),
+			'correoe' => $this->input->post('correoe'),
+			'area' => $this->input->post('area')
+		);
+
+		$datcont = array(
+			'contactos' => $this->perfil_model->savestpcontactos($datoscontacto)
+		);
+
+		$this->load->view('registro/contactosstp', $datcont);
+	}
 }
