@@ -208,6 +208,12 @@ $("#fcontactosstp2").on("submit", function(e){
 });
 
 $("#butfinalizar").on('click', function(){
-		$('#modal-contactos-stp').modal('close');
+	$.ajax({
+		url: "<?= base_url('perfil/finalizastp'); ?>",
+		type: "POST",
+		dataType: "HTML"
+	}).done(function(echo){
+		$("#formulario_stp_contactos").html(echo);
+	});
 });
 </script>

@@ -110,7 +110,7 @@
 		<!--<hr class="line-side">-->
 		<ul>
 			<ul class="icon-list">
-				<?php if (!empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] )  AND $this->session->userdata('pago_suscription') == 1) { ?>
+				<?php if (!empty($this->session->userdata('datosEmpresa')["finclabe"])  AND $this->session->userdata('pago_suscription') == 1) { ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Notificaciones"><i class="material-icons%s">notifications</i></a></li>', base_url ( 'notificaciones' ), ( strpos ( current_url (), 'notificaciones' ) ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Inicio"><i class="material-icons%s">home</i></a></li>', base_url ( 'inicio' ), ( count ( array_intersect ( [ 'notificaciones', 'Conciliaciones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'Timbrado', 'Tienda', 'xml' ], explode ( '/', current_url () ) ) ) == 0 ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Conciliaciones"><i class="material-icons%s">swap_horiz</i></a></li>', base_url ( 'Conciliaciones' ), ( strpos ( current_url (), 'Conciliaciones' ) !== FALSE || strpos ( current_url (), 'facturas/subida' ) !== FALSE ) ? ' icon-list-hover' : '' ); ?>

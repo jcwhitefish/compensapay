@@ -583,4 +583,12 @@ class Perfil extends MY_Loggedin
 
 		$this->load->view('registro/contactosstp', $datcont);
 	}
+	public function finalizastp()
+	{
+		//genera pdf stp
+		$this->perfil_model->genera_pdf_stp();
+
+		//muestra pantalla de revisión 
+		$this->load->view('registro/registrofinalizado');
+	}
 }
