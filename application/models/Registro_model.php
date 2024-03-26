@@ -149,7 +149,33 @@ class Registro_model extends CI_Model {
         
         $this->db->insert('users', $data);
 
-        return $this->db->insert_id();
+        $userid = $this->db->insert_id();
+
+        //insertar notificaciones
+
+        $datan = array(
+            'user_id' => $userid,
+            'nt_OperationNew' => 1,
+            'nt_OperationApproved' => 1,
+            'nt_OperationPaid' => 1,
+            'nt_OperationStatus' => 1,
+            'nt_OperationExternalAccount' => 1,
+            'nt_OperationReturn' => 1,
+            'nt_OperationReject' => 1,
+            'nt_OperationDate' => 1,
+            'nt_OperationInvoiceNew' => 1,
+            'nt_OperationInvoiceRequest' => 1,
+            'nt_DocumentStatementReady' => 1,
+            'nt_InviteNew' => 1,
+            'nt_InviteStatus' => 1,
+            'nt_SupportTicketStatus' => 1,
+            'nt_SupportReply' => 1,
+            'nt_CreateAt' => time()
+        );
+
+        $this->db->insert(' conf_notifications', $datan);
+
+        return $userid;
 
     }
 }
