@@ -12,8 +12,9 @@
                             <label for="user">Usuario</label>
                             <input type="password" name="password" id="password" placeholder="Contraseña" required>
                             <label for="password">Contraseña</label>
-                            <p class="error-message">¡Usuario o contraseña incorrectos!</p>
-
+                            <?php if(!empty($this->session->userdata('logged_in'))){ ?>
+                                <p class="error-message">¡Usuario o contraseña incorrectos!</p>
+                            <?php } ?>
                         </div>
                         <?php
                         if (isset($error_message) && !empty($error_message)) {

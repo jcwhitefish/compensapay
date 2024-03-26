@@ -28,7 +28,7 @@ class Inicio extends MY_Loggedin
 
 	public function index()
 	{
-		if ( empty( $this->session->userdata ( 'datosEmpresa' )[ 'rec_id' ] ) OR 
+		if ( 
 			empty( $this->session->userdata ( 'datosEmpresa' )[ 'kyc_id' ] ) OR 
 			empty($this->session->userdata('datosEmpresa')['pt_id']) OR 
 			empty($this->session->userdata('datosEmpresa')["propietarioReal"]) OR 

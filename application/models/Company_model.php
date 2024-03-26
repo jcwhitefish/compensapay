@@ -21,7 +21,7 @@ class Company_model extends CI_Model {
     public function get_company($condiciones) {
         // TODO: Asi podemos traer 1 registro en especifico bajo ciertas condiciones
         //$this->db->select('rec_supplier.rec_id, companies.*, COUNT(accionistas.id) AS accionistas');
-        $this->db->select('stp_kyc.kyc_id, stp_perfiltransaccional.pt_id, stp_propietarioreal.Id AS propietarioReal, companies.*, COUNT(stp_usuarios.id) AS StpUsuarios, COUNT(stp_contactos.id) AS StpContactos', 'fintech.arteria_clabe AS finclabe');
+        $this->db->select('stp_kyc.kyc_id AS kyc_id, stp_perfiltransaccional.pt_id AS pt_id, stp_propietarioreal.Id AS propietarioReal, companies.*, COUNT(stp_usuarios.id) AS StpUsuarios, COUNT(stp_contactos.id) AS StpContactos, fintech.arteria_clabe AS finclabe');
         $this->db->from('companies');
         //$this->db->join('rec_supplier', 'rec_supplier.id_com = companies.id', 'left');
         $this->db->join('stp_kyc', 'stp_kyc.idCompanie = companies.id', 'left');

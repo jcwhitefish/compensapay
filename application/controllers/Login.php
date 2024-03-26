@@ -164,6 +164,7 @@ class Login extends MY_Loggedout
 			$dato['status'] = 1;
 			redirect(base_url('inicio'));
 		} else {
+			$this->session->set_userdata('logged_in', false);
 			$dato['status'] = 0;
 			redirect(base_url('login'));
 		}
