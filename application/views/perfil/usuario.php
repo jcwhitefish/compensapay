@@ -5,7 +5,7 @@ if ($this->session->userdata('logged_in')) {
 }
 //var_dump($usuario);
 ?>
-<div class="p-5" id="app">
+<div class="p-5">
     <h5>Perfil de usuario</h5>
     <div class="row card esquinasRedondas" style="padding: 20px">
         <div class="card-content">
@@ -17,21 +17,11 @@ if ($this->session->userdata('logged_in')) {
                             <div class="col l12" style="margin-bottom: 30px;">
                                 <p class="bold">Datos generales</p>
                             </div>
-                            <div class="input-border col l6">
-                                <input type="text" name="user" id="user" value="<?php echo $usuario[0]["user"];?>" required>
-                                <label for="user">Usuario *</label>
-                            </div>
-                            <div class="input-border col l6">
-                                <input v-model="profileText" type="text" name="profile" id="profile" disabled>
-                                <label for="profile">Perfil</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-border col l6">
+                            <div class="input-border col l12">
                                 <input type="text" name="name" id="name" value="<?php echo $usuario[0]["name"];?>" required>
                                 <label for="name">Nombre *</label>
                             </div>
-                            <div class="input-border col l6">
+                            <div class="input-border col l12">
                                 <input type="text" name="lastname" id="lastname" value="<?php echo $usuario[0]["last_name"];?>" required>
                                 <label for="lastname">Apellidos *</label>
                             </div>
@@ -39,13 +29,7 @@ if ($this->session->userdata('logged_in')) {
                         <div class="row">
                             <div class="input-border col l12">
                                 <input type="email" name="email" id="email" value="<?php echo $usuario[0]["email"];?>" required>
-                                <label for="email">Correo *</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-border col l12">
-                                <input type="email" name="validate-email" id="validate-email" value="<?php echo $usuario[0]["email"];?>" required>
-                                <label for="validate-email">Confirmar Correo *</label>
+                                <label for="email">Correo Electrónico *</label>
                             </div>
                         </div>
                         <div class="row">
@@ -54,34 +38,25 @@ if ($this->session->userdata('logged_in')) {
                                 <label for="phone-number">Teléfono Movil *</label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="input-border col l12">
-                                <input type="text" name="validate-phone-number" pattern="[0-9]{10}" minlength="10" maxlength="10" id="validate-phone-number" value="<?php echo $usuario[0]["telephone"];?>" required>
-                                <label for="validate-phone-number">Confirmar Teléfono Movil *</label>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="col l4 line-card especial-p">
                         <div class="row">
                             <div class="col l12" style="margin-bottom: 30px;">
-                                <p class="bold">Pregunta secreta para recuperar la contraseña</p>
-                            </div>
-                            <div class="input-border col l12">
-                                <select name="question" id="question" required>
-                                    <?php
-                                    foreach($usuario[1] AS $quest)
-                                    {
-                                        echo '<option value="'.$quest["pg_id"].'"'; if($quest["pg_id"]==$usuario[0]["id_question"]){echo ' selected';} echo '>'.$quest["pg_pregunta"].'</option>';
-                                    }
-                                    ?>
-                                </select>
-                                <label for="question">Pregunta *</label>
+                                <p class="bold">Contraseña</p>
+                                <p>Solo usar si se desea cambiar la contraseña</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-border col l12">
-                                <input type="text" name="answer" id="answer" value="<?php echo $usuario[0]["answer"];?>" required>
-                                <label for="answer">Respuesta *</label>
+                                <input type="password" name="contrasena" id="contrasena">
+                                <label for="contrasena">Contraseña</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-border col l12">
+                                <input type="password" name="contrasena2" id="contrasena2">
+                                <label for="contrasena2">Confirmar contraseña</label>
                             </div>
                         </div>
                     </div>
@@ -96,7 +71,7 @@ if ($this->session->userdata('logged_in')) {
                         </div>
                     </div>
                     <div class="col l7 p-5 center-align">
-                        <button class="button-gray" type="submit" name="action">Guardar</button>
+                        <button class="button-gray" type="submit" name="action">Actualizar información</button>
                     </div>
                 </div>
             </form>
