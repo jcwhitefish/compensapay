@@ -10,7 +10,11 @@
 	class Conciliaciones extends MY_Loggedin {
 		private string $environment = 'SANDBOX';
 		public function index (): void {
-			$data[ 'main' ] = $this->load->view ( 'conciliaciones', '', TRUE );
+			$data = [
+				'user' => $this->session->userdata ( 'datosUsuario' ),
+				'company' => $this->session->userdata ( 'datosEmpresa' ),
+			];
+			$data[ 'main' ] = $this->load->view ( 'conciliaciones', $data, TRUE );
 			$this->load->view ( 'plantilla', $data );
 		}
 		public function CFDI (): bool {

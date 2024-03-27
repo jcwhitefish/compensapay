@@ -3,6 +3,11 @@
 		padding: 15px !important;
 	}
 	
+	[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+		opacity: 0 !important;
+	}
+	
+	
 	input:disabled::placeholder {
 		color: #ad8db8 !important;
 		/* Cambia el color según tus preferencias */
@@ -61,6 +66,10 @@
 </style>
 
 <div class="p-5">
+	<?php
+		$company = base64_encode ( json_encode ( $company ) ) ?? '';
+		$user = base64_encode ( json_encode ( $user ) ) ?? '';
+	?>
 	<h5>Conciliaciones</h5>
 	<!-- head con el calendario -->
 	<div class="row card esquinasRedondas" style="padding-top: 10px;">
@@ -89,9 +98,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col l2"></div>
-		<div class="col l2"></div>
-		<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
+		<div class="col l4"></div>
+		<div class="col l4 right" style="display: block; text-align: center; padding-top: 10px;">
+			<a id="masiva" class="modal-trigger button-gray" href="#modal-conciliacionPlus">Conciliación Masiva</a>
 			<a id="btnAction" class="modal-trigger button-gray" href="#modal-CFDI">Subir CFDI</a>
 		</div>
 	</div>
@@ -364,13 +373,96 @@
 			</div>
 		</div>
 	</div>
+	<!-- Crear conciliación masiva -->
+	<div id="modal-conciliacionPlus" class="modal" style=" height: 95%; width: 90% !important">
+		<div class="modal-content">
+			<h5>Carga de conciliaciones masivas</h5>
+			<div class="card esquinasRedondas">
+				<div class="card-content" id="contentCPlus">
+					<h6 class="p-3">Seleccionar conciliaciones</h6>
+					<form id="chooseCPlus">
+						<div class="input-field col s12">
+							<select multiple id="conciliaItems" name="conciliaItems">
+								<optgroup label="Seleccionar todas">
+									<option value="1">SOLVE | Depositar $5.80 | Regresa $2.32 </option>
+									<option value="1">UNSC | Depositar $6.20 | Regresa $1.16 </option>
+								</optgroup>
+							</select>
+							<label>Conciliaciones</label>
+						</div>
+					</form>
+					<!--					<h6 class="p-3">Carga múltiples .xml en un archivo .zip</h6>-->
+					<!--					<form id="uploadCFDIPlus" enctype="multipart/form-data">-->
+					<!--						<div class="file-field input-field">-->
+					<!--							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">-->
+					<!--								<input-->
+					<!--									class="file-path validate" type="text"-->
+					<!--									placeholder="Una factura en xml o múltiples en .zip" disabled>-->
+					<!--							</div>-->
+					<!--							<div style="width: 25%;margin-left: auto;">-->
+					<!--								<label-->
+					<!--									for="containerCFDIPlus" class="custom-file-upload button-gray">Seleccionar</label>-->
+					<!--								<input-->
+					<!--									name="containerCFDIPlus" id="containerCFDIPlus" type="file" accept=".zip"-->
+					<!--									required />-->
+					<!--								<input type="hidden" name="sCompany" id="sCompany" value="-->
+					<?php //= $company ?><!--">-->
+					<!--								<input type="hidden" name="sUser" id="sUser" value="-->
+					<?php //= $user ?><!--">-->
+					<!--							</div>-->
+					<!--						</div>-->
+					<!--						<div class="row">-->
+					<!--							<div class="col l12 center-align">-->
+					<!--								<a class="modal-close button-orange">Cancelar</a>-->
+					<!--								<input class="button-gray" type="submit" value="Siguiente">-->
+					<!--							</div>-->
+					<!--						</div>-->
+					<!--						<div class="row">-->
+					<!--							<div class="col l12 d-flex">-->
+					<!--								<div class="p-5">-->
+					<!--									<div class="switch">-->
+					<!--										<label>-->
+					<!--											<input type="checkbox" required>-->
+					<!--											<span class="lever"></span>-->
+					<!--										</label>-->
+					<!--									</div>-->
+					<!--								</div>-->
+					<!--								<p class="text-modal" style="text-align: justify;">-->
+					<!--									En caso de utilizar la presente factura para conciliar con una nota de crédito, el-->
+					<!--									Proveedor acepta y otorga su-->
+					<!--									consentimiento en este momento para que, una vez recibido el pago por la misma,-->
+					<!--									Solve descuente y transfiere-->
+					<!--									de manera automática a nombre y cuenta del Proveedor, el monto debido por el-->
+					<!--									Proveedor en relación con dicha-->
+					<!--									factura en favor del Cliente. Los términos utilizados en mayúscula tendrán el-->
+					<!--									significado que se le atribuye-->
+					<!--									dicho término en los Términos y Condiciones. En caso de utilizar esta factura para-->
+					<!--									conciliar con una factura-->
+					<!--									de un Proveedor, al momento de dar clic en “Aceptar” el Cliente acuerda que la-->
+					<!--									factura en cuestión será utilizada-->
+					<!--									para efectos de las operaciones en la Plataforma conforme a los <a-->
+					<!--										href="terminosycondiciones">Términos y Condiciones</a>.-->
+					<!--								</p><br>-->
+					<!--							</div>-->
+					<!--						</div>-->
+					<!--					</form>-->
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
 	let btnActive = 0;
 	let conciliateWay = 0;
 	$(document).ready(function () {
 		conciliation();
-		// $('#modal-new-conciliation').modal('open');/
+		$(".dropdown-button").dropdown({hover: true, gutter: 0,});
+		$("select").formSelect();
+		$("#btndrop").dropdown({
+			constrainWidth: true, // Does not change width of dropdown to that of the activator
+			hover: true, // Activate on hover
+			closeOnClick: false,
+		});
 		$("#start").on("change", function () {
 			switch (btnActive) {
 				case 0:
@@ -790,6 +882,41 @@
 				}
 			});
 		});
+		$("#uploadCFDIPlus").on("submit", function (e) {
+			e.preventDefault();
+			const formData = new FormData($("#formulario")[0]);
+			const files = $("#containerCFDIPlus")[0].files[0];
+			const company = $("#sCompany").val();
+			const user = $("#sUser").val();
+			formData.append("file", files);
+			formData.append("company", company);
+			formData.append("user", user);
+			$.ajax({
+				url: "https://api-solve.local/uploadCFDIPlus",
+				type: "POST",
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (response) {
+					if (response.conciliaciones !== null) {
+						$("#contentCPlus").empty();
+						let chooseC = "<h6 class=\"p-3\">Selecciona las con</h6>";
+						chooseC += "";
+					}
+					// Maneja la respuesta del servidor
+					console.log("Respuesta del servidor:", response);
+					// Puedes realizar acciones adicionales aquí
+				},
+				error: function (status, error) {
+					// Maneja los errores de la solicitud
+					console.error("Error en la solicitud:", status);
+				}
+			});
+			
+		});
+		$("li.optgroup").on("click", function () {
+			$("li.optgroup-option").trigger("click");
+		});
 	});
 	
 	function noSelect() {
@@ -797,6 +924,214 @@
 		$("#btnInvoice").removeClass("selected");
 		$("#tablaActiva").empty();
 		$("#btnAction").empty();
+	}
+	
+	function getToken() {
+		$.ajax({
+			url: "/Conciliaciones/conciliation",
+			data: {
+				from: $("#start").val(),
+				to: $("#fin").val(),
+			},
+			dataType: "json",
+			method: "post",
+			beforeSend: function () {
+				const obj = $("#tblsViewer");
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$("#solveLoader").delay(50000).css({
+					display: "block",
+					opacity: 1,
+					visibility: "visible",
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500) {
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				} else if (data.code === 404) {
+					console.log("");
+				} else {
+					$("#tblBody").empty();
+					$.each(data, function (index, value) {
+						let uuid, status, uuid2, clabe;
+						let aut, cancel, acept;
+						let flag;
+						let opNumber;
+						uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid1 + "</a>";
+						uuid2 = "<a href=\"" + value.idur2 + "\" target=\"_blank\">" + value.uuid2 + "</a>";
+						if (value.role === "receptor") {
+							switch (value.status) {
+								case "0":
+									aut = $("<a class=\"modal-trigger\" href=\"#modal-aut-conciliation\">Autorizar</a>");
+									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
+									acept = $("<a style='cursor: pointer;' class=\"button-gray \">Aceptar</a>");
+									cancel.click(function () {
+										$("#rejectText").empty();
+										$("#idReject").val(value.id);
+									});
+									acept.click(function () {
+										aceptOp(value.id, $("#autPayDate").val());
+									});
+									aut.click(function () {
+										let autEmisor = $("#autEmisor");
+										let autCFDI = $("#autCFDI");
+										let autConciliador = $("#autConciliador");
+										let autReferencia = $("#autReferencia");
+										let autMonto1 = $("#autMonto1");
+										let autMonto2 = $("#autMonto2");
+										let autClabe = $("#autClabe");
+										let autPayDate = $("#autPayDate");
+										autEmisor.empty();
+										autCFDI.empty();
+										autConciliador.empty();
+										autReferencia.empty();
+										autMonto1.empty();
+										autMonto2.empty();
+										autClabe.empty();
+										autEmisor.append(value.emisor);
+										autCFDI.append(uuid);
+										autConciliador.append(uuid2);
+										autReferencia.append(value.operation_number);
+										autMonto1.append("$" + value.total1);
+										autMonto2.append("$" + value.total2);
+										autClabe.append(value.account_clabe);
+										let dateS = (value.datePago);
+										dateS = dateS.split("-");
+										autPayDate.attr("value", dateS[2] + "-" + dateS[1] + "-" + dateS[0]);
+										$("#autAceptar").empty();
+										$("#autCancel").empty();
+										$("#autAceptar").append(acept);
+										$("#autCancel").append(cancel);
+									});
+									break;
+								case "1":
+								case "3":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							flag = value.role;
+							opNumber = value.operation_number;
+							clabe = value.account_clabe;
+						} else if (value.role === "emisor" && (value.status === "3" || value.status === "4")) {
+							switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							opNumber = value.operation_number;
+							clabe = "xxxxxxxxxxxxxx" + value.account_clabe.substring(value.account_clabe.length - 4);
+						} else {
+							switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							opNumber = "-";
+							clabe = "-";
+						}
+						switch (value.status) {
+							case "0":
+								status = "<p><span class=\"estatus\">Por autorizar</span></p>";
+								break;
+							case "1":
+								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
+								break;
+							case "2":
+								status = "<p><span class=\"estatus\" style=\"background-color:#c20005\">Rechazada</span></p>";
+								break;
+							case "3":
+								status = "<p><span class=\"estatus\" style=\"background-color:#52A447\">Realizada</span></p>";
+								break;
+							case "4":
+								status = "<p><span class=\"estatus\" style=\"background-color:#dedc48\">Vencida</span></p>";
+								break;
+						}
+						const tr = $("<tr " + flag + ">" +
+							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
+							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
+							"<td class='center-align " + flag + "'>" + clabe + "</td>" +
+							"<td class='center-align " + flag + "'>" + opNumber + "</td>" +
+							"<td class='center-align'>" + value.emisor + "</td>" +
+							"<td class='center-align'>" + value.receptor + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis;'>"
+							+ uuid + "</td>" +
+							"<td class='center-align " + flag + "'>$ " + value.total1 + "</td>" +
+							"<td class='center-align'> " + value.dateCFDI1 + "</td>" +
+							"<td class='center-align'>" + value.datePago + "</td>" +
+							"<td class='center-align'>" + value.senderConciliation + "</td>" +
+							"<td class='center-align'>" + value.receiverConciliation + "</td>" +
+							"<td class='center-align' style='white-space: nowrap; max-width: 100px; overflow: hidden; word-wrap: break-word;" +
+							"text-overflow: ellipsis;'>" + uuid2 + "</td>" +
+							"<td class='center-align'>$ " + value.total2 + "</td>" +
+							"<td class='center-align' style='text-wrap: nowrap;'>" + value.dateCFDI2 + "</td>" +
+							"<td class='center-align'  style='text-wrap: nowrap;' id=\"tblPayD" + value.id + "\" >" + value.datePago + "</td>" +
+							"</tr>");
+						$("#tblBody").append(tr);
+						$("#aut" + value.id).append(aut);
+						//$("#tabla_conciliaciones").DataTable({
+						//	retrieve: true,
+						//	paging: false,
+						//	deferRender: true,
+						//	language: {
+						//		decimal: ".",
+						//		thousands: ",",
+						//		url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+						//	},
+						//	info: false,
+						//	searching: false,
+						//	sort: true
+						//});
+						
+					});
+				}
+			},
+			complete: function () {
+				$("#solveLoader").css({
+					display: "none"
+				});
+			},
+			error: function (data) {
+				$("#solveLoader").css({
+					display: "none"
+				});
+				let toastHTML = "<span><strong>Ha ocurrido un problema, por favor intente mas tarde</strong></span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+			}
+		});
 	}
 	
 	function conciliation() {
@@ -1253,4 +1588,5 @@
 			}
 		});
 	}
+
 </script>
