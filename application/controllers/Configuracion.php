@@ -19,10 +19,12 @@
 			$this->load->view ( 'plantilla', $data );
 		}
 		public function newSubscription (): bool { //guarda los datos de la tarjeta
+			
+			die();
 			$this->load->model ( 'Openpay_model', 'dataOp' );
 			$id = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
-			$customerDAta = $this->dataOp->NewClient ( $id, $this->env );
-//		var_dump ($customerDAta);
+			$user = $this->session->userdata ( 'datosUsuario' )[ "id" ];
+			$customerDAta = $this->dataOp->NewClient ( $user, $this->env );
 			$args = [
 				'card_number' => $this->input->post ( 'cardNumber' ),
 				'holder_name' => $this->input->post ( 'holderName' ),
@@ -47,7 +49,7 @@
 		}
 		public function changeCard () {
 			$this->load->model ( 'Openpay_model', 'dataOp' );
-			$id = $this->session->userdata ( 'id' );
+			$id = $this->session->userdata ( 'datosEmpresa' )[ "id" ];
 			$subs = $this->dataOp->getSubscription ( $id, $this->env );
 			$subs = $subs[ 0 ];
 //		var_dump($subs);

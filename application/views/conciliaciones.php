@@ -68,6 +68,7 @@
 <div class="p-5">
 	<?php
 		$company = base64_encode ( json_encode ( $company ) ) ?? '';
+		$rfcActual = json_decode ( base64_decode ( $company ), TRUE )[ 'rfc' ];
 		$user = base64_encode ( json_encode ( $user ) ) ?? '';
 	?>
 	<h5>Conciliaciones</h5>
@@ -378,74 +379,65 @@
 		<div class="modal-content">
 			<h5>Carga de conciliaciones masivas</h5>
 			<div class="card esquinasRedondas">
+				<input type="hidden" name="rfcActual" id="rfcActual" value="<?= $rfcActual ?>">
 				<div class="card-content" id="contentCPlus">
-					<h6 class="p-3">Seleccionar conciliaciones</h6>
-					<form id="chooseCPlus">
-						<div class="input-field col s12">
-							<select multiple id="conciliaItems" name="conciliaItems">
-								<optgroup label="Seleccionar todas">
-									<option value="1">SOLVE | Depositar $5.80 | Regresa $2.32 </option>
-									<option value="1">UNSC | Depositar $6.20 | Regresa $1.16 </option>
-								</optgroup>
-							</select>
-							<label>Conciliaciones</label>
+					<h6 class="p-3">Carga múltiples .xml en un archivo .zip</h6>
+					<form id="uploadCFDIPlus" enctype="multipart/form-data">
+						<div class="file-field input-field">
+							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">
+								<input
+									class="file-path validate" type="text"
+									placeholder="Una factura en xml o múltiples en .zip" disabled>
+							</div>
+							<div style="width: 25%;margin-left: auto;">
+								<label
+									for="containerCFDIPlus" class="custom-file-upload button-gray">Seleccionar</label>
+								<input
+									name="containerCFDIPlus" id="containerCFDIPlus" type="file" accept=".zip"
+									required />
+								<input
+									type="hidden" name="sCompany" id="sCompany" value="
+					<?= $company ?>">
+								<input
+									type="hidden" name="sUser" id="sUser" value="
+					<?= $user ?>">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col l12 center-align">
+								<a href="<?= base_url ( 'Conciliaciones' ) ?>" class="modal-close button-orange">Cancelar</a>
+								<input class="button-gray" type="submit" value="Siguiente">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col l12 d-flex">
+								<div class="p-5">
+									<div class="switch">
+										<label>
+											<input type="checkbox" required>
+											<span class="lever"></span>
+										</label>
+									</div>
+								</div>
+								<p class="text-modal" style="text-align: justify;">
+									En caso de utilizar la presente factura para conciliar con una nota de crédito, el
+									Proveedor acepta y otorga su
+									consentimiento en este momento para que, una vez recibido el pago por la misma,
+									Solve descuente y transfiere
+									de manera automática a nombre y cuenta del Proveedor, el monto debido por el
+									Proveedor en relación con dicha
+									factura en favor del Cliente. Los términos utilizados en mayúscula tendrán el
+									significado que se le atribuye
+									dicho término en los Términos y Condiciones. En caso de utilizar esta factura para
+									conciliar con una factura
+									de un Proveedor, al momento de dar clic en “Aceptar” el Cliente acuerda que la
+									factura en cuestión será utilizada
+									para efectos de las operaciones en la Plataforma conforme a los <a
+										href="terminosycondiciones">Términos y Condiciones</a>.
+								</p><br>
+							</div>
 						</div>
 					</form>
-					<!--					<h6 class="p-3">Carga múltiples .xml en un archivo .zip</h6>-->
-					<!--					<form id="uploadCFDIPlus" enctype="multipart/form-data">-->
-					<!--						<div class="file-field input-field">-->
-					<!--							<div class="file-path-wrapper" style="width: 75%;margin-left: auto;float: left;">-->
-					<!--								<input-->
-					<!--									class="file-path validate" type="text"-->
-					<!--									placeholder="Una factura en xml o múltiples en .zip" disabled>-->
-					<!--							</div>-->
-					<!--							<div style="width: 25%;margin-left: auto;">-->
-					<!--								<label-->
-					<!--									for="containerCFDIPlus" class="custom-file-upload button-gray">Seleccionar</label>-->
-					<!--								<input-->
-					<!--									name="containerCFDIPlus" id="containerCFDIPlus" type="file" accept=".zip"-->
-					<!--									required />-->
-					<!--								<input type="hidden" name="sCompany" id="sCompany" value="-->
-					<?php //= $company ?><!--">-->
-					<!--								<input type="hidden" name="sUser" id="sUser" value="-->
-					<?php //= $user ?><!--">-->
-					<!--							</div>-->
-					<!--						</div>-->
-					<!--						<div class="row">-->
-					<!--							<div class="col l12 center-align">-->
-					<!--								<a class="modal-close button-orange">Cancelar</a>-->
-					<!--								<input class="button-gray" type="submit" value="Siguiente">-->
-					<!--							</div>-->
-					<!--						</div>-->
-					<!--						<div class="row">-->
-					<!--							<div class="col l12 d-flex">-->
-					<!--								<div class="p-5">-->
-					<!--									<div class="switch">-->
-					<!--										<label>-->
-					<!--											<input type="checkbox" required>-->
-					<!--											<span class="lever"></span>-->
-					<!--										</label>-->
-					<!--									</div>-->
-					<!--								</div>-->
-					<!--								<p class="text-modal" style="text-align: justify;">-->
-					<!--									En caso de utilizar la presente factura para conciliar con una nota de crédito, el-->
-					<!--									Proveedor acepta y otorga su-->
-					<!--									consentimiento en este momento para que, una vez recibido el pago por la misma,-->
-					<!--									Solve descuente y transfiere-->
-					<!--									de manera automática a nombre y cuenta del Proveedor, el monto debido por el-->
-					<!--									Proveedor en relación con dicha-->
-					<!--									factura en favor del Cliente. Los términos utilizados en mayúscula tendrán el-->
-					<!--									significado que se le atribuye-->
-					<!--									dicho término en los Términos y Condiciones. En caso de utilizar esta factura para-->
-					<!--									conciliar con una factura-->
-					<!--									de un Proveedor, al momento de dar clic en “Aceptar” el Cliente acuerda que la-->
-					<!--									factura en cuestión será utilizada-->
-					<!--									para efectos de las operaciones en la Plataforma conforme a los <a-->
-					<!--										href="terminosycondiciones">Términos y Condiciones</a>.-->
-					<!--								</p><br>-->
-					<!--							</div>-->
-					<!--						</div>-->
-					<!--					</form>-->
 				</div>
 			</div>
 		</div>
@@ -899,9 +891,33 @@
 				contentType: false,
 				success: function (response) {
 					if (response.conciliaciones !== null) {
+						let rfcActual = $("#rfcActual").val();
 						$("#contentCPlus").empty();
-						let chooseC = "<h6 class=\"p-3\">Selecciona las con</h6>";
-						chooseC += "";
+						let chooseC = '<h6 class="p-3">Seleccionar conciliaciones</h6>' +
+							'<form id="chooseCPlus"><div class="row">' +
+							'<select multiple id="conciliaItems" name="conciliaItems">'+
+							'</select><label for="conciliaItems">Conciliaciones</label></div>' +
+							'<div class="row"><div class="col l12 center-align">' +
+							'<a  href="<?=base_url ( 'Conciliaciones' )?>" class="modal-close button-orange">Cancelar</a>' +
+							'<input class="button-gray" type="submit" value="Siguiente"></div></div></form>';
+							
+						$("#contentCPlus").append(chooseC);
+						let opt = $('<optgroup label="Seleccionar todas" id="optGpo"></optgroup>');
+						$('#conciliaItems').append(opt);
+						let conciliation = response.conciliaciones;
+						let optionsC ='';
+						$.each(conciliation, function (index, value) {
+							if (value.sender === rfcActual) {
+								optionsC += "<option value=\"" + value.sender + "|" + value.receiver + "\"><strong>" + value.receiver + "</strong> | Depositar $" + value.out + " | Regresa $" + value.in + "</option>";
+							} else {
+								optionsC += "<option value=\"" + value.sender + "|" + value.receiver + "\"><strong>" + value.sender + "</strong> | Depositar $" + value.in + " | Regresa $" + value.out + "</option>";
+							}
+						});
+						$('#optGpo').append(optionsC);
+						$('select').formSelect();
+						$("li.optgroup").on("click", function () {
+							$("li.optgroup-option").trigger("click");
+						});
 					}
 					// Maneja la respuesta del servidor
 					console.log("Respuesta del servidor:", response);
