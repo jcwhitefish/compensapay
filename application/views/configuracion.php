@@ -4,7 +4,7 @@
 <script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
 <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
 <div class="p-5">
-
+	
 	<?php $notifications = $notifications[ 0 ] ?? ''; ?>
 	<h5>Configuración avanzada <?= $this->session->userdata ( 'datosEmpresa' )[ 'short_name' ] ?></h5>
 	<div class="row card esquinasRedondas" style="padding: 20px">
@@ -204,6 +204,9 @@
 			<form method="POST" id="payment-form" style="margin-top: 1px; margin-bottom: 1px;">
 				<input type="hidden" name="token_id" id="token_id">
 				<input type="hidden" name="deviceID" id="deviceID" value="" />
+				<input type="hidden" name="deviceID3D" id="deviceID3D" value="" />
+				<input type="hidden" name="tokenCard" id="tokenCard" value="" />
+				<input type="hidden" name="token3DCard" id="token3DCard" value="" />
 				<input type="hidden" name="cardType" id="cardType" value="" />
 				<input type="hidden" name="cardFlag" id="cardFlag" value="<?= $flag = empty( $card ) ? 1 : 2; ?>" />
 				<div class="row" style="margin-bottom: 1px; margin-top: 1px">
@@ -264,7 +267,9 @@
 					<img src="/assets/images/tarjets-de-credito.png" alt="taretas" height="30px">
 				</div>
 				<div class="col l3">
-					<button class="btn waves-effect waves-light grey right button-gray" id="sendCard" name="sendCard" style="padding: 0 20px">
+					<button
+						class="btn waves-effect waves-light grey right button-gray" id="sendCard" name="sendCard"
+						style="padding: 0 20px">
 						Enviar<i class="material-icons right">send</i>
 					</button>
 				</div>
@@ -303,14 +308,11 @@
 		alert("ERROR [" + response.status + "] " + desc);
 	};
 	$(document).ready(function () {
-		let deviceDataId;
-		OpenPay.setSandboxMode(true);
-		OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
-		OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		// OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+		// OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		
 		// OpenPay.setId('mtcyupm65psrjreromun');
 		// OpenPay.setApiKey('pk_88137bbfe9d94c208d6741754c9e24d4');
-		deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
-		$("#deviceID").val(deviceDataId);
 		$("#cardNumber").on("change", function () {
 			const cardIMG = $("#cardTypeImg");
 			const cardNumber = $("#cardNumber").val();
@@ -329,9 +331,23 @@
 		$("#sendCard").on("click", function (event) {
 			const flag = $("#cardFlag").val();
 			if (flag === 1 || flag === "1") {
-				OpenPay.token.extractFormAndCreate("payment-form", newCard, error_callbak);
+				let deviceDataId;
+				OpenPay.setSandboxMode(true);
+				OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+				OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+				deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+				console.log(deviceDataId);
+				$("#deviceID").val(deviceDataId);
+				OpenPay.token.extractFormAndCreate("payment-form", token3D, error_callbak);
 			} else {
-				OpenPay.token.extractFormAndCreate("payment-form", shiftCard, error_callbak);
+				let deviceDataId;
+				OpenPay.setSandboxMode(true);
+				OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+				OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+				deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+				console.log(deviceDataId);
+				$("#deviceID").val(deviceDataId);
+				OpenPay.token.extractFormAndCreate("payment-form", token3D, error_callbak);
 			}
 		});
 		
@@ -407,16 +423,43 @@
 			$("#sendCard").prop("disabled", true);
 		}
 	}
+	function token3D(response){
+		console.log(response);
+		const flag = $("#cardFlag").val();
+		$("#tokenCard").val(response.data.id);
+		if (flag === 1 || flag === "1") {
+			let deviceDataId2;
+			OpenPay.setSandboxMode(true);
+			OpenPay.setId("mmekhnp4dwlgffp41coj");
+			OpenPay.setApiKey("pk_b881111be9a2400b9d030f9d2f3d2afa");
+			deviceDataId2 = OpenPay.deviceData.setup("payment-form2", "deviceIdHiddenFieldName");
+			console.log(deviceDataId2);
+			$("#deviceID3D").val(deviceDataId2);
+			OpenPay.token.extractFormAndCreate("payment-form", newCard, error_callbak);
+		} else {
+			let deviceDataId2;
+			OpenPay.setSandboxMode(true);
+			OpenPay.setId("mmekhnp4dwlgffp41coj");
+			OpenPay.setApiKey("pk_b881111be9a2400b9d030f9d2f3d2afa");
+			deviceDataId2 = OpenPay.deviceData.setup("payment-form2", "deviceIdHiddenFieldName");
+			console.log(deviceDataId2);
+			$("#deviceID3D").val(deviceDataId2);
+			OpenPay.token.extractFormAndCreate("payment-form", shiftCard, error_callbak);
+		}
+	}
 	
 	function newCard(response) {
+		console.log(response);
 		let cardNumber = $("#cardNumber").val();
 		let cardType = OpenPay.card.cardType(cardNumber);
 		let device = $("#deviceID").val();
+		let device3D = $("#deviceID3D").val();
 		let cvv = $("#cvv").val();
 		let month = $("#expMonth").val();
 		let year = $("#expYear").val();
 		let name = $("#nameHolder").val();
-		let tokenCard = response.data.id;
+		let tokenCard = $("#tokenCard").val();
+		let token3DCard = response.data.id;
 		$("#token_id").val(tokenCard);
 		$.ajax({
 			url: "Configuracion/newSubscription",
@@ -427,8 +470,10 @@
 				expirationYear: year,
 				cvv: cvv,
 				sessionID: device,
+				session3DID: device3D,
 				cardType: cardType,
-				tokenCard: tokenCard
+				tokenCard: tokenCard,
+				token3DCard: token3DCard,
 			},
 			dataType: "json",
 			method: "post",

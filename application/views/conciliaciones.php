@@ -1,29 +1,24 @@
+
 <style>
 	td, th {
 		padding: 15px !important;
 	}
-	
 	[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
 		opacity: 0 !important;
 	}
-	
-	
 	input:disabled::placeholder {
 		color: #ad8db8 !important;
 		/* Cambia el color según tus preferencias */
 		/* Otros estilos que desees aplicar al marcador de posición */
 	}
-	
 	/* Modal */
 	.text-modal {
 		font-size: 13px;
 	}
-	
 	.modal {
 		max-height: 83% !important;
 		width: 80% !important;
 	}
-	
 	/* Fix show checkbox and radiobutton*/
 	[type="checkbox"]:not(:checked),
 	[type="checkbox"]:checked {
@@ -31,7 +26,6 @@
 		position: relative;
 		pointer-events: auto;
 	}
-	
 	[type="radio"]:not(:checked),
 	[type="radio"]:checked {
 		opacity: 1;
@@ -47,28 +41,26 @@
 		border: 2px solid black !important;
 		border-radius: 10px;
 	}
-	
 	#toast-container {
 		min-width: 10%;
 		top: 50%;
 		right: 50%;
 		transform: translateX(50%) translateY(50%);
 	}
-	
 	.receptor {
 		color: #52A447 !important;
 		font-weight: bold;
 	}
-	
 	.receptor:hover {
 		color: #52A447 !important;
 	}
+	[type="radio"]{display: none}
 </style>
-
 <div class="p-5">
 	<?php
 		$company = base64_encode ( json_encode ( $company ) ) ?? '';
 		$rfcActual = json_decode ( base64_decode ( $company ), TRUE )[ 'rfc' ];
+		$id = json_decode ( base64_decode ( $company ), TRUE )[ 'id' ];
 		$user = base64_encode ( json_encode ( $user ) ) ?? '';
 	?>
 	<h5>Conciliaciones</h5>
@@ -79,6 +71,7 @@
 				<div class="col valign-wrapper"><p>Desde:</p></div>
 				<div class="col">
 					<label for="start">
+						<input type="hidden" name="idInc" id="idInc" value="<?= $id ?>">
 						<input
 							type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
 							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
@@ -105,17 +98,21 @@
 			<a id="btnAction" class="modal-trigger button-gray" href="#modal-CFDI">Subir CFDI</a>
 		</div>
 	</div>
-	
 	<!-- Las tablas principales que se muestran Facturas-->
 	<div class="card esquinasRedondas" id="tblsViewer">
 		<div class="card-content" style="padding: 10px; ">
 			<div class="row" style="margin-bottom: 1px">
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
-					<div class="col l3">
+					<div class="col l5 valign-wrapper">
 						<button
 							id="btnConciliation" class="button-table" style="margin-right: 0.75rem"
 							onclick="conciliation()">
 							Conciliación
+						</button>
+						<button
+							id="btnConciliationPlus" class="button-table" style="margin-right: 0.75rem"
+							onclick="conciliationPlus()">
+							Conciliación Masiva
 						</button>
 						<button
 							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
@@ -392,15 +389,9 @@
 							<div style="width: 25%;margin-left: auto;">
 								<label
 									for="containerCFDIPlus" class="custom-file-upload button-gray">Seleccionar</label>
-								<input
-									name="containerCFDIPlus" id="containerCFDIPlus" type="file" accept=".zip"
-									required />
-								<input
-									type="hidden" name="sCompany" id="sCompany" value="
-					<?= $company ?>">
-								<input
-									type="hidden" name="sUser" id="sUser" value="
-					<?= $user ?>">
+								<input name="containerCFDIPlus" id="containerCFDIPlus" type="file" accept=".zip" required />
+								<input type="hidden" name="sCompany" id="sCompany" value="<?= $company ?>">
+								<input type="hidden" name="sUser" id="sUser" value="<?= $user ?>">
 							</div>
 						</div>
 						<div class="row">
@@ -440,6 +431,24 @@
 					</form>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="modal-cfdi" class="modal" style=" height: 95%; width: 90% !important">
+		<div class="modal-content">
+			<h5>CFDI de la conciliación</h5>
+			<div class="card esquinasRedondas">
+				<table id="tabla_cfdi_cp" class="stripe row-border order-column nowrap"><thead><tr>
+						<th >Emisor</th>
+						<th >Receptor</th>
+						<th class="center-align">CFDI</th>
+						<th >Fecha de CFDI</th>
+						<th >Fecha de recepción</th>
+						<th >Total</th>
+						<th >Tipo de documento</th>
+					</tr></thead>
+					<tbody id="tblBodyCfdi"></tbody></table>
+			</div>
+			<a  class="modal-close button-orange">Cerrar</a>
 		</div>
 	</div>
 </div>
@@ -889,39 +898,33 @@
 				data: formData,
 				processData: false,
 				contentType: false,
+				beforeSend: function () {
+					const obj = $("#contentCPlus");
+					const left = obj.offset().left;
+					const top = obj.offset().top;
+					const width = obj.width();
+					const height = obj.height();
+					$("#solveLoader").delay(50000).css({
+						display: "block",
+						opacity: 1,
+						visibility: "visible",
+						left: left,
+						top: top,
+						width: width,
+						height: height,
+						zIndex: 999999
+					}).focus();
+				},
 				success: function (response) {
 					if (response.conciliaciones !== null) {
-						let rfcActual = $("#rfcActual").val();
-						$("#contentCPlus").empty();
-						let chooseC = '<h6 class="p-3">Seleccionar conciliaciones</h6>' +
-							'<form id="chooseCPlus"><div class="row">' +
-							'<select multiple id="conciliaItems" name="conciliaItems">'+
-							'</select><label for="conciliaItems">Conciliaciones</label></div>' +
-							'<div class="row"><div class="col l12 center-align">' +
-							'<a  href="<?=base_url ( 'Conciliaciones' )?>" class="modal-close button-orange">Cancelar</a>' +
-							'<input class="button-gray" type="submit" value="Siguiente"></div></div></form>';
-							
-						$("#contentCPlus").append(chooseC);
-						let opt = $('<optgroup label="Seleccionar todas" id="optGpo"></optgroup>');
-						$('#conciliaItems').append(opt);
-						let conciliation = response.conciliaciones;
-						let optionsC ='';
-						$.each(conciliation, function (index, value) {
-							if (value.sender === rfcActual) {
-								optionsC += "<option value=\"" + value.sender + "|" + value.receiver + "\"><strong>" + value.receiver + "</strong> | Depositar $" + value.out + " | Regresa $" + value.in + "</option>";
-							} else {
-								optionsC += "<option value=\"" + value.sender + "|" + value.receiver + "\"><strong>" + value.sender + "</strong> | Depositar $" + value.in + " | Regresa $" + value.out + "</option>";
-							}
-						});
-						$('#optGpo').append(optionsC);
-						$('select').formSelect();
-						$("li.optgroup").on("click", function () {
-							$("li.optgroup-option").trigger("click");
-						});
+						chooseCPlus(response, user, company);
 					}
-					// Maneja la respuesta del servidor
 					console.log("Respuesta del servidor:", response);
-					// Puedes realizar acciones adicionales aquí
+				},
+				complete: function () {
+					$("#solveLoader").css({
+						display: "none"
+					});
 				},
 				error: function (status, error) {
 					// Maneja los errores de la solicitud
@@ -934,14 +937,13 @@
 			$("li.optgroup-option").trigger("click");
 		});
 	});
-	
 	function noSelect() {
+		$("#btnConciliationPlus").removeClass("selected");
 		$("#btnConciliation").removeClass("selected");
 		$("#btnInvoice").removeClass("selected");
 		$("#tablaActiva").empty();
 		$("#btnAction").empty();
 	}
-	
 	function getToken() {
 		$.ajax({
 			url: "/Conciliaciones/conciliation",
@@ -1149,7 +1151,6 @@
 			}
 		});
 	}
-	
 	function conciliation() {
 		$("#tablaActiva").empty();
 		btnActive = 0;
@@ -1383,9 +1384,7 @@
 			}
 		});
 	}
-	
 	function cfdi() {
-		
 		$("#tablaActiva").empty();
 		btnActive = 0;
 		noSelect();
@@ -1532,7 +1531,6 @@
 			}
 		});
 	}
-	
 	function aceptOp(id, payDate) {
 		$.ajax({
 			url: "/Conciliaciones/accept",
@@ -1604,5 +1602,419 @@
 			}
 		});
 	}
-
+	function chooseCPlus(response, user, company){
+		let rfcActual = $("#rfcActual").val();
+		$("#contentCPlus").empty();
+		let chooseC = "<h6 class=\"p-3\">Seleccionar conciliaciones</h6>" +
+			"<form id=\"chooseCPlus\"><div class=\"row\">" +
+			"<select multiple id=\"conciliaItems\" name=\"conciliaItems\">" +
+			"</select><label for=\"conciliaItems\">Conciliaciones</label></div>" +
+			"<div class=\"row\"><div class=\"col l12 center-align\">" +
+			'<a  href="<?=base_url ( 'Conciliaciones' )?>" class="modal-close button-orange">Cancelar</a>' +
+			"<input class=\"button-gray\" type=\"submit\" value=\"Siguiente\"></div></div></form>";
+		$("#contentCPlus").append(chooseC);
+		let opt = $("<optgroup label=\"Seleccionar todas\" id=\"optGpo\"></optgroup>");
+		$("#conciliaItems").append(opt);
+		let conciliation = response.conciliaciones;
+		let optionsC = "";
+		$.each(conciliation, function (index, value) {
+			if (value.sender === rfcActual) {
+				if(value.out > value. in){
+					optionsC += "<option value=\"" + value.receiver  + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out +"\"> <strong>" + value.receiver + "</strong> | ↑ Depositas $" + value.out + " | ↓ Regresan $" + value.in + "</option>";
+				}else{
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.receiver + "</strong> | ↑ Regresas $" + value.out + " | ↓ Depositan $" + value.in + "</option>";
+				}
+			} else {
+				if(value.out > value. in){
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.sender + "</strong> | ↓ Depositan $" + value.out + " | ↑ Regresas $" + value.in + "</option>";
+				}else{
+					optionsC += "<option value=\"" + value.receiver + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out + "\"> <strong>" + value.sender + "</strong> | ↓ Regresan $" + value.out + " | ↑ Depositas $" + value.in + "</option>";
+				}
+			}
+		});
+		$("#optGpo").append(optionsC);
+		$("select").formSelect();
+		$("li.optgroup").on("click", function () {
+			$("li.optgroup-option").trigger("click");
+		});
+		$("#chooseCPlus").on("submit", function (e) {
+			e.preventDefault();
+			const formData2 = new FormData($("#formulario2")[0]);
+			const conciliationSelected = $("#conciliaItems").val();
+			formData2.append("conciliaciones", conciliationSelected);
+			formData2.append("company", company);
+			formData2.append("user", user);
+			$.ajax({
+				url: "https://api-solve.local/chosenConciliation",
+				type: "POST",
+				data: formData2,
+				processData: false,
+				contentType: false,
+				beforeSend: function () {
+					const obj = $("#contentCPlus");
+					const left = obj.offset().left;
+					const top = obj.offset().top;
+					const width = obj.width();
+					const height = obj.height();
+					$("#solveLoader").delay(50000).css({
+						display: "block",
+						opacity: 1,
+						visibility: "visible",
+						left: left,
+						top: top,
+						width: width,
+						height: height,
+						zIndex: 999999
+					}).focus();
+				},
+				success: function (response) {
+					if (response.error == null){
+						chooseDPlus(response,user, company);
+					}
+				},
+				complete: function () {
+					$("#solveLoader").css({
+						display: "none"
+					});
+				},
+				error: function (status, error) {
+					// Maneja los errores de la solicitud
+					console.error("Error en la solicitud:", status);
+				}
+			});
+		});
+	}
+	function chooseDPlus (response, user, company) {
+		let content = $("#contentCPlus");
+		let rfcActual = $('#rfcActual').val();
+		content.empty();
+		let base = "<h6 class='p-3'>¿Deseas crear una dispersion masiva?</h6>" +
+			"<form id='chooseCPlus'><div class='row'>" +
+			"<p><label><input name='makeDPlus' id='SiConciliation' value='1' type='radio' /> <span>Si</span></label></p>"+
+			"<p><label><input name='makeDPlus' id='NoConciliation' value='2' type='radio' checked/> <span>No</span></label></p>"+
+			"<div id='chooseD' class='row'></div>"+
+			"<div id='buttonsSpace' class='row'><div class='col l12 center-align'>" +
+			'<a href="<?=base_url ( 'Conciliaciones' )?>" class="modal-close button-orange">Terminar</a>'+
+			"</div></div></form>";
+		content.append(base);
+		let chooseD = $('#chooseD');
+		let buttonsSpace = $('#buttonsSpace');
+		$('input[type=radio][name=makeDPlus]').change(function() {
+			if (this.value === '1') {
+				chooseD.empty();
+				buttonsSpace.empty();
+				let selector = "<select multiple id='dispersionItems' name='dispersionItems'></select><label for='dispersionItems'>Conciliaciones</label>";
+				let opt = $("<optgroup label=\"Seleccionar todas\" id=\"optGpo2\"></optgroup>");
+				chooseD.append(selector);
+				$("#dispersionItems").append(opt);
+				let options = '';
+				$.each(response[0], function (index, value) {
+					if (value[1] === rfcActual) {
+						options += "<option value='" + value.idConciliation + "' >" + value[1] + " | " + value[0] + " | Depositan ↓ $" + value[3] + " | Regresas ↑ $" + value[4] + "</option> ";
+					} else {
+						options += "<option value='" + value.idConciliation + "' >" + value[1] + " | " + value[0] + " | Depositas ↑ $" + value[3] + " | Regresan ↓ $" + value[4] + "</option> ";
+					}
+				});
+				$('#optGpo2').append(options);
+				$("select").formSelect();
+				$("li.optgroup").on("click", function () {
+					$("li.optgroup-option").trigger("click");
+				});
+				let buttons = "<div class='col l12 center-align'>" +
+					'<a href="<?=base_url ( 'Conciliaciones' )?>" class="modal-close button-orange">Terminar</a>' +
+					"<input class='button-gray' type='submit' value='Siguiente'></div>";
+				buttonsSpace.append(buttons);
+				$('#chooseCPlus').on("submit", function (e) {
+					e.preventDefault();
+					const formData3 = new FormData();
+					const conciliationSelected = $("#dispersionItems").val();
+					formData3.append("conciliaciones", conciliationSelected);
+					formData3.append("company", company);
+					formData3.append("user", user);
+					$.ajax({
+						url: "https://api-solve.local/chosenForDispersion",
+						type: "POST",
+						data: formData3,
+						processData: false,
+						contentType: false,
+						beforeSend: function () {
+							const obj = $("#contentCPlus");
+							const left = obj.offset().left;
+							const top = obj.offset().top;
+							const width = obj.width();
+							const height = obj.height();
+							$("#solveLoader").delay(50000).css({
+								display: "block",
+								opacity: 1,
+								visibility: "visible",
+								left: left,
+								top: top,
+								width: width,
+								height: height,
+								zIndex: 999999
+							}).focus();
+						},
+						success: function (response) {
+							if (response.error === null){
+								toastHTML = "<span>Dispersion masiva creada correctamente</span>" +
+									"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+									"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+								M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+								conciliationPlus();
+								setTimeout(function() {
+									location.reload();
+								}, 3000);
+							}
+						},
+						complete: function () {
+							$("#solveLoader").css({
+								display: "none"
+							});
+						},
+						error: function (status, error) {
+							// Maneja los errores de la solicitud
+							console.error("Error en la solicitud:", status);
+						}
+					});
+				});
+			}else if (this.value === '2') {
+				chooseD.empty();
+				buttonsSpace.empty();
+				let buttons = "<div class='col l12 center-align'>" +
+					'<a href="<?=base_url( 'Conciliaciones' )?>" class="modal-close button-orange">Terminar</a></div>';
+				buttonsSpace.append(buttons);
+			}
+		});
+	}
+	function conciliationPlus (){
+		$("#tablaActiva").empty();
+		btnActive = 0;
+		noSelect();
+		$("#btnConciliationPlus").addClass("selected");
+		let btnAction = $("#btnAction").append("Subir CFDI");
+		btnAction.attr("href", "#modal-CFDI");
+		const tableBase = "<table id=\"tabla_conciliaciones\" class=\"stripe row-border order-column nowrap\"><thead><tr>" +
+			"<th>Autorizar</th>" +
+			"<th class=\"center-align\">Estatus<br />conciliación</th>" +
+			"<th class='center-align'>Clabe Interbancaria Transferencia Inicial</th>" +
+			"<th style=\"min-width: 142px; text-align: center\">Número de Referencia</th>" +
+			"<th style=\"min-width: 142px; text-align: center\">Folio</th>" +
+			"<th class=\"center-align\">Grupo de CFDI</th>" +
+			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto a pagar</th>" +
+			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto de regreso</th>" +
+			"<th style=\"text-align: center\" class=\"center-align\">Emisor del pago</th>" +
+			"<th style=\"text-align: center\" class=\"center-align\">Receptor del pago</th>" +
+			"<th class=\"center-align\">Fecha<br />Conciliación</th>" +
+			"</tr></thead>" +
+			"<tbody id=\"tblBody\"></tbody></table>";
+		$("#tablaActiva").append(tableBase);
+		$.ajax({
+			url: "https://api-solve.local/conciliationPlus",
+			data: JSON.stringify({
+				company: $("#idInc").val(),
+				environment:"SANDBOX",
+				}),
+			headers: {"Content-Type": "application/json"},
+			dataType: "JSON",
+			method: "POST",
+			beforeSend: function () {
+				const obj = $("#tblsViewer");
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$("#solveLoader").delay(50000).css({
+					display: "block",
+					opacity: 1,
+					visibility: "visible",
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500) {
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				} else if (data.code === 404) {
+					console.log("");
+				} else {
+					$("#tblBody").empty();
+					let rfcActual = $('#rfcActual').val();
+					$.each(data, function (index, value) {
+						let uuid, status, uuid2, clabe;
+						let aut, cancel, acept;
+						let exitMoney, entryMoney;
+						let flag = 'receptor';
+						exitMoney = value.exit_money;
+						entryMoney = value.entry_money;
+						if (value.rfc === rfcActual) {
+							flag = 'emisor';
+							switch (value.status) {
+								case "0":
+									aut = $("<a class=\"modal-trigger\" href=\"#modal-aut-conciliation\">Autorizar</a>");
+									cancel = $("<a class=\"modal-trigger button-orange modal-close\" href=\"#modal-rechazo\">Rechazar</a>");
+									acept = $("<a style='cursor: pointer;' class=\"button-gray \">Aceptar</a>");
+									cancel.click(function () {
+										$("#rejectText").empty();
+										$("#idReject").val(value.id);
+									});
+									acept.click(function () {
+										aceptOp(value.id, $("#autPayDate").val());
+									});
+									aut.click(function () {
+										let autEmisor = $("#autEmisor");
+										let autCFDI = $("#autCFDI");
+										let autConciliador = $("#autConciliador");
+										let autReferencia = $("#autReferencia");
+										let autMonto1 = $("#autMonto1");
+										let autMonto2 = $("#autMonto2");
+										let autClabe = $("#autClabe");
+										let autPayDate = $("#autPayDate");
+										autEmisor.empty();
+										autCFDI.empty();
+										autConciliador.empty();
+										autReferencia.empty();
+										autMonto1.empty();
+										autMonto2.empty();
+										autClabe.empty();
+										autEmisor.append(value.emisor);
+										autCFDI.append(uuid);
+										autConciliador.append(uuid2);
+										autReferencia.append(value.operation_number);
+										autMonto1.append("$" + value.total1);
+										autMonto2.append("$" + value.total2);
+										autClabe.append(value.account_clabe);
+										let dateS = (value.datePago);
+										dateS = dateS.split("-");
+										autPayDate.attr("value", dateS[2] + "-" + dateS[1] + "-" + dateS[0]);
+										$("#autAceptar").empty();
+										$("#autCancel").empty();
+										$("#autAceptar").append(acept);
+										$("#autCancel").append(cancel);
+									});
+									break;
+								case "1":
+								case "3":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							clabe = value.clabeTransferencia;
+							exitMoney = value.entry_money;
+							entryMoney = value.exit_money;
+							312
+						} else if (flag === "receptor" && (value.status === 3 || value.status ===4)) {
+							switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							clabe = "xxxxxxxxxxxxxx" + value.clabeTransferencia.substring(value.clabeTransferencia.length - 4);
+						} else {
+							switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							}
+							clabe = "-";
+						}
+						switch (value.status) {
+							case "0":
+								status = "<p><span class=\"estatus\">Por autorizar</span></p>";
+								break;
+							case "1":
+								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
+								break;
+							case "2":
+								status = "<p><span class=\"estatus\" style=\"background-color:#c20005\">Rechazada</span></p>";
+								break;
+							case "3":
+								status = "<p><span class=\"estatus\" style=\"background-color:#52A447\">Realizada</span></p>";
+								break;
+							case "4":
+								status = "<p><span class=\"estatus\" style=\"background-color:#dedc48\">Vencida</span></p>";
+								break;
+						}
+						let cfdiM = $("<a style='cursor: pointer;'>Ver CFDI</a>");
+						cfdiM.click(function () {
+							$("#tblBodyCfdi").empty();
+							let $dat = value.cfdi;
+							fillCfdi($dat);
+						});
+						const tr = $("<tr " + flag + ">" +
+							"<td class='tabla-celda center-align' id='aut" + value.id + "'></td>" +
+							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
+							"<td class='center-align " + flag + "'>" + clabe + "</td>" +
+							"<td class='center-align " + flag + "'>" + value.reference_number + "</td>" +
+							"<td class='center-align'>" + value.folio + "</td>" +
+							"<td class='center-align' id='cfdi" + value.id + "'></td>" +
+							"<td class='center-align' >$ "+ exitMoney + "</td>" +
+							"<td class='center-align' >$ "+ entryMoney + "</td>" +
+							"<td class='center-align'> " + value.deudor + "</td>" +
+							"<td class='center-align'>" + value.receptor + "</td>" +
+							"<td class='center-align'  style='text-wrap: nowrap;' id=\"tblPayD" + value.id + "\" >" + value.payment_date + "</td>" +
+							"</tr>");
+						$("#tblBody").append(tr);
+						$("#aut" + value.id).append(aut);
+						$("#cfdi" + value.id).append(cfdiM);
+					});
+				}
+			},
+			complete: function () {
+				$("#solveLoader").css({
+					display: "none"
+				});
+			},
+			error: function (data) {
+				$("#solveLoader").css({
+					display: "none"
+				});
+				let toastHTML = "<span><strong>Ha ocurrido un problema, por favor intente mas tarde</strong></span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+			}
+		});
+	}
+	function fillCfdi ($data){
+		$.each($data, function(index, value){
+			const tr = $("<tr>" +
+				"<td class='center-align'>" + value.sender + "</td>" +
+				"<td class='center-align'>" + value.receiber + "</td>" +
+				"<td class='center-align'>"+value.uuid+"</td>" +
+				"<td class='center-align' >"+ value.payment_date + "</td>" +
+				"<td class='center-align' >"+ value.created_at + "</td>" +
+				"<td class=''>$ " + value.total + "</td>" +
+				"<td class='center-align'>" + value.tipo + "</td>" +
+				"</tr>");
+			$("#tblBodyCfdi").append(tr);
+		});
+		$("#modal-cfdi").modal("open");
+	}
 </script>

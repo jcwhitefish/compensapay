@@ -47,7 +47,7 @@
 				die( $res );
 			}
 		}
-		public function sendResponse ( array $resp = NULL, $error = 0 ) {
+		public function sendResponse ( array $resp = NULL, $error = 0 ): void {
 			$return = NULL;
 			if ( $resp == NULL && $error == 0 ) {
 //            header('HTTP/1.0 501 Not Implemented');

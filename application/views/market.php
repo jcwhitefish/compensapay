@@ -350,6 +350,8 @@
 	}
 </style>
 <script>
+	let deviceDataId;
+	let deviceDataId2;
 	const sucess_callbak = function (response) {
 		const token_id = response.data.id;
 		console.log(token_id);
@@ -360,66 +362,66 @@
 		alert("ERROR [" + response.status + "] " + desc);
 	};
 	$(document).ready(function () {
-		// $("#3dModal").modal("open");
-		const sandbox = true;
-		let deviceDataId;
-		let deviceDataId2;
-		
 		// OpenPay.setId('mtcyupm65psrjreromun');
 		// OpenPay.setApiKey('pk_88137bbfe9d94c208d6741754c9e24d4');
-		
-		$("#cardNumber").on("change", function () {
-			const cardIMG = $("#cardTypeImg");
-			const cardNumber = $("#cardNumber").val();
-			const cardType = OpenPay.card.cardType(cardNumber);
-			verifyForm();
-			const img = "<img src=\"/assets/images/cardtype/" + cardType + ".svg\" alt=\"" + cardType + "\" height=\"70px\">";
-			cardIMG.empty();
-			cardIMG.append(img);
-		});
-		$("#cardNumber2").on("change", function () {
-			const cardIMG = $("#cardTypeImg2");
-			const cardNumber = $("#cardNumber2").val();
-			const cardType = OpenPay.card.cardType(cardNumber);
-			verifyForm2();
-			const img = "<img src=\"/assets/images/cardtype/" + cardType + ".svg\" alt=\"" + cardType + "\" height=\"70px\">";
-			cardIMG.empty();
-			cardIMG.append(img);
-		});
-		$("#nameHolder").on("input", function () {
-			verifyForm();
-		});
-		$("#nameHolder2").on("input", function () {
-			verifyForm2();
-		});
-		$("#cvv").on("input", function () {
-			verifyForm();
-		});
-		$("#cvv2").on("input", function () {
-			verifyForm2();
-		});
-		$("#sendCard").on("click", function (event) {
-			OpenPay.setSandboxMode(true);
-			OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
-			OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
-			deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
-			$("#deviceID").val(deviceDataId);
-			const flag = $("#cardFlag").val();
-			if (flag === 1 || flag === "1") {
-				OpenPay.token.extractFormAndCreate("payment-form", newCard, error_callbak);
-			} else {
-				OpenPay.token.extractFormAndCreate("payment-form", shiftCard, error_callbak);
-			}
-		});
-		$("#sendCard2").on("click", function (event) {
-			OpenPay.token.extractFormAndCreate("payment-form2", buyOp, error_callbak);
-			
-		});
-		$("#changeCard").on("click", function () {
-			$("#addCardM").modal("open");
-		});
+		// $("#cardNumber").on("change", function () {
+		// 	const cardIMG = $("#cardTypeImg");
+		// 	const cardNumber = $("#cardNumber").val();
+		// 	const cardType = OpenPay.card.cardType(cardNumber);
+		// 	verifyForm();
+		// 	const img = "<img src=\"/assets/images/cardtype/" + cardType + ".svg\" alt=\"" + cardType + "\" height=\"70px\">";
+		// 	cardIMG.empty();
+		// 	cardIMG.append(img);
+		// });
+		// $("#cardNumber2").on("change", function () {
+		// 	const cardIMG = $("#cardTypeImg2");
+		// 	const cardNumber = $("#cardNumber2").val();
+		// 	const cardType = OpenPay.card.cardType(cardNumber);
+		// 	verifyForm2();
+		// 	const img = "<img src=\"/assets/images/cardtype/" + cardType + ".svg\" alt=\"" + cardType + "\" height=\"70px\">";
+		// 	cardIMG.empty();
+		// 	cardIMG.append(img);
+		// });
+		// $("#nameHolder").on("input", function () {
+		// 	verifyForm();
+		// });
+		// $("#nameHolder2").on("input", function () {
+		// 	verifyForm2();
+		// });
+		// $("#cvv").on("input", function () {
+		// 	verifyForm();
+		// });
+		// $("#cvv2").on("input", function () {
+		// 	verifyForm2();
+		// });
+		// $("#sendCard").on("click", function (event) {
+		// 	OpenPay.setSandboxMode(true);
+		// 	OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+		// 	OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		// 	deviceDataId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+		// 	$("#deviceID").val(deviceDataId);
+		// 	const flag = $("#cardFlag").val();
+		// 	if (flag === 1 || flag === "1") {
+		// 		OpenPay.token.extractFormAndCreate("payment-form", newCard, error_callbak);
+		// 	} else {
+		// 		OpenPay.token.extractFormAndCreate("payment-form", shiftCard, error_callbak);
+		// 	}
+		// });
+		// $("#sendCard2").on("click", function (event) {
+		// 	OpenPay.setSandboxMode(true);
+		// 	OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
+		// 	OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		// 	deviceDataId2 = OpenPay.deviceData.setup("payment-form2", "deviceIdHiddenFieldName");
+		// 	console.log(deviceDataId2);
+		// 	$("#deviceID2").val(deviceDataId2);
+		// 	OpenPay.token.extractFormAndCreate("payment-form2", buyOp, error_callbak);
+		//
+		// });
+		// $("#changeCard").on("click", function () {
+		// 	$("#addCardM").modal("open");
+		// });
 		$("#buyOp1").on("click", function () {
-			$("#buyModal").modal("open");
+			buyOp();
 		});
 	});
 	
@@ -445,32 +447,33 @@
 		}
 	}
 	
-	function buyOp(response) {
+	function buyOp() {
 		OpenPay.setSandboxMode(true);
-		OpenPay.setId("mhcmkrgyxbjfw9vb9cqc");
-		OpenPay.setApiKey("pk_e09cd1f4b4c542e6adbf1f132d8d9ebb");
+		OpenPay.setId("mmekhnp4dwlgffp41coj");
+		OpenPay.setApiKey("pk_b881111be9a2400b9d030f9d2f3d2afa");
 		deviceDataId2 = OpenPay.deviceData.setup("payment-form2", "deviceIdHiddenFieldName");
-		
-		let cardNumber = $("#cardNumber2").val();
-		let cardType = OpenPay.card.cardType(cardNumber);
-		// let device = $("#deviceID2").val();
-		let cvv = $("#cvv2").val();
-		let month = $("#expMonth2").val();
-		let year = $("#expYear2").val();
-		let name = $("#nameHolder2").val();
-		let tokenCard = response.data.id;
-		$("#token_id2").val(tokenCard);
+		console.log(deviceDataId2);
+		$("#deviceID2").val(deviceDataId2);
+		// let cardNumber = $("#cardNumber2").val();
+		// let cardType = OpenPay.card.cardType(cardNumber);
+		// // let device = $("#deviceID2").val();
+		// let cvv = $("#cvv2").val();
+		// let month = $("#expMonth2").val();
+		// let year = $("#expYear2").val();
+		// let name = $("#nameHolder2").val();
+		// let tokenCard = response.data.id;
+		// $("#token_id2").val(tokenCard);
 		$.ajax({
 			url: "Tienda/BuyOperations",
 			data: {
-				cardNumber: cardNumber,
-				holderName: name,
-				expirationMonth: month,
-				expirationYear: year,
-				cvv: cvv,
+				// cardNumber: cardNumber,
+				// holderName: name,
+				// expirationMonth: month,
+				// expirationYear: year,
+				// cvv: cvv,
 				sessionID: deviceDataId2,
-				cardType: cardType,
-				tokenCard: tokenCard
+				// cardType: cardType,
+				// tokenCard: tokenCard
 			},
 			dataType: "json",
 			method: "post",
@@ -496,9 +499,9 @@
 					M.toast({html: toastHTML});
 				} else {
 					$("#addCardM").modal("close");
-					const frame = '<iframe id="3dFrame" title="3D Secure Validation" width="100%" height="100%" src="'+data.payment_method.url+'"></iframe>';
-					$('#3dContent').append(frame);
-					$('#3dModal').modal('open');
+					const frame = "<iframe id=\"3dFrame\" title=\"3D Secure Validation\" width=\"100%\" height=\"100%\" src=\"" + data.payment_method.url + "\"></iframe>";
+					$("#3dContent").append(frame);
+					$("#3dModal").modal("open");
 				}
 			},
 			complete: function () {
