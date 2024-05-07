@@ -115,6 +115,11 @@
 							Conciliación Masiva
 						</button>
 						<button
+							id="btnDispersionPlus" class="button-table" style="margin-right: 0.75rem"
+							onclick="DispersionPlus()">
+							Dispersión Masiva
+						</button>
+						<button
 							id="btnInvoice" class="button-table" style="margin-right: 0.75rem"
 							onclick="cfdi()">
 							CFDIs
@@ -939,6 +944,7 @@
 	});
 	function noSelect() {
 		$("#btnConciliationPlus").removeClass("selected");
+		$("#btnDispersionPlus").removeClass("selected");
 		$("#btnConciliation").removeClass("selected");
 		$("#btnInvoice").removeClass("selected");
 		$("#tablaActiva").empty();
@@ -1810,13 +1816,12 @@
 		$("#tablaActiva").append(tableBase);
 		$.ajax({
 			url: "https://api-solve.local/conciliationPlus",
-			data: JSON.stringify({
+			data:{
 				company: $("#idInc").val(),
 				environment:"SANDBOX",
-				}),
-			headers: {"Content-Type": "application/json"},
+			},
 			dataType: "JSON",
-			method: "POST",
+			method: "GET",
 			beforeSend: function () {
 				const obj = $("#tblsViewer");
 				const left = obj.offset().left;
@@ -2016,5 +2021,142 @@
 			$("#tblBodyCfdi").append(tr);
 		});
 		$("#modal-cfdi").modal("open");
+	}
+	function DispersionPlus() {
+		$("#tablaActiva").empty();
+		btnActive = 0;
+		noSelect();
+		$("#btnDispersionPlus").addClass("selected");
+		let btnAction = $("#btnAction").append("Subir CFDI");
+		btnAction.attr("href", "#modal-CFDI");
+		const tableBase = "<table id=\"tabla_conciliaciones\" class=\"stripe row-border order-column nowrap\"><thead><tr>" +
+			"<th class=\"center-align\">Estatus</th>" +
+			"<th class=\"center-align\">Estatus</th>" +
+			"<th class='center-align'>Referencia númerica</th>" +
+			"<th class=\"center-align\">Folio de dispersión</th>" +
+			"<th class=\"center-align\">Balance antes</th>" +
+			"<th class=\"center-align\">Balance necesario</th>" +
+			"<th class=\"center-align\">Balance despues</th>" +
+			"<th class=\"center-align\">Clabe bancaria</th>" +
+			"<th class=\"center-align\">Fecha de Alta<br />de operación</th>" +
+			"<th class=\"center-align\">Fecha de ultima<br />modificación</th>" +
+			"</tr></thead>" +
+			"<tbody id=\"tblBody\"></tbody></table>";
+		$("#tablaActiva").append(tableBase);
+		$.ajax({
+			url: "https://api-solve.local/dispersionPlus",
+			data: {
+				from: $("#start").val(),
+				to: $("#fin").val(),
+				company: $("#idInc").val(),
+				environment:"SANDBOX",
+			},
+			dataType: "json",
+			method: "GET",
+			beforeSend: function () {
+				const obj = $("#tblsViewer");
+				const left = obj.offset().left;
+				const top = obj.offset().top;
+				const width = obj.width();
+				const height = obj.height();
+				$("#solveLoader").delay(50000).css({
+					display: "block",
+					opacity: 1,
+					visibility: "visible",
+					left: left,
+					top: top,
+					width: width,
+					height: height,
+					zIndex: 999999
+				}).focus();
+			},
+			success: function (data) {
+				if (data.code === 500) {
+					let toastHTML = "<span><strong>" + data.message + " </strong> </span>&nbsp;<br><p><span><strong>" + data.reason +
+						"</strong></span>" +
+						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				} else if (data.code === 404) {
+					console.log("");
+				} else {
+					$("#tblBody").empty();
+					$.each(data, function (index, value) {
+						let status, aut, flag;
+						let after = '---';
+						if(value.balance_after !== null){
+							after = '$ '+value.balance_after;
+						}
+						let update = '---';
+						if(value.updated_at !== null){
+							update = value.updated_at;
+						}
+						switch (value.status) {
+								case "0":
+									aut = "<i class=\"small material-icons\">panorama_fish_eye</i>";
+									break;
+								case "3":
+								case "1":
+									aut = "<i class=\"small material-icons\" style=\"color: green;\">check_circle</i>";
+									break;
+								case "2":
+									aut = "<i class=\"small material-icons\" style=\"color: red;\">cancel</i>";
+									break;
+							
+							
+						}
+						switch (value.status) {
+							case "0":
+								status = "<p><span class=\"estatus\">Por autorizar</span></p>";
+								break;
+							case "1":
+								status = "<p><span class=\"estatus\" style=\"background-color:#8225fc\">Autorizada</span></p>";
+								break;
+							case "2":
+								status = "<p><span class=\"estatus\" style=\"background-color:#c20005\">Rechazada</span></p>";
+								break;
+							case "3":
+								status = "<p><span class=\"estatus\" style=\"background-color:#52A447\">Realizada</span></p>";
+								break;
+							case "4":
+								status = "<p><span class=\"estatus\" style=\"background-color:#dedc48\">Vencida</span></p>";
+								break;
+						}
+						const tr = $("<tr>" +
+							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
+							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
+							"<td class='center-align'>" + value.reference_number + "</td>" +
+							"<td class='center-align'>" + value.folio + "</td>" +
+							"<td class='center-align'>$ " + value.balance_before + "</td>" +
+							"<td class='center-align'>$ " + value.balance_needed + "</td>" +
+							"<td class='center-align'>" + after + "</td>" +
+							"<td class='center-align'>" + value.clabe + "</td>" +
+							"<td class='center-align'>" + value.created_at + "</td>" +
+							"<td class='center-align'>" + update + "</td>" +
+							"</tr>");
+						$("#tblBody").append(tr);
+						$("#aut" + value.id).append(aut);
+					});
+				}
+			},
+			complete: function () {
+				$("#solveLoader").css({
+					display: "none"
+				});
+			},
+			error: function (data) {
+				$("#solveLoader").css({
+					display: "none"
+				});
+				let toastHTML = "<span><strong>Ha ocurrido un problema, por favor intente mas tarde</strong></span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
+					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
+					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
+				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
+			}
+		});
 	}
 </script>
