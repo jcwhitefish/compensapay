@@ -2123,7 +2123,7 @@
 								break;
 						}
 						const tr = $("<tr>" +
-							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\"></td>" +
+							"<td class='tabla-celda center-align' id=\"aut" + value.id + "\>" + status + "</td>" +
 							"<td class='tabla-celda center-align' style='text-wrap: nowrap;'>" + status + "</td>" +
 							"<td class='center-align'>" + value.reference_number + "</td>" +
 							"<td class='center-align'>" + value.folio + "</td>" +
