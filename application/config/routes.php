@@ -54,4 +54,5 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['getEvents'] = 'Fintec/getEvents';
 $route['stpTransactions'] = 'Webhook/transactions';
+$route['ConciliacionMasiva'] =  'Conciliaciones/ConciliacionPlus';
 

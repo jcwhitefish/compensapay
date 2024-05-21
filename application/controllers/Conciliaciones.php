@@ -17,6 +17,14 @@
 			$data[ 'main' ] = $this->load->view ( 'conciliaciones', $data, TRUE );
 			$this->load->view ( 'plantilla', $data );
 		}
+		public function ConciliacionPlus(): void {
+			$data = [
+				'user' => $this->session->userdata ( 'datosUsuario' ),
+				'company' => $this->session->userdata ( 'datosEmpresa' ),
+			];
+			$data[ 'main' ] = $this->load->view ( 'conciliacionPlus', $data, TRUE );
+			$this->load->view ( 'plantilla', $data );
+		}
 		public function CFDI (): bool {
 			//Se obtienen la fecha mínima y máxima para filtrar las facturas
 			$from = strtotime ( $this->input->post ( 'from' ) );

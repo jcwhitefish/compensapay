@@ -7,7 +7,6 @@
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +30,6 @@
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" rel="stylesheet">
 	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 </head>
-
 <body>
 <style>
 	#solveLoader {
@@ -113,7 +111,14 @@
 				<?php if (!empty($this->session->userdata('datosEmpresa')["finclabe"])  AND $this->session->userdata('pago_suscription') == 1) { ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Notificaciones"><i class="material-icons%s">notifications</i></a></li>', base_url ( 'notificaciones' ), ( strpos ( current_url (), 'notificaciones' ) ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Inicio"><i class="material-icons%s">home</i></a></li>', base_url ( 'inicio' ), ( count ( array_intersect ( [ 'notificaciones', 'Conciliaciones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'Timbrado', 'Tienda', 'xml' ], explode ( '/', current_url () ) ) ) == 0 ) ? ' icon-list-hover' : '' ); ?>
-				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Conciliaciones"><i class="material-icons%s">swap_horiz</i></a></li>', base_url ( 'Conciliaciones' ), ( strpos ( current_url (), 'Conciliaciones' ) !== FALSE || strpos ( current_url (), 'facturas/subida' ) !== FALSE ) ? ' icon-list-hover' : '' ); ?>
+				<?php echo sprintf (
+					'<li><a href="%s" class="tooltipped dropdown-trigger" data-position="right" data-tooltip="Operaciones" data-target="dropdown1">
+<i class="material-icons%s">swap_horiz</i>
+</a></li>', base_url ( 'Conciliaciones' ), ( strpos ( current_url (), 'Conciliaciones' ) !== FALSE || strpos ( current_url (), 'facturas/subida' ) !== FALSE ) ? ' icon-list-hover' : '' ); ?>
+				<?php echo ('<ul id="dropdown1" class="dropdown-content" style="width: 135px !important;">
+  <li><a href="/Conciliaciones">Conciliación sencilla</a></li>
+  <li><a href="/ConciliacionMasiva">Conciliacion masiva</a></li>
+  <li><a href="/Dispersiones">Dispersión masiva</a></li></ul>');?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Documentos"><i class="material-icons%s">folder</i></a></li>', base_url ( 'Documentos' ), ( strpos ( current_url (), 'Documentos' ) ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Timbrado"><i class="material-icons%s">description</i></a></li>', base_url ( 'Timbrado' ), ( strpos ( current_url (), 'Timbrado' ) ) ? ' icon-list-hover' : '' ); ?>
 				<?php //echo sprintf('<li><a href="%s"><i class="material-icons%s">pie_chart</i></a></li>', base_url('reportes'), (strpos(current_url(), 'reportes')) ? ' icon-list-hover' : ''); ?>
@@ -188,6 +193,9 @@
 
 </script>
 <style>
+	.dropdown-content{
+		min-width: 200px !important;
+	}
 	.nav-max {
 		height: 40px !important;
 		position: relative;
@@ -325,5 +333,4 @@
 	}
 </style>
 </body>
-
 </html>
