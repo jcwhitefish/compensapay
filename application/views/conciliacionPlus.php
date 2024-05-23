@@ -253,9 +253,9 @@
 	</div>
 </div>
 <script>
-	// let url = "https://api-solve.local";                     //Local
-	let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
-	// let url = "https://apisandbox.solve.com.mx/public/";     //Live
+	let url = "https://api-solve.local";                     //Local
+	// let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
+	// // let url = "https://apisandbox.solve.com.mx/public/";     //Live
 	$(document).ready(function () {
 		conciliationPlus();
 		$(".dropdown-button").dropdown({hover: true, gutter: 0,});
@@ -344,15 +344,15 @@
 		$.each(conciliation, function (index, value) {
 			if (value.sender === rfcActual) {
 				if(value.out > value. in){
-					optionsC += "<option value=\"" + value.receiver  + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out +"\"> <strong>" + value.receiver + "</strong> | ↑ Depositas $" + value.out + " | ↓ Regresan $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.receiver  + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out +"\"> <strong>" + value.receiver + "</strong> | ↑ Envias $" + value.out + " | ↓ Recibes $" + value.in + "</option>";
 				}else{
-					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.receiver + "</strong> | ↑ Regresas $" + value.out + " | ↓ Depositan $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.receiver + "</strong> | ↑ Recibes $" + value.out + " | ↓ Envias $" + value.in + "</option>";
 				}
 			} else {
 				if(value.out > value. in){
-					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.sender + "</strong> | ↓ Depositan $" + value.out + " | ↑ Regresas $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.sender + "</strong> |  ↑ Envias $" + value.in + "| ↓ Recibes $" + value.out + " </option>";
 				}else{
-					optionsC += "<option value=\"" + value.receiver + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out + "\"> <strong>" + value.sender + "</strong> | ↓ Regresan $" + value.out + " | ↑ Depositas $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.receiver + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out + "\"> <strong>" + value.sender + "</strong> | ↓ Recibes $" + value.out + " | ↑ Envias $" + value.in + "</option>";
 				}
 			}
 		});
