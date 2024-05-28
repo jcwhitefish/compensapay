@@ -23,7 +23,6 @@ $PNG_WEB_DIR = 'temp/';
 //recibo el id de la factura
 
 if(isset($_POST["idfactura"])){$idfactura=$_POST["idfactura"];}
-
 elseif(isset($_GET["idfactura"])){$idfactura=$_GET["idfactura"];}
 
 

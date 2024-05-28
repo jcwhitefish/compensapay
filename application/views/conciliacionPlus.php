@@ -344,15 +344,15 @@
 		$.each(conciliation, function (index, value) {
 			if (value.sender === rfcActual) {
 				if(value.out > value. in){
-					optionsC += "<option value=\"" + value.receiver  + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out +"\"> <strong>" + value.receiver + "</strong> | ↑ Envias $" + value.out + " | ↓ Recibes $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.receiver  + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out +"\"> <strong>" + value.receiver + " / " + value.receiver_name+"</strong> | ↑ Envias $" + value.out + " | ↓ Recibes $" + value.in + " | " + value.total_cfdi + " cfdi procesados</option>";
 				}else{
-					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.receiver + "</strong> | ↑ Recibes $" + value.out + " | ↓ Envias $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.receiver  + " / " + value.receiver_name+ "</strong> | ↑ Recibes $" + value.out + " | ↓ Envias $" + value.in + " | " + value.total_cfdi + " cfdi procesados</option>";
 				}
 			} else {
 				if(value.out > value. in){
-					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.sender + "</strong> |  ↑ Envias $" + value.in + "| ↓ Recibes $" + value.out + " </option>";
+					optionsC += "<option value=\"" + value.sender  + "|" + value.receiver + "|" + value.tmp + "|" + value.out + "|" + value.in +"\"> <strong>" + value.sender + " / " + value.sender_name + "</strong> | ↓ Recibes $" + value.out + " | ↑ Envias $" + value.in + " | " + value.total_cfdi + " cfdi procesados</option>";
 				}else{
-					optionsC += "<option value=\"" + value.receiver + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out + "\"> <strong>" + value.sender + "</strong> | ↓ Recibes $" + value.out + " | ↑ Envias $" + value.in + "</option>";
+					optionsC += "<option value=\"" + value.receiver + "|" + value.sender + "|" + value.tmp + "|" + value.in + "|" + value.out + "\"> <strong>" + value.sender+ " / " + value.sender_name + "</strong> | ↑ Envias $" + value.in + "| ↓ Recibes $" + value.out + " | " + value.total_cfdi + " cfdi procesados</option>";
 				}
 			}
 		});
@@ -730,7 +730,8 @@
 			const tr = $("<tr>" +
 				"<td class='center-align'>" + value.sender + "</td>" +
 				"<td class='center-align'>" + value.receiber + "</td>" +
-				"<td class='center-align'>"+value.uuid+"</td>" +
+				"<td class='center-align'>" +
+				"<a href='<?=base_url('assets/factura/api_cfdi.php?environment=SANDBOX&uuid=')?>"+value.uuid+"&category=2' target='_blank'>"+value.uuid+"</a></td>" +
 				"<td class='center-align' >"+ value.payment_date + "</td>" +
 				"<td class='center-align' >"+ value.created_at + "</td>" +
 				"<td class=''>$ " + value.total + "</td>" +
