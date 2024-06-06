@@ -34,7 +34,6 @@
 	
 	/* Fix button selected but all class selected afect */
 	.selected {
-		background-color: black !important;
 		color: white !important;
 		height: 50px;
 		border: 2px solid black !important;
@@ -138,7 +137,7 @@
 				</div>
 			</div>
 			<div class="col l2 filter" style="padding: 5px; margin-left: auto;margin-right: auto;">
-				<a id="masiva" class="modal-trigger button-gray right" href="#modal-conciliacionPlus">Crear Conciliación Masiva</a>
+				<a id="masiva" class="modal-trigger button-gray right" style="padding-left: 10px;padding-right: 10px;" href="#modal-conciliacionPlus">Crear Conciliación Masiva</a>
 			</div>
 		</div>
 		<input type="hidden" name="idInc" id="idInc" value="<?= $id ?>">
@@ -253,9 +252,6 @@
 	</div>
 </div>
 <script>
-	let url = "https://api-solve.local";                     //Local
-	// let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
-	// // let url = "https://apisandbox.solve.com.mx/public/";     //Live
 	$(document).ready(function () {
 		conciliationPlus();
 		$(".dropdown-button").dropdown({hover: true, gutter: 0,});

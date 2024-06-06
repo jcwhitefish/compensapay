@@ -6,7 +6,16 @@
 	 */
 	class Documentos extends MY_Loggedin {
 		public function index (): void {
-			$data[ 'main' ] = $this->load->view ( 'documents', '', TRUE );
+			$data = [
+				'user' => $this->session->userdata ( 'datosUsuario' ),
+				'company' => $this->session->userdata ( 'datosEmpresa' ),
+				'main' => $this->load->view ( 'documents', '', true ),
+			];
+			$data = [
+				'user' => $this->session->userdata ( 'datosUsuario' ),
+				'company' => $this->session->userdata ( 'datosEmpresa' ),
+			];
+			$data[ 'main' ] = $this->load->view ( 'documents', $data, TRUE );
 			$this->load->view ( 'plantilla', $data );
 		}
 		/**

@@ -168,7 +168,6 @@
 		
 		
 	}
-	
 	<?php if ($this->session->userdata ( 'logged_in' )) { ?>
 	//let miImagen = document.getElementById('logoValidar');
 	//miImagen.onload = function() {
@@ -190,7 +189,10 @@
 	//    console.log(miImagen);
 	//};
 	<?php } ?>
-
+	let url = "https://api-solve.local";                     //Local
+	// let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
+	// // let url = "https://apisandbox.solve.com.mx/public/";     //Live
+	let env = "SANDBOX";
 </script>
 <style>
 	.dropdown-content{

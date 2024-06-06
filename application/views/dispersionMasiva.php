@@ -129,8 +129,8 @@
 	</div>
 </div>
 <script>
-	const url = "https://api-solve.local";                     //Local
-	// let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
+	// const url = "https://api-solve.local";                     //Local
+	let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
 	// // let url = "https://apisandbox.solve.com.mx/public/";     //Live
 	const tblActiva = $("#tablaActiva");
 	$(document).ready(function () {

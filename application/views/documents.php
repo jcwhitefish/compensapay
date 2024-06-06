@@ -1,5 +1,9 @@
 <?php
 	$factura = base_url ( 'assets/factura/factura.php?idfactura=' );
+	$company = base64_encode ( json_encode ( $company ) ) ?? '';
+	$rfcActual = json_decode ( base64_decode ( $company ), TRUE )[ 'rfc' ];
+	$id = json_decode ( base64_decode ( $company ), TRUE )[ 'id' ];
+	$user = base64_encode ( json_encode ( $user ) ) ?? '';
 ?>
 <script>
 	$(document).ready(function () {
@@ -59,60 +63,190 @@
 <div class="p-5">
 	<h5>Documentos</h5>
 	<!-- head con el calendario -->
-	<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
-		<div class="col l3">
-				<div class="row" style="margin-bottom: 0px;">
-					<div class="col valign-wrapper"><p>Desde:</p></div>
-					<div class="col">
-						<label for="start">
-							<input
-								type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
-								max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
-						</label>
+	<div class="row card esquinasRedondas" style="padding-top: 10px;" id="filterSpace">
+		<div id="filterCfdi">
+			<div class="row" style="display: flex;justify-content: center;">
+				<div
+						class="col l5 center"
+						style="border: 1px rgba(0,0,0,0.1) solid; border-radius:25px; padding: 5px; margin-left: auto;margin-right: auto;">
+					<div class="row center-align" style="padding: 0; margin: 0;">Alta de operación</div>
+					<div class="row center-align" style="margin: 0;">
+						<div class="col l6 center-align">
+							<div class="col center-align"><p>Desde:</p></div>
+							<div class="col center-align">
+								<label for="start">
+									<input
+											type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
+											max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+								</label>
+							</div>
+						</div>
+						<div class="col l6 center-align">
+							<div class="col center-align"><p>Hasta:</p></div>
+							<div class="col center-align">
+								<label for="fin">
+									<input
+											type="date" id="fin" name="trip-start"
+											value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+											max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+								</label>
+							</div>
+						</div>
 					</div>
 				</div>
-		</div>
-		<div class="col l3">
-			<div class="row" style="margin-bottom: 0px;">
-				<div class="col valign-wrapper"><p>Hasta:</p></div>
-				<div class="col">
-					<label for="fin">
-						<input
-							type="date" id="fin" name="trip-start"
-							value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
-							max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
-					</label>
+				<div
+						class="col l5 center"
+						style="border: 1px rgba(0,0,0,0.1) solid; border-radius:25px; padding: 5px; margin-left: auto;margin-right: auto;">
+					<div class="row center-align" style="padding: 0; margin: 0;">Ultima modificación</div>
+					<div class="row center-align" style="margin: 0;">
+						<div class="col l6 center-align">
+							<div class="col center-align"><p>Desde:</p></div>
+							<div class="col center-align">
+								<label for="startMod">
+									<input
+											type="date" id="startMod" name="startMod" value="2023-10-01"
+											min="2023-10-01"
+											max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+								</label>
+							</div>
+						</div>
+						<div class="col l6 center-align">
+							<div class="col center-align"><p>Hasta:</p></div>
+							<div class="col center-align">
+								<label for="finMod">
+									<input
+											type="date" id="finMod" name="finMod"
+											value="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+											max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="display: flex;justify-content: center;">
+				<div class="col l3 filter" style="padding: 5px; margin-left: auto;margin-right: auto;">
+					<div class="row center-align valign-wrapper" style="margin-bottom: 0; justify-content: center">
+						<div class="col valign-wrapper"><p>UUID:</p></div>
+						<div class="col">
+							<label for="searchFolio">
+								<input
+										type="text" id="searchUuid" name="searchUuid"
+										placeholder="E4890A0F-8375-4D2F-A289-ED9C467433AC"
+										oninput="this.value = this.value.replace(/[^a-zA-Z0-9-]/g, '').replace(/(\..*?)\..*/g, '$1').toUpperCase();"
+										maxlength="50" />
+							</label>
+						</div>
+					</div>
+				</div>
+				<div
+						class="col l3 filter"
+						style="padding: 5px; margin-left: auto;margin-right: auto; justify-content: center; display: flex">
+					<div class="row" style="margin-bottom: 0;">
+						<div class="col valign-wrapper"><p>Buscar:</p></div>
+						<div class="col">
+							<label for="searchRNumerica">
+								<input
+										type="text" id="searchRNumerica" name="searchRNumerica" placeholder="6465825"
+										oninput="this.value = this.value.replace(/[^a-zA-Z0-9-]/g, '').replace(/(\..*?)\..*/g, '$1').toUpperCase();"
+										maxlength="30" />
+							</label>
+						</div>
+					</div>
+				</div>
+				<div
+						class="col l3 filter"
+						style="padding: 5px; margin-left: auto;margin-right: auto; justify-content: center; display: flex">
+					<div class="row" style="margin-bottom: 0;">
+						<div class="col valign-wrapper"><p>Mostrar CFDI conciliacion:</p></div>
+						<div class="col">
+							<form action="#">
+								<p>
+									<label>
+										<input
+												type="checkbox" id="showSencilla" class="filled-in" checked="checked"
+												style="display: none;" />
+										<span>Sencilla</span>
+									</label>
+								</p>
+								<p>
+									<label>
+										<input type="checkbox" id="showPlus" class="filled-in" style="display: none;" />
+										<span>Masiva</span>
+									</label>
+								</p>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div
+						class="col l3 filter"
+						style="padding: 5px; margin-left: auto;margin-right: auto; display: flex; justify-content: center; height: 39px">
+					<a
+							id="download" class="modal-trigger button-gray"
+							style="padding-bottom: 2px; padding-top: 2px;height: 39px;width: 115px;padding-left: 20px;padding-right: 20px;
+							align-content: center; text-align: center"
+							download>Exportar</a>
 				</div>
 			</div>
 		</div>
-		<div class="col l2"></div>
-		<div class="col l2"></div>
-		<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
-			<a id="download"  class="modal-trigger button-gray" download>Exportar</a>
+		<div id="filterGral">
+			<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
+				<div class="col l3">
+					<div class="row" style="margin-bottom: 0px;">
+						<div class="col valign-wrapper"><p>Desde:</p></div>
+						<div class="col">
+							<label for="start">
+								<input
+										type="date" id="start" name="trip-start" value="2023-10-01" min="2023-10-01"
+										max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="col l3">
+					<div class="row" style="margin-bottom: 0px;">
+						<div class="col valign-wrapper"><p>Hasta:</p></div>
+						<div class="col">
+							<label for="fin">
+								<input
+										type="date" id="fin" name="trip-start"
+										value="
+	<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" min="2023-10-01"
+										max="<?= date ( 'Y-m-d', strtotime ( 'now' ) ) ?>" />
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="col l2"></div>
+				<div class="col l2"></div>
+				<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
+					<a id="download" class="modal-trigger button-gray" download>Exportar</a>
+				</div>
+			</div>
 		</div>
 	</div>
 	<!-- Las tablas principales que se muestran -->
 	<div class="card esquinasRedondas" id="tblsViewer" style="margin-right: 15px">
+		<input type="hidden" name="idInc" id="idInc" value="<?= $id ?>">
 		<div class="card-content" style="padding: 10px; margin-right: ">
 			<div class="row" style="margin-bottom: 1px">
 				<div id="Menus" class="row l12 p-3" style="margin-bottom: 5px">
 					<div class="col l2">
-						<button id="cfdi" class="button-table" onclick="cfdi();data_tablas_d();">
-							CFDIs
-						</button>
+						<button id="cfdi" class="button-table" onclick="cfdi();">CFDIs</button>
 					</div>
 					<div class="col l2">
-						<button id="comprobantes" class="button-table" onclick="comprobantesP();data_tablas_d();">
+						<button id="comprobantes" class="button-table" onclick="comprobantesP();">
 							Comprobantes de pago
 						</button>
 					</div>
 					<div class="col l2">
-						<button id="movimientos" class="button-table" onclick="movimientos();data_tablas_d();">
+						<button id="movimientos" class="button-table" onclick="movimientos();">
 							Movimientos
 						</button>
 					</div>
 					<div class="col l2">
-						<button id="estados" class="button-table" onclick="estados();data_tablas_d();">
+						<button id="estados" class="button-table" onclick="estados();">
 							Estados de cuenta
 						</button>
 					</div>
@@ -171,20 +305,36 @@
 				default:
 				// code block
 			}
-			
+		});
+		$("#showSencilla").change(function () {
+			cfdi();
+		});
+		$("#showPlus").change(function () {
+			cfdi();
+		});
+		$("#searchUuid").on("keyup", function () {
+			cfdi();
+		});
+		$("#searchRNumerica").on("keyup", function () {
+			cfdi();
 		});
 	});
+	
 	function noSelect() {
 		$("#cfdi").removeClass("selected");
 		$("#comprobantes").removeClass("selected");
 		$("#movimientos").removeClass("selected");
 		$("#estados").removeClass("selected");
 		$("#tablaActivaD").empty();
+		$("#filterCfdi").css("display", "none");
+		$("#filterGral").css("display", "none");
 	}
+	
 	function cfdi() {
+		noSelect();
+		$("#filterCfdi").css("display", "block");
 		$("#tablaActivaD").empty();
 		btnActive = 0;
-		noSelect();
 		$("#cfdi").addClass("selected");
 		const tableBase = "<table id=\"tabla_d_cfdis\" class=\"stripe row-border order-column nowrap\">" +
 			"<thead><tr>" +
@@ -201,15 +351,30 @@
 			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
 		$("#tablaActivaD").append(tableBase);
-		
+		let sSencillo = 0;
+		let sPlus = 0;
+		if ($("#showSencilla").is(":checked")) {
+			sSencillo = 1;
+		}
+		if ($("#showPlus").is(":checked")) {
+			sPlus = 1;
+		}
 		$.ajax({
-			url: "/Documentos/DocsCFDI",
+			url: url + "/getInvoiceDocuments",
 			data: {
 				from: $("#start").val(),
 				to: $("#fin").val(),
+				from2: $("#startMod").val(),
+				to2: $("#finMod").val(),
+				sencilla: sSencillo,
+				plus: sPlus,
+				uuid: $("#searchUuid").val(),
+				args: $("#searchRNumerica").val(),
+				company: $("#idInc").val(),
+				environment: env,
 			},
 			dataType: "json",
-			method: "post",
+			method: "get",
 			beforeSend: function () {
 				const obj = $("#tblsViewer");
 				const left = obj.offset().left;
@@ -229,11 +394,11 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -242,23 +407,27 @@
 					$("#tblBody").empty();
 					$.each(data, function (index, value) {
 						let uuid = "<a href=\"" + value.idurl + "\" target=\"_blank\">" + value.uuid + "</a>";
-						let subtotal;
-						let iva;
+						let datePay = "";
+						if (value.dateToPay === null) {
+							datePay = "-----";
+						} else {
+							datePay = value.dateToPay;
+						}
 						const tr = $("<tr>" +
 							"<td>" +
 							"<div class=\"switch\">" +
-                            "<label>" +
-                            "<input type=\"checkbox\" id=\"checkTbl\">" +
-                            "<span class=\"lever\"></span>" +
-                            "</label>" +
-                            "</div>" +
+							"<label>" +
+							"<input type=\"checkbox\" id=\"checkTbl\">" +
+							"<span class=\"lever\"></span>" +
+							"</label>" +
+							"</div>" +
 							"</td>" +
 							"<td>" + value.emisor + "</td>" +
 							"<td>" + value.receptor + "</td>" +
 							"<td>" + uuid + "</td>" +
 							"<td>" + value.dateCFDI + "</td>" +
 							"<td>" + value.dateCreate + "</td>" +
-							"<td>" + value.dateToPay + "</td>" +
+							"<td>" + datePay + "</td>" +
 							"<td>$ " + value.total + "</td>" +
 							"<td>" + value.tipo + "</td>" +
 							"</tr>");
@@ -287,21 +456,23 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
+	
 	function comprobantesP() {
 		$("#tablaActivaD").empty();
 		btnActive = 1;
 		noSelect();
+		$("#filterGral").css("display", "block");
 		$("#comprobantes").addClass("selected");
 		const tableBase = "<table id=\"tabla_d_comprobantes\" class=\"stripe row-border order-column nowrap\">" +
 			"<thead style=\"position:sticky; top: 0;\"><tr>" +
@@ -315,7 +486,7 @@
 			"<th>Fecha de pago</th>" +
 			"<th>Monto del pago</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"></tbody>" + 
+			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
 		$("#tablaActivaD").append(tableBase);
 		$.ajax({
@@ -345,11 +516,11 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -367,11 +538,11 @@
 						const tr = $("<tr>" +
 							"<td>" +
 							"<div class=\"switch\">" +
-                            "<label>" +
-                            "<input type=\"checkbox\" id=\"checkTbl\">" +
-                            "<span class=\"lever\"></span>" +
-                            "</label>" +
-                            "</div>" +
+							"<label>" +
+							"<input type=\"checkbox\" id=\"checkTbl\">" +
+							"<span class=\"lever\"></span>" +
+							"</label>" +
+							"</div>" +
 							"</td>" +
 							"<td>" + cepUrl + "</td>" +
 							"<td>" + value.bank_source + "</td>" +
@@ -407,21 +578,24 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
+	
 	function movimientos() {
 		$("#tablaActivaD").empty();
-		btnActive = 2;
 		noSelect();
+		$("#filterGral").css("display", "block");
+		btnActive = 2;
+		
 		$("#movimientos").addClass("selected");
 		const tableBase = "<table id=\"tabla_d_movimientos\" class=\"stripe row-border order-column nowrap\">" +
 			"<thead style=\"position:sticky; top: 0;\"><tr>" +
@@ -441,7 +615,7 @@
 			"<th>CFDI correspondiente</th>" +
 			"<th>Fecha de Transacción</th>" +
 			"</tr></thead>" +
-			"<tbody id=\"tblBody\"></tbody>" + 
+			"<tbody id=\"tblBody\"></tbody>" +
 			"</table>";
 		$("#tablaActivaD").append(tableBase);
 		$.ajax({
@@ -471,11 +645,11 @@
 			},
 			success: function (data) {
 				if (data.code === 500) {
-					let toastHTML = "<span><strong>" + data.message + "</strong></span>"+
+					let toastHTML = "<span><strong>" + data.message + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-					toastHTML = "<span><strong>" + data.reason + "</strong></span>"+
+					toastHTML = "<span><strong>" + data.reason + "</strong></span>" +
 						"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 						"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 					M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
@@ -492,11 +666,11 @@
 						const tr = $("<tr>" +
 							"<td>" +
 							"<div class=\"switch\">" +
-                            "<label>" +
-                            "<input type=\"checkbox\" id=\"checkTbl\">" +
-                            "<span class=\"lever\"></span>" +
-                            "</label>" +
-                            "</div>" +
+							"<label>" +
+							"<input type=\"checkbox\" id=\"checkTbl\">" +
+							"<span class=\"lever\"></span>" +
+							"</label>" +
+							"</div>" +
 							"</td>" +
 							"<td>$ " + value.amount + "</td>" +
 							"<td>" + value.traking_key + "</td>" +
@@ -538,20 +712,22 @@
 				$("#solveLoader").css({
 					display: "none"
 				});
-				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>"+
+				let toastHTML = "<span><strong>Ha ocurrido un problema por favor intente mas tarde</strong></span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
-				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>"+
+				toastHTML = "<span>Si el problema persiste levante ticket en el apartado de soporte</span>" +
 					"<button onclick='M.Toast.dismissAll()' class='btn-flat toast-action'>" +
 					"<span class='material-icons' style='display: block; color: white;'>cancel</span></button>";
 				M.toast({html: toastHTML, displayLength: 20000, duration: 20000});
 			}
 		});
 	}
+	
 	function estados() {
 		$("#tablaActivaD").empty();
 		noSelect();
+		$("#filterGral").css("display", "block");
 		$("#estados").addClass("selected");
 		const tableBase = "<table id=\"tabla_d_estados\" class=\"stripe row-border order-column nowrap\">" +
 			"<thead style=\"position:sticky; top: 0;\"><tr>" +
@@ -581,39 +757,39 @@
 	}
 </script>
 <style>
-	
-	/* Fix show checkbox and radiobuttons*/
-	
-	[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-		opacity: 1,
-		position: relative;
-		pointer-events: auto;
-	}
-	
-	/* Fix button selected but all class selected afect */
-	
-	.selected {
-		background-color: black !important;
-		color: white !important;
-		height: 50px;
-		border: 2px solid black !important;
-		border-radius: 10px;
-	}
-	
-	/* Buttons */
-	
-	.button-table {
-		background-color: white;
-		border: 2px solid white;
-		height: 50px;
-		width: 180px
-	}
-	
-	.button-table:focus {
-		background-color: black !important;
-		color: white;
-		height: 50px;
-		border: 2px solid black !important;
-		border-radius: 10px;
-	}
+
+    /* Fix show checkbox and radiobuttons*/
+
+    [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        opacity: 1;
+        position: relative;
+        pointer-events: auto;
+    }
+
+    /* Fix button selected but all class selected afect */
+
+    .selected {
+        background-color: black !important;
+        color: white !important;
+        height: 50px;
+        border: 2px solid black !important;
+        border-radius: 10px;
+    }
+
+    /* Buttons */
+
+    .button-table {
+        background-color: white;
+        border: 2px solid white;
+        height: 50px;
+        width: 180px
+    }
+
+    .button-table:focus {
+        background-color: black !important;
+        color: white;
+        height: 50px;
+        border: 2px solid black !important;
+        border-radius: 10px;
+    }
 </style>
