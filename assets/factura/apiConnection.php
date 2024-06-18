@@ -10,7 +10,7 @@
 	 */
 	function getRequest ( array $data, string $endpoint, string $env ): bool|string {
 		$data = http_build_query ( $data );
-		$url = strtoupper ( $env ) === 'SANDBOX' ? 'https://api-solve.local/' : 'https://api-solve.xyz/';
+		$url = strtoupper ( $env ) === 'SANDBOX' ? 'https://api-solve.xyz/' : 'https://api-solve.xyz/';
 		$curl = curl_init ();
 //		var_dump ($url . $endpoint . $data);
 		curl_setopt_array ( $curl, [
