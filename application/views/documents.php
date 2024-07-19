@@ -6,9 +6,59 @@
 	$user = base64_encode ( json_encode ( $user ) ) ?? '';
 ?>
 <script>
+	let btnActive = 0;
 	$(document).ready(function () {
 		$("#download").on("click", function () {
-			const resume_table = document.getElementById("activeTbl");
+			const resume_table = document.getElementById("tabla_d_cfdis");
+			const menu = document.getElementsByClassName("selected")[0].id;
+			
+			const inputCheck = resume_table.querySelectorAll("input[id=\"checkTbl\"]");
+			const inputChecked = resume_table.querySelectorAll("input[id=\"checkTbl\"]:checked");
+			if (inputChecked.length === 0) {
+				return false;
+			}
+			let numCheck = 0;
+			let content = "";
+			const doc = [];
+			
+			for (let i = 1, row; row = resume_table.rows[i]; i++) {
+				if (inputCheck[numCheck].checked) {
+					for (let j = 1, col; col = row.cells[j]; j++, content += "|") {
+						content += col.innerText;
+					}
+					doc.push(content);
+					content = "";
+				}
+				numCheck++;
+			}
+			$.ajax({
+				url: "/Facturas/crearExcel",
+				data: {
+					info: doc,
+					menu: menu
+				},
+				dataType: "json",
+				method: "post",
+				success: function (data) {
+					let opResult = data;
+					let $a = $("<a>");
+					$a.attr("href", opResult.data);
+					$("body").append($a);
+					$a.attr("download", menu + ".xlsx");
+					$a[0].click();
+					$a.remove();
+				},
+				error: function (data) {
+					alert("Ha ocurrido un problema");
+					console.log(data);
+					//location.reload();
+				}
+			});
+			
+		});
+		$("#downloadGral").on("click", function () {
+			let tables = ['tabla_d_cfdis', 'tabla_d_comprobantes', 'tabla_d_movimientos', 'tabla_d_estados'];
+			const resume_table = document.getElementById(tables[btnActive]);
 			const menu = document.getElementsByClassName("selected")[0].id;
 			
 			const inputCheck = resume_table.querySelectorAll("input[id=\"checkTbl\"]");
@@ -182,18 +232,15 @@
 				<div
 						class="col l3 filter"
 						style="padding: 5px; margin-left: auto;margin-right: auto; display: flex; justify-content: center; height: 39px">
-					<a
-							id="download" class="modal-trigger button-gray"
-							style="padding-bottom: 2px; padding-top: 2px;height: 39px;width: 115px;padding-left: 20px;padding-right: 20px;
-							align-content: center; text-align: center"
-							download>Exportar</a>
+					<a id="download" class="modal-trigger button-gray" style="padding-bottom: 2px; padding-top: 2px;height: 39px;width: 115px;padding-left: 20px;padding-right: 20px;
+							align-content: center; text-align: center" download>Exportar</a>
 				</div>
 			</div>
 		</div>
 		<div id="filterGral">
 			<div class="row card esquinasRedondas" style="margin: 10px 10px 0 0; padding-top: 10px;">
 				<div class="col l3">
-					<div class="row" style="margin-bottom: 0px;">
+					<div class="row" style="margin-bottom: 0;">
 						<div class="col valign-wrapper"><p>Desde:</p></div>
 						<div class="col">
 							<label for="start">
@@ -205,7 +252,7 @@
 					</div>
 				</div>
 				<div class="col l3">
-					<div class="row" style="margin-bottom: 0px;">
+					<div class="row" style="margin-bottom: 0;">
 						<div class="col valign-wrapper"><p>Hasta:</p></div>
 						<div class="col">
 							<label for="fin">
@@ -221,7 +268,7 @@
 				<div class="col l2"></div>
 				<div class="col l2"></div>
 				<div class="col l2 valign-wrapper" style="display: block; text-align: center; padding-top: 10px;">
-					<a id="download" class="modal-trigger button-gray" download>Exportar</a>
+					<a id="downloadGral" class="modal-trigger button-gray" download>Exportar</a>
 				</div>
 			</div>
 		</div>
@@ -266,7 +313,7 @@
 	</div>
 </div>
 <script>
-	let btnActive = 0;
+	
 	$(document).ready(function () {
 		cfdi();
 		$("#start").on("change", function () {
