@@ -110,11 +110,14 @@
 			<ul class="icon-list">
 				<?php if (!empty($this->session->userdata('datosEmpresa')["finclabe"])  AND $this->session->userdata('pago_suscription') == 1) { ?>
 				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Notificaciones"><i class="material-icons%s">notifications</i></a></li>', base_url ( 'notificaciones' ), ( strpos ( current_url (), 'notificaciones' ) ) ? ' icon-list-hover' : '' ); ?>
-				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Inicio"><i class="material-icons%s">home</i></a></li>', base_url ( 'inicio' ), ( count ( array_intersect ( [ 'notificaciones', 'Conciliaciones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'Timbrado', 'Tienda', 'xml' ], explode ( '/', current_url () ) ) ) == 0 ) ? ' icon-list-hover' : '' ); ?>
+				<?php echo sprintf ( '<li><a href="%s" class="tooltipped" data-position="right" data-tooltip="Inicio"><i class="material-icons%s">home</i></a></li>', base_url ( 'inicio' ), ( count ( array_intersect ( [ 'notificaciones', 'Conciliaciones', 'ConciliacionMasiva', 'Dispersiones', 'reportes', 'calendario', 'clientesproveedores', 'perfil', 'soporte', 'Documentos', 'Timbrado', 'Tienda', 'xml' ], explode ( '/', current_url () ) ) ) == 0 ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo sprintf (
 					'<li><a href="%s" class="tooltipped dropdown-trigger" data-position="right" data-tooltip="Operaciones" data-target="dropdown1">
 <i class="material-icons%s">swap_horiz</i>
-</a></li>', base_url ( 'Conciliaciones' ), ( strpos ( current_url (), 'Conciliaciones' ) !== FALSE || strpos ( current_url (), 'facturas/subida' ) !== FALSE ) ? ' icon-list-hover' : '' ); ?>
+</a></li>', base_url ( 'Conciliaciones' ), ( strpos ( current_url (), 'Conciliaciones' ) !== FALSE ||
+						strpos ( current_url (), 'ConciliacionMasiva' ) !== FALSE ||
+						strpos ( current_url (), 'Dispersiones' ) !== FALSE ||
+						strpos ( current_url (), 'facturas/subida' ) !== FALSE ) ? ' icon-list-hover' : '' ); ?>
 				<?php echo ('<ul id="dropdown1" class="dropdown-content" style="width: 135px !important;">
   <li><a href="/Conciliaciones">Conciliación sencilla</a></li>
   <li><a href="/ConciliacionMasiva">Conciliacion masiva</a></li>
@@ -189,8 +192,8 @@
 	//    console.log(miImagen);
 	//};
 	<?php } ?>
-	let url = "https://api-solve.local";                     //Local
-	// let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
+	// let url = "https://api-solve.local";                     //Local
+	let url = "https://apisandbox.solve.com.mx/public";     //Sandbox
 	// // let url = "https://apisandbox.solve.com.mx/public/";     //Live
 	let env = "SANDBOX";
 </script>

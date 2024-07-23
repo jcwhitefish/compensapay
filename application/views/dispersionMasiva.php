@@ -156,9 +156,9 @@
 			"<th class=\"center-align\">Acciones</th>" +
 			"<th class='center-align'>Referencia númerica</th>" +
 			"<th class=\"center-align\">Folio de dispersión</th>" +
-			"<th class=\"center-align\">Balance antes</th>" +
-			"<th class=\"center-align\">Balance necesario</th>" +
-			"<th class=\"center-align\">Balance despues</th>" +
+			// "<th class=\"center-align\">Balance antes</th>" +
+			"<th class=\"center-align\">Monto dispersion</th>" +
+			// "<th class=\"center-align\">Balance despues</th>" +
 			"<th class=\"center-align\">Clabe bancaria</th>" +
 			"<th class=\"center-align\">Fecha de Alta<br />de operación</th>" +
 			"<th class=\"center-align\">Fecha de ultima<br />modificación</th>" +
@@ -256,9 +256,9 @@
 							"<td class='center-align' id='ddPlus" + value.id + "'></td>" +
 							"<td class='center-align'>" + value.reference_number + "</td>" +
 							"<td class='center-align'>" + value.folio + "</td>" +
-							"<td class='center-align'>$ " + value.balance_before + "</td>" +
+							// "<td class='center-align'>$ " + value.balance_before + "</td>" +
 							"<td class='center-align'>$ " + value.balance_needed + "</td>" +
-							"<td class='center-align'>" + after + "</td>" +
+							// "<td class='center-align'>" + after + "</td>" +
 							"<td class='center-align'>" + value.clabe + "</td>" +
 							"<td class='center-align'>" + value.created_at + "</td>" +
 							"<td class='center-align'>" + update + "</td>" +
