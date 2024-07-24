@@ -31,6 +31,13 @@ class Company_model extends CI_Model {
         $this->db->join('stp_contactos', 'stp_contactos.idCompanie = companies.id', 'left');
         $this->db->join('fintech', 'fintech.companie_id = companies.id', 'left');
         $this->db->where('companies.id', $condiciones['id']);
+        $this->db->group_by(array(
+    'stp_kyc.kyc_id', 
+    'stp_perfiltransaccional.pt_id', 
+    'stp_propietarioreal.Id', 
+    'companies.id', 
+    'fintech.arteria_clabe'
+));
         $query = $this->db->get();
         //$query = $this->db->get_where('companies', $condiciones);
         return $query->row_array();

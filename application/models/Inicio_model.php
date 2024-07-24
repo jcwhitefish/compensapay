@@ -106,13 +106,13 @@ class Inicio_model extends CI_Model {
                         FROM invoices AS i
                         INNER JOIN operations AS o ON o.id_invoice = i.id OR o.id_invoice_relational=i.id
                         INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                        WHERE i.id_company = '".$idCompanie."' AND i.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY o.id";
+                        WHERE i.id_company = '".$idCompanie."' AND i.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY i.total, o.id";
 
         $ResIngMesNC = "SELECT dn.total AS ingreso
                         FROM debit_notes AS dn
                         INNER JOIN operations AS o ON o.id_debit_note = dn.id 
                         INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                        WHERE dn.receiver_rfc = '".$rfcEmpresa."' AND dn.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY o.id";
+                        WHERE dn.receiver_rfc = '".$rfcEmpresa."' AND dn.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY dn.total, o.id";
 
         $RRResIngMesF= 0; $RRResIngMesNC = 0;
 
@@ -139,13 +139,13 @@ class Inicio_model extends CI_Model {
                         FROM invoices AS i
                         INNER JOIN operations AS o ON o.id_invoice = i.id OR o.id_invoice_relational=i.id
                         INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                        WHERE i.receiver_rfc = '".$rfcEmpresa."' AND i.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY o.id";
+                        WHERE i.receiver_rfc = '".$rfcEmpresa."' AND i.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY i.total, o.id";
 
         $ResEgrMesC = "SELECT dn.total AS egreso
                         FROM compensatest_base.debit_notes AS dn
                         INNER JOIN compensatest_base.operations AS o ON o.id_debit_note = dn.id 
                         INNER JOIN compensatest_base.balance AS b ON o.operation_number = b.operationNumber
-                        WHERE dn.id_company = $idCompanie AND dn.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY o.id";
+                        WHERE dn.id_company = $idCompanie AND dn.status = 3 AND b.transaction_date >= '".strtotime(date('Y-m').'-01 00:00:00')."' AND b.transaction_date <= '".strtotime(date("Y-m").'-31 23:59:59')."' GROUP BY dn.total, o.id";
 
         $RRResEgrMesF= 0; $RRResEgrMesC = 0;
             
@@ -187,13 +187,13 @@ class Inicio_model extends CI_Model {
                             FROM invoices AS i
                             INNER JOIN operations AS o ON o.id_invoice = i.id OR o.id_invoice_relational=i.id
                             INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                            WHERE i.id_company = '".$idCompanie."' AND i.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY o.id";
+                            WHERE i.id_company = '".$idCompanie."' AND i.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY i.total, o.id";
 
             $ResIngMesNC = "SELECT dn.total AS ingreso
                         FROM debit_notes AS dn
                         INNER JOIN operations AS o ON o.id_debit_note = dn.id 
                         INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                        WHERE dn.receiver_rfc = '".$rfcEmpresa."' AND dn.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY o.id";
+                        WHERE dn.receiver_rfc = '".$rfcEmpresa."' AND dn.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY dn.total, o.id";
 
             //$ResIngMesP = "SELECT SUM(b.amount) AS ingreso 
             //            FROM balance b INNER JOIN operations o ON b.operationNumber = o.operation_number 
@@ -232,13 +232,13 @@ class Inicio_model extends CI_Model {
                         FROM invoices AS i
                         INNER JOIN operations AS o ON o.id_invoice = i.id OR o.id_invoice_relational=i.id
                         INNER JOIN balance AS b ON o.operation_number = b.operationNumber
-                        WHERE i.receiver_rfc = '".$rfcEmpresa."' AND i.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY o.id";
+                        WHERE i.receiver_rfc = '".$rfcEmpresa."' AND i.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY i.total, o.id";
 
             $ResEgrMesC = "SELECT dn.total AS egreso
                         FROM compensatest_base.debit_notes AS dn
                         INNER JOIN compensatest_base.operations AS o ON o.id_debit_note = dn.id 
                         INNER JOIN compensatest_base.balance AS b ON o.operation_number = b.operationNumber
-                        WHERE dn.id_company = $idCompanie AND dn.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY o.id";
+                        WHERE dn.id_company = $idCompanie AND dn.status = 3 AND b.transaction_date >= '".strtotime($fechai)."' AND b.transaction_date <= '".strtotime($fechaf)."' GROUP BY dn.total, o.id";
 
             //$ResEgrMesP = "SELECT SUM(b.amount) AS egreso 
             //            FROM balance b 
