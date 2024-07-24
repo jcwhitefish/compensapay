@@ -20,7 +20,7 @@
 		'uuid' => $uuid,
 		'category' => $cat, ];
 	$ResFactura = json_decode ( getRequest ( $data, 'getCfdiInfo?', $env ), TRUE );
-//	var_dump ($res);
+//	var_dump ($ResFactura);
 	$xml = xml2array ( $ResFactura[ "xml_document" ] );
 	$filename = $PNG_TEMP_DIR . $ResFactura[ "uuid" ] . '.png';
 	QRcode::png ( '?re=' . $xml[ "cfdi:Comprobante" ][ "cfdi:Emisor_attr" ][ "Rfc" ] . '&rr=' . $xml[ "cfdi:Comprobante" ][ "cfdi:Receptor_attr" ][ "Rfc" ] . '&tt=' .
