@@ -328,7 +328,7 @@
 		let chooseC = "<h6 class=\"p-3\">Seleccionar conciliaciones</h6>" +
 			"<form id=\"chooseCPlus\"><div class=\"row\">" +
 			"<select multiple id=\"conciliaItems\" name=\"conciliaItems\">" +
-			"</select><label for=\"conciliaItems\">Conciliaciones</label></div>" +
+			"</select><label for=\"conciliaItems\"></label></div>" +
 			"<div class=\"row\"><div class=\"col l12 center-align\">" +
 			'<a  href="<?=base_url ( 'ConciliacionMasiva' )?>" class="modal-close button-orange">Cancelar</a>' +
 			"<input class=\"button-gray\" type=\"submit\" value=\"Siguiente\"></div></div></form>";
@@ -521,7 +521,7 @@
 			"<th style=\"min-width: 142px; text-align: center\">Folio</th>" +
 			"<th class=\"center-align\">Grupo de CFDI</th>" +
 			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto a pagar</th>" +
-			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto de regreso</th>" +
+			"<th style=\"min-width: 128px; text-align: center\" class=\"center-align\">Monto por recibir</th>" +
 			"<th style=\"text-align: center\" class=\"center-align\">Emisor del pago</th>" +
 			"<th style=\"text-align: center\" class=\"center-align\">Receptor del pago</th>" +
 			"<th class=\"center-align\">Fecha<br />Conciliación</th>" +
