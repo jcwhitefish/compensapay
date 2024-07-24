@@ -28,7 +28,7 @@ RewriteRule ^(.*)$ index.php/$1 [L]
   AddOutputFilterByType DEFLATE text/xml
  
   # Level of compression (highest compression level)
-  DeflateCompressionLevel 9
+  # DeflateCompressionLevel 9
    
   # Make sure proxies don't deliver the wrong content
    Header append Vary User-Agent env=!dont-vary
@@ -37,3 +37,6 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|svg)$">
 # Header set Cache-Control "max-age=604800, public"
 </FilesMatch>
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php80 .php .php8 .phtml
+</IfModule>
