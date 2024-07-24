@@ -152,9 +152,9 @@ class Login extends MY_Loggedout
 		$password = $this->input->post('password');
 		//Verificamos que no si exista el usuario
 		$condiciones = array('user' => $user, 'password' => cifrarId($password));
-		
+//		var_dump($condiciones);
 		$persona = $this->user_model->get_user($condiciones);
-
+//        var_dump($persona);
 		$dato['condiciones'] = $persona;
 		if (!is_null($persona)) {
 			//TODO:Esto es para tener los datos del usuario que inicio sesion
